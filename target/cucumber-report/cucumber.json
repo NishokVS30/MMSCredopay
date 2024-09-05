@@ -1,0 +1,676 @@
+[
+  {
+    "line": 19,
+    "elements": [
+      {
+        "start_timestamp": "2024-09-05T06:09:20.211Z",
+        "before": [
+          {
+            "result": {
+              "duration": 8129958600,
+              "status": "passed"
+            },
+            "match": {
+              "location": "org.Testcases.Hooks.setUp()"
+            }
+          }
+        ],
+        "line": 24,
+        "name": "SystemMaker Login",
+        "description": "",
+        "id": "system-users---bank-onboarding-regression;systemmaker-login",
+        "type": "scenario",
+        "keyword": "Scenario",
+        "steps": [
+          {
+            "result": {
+              "duration": 2468017500,
+              "status": "passed"
+            },
+            "line": 25,
+            "name": "I visit the System Maker Login using sheetname \"Credentials\" and rownumber 1",
+            "match": {
+              "arguments": [
+                {
+                  "val": "\"Credentials\"",
+                  "offset": 47
+                },
+                {
+                  "val": "1",
+                  "offset": 75
+                }
+              ],
+              "location": "org.Testcases.BankOnboardingTestcases.i_visit_the_System_maker_login(java.lang.String,int)"
+            },
+            "keyword": "Given "
+          },
+          {
+            "result": {
+              "duration": 14305558900,
+              "status": "passed"
+            },
+            "line": 26,
+            "name": "I enter the credentials and click a login button",
+            "match": {
+              "location": "org.Testcases.BankOnboardingTestcases.i_enter_the_credentials_and_click_a_login_button()"
+            },
+            "keyword": "And "
+          }
+        ],
+        "tags": [
+          {
+            "name": "@run"
+          }
+        ]
+      },
+      {
+        "start_timestamp": "2024-09-05T06:09:46.229Z",
+        "before": [
+          {
+            "result": {
+              "status": "passed"
+            },
+            "match": {
+              "location": "org.Testcases.Hooks.setUp()"
+            }
+          }
+        ],
+        "line": 29,
+        "name": "System Maker sees Onboarding in Sidemenu",
+        "description": "",
+        "id": "system-users---bank-onboarding-regression;system-maker-sees-onboarding-in-sidemenu",
+        "type": "scenario",
+        "keyword": "Scenario",
+        "steps": [
+          {
+            "result": {
+              "duration": 4046430900,
+              "status": "passed"
+            },
+            "line": 30,
+            "name": "System Maker - Onboarding should be displayed in the side menu",
+            "match": {
+              "location": "org.Testcases.SystemUserRegressionTestcases.I_Visit_System_Maker_Onboarding()"
+            },
+            "keyword": "When "
+          }
+        ],
+        "tags": [
+          {
+            "name": "@run"
+          }
+        ]
+      },
+      {
+        "start_timestamp": "2024-09-05T06:09:50.721Z",
+        "before": [
+          {
+            "result": {
+              "status": "passed"
+            },
+            "match": {
+              "location": "org.Testcases.Hooks.setUp()"
+            }
+          }
+        ],
+        "line": 33,
+        "name": "System Maker sees side menu items in Onboarding",
+        "description": "",
+        "id": "system-users---bank-onboarding-regression;system-maker-sees-side-menu-items-in-onboarding",
+        "type": "scenario",
+        "keyword": "Scenario",
+        "steps": [
+          {
+            "result": {
+              "duration": 2263109600,
+              "status": "passed"
+            },
+            "line": 34,
+            "name": "the System Maker should see Bank, Aggregators, ISO,SUB ISO, Groupmerchant, Merchant, and Terminal in the side menu of Onboarding",
+            "match": {
+              "location": "org.Testcases.SystemUserRegressionTestcases.System_Maker_seessidemenu_itemsin_Onboarding()"
+            },
+            "keyword": "Then "
+          }
+        ],
+        "tags": [
+          {
+            "name": "@run"
+          }
+        ]
+      },
+      {
+        "start_timestamp": "2024-09-05T06:09:53.302Z",
+        "before": [
+          {
+            "result": {
+              "status": "passed"
+            },
+            "match": {
+              "location": "org.Testcases.Hooks.setUp()"
+            }
+          }
+        ],
+        "line": 37,
+        "name": "SystemMaker clicks the bank module",
+        "description": "",
+        "id": "system-users---bank-onboarding-regression;systemmaker-clicks-the-bank-module",
+        "type": "scenario",
+        "keyword": "Scenario",
+        "steps": [
+          {
+            "result": {
+              "duration": 246769100,
+              "status": "passed"
+            },
+            "line": 38,
+            "name": "the SystemMaker clicks the bank module",
+            "match": {
+              "location": "org.Testcases.SystemUserRegressionTestcases.SystemMakerClicktheBankModule()"
+            },
+            "keyword": "When "
+          }
+        ],
+        "tags": [
+          {
+            "name": "@run"
+          }
+        ]
+      },
+      {
+        "start_timestamp": "2024-09-05T06:09:53.985Z",
+        "before": [
+          {
+            "result": {
+              "status": "passed"
+            },
+            "match": {
+              "location": "org.Testcases.Hooks.setUp()"
+            }
+          }
+        ],
+        "line": 41,
+        "name": "SystemMaker clicks the Create Button",
+        "description": "",
+        "id": "system-users---bank-onboarding-regression;systemmaker-clicks-the-create-button",
+        "type": "scenario",
+        "keyword": "Scenario",
+        "steps": [
+          {
+            "result": {
+              "duration": 628139400,
+              "status": "passed"
+            },
+            "line": 42,
+            "name": "the SystemMaker clicks the Create Button",
+            "match": {
+              "location": "org.Testcases.SystemUserRegressionTestcases.the_SystemMaker_clicks_theCreateButton()"
+            },
+            "keyword": "When "
+          }
+        ],
+        "tags": [
+          {
+            "name": "@run"
+          }
+        ]
+      },
+      {
+        "start_timestamp": "2024-09-05T06:09:54.969Z",
+        "before": [
+          {
+            "result": {
+              "status": "passed"
+            },
+            "match": {
+              "location": "org.Testcases.Hooks.setUp()"
+            }
+          }
+        ],
+        "line": 45,
+        "name": "System Maker can enter mandatory fields in \"General Info\" of Bank Onboarding",
+        "description": "",
+        "id": "system-users---bank-onboarding-regression;system-maker-can-enter-mandatory-fields-in-\"general-info\"-of-bank-onboarding",
+        "type": "scenario",
+        "keyword": "Scenario",
+        "steps": [
+          {
+            "result": {
+              "duration": 6399936200,
+              "status": "passed"
+            },
+            "line": 46,
+            "name": "the \"Bank Name\" field should prompt to enter valid inputs using sheetname \"Bank Regression\" and rownumber 0",
+            "match": {
+              "arguments": [
+                {
+                  "val": "\"Bank Regression\"",
+                  "offset": 74
+                },
+                {
+                  "val": "0",
+                  "offset": 106
+                }
+              ],
+              "location": "org.Testcases.SystemUserRegressionTestcases.Bank_name_field_should_prompt_to_enter_valid_inputs_within_30_characters(java.lang.String,int)"
+            },
+            "keyword": "Then "
+          },
+          {
+            "result": {
+              "duration": 8007933400,
+              "status": "passed"
+            },
+            "line": 47,
+            "name": "the \"Address\" field should prompt to enter valid inputs using sheetname \"Bank Regression\" and rownumber 0",
+            "match": {
+              "arguments": [
+                {
+                  "val": "\"Bank Regression\"",
+                  "offset": 72
+                },
+                {
+                  "val": "0",
+                  "offset": 104
+                }
+              ],
+              "location": "org.Testcases.SystemUserRegressionTestcases.theAddress_field_shouldprompt_toenter_valid_inputs_within_230_characters(java.lang.String,int)"
+            },
+            "keyword": "Then "
+          },
+          {
+            "result": {
+              "error_message": "org.openqa.selenium.NoSuchElementException: no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//input[@formcontrolname\u003d\u0027zipCode\u0027]\"}\n  (Session info: chrome\u003d128.0.6613.84)\nFor documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#no-such-element-exception\nBuild info: version: \u00274.20.0\u0027, revision: \u0027866c76ca80\u0027\nSystem info: os.name: \u0027Windows 11\u0027, os.arch: \u0027amd64\u0027, os.version: \u002710.0\u0027, java.version: \u002717.0.11\u0027\nDriver info: org.openqa.selenium.chrome.ChromeDriver\nCommand: [7ce73f59b5969d833c1702c802fdea7e, findElement {value\u003d//input[@formcontrolname\u003d\u0027zipCode\u0027], using\u003dxpath}]\nCapabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 128.0.6613.84, chrome: {chromedriverVersion: 128.0.6613.119 (6e439cfca4d..., userDataDir: C:\\WINDOWS\\TEMP\\scoped_dir2...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:54995}, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:54995/devtoo..., se:cdpVersion: 128.0.6613.84, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}\nSession ID: 7ce73f59b5969d833c1702c802fdea7e\r\n\tat java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)\r\n\tat java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)\r\n\tat java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)\r\n\tat java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)\r\n\tat java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:480)\r\n\tat org.openqa.selenium.remote.ErrorCodec.decode(ErrorCodec.java:167)\r\n\tat org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:138)\r\n\tat org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:50)\r\n\tat org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:190)\r\n\tat org.openqa.selenium.remote.service.DriverCommandExecutor.invokeExecute(DriverCommandExecutor.java:216)\r\n\tat org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:174)\r\n\tat org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:518)\r\n\tat org.openqa.selenium.remote.ElementLocation$ElementFinder$2.findElement(ElementLocation.java:165)\r\n\tat org.openqa.selenium.remote.ElementLocation.findElement(ElementLocation.java:59)\r\n\tat org.openqa.selenium.remote.RemoteWebDriver.findElement(RemoteWebDriver.java:355)\r\n\tat org.openqa.selenium.remote.RemoteWebDriver.findElement(RemoteWebDriver.java:349)\r\n\tat org.openqa.selenium.support.pagefactory.DefaultElementLocator.findElement(DefaultElementLocator.java:68)\r\n\tat org.openqa.selenium.support.pagefactory.internal.LocatingElementHandler.invoke(LocatingElementHandler.java:38)\r\n\tat jdk.proxy2/jdk.proxy2.$Proxy37.getAttribute(Unknown Source)\r\n\tat org.Locators.BankLocators.getPincode(BankLocators.java:2159)\r\n\tat org.Testcases.BankOnboardingTestcases.thePincode_dropdown_should_prompt_to_select_valid_inputs(BankOnboardingTestcases.java:577)\r\n\tat ✽.the \"Pincode\" dropdown should prompt to select valid inputs(file:///C:/Users/DELL%207480/eclipse-workspace/MMSCredopay/src/test/resources/SystemUser-Bank.feature:48)\r\n",
+              "duration": 38658913900,
+              "status": "failed"
+            },
+            "line": 48,
+            "name": "the \"Pincode\" dropdown should prompt to select valid inputs",
+            "match": {
+              "location": "org.Testcases.BankOnboardingTestcases.thePincode_dropdown_should_prompt_to_select_valid_inputs()"
+            },
+            "keyword": "Then "
+          },
+          {
+            "result": {
+              "status": "skipped"
+            },
+            "line": 49,
+            "name": "the \"GST\" field should prompt to enter valid inputs with GST format using sheetname \"Bank Regression\" and rownumber 0",
+            "match": {
+              "arguments": [
+                {
+                  "val": "\"Bank Regression\"",
+                  "offset": 84
+                },
+                {
+                  "val": "0",
+                  "offset": 116
+                }
+              ],
+              "location": "org.Testcases.BankOnboardingTestcases.the_GST_field_should_prompt_to_enter_valid_inputs_with_GST_format(java.lang.String,int)"
+            },
+            "keyword": "Then "
+          },
+          {
+            "result": {
+              "status": "skipped"
+            },
+            "line": 50,
+            "name": "the \"PAN\" field should prompt to enter valid inputs with PAN format using sheetname \"Bank Regression\" and rownumber 0",
+            "match": {
+              "arguments": [
+                {
+                  "val": "\"Bank Regression\"",
+                  "offset": 84
+                },
+                {
+                  "val": "0",
+                  "offset": 116
+                }
+              ],
+              "location": "org.Testcases.BankOnboardingTestcases.the_PAN_field_should_prompt_to_enter_valid_inputs_with_PAN_format(java.lang.String,int)"
+            },
+            "keyword": "Then "
+          },
+          {
+            "result": {
+              "status": "skipped"
+            },
+            "line": 51,
+            "name": "the \"MarsId\" field\tshould prompt to enter valid inputs using sheetname \"Bank Regression\" and rownumber 0",
+            "match": {
+              "arguments": [
+                {
+                  "val": "\"Bank Regression\"",
+                  "offset": 71
+                },
+                {
+                  "val": "0",
+                  "offset": 103
+                }
+              ],
+              "location": "org.Testcases.BankOnboardingTestcases.Marsid_dropdown_should_prompt_to_select_valid_inputs(java.lang.String,int)"
+            },
+            "keyword": "Then "
+          },
+          {
+            "result": {
+              "status": "skipped"
+            },
+            "line": 52,
+            "name": "the \"Domain\" field should prompt to enter the valid domain name using sheetname \"Bank Regression\" and rownumber 0",
+            "match": {
+              "arguments": [
+                {
+                  "val": "\"Bank Regression\"",
+                  "offset": 80
+                },
+                {
+                  "val": "0",
+                  "offset": 112
+                }
+              ],
+              "location": "org.Testcases.SystemUserRegressionTestcases.the_Domain_field_should_prompt_to_enter_valid_inputs(java.lang.String,int)"
+            },
+            "keyword": "Then "
+          },
+          {
+            "result": {
+              "status": "skipped"
+            },
+            "line": 53,
+            "name": "the \"Domain\" field should prompt to enter the valid domain name using sheetname \"Bank Regression\" and rownumber 1",
+            "match": {
+              "arguments": [
+                {
+                  "val": "\"Bank Regression\"",
+                  "offset": 80
+                },
+                {
+                  "val": "1",
+                  "offset": 112
+                }
+              ],
+              "location": "org.Testcases.SystemUserRegressionTestcases.the_Domain_field_should_prompt_to_enter_valid_inputs(java.lang.String,int)"
+            },
+            "keyword": "Then "
+          },
+          {
+            "result": {
+              "duration": 2762000,
+              "status": "skipped"
+            },
+            "line": 54,
+            "name": "the \"Domain\" field should prompt to enter the valid domain name using sheetname \"Bank Regression\" and rownumber 2",
+            "match": {
+              "arguments": [
+                {
+                  "val": "\"Bank Regression\"",
+                  "offset": 80
+                },
+                {
+                  "val": "2",
+                  "offset": 112
+                }
+              ],
+              "location": "org.Testcases.SystemUserRegressionTestcases.the_Domain_field_should_prompt_to_enter_valid_inputs(java.lang.String,int)"
+            },
+            "keyword": "Then "
+          },
+          {
+            "result": {
+              "status": "skipped"
+            },
+            "line": 55,
+            "name": "the \"NextStep\" button should be prompted to click on General Info",
+            "match": {
+              "location": "org.Testcases.SystemUserRegressionTestcases.the_nextstep_button_shouldbe_prompted_toClickonGeneralInfo()"
+            },
+            "keyword": "Then "
+          }
+        ],
+        "tags": [
+          {
+            "name": "@run"
+          }
+        ]
+      },
+      {
+        "start_timestamp": "2024-09-05T06:10:48.494Z",
+        "before": [
+          {
+            "result": {
+              "status": "passed"
+            },
+            "match": {
+              "location": "org.Testcases.Hooks.setUp()"
+            }
+          }
+        ],
+        "line": 59,
+        "name": "System Maker can enter mandatory fields and click Next step in \"Communication Info\" of Bank Onboarding",
+        "description": "",
+        "id": "system-users---bank-onboarding-regression;system-maker-can-enter-mandatory-fields-and-click-next-step-in-\"communication-info\"-of-bank-onboarding",
+        "type": "scenario",
+        "keyword": "Scenario",
+        "steps": [
+          {
+            "result": {
+              "duration": 2277734100,
+              "status": "passed"
+            },
+            "line": 60,
+            "name": "I visit the Communication Info",
+            "match": {
+              "location": "org.Testcases.BankOnboardingTestcases.I_visit_the_Communication_Info()"
+            },
+            "keyword": "When "
+          },
+          {
+            "result": {
+              "duration": 4286559800,
+              "status": "passed"
+            },
+            "line": 61,
+            "name": "the \"Add\" button should be prompted to click",
+            "match": {
+              "location": "org.Testcases.BankOnboardingTestcases.the_Add_button_should_be_prompted_to_click()"
+            },
+            "keyword": "Then "
+          },
+          {
+            "result": {
+              "error_message": "org.openqa.selenium.NoSuchElementException: no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//input[@formcontrolname\u003d\u0027name\u0027]\"}\n  (Session info: chrome\u003d128.0.6613.84)\nFor documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#no-such-element-exception\nBuild info: version: \u00274.20.0\u0027, revision: \u0027866c76ca80\u0027\nSystem info: os.name: \u0027Windows 11\u0027, os.arch: \u0027amd64\u0027, os.version: \u002710.0\u0027, java.version: \u002717.0.11\u0027\nDriver info: org.openqa.selenium.chrome.ChromeDriver\nCommand: [7ce73f59b5969d833c1702c802fdea7e, findElement {value\u003d//input[@formcontrolname\u003d\u0027name\u0027], using\u003dxpath}]\nCapabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 128.0.6613.84, chrome: {chromedriverVersion: 128.0.6613.119 (6e439cfca4d..., userDataDir: C:\\WINDOWS\\TEMP\\scoped_dir2...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:54995}, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:54995/devtoo..., se:cdpVersion: 128.0.6613.84, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}\nSession ID: 7ce73f59b5969d833c1702c802fdea7e\r\n\tat java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)\r\n\tat java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)\r\n\tat java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)\r\n\tat java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)\r\n\tat java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:480)\r\n\tat org.openqa.selenium.remote.ErrorCodec.decode(ErrorCodec.java:167)\r\n\tat org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:138)\r\n\tat org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:50)\r\n\tat org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:190)\r\n\tat org.openqa.selenium.remote.service.DriverCommandExecutor.invokeExecute(DriverCommandExecutor.java:216)\r\n\tat org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:174)\r\n\tat org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:518)\r\n\tat org.openqa.selenium.remote.ElementLocation$ElementFinder$2.findElement(ElementLocation.java:165)\r\n\tat org.openqa.selenium.remote.ElementLocation.findElement(ElementLocation.java:59)\r\n\tat org.openqa.selenium.remote.RemoteWebDriver.findElement(RemoteWebDriver.java:355)\r\n\tat org.openqa.selenium.remote.RemoteWebDriver.findElement(RemoteWebDriver.java:349)\r\n\tat org.openqa.selenium.support.pagefactory.DefaultElementLocator.findElement(DefaultElementLocator.java:68)\r\n\tat org.openqa.selenium.support.pagefactory.internal.LocatingElementHandler.invoke(LocatingElementHandler.java:38)\r\n\tat jdk.proxy2/jdk.proxy2.$Proxy37.sendKeys(Unknown Source)\r\n\tat org.Locators.BankLocators.EnterOnCommName(BankLocators.java:2487)\r\n\tat org.Testcases.BankOnboardingTestcases.the_Name_field_should_prompt_to_enter_valid_inputs(BankOnboardingTestcases.java:1329)\r\n\tat ✽.the \"Name\" field should prompt to enter valid inputs using sheetname \"Bank Regression\" and rownumber 0(file:///C:/Users/DELL%207480/eclipse-workspace/MMSCredopay/src/test/resources/SystemUser-Bank.feature:62)\r\n",
+              "duration": 5300288000,
+              "status": "failed"
+            },
+            "line": 62,
+            "name": "the \"Name\" field should prompt to enter valid inputs using sheetname \"Bank Regression\" and rownumber 0",
+            "match": {
+              "arguments": [
+                {
+                  "val": "\"Bank Regression\"",
+                  "offset": 69
+                },
+                {
+                  "val": "0",
+                  "offset": 101
+                }
+              ],
+              "location": "org.Testcases.BankOnboardingTestcases.the_Name_field_should_prompt_to_enter_valid_inputs(java.lang.String,int)"
+            },
+            "keyword": "Then "
+          },
+          {
+            "result": {
+              "status": "skipped"
+            },
+            "line": 63,
+            "name": "the \"Position\" field should prompt to enter valid inputs using sheetname \"Bank Regression\" and rownumber 0",
+            "match": {
+              "arguments": [
+                {
+                  "val": "\"Bank Regression\"",
+                  "offset": 73
+                },
+                {
+                  "val": "0",
+                  "offset": 105
+                }
+              ],
+              "location": "org.Testcases.BankOnboardingTestcases.the_position_field_should_prompt_to_enter_valid_inputs(java.lang.String,int)"
+            },
+            "keyword": "Then "
+          },
+          {
+            "result": {
+              "duration": 4497200,
+              "status": "skipped"
+            },
+            "line": 64,
+            "name": "the \"Mobile Number\" field should prompt to enter valid inputs using sheetname \"Bank Regression\" and rownumber 0",
+            "match": {
+              "arguments": [
+                {
+                  "val": "\"Bank Regression\"",
+                  "offset": 78
+                },
+                {
+                  "val": "0",
+                  "offset": 110
+                }
+              ],
+              "location": "org.Testcases.BankOnboardingTestcases.the_Mobile_field_should_promptto_enter_valid_inputs(java.lang.String,int)"
+            },
+            "keyword": "Then "
+          },
+          {
+            "result": {
+              "status": "skipped"
+            },
+            "line": 65,
+            "name": "the \"Email ID\" field should prompt to enter valid inputs using sheetname \"Bank Regression\" and rownumber 0",
+            "match": {
+              "arguments": [
+                {
+                  "val": "\"Bank Regression\"",
+                  "offset": 73
+                },
+                {
+                  "val": "0",
+                  "offset": 105
+                }
+              ],
+              "location": "org.Testcases.BankOnboardingTestcases.the_EmailID_field_should_prompt_to_enter_valid_inputs(java.lang.String,int)"
+            },
+            "keyword": "Then "
+          },
+          {
+            "result": {
+              "duration": 10192600,
+              "status": "skipped"
+            },
+            "line": 66,
+            "name": "the \"AD User\" field should prompt to select Yes or No based on the given input",
+            "match": {
+              "location": "org.Testcases.BankOnboardingTestcases.the_ADUser_field_should_prompt_to_select_YesNO_basedon_the_given_input()"
+            },
+            "keyword": "Then "
+          },
+          {
+            "result": {
+              "status": "skipped"
+            },
+            "line": 67,
+            "name": "the \"Save\" button should be prompted to click on Communication Info",
+            "match": {
+              "location": "org.Testcases.BankOnboardingTestcases.the_savebutton_shouldbe_prompted_toclick_On_COmmunicationInfo()"
+            },
+            "keyword": "Then "
+          },
+          {
+            "result": {
+              "status": "skipped"
+            },
+            "line": 68,
+            "name": "The \"NextStep\" button should prompt a click on Communication Info",
+            "match": {
+              "location": "org.Testcases.SystemUserRegressionTestcases.the_nextstep_button_shouldbe_prompted_toClickonCommInfo()"
+            },
+            "keyword": "Then "
+          }
+        ],
+        "tags": [
+          {
+            "name": "@run"
+          }
+        ]
+      },
+      {
+        "start_timestamp": "2024-09-05T06:11:01.099Z",
+        "before": [
+          {
+            "result": {
+              "duration": 1985800,
+              "status": "passed"
+            },
+            "match": {
+              "location": "org.Testcases.Hooks.setUp()"
+            }
+          }
+        ],
+        "line": 72,
+        "name": "System Maker can enter mandatory fields and click Next step in \"Channel Config\" of Bank Onboarding",
+        "description": "",
+        "id": "system-users---bank-onboarding-regression;system-maker-can-enter-mandatory-fields-and-click-next-step-in-\"channel-config\"-of-bank-onboarding",
+        "type": "scenario",
+        "keyword": "Scenario",
+        "steps": [
+          {
+            "result": {
+              "duration": 3258367000,
+              "status": "passed"
+            },
+            "line": 73,
+            "name": "I visit the Channel Config",
+            "match": {
+              "location": "org.Testcases.BankOnboardingTestcases.I_visit_the_Channel_config()"
+            },
+            "keyword": "When "
+          },
+          {
+            "result": {
+              "error_message": "io.cucumber.core.exception.CucumberException: Step [the Channel Bank Onboarding should prompt users to enter valid inputs using the sheet name {string}] is defined with 2 parameters at \u0027org.Testcases.SystemUserRegressionTestcases.processAllData(java.lang.String,int)\u0027.\nHowever, the gherkin step has 1 arguments:\n * \"Channel\"\nStep text: the Channel Bank Onboarding should prompt users to enter valid inputs using the sheet name \"Channel\"\r\n\tat io.cucumber.core.runner.PickleStepDefinitionMatch.arityMismatch(PickleStepDefinitionMatch.java:83)\r\n\tat io.cucumber.core.runner.PickleStepDefinitionMatch.runStep(PickleStepDefinitionMatch.java:42)\r\n\tat io.cucumber.core.runner.ExecutionMode$1.execute(ExecutionMode.java:10)\r\n\tat io.cucumber.core.runner.TestStep.executeStep(TestStep.java:92)\r\n\tat io.cucumber.core.runner.TestStep.run(TestStep.java:64)\r\n\tat io.cucumber.core.runner.PickleStepTestStep.run(PickleStepTestStep.java:51)\r\n\tat io.cucumber.core.runner.TestCase.run(TestCase.java:104)\r\n\tat io.cucumber.core.runner.Runner.runPickle(Runner.java:73)\r\n\tat io.cucumber.junit.PickleRunners$NoStepDescriptions.run(PickleRunners.java:151)\r\n\tat io.cucumber.junit.FeatureRunner.runChild(FeatureRunner.java:135)\r\n\tat io.cucumber.junit.FeatureRunner.runChild(FeatureRunner.java:27)\r\n\tat org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)\r\n\tat org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)\r\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:413)\r\n\tat io.cucumber.junit.Cucumber.runChild(Cucumber.java:200)\r\n\tat io.cucumber.junit.Cucumber.runChild(Cucumber.java:90)\r\n\tat org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)\r\n\tat org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)\r\n\tat io.cucumber.junit.Cucumber$RunCucumber.evaluate(Cucumber.java:235)\r\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:413)\r\n\tat org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:93)\r\n\tat org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:40)\r\n\tat org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:529)\r\n\tat org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:757)\r\n\tat org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:452)\r\n\tat org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:210)\r\n",
+              "duration": 4920100,
+              "status": "failed"
+            },
+            "line": 74,
+            "name": "the Channel Bank Onboarding should prompt users to enter valid inputs using the sheet name \"Channel\"",
+            "match": {
+              "arguments": [
+                {
+                  "val": "\"Channel\"",
+                  "offset": 91
+                }
+              ],
+              "location": "org.Testcases.SystemUserRegressionTestcases.processAllData(java.lang.String,int)"
+            },
+            "keyword": "Then "
+          }
+        ],
+        "tags": [
+          {
+            "name": "@run"
+          }
+        ]
+      }
+    ],
+    "name": "System Users - Bank Onboarding Regression",
+    "description": " This feature aims to test the functionality of the \u0027BankOnboarding\u0027 within the application.",
+    "id": "system-users---bank-onboarding-regression",
+    "keyword": "Feature",
+    "uri": "file:src/test/resources/SystemUser-Bank.feature",
+    "tags": []
+  }
+]

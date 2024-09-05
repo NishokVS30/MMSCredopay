@@ -11,6 +11,7 @@ import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -894,11 +895,40 @@ public class BankLocators {
 	}
 	
 	
+//	public void selectDropdownOption(String optionText) {
+//	    String xpathExpression = "//span[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '" 
+//	                              + optionText.toLowerCase() + "')]";
+//	    driver.findElement(By.xpath(xpathExpression)).click();
+//	}
+	
 	public void selectDropdownOption(String optionText) {
-	    String xpathExpression = "//span[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '" 
+	    // Construct the XPath for the option text in a case-insensitive manner
+	    String xpathExpression = "//mat-option//span[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '" 
 	                              + optionText.toLowerCase() + "')]";
-	    driver.findElement(By.xpath(xpathExpression)).click();
+	    
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+	    try {
+	        // Wait for the overlay to disappear (if it exists)
+	        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.className("cdk-overlay-backdrop")));
+
+	        // Wait for the dropdown option to be visible and clickable
+	        WebElement optionElement = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpathExpression)));
+
+	        // Scroll the element into view (if needed) and click
+	        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", optionElement);
+	        optionElement.click();
+	    } catch (TimeoutException e) {
+	        System.out.println("The dropdown option '" + optionText + "' is not found or not clickable within the timeout.");
+	    } catch (ElementClickInterceptedException e) {
+	        System.out.println("Element click intercepted for '" + optionText + "'. Trying to click via JavaScript.");
+	        
+	        // Try clicking via JavaScript as a fallback
+	        WebElement optionElement = driver.findElement(By.xpath(xpathExpression));
+	        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", optionElement);
+	    }
 	}
+
 
 	
 

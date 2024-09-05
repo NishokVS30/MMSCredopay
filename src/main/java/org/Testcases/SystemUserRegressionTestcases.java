@@ -292,7 +292,7 @@ try {
 	}
 	
 	@Then("the Channel Bank Onboarding should prompt users to enter valid inputs using the sheet name {string}")
-	public void processAllData(String sheetName, int rowNumber)
+	public void processAllData(String sheetName)
 	        throws InvalidFormatException, IOException, InterruptedException, AWTException {
 
 	    // Initialize BankLocators only once
@@ -302,7 +302,7 @@ try {
 	    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
 	    // Set the Excel file path and sheet name
-	    ExcelUtils.setExcelFile("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx",
+	    ExcelUtils.setExcelFile("C:\\Users\\DELL 7480\\git\\MMSCredopay\\Excel\\MMSCredopay.xlsx",
 	            sheetName);
 
 	    // Get the total number of non-empty rows
@@ -330,9 +330,13 @@ try {
 	            B.ChannelADD(); // Click 'Add' button for the channel
 	            B.clickonChannel(); // Click on the channel dropdown
 
+	            Thread.sleep(2000); 
 	            // Select the channel based on the Excel value (e.g., POS, AEPS, etc.)
 	            B.selectDropdownOption(channel);
-	            LoginInputDatas("Channel-" + currentRow, channel); // Log input data for the channel
+	            LoginInputDatas("Channel-" + currentRow, channel);
+	            
+	            performTabKeyPress();
+	            // Log input data for the channel
 	        } else {
 	            System.out.println("Channel data is null or empty for row: " + currentRow);
 	        }
@@ -341,7 +345,9 @@ try {
 	            // Network selection
 	            B.clickonNetwork(); // Click on the network dropdown
 	            B.selectDropdownOption(network); // Select network from Excel
-	            LoginInputDatas("Network-" + currentRow, network); // Log input data for the network
+	            LoginInputDatas("Network-" + currentRow, network); 
+	            performTabKeyPress();
+	            // Log input data for the network
 	        } else {
 	            System.out.println("Network data is null or empty for row: " + currentRow);
 	        }
@@ -350,7 +356,9 @@ try {
 	            // Transaction Set selection
 	            B.clickonTransactionsetPoS(); // Click on the transaction set dropdown
 	            B.selectDropdownOption(transactionSet); // Select transaction set from Excel
-	            LoginInputDatas("Transaction Set-" + currentRow, transactionSet); // Log input data for transaction set
+	            LoginInputDatas("Transaction Set-" + currentRow, transactionSet);
+	            performTabKeyPress();
+	            // Log input data for transaction set
 	        } else {
 	            System.out.println("Transaction Set data is null or empty for row: " + currentRow);
 	        }
@@ -359,7 +367,9 @@ try {
 	            // Routing selection
 	            B.clickonRouting(); // Click on the routing dropdown
 	            B.selectDropdownOption(routing); // Select routing from Excel
-	            LoginInputDatas("Routing-" + currentRow, routing); // Log input data for routing
+	            LoginInputDatas("Routing-" + currentRow, routing);
+	            performTabKeyPress();
+	            // Log input data for routing
 	        } else {
 	            System.out.println("Routing data is null or empty for row: " + currentRow);
 	        }
@@ -1987,7 +1997,11 @@ try {
 	}
 
 	
-	
+	private void performTabKeyPress() throws AWTException {
+		Robot robot = new Robot();
+		robot.keyPress(KeyEvent.VK_TAB);
+		robot.keyRelease(KeyEvent.VK_TAB);
+	}	
 
 
 	private void LoginInputDatas(String fieldName, String fieldValue) {
@@ -2006,5 +2020,6 @@ try {
 		// Log the table in Extent Report
 		test.log(Status.PASS, m);
 	}
+	
 
 }

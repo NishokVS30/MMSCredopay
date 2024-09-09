@@ -32,6 +32,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.cucumber.java.it.Data.Datas;
 import io.qameta.allure.Allure;
 
 public class AggregatorOnboardingTestcases {
@@ -146,10 +147,6 @@ public class AggregatorOnboardingTestcases {
 		A.AggreementDateLabelName();
 	}
 
-
-
-	
-
 	@Then("the label name should be \"Aggregator Code\"")
 	public void the_label_nameshould_be_AggregatorCode() {
 
@@ -175,11 +172,7 @@ public class AggregatorOnboardingTestcases {
 		A.ClickOnAggregatorCOde();
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.DisplayedOnThisFieldisRequired();
 
@@ -213,29 +206,12 @@ public class AggregatorOnboardingTestcases {
 		A.EnterOnAggregatorCOde(code);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
+		
+    	LoginInputDatas("Aggregator Code", code);
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Aggregator Code</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + code + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Aggregator Code" }, { code },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
 
 	}
 
@@ -288,11 +264,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClickOnMarsid();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+	performTabKeyPress();
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -335,21 +307,7 @@ public class AggregatorOnboardingTestcases {
 
 		B.NOTDisplayedOnInvalidFormat();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Marsid</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + id + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Marsid" }, { id },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		LoginInputDatas("Marsid", id);
 
 	}
 
@@ -395,29 +353,10 @@ public class AggregatorOnboardingTestcases {
 		A.EnterOnAutoDeactivationdays(days);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
-
+	    performTabKeyPress();
 		B.NOTDisplayedOnInvalidFormat();
-
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Auto Deactivation Days</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + days + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Auto Deactivation Days" }, { days },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		
+		LoginInputDatas("Auto Deactivation Days", days);
 
 	}
 
@@ -512,9 +451,9 @@ public class AggregatorOnboardingTestcases {
 		B.ClickOnNextStep();
 
 	}
-	
+
 //Company Info	
-	
+
 	@When("I Visit the Company Info")
 	public void CompanyInfo() throws InterruptedException {
 		A = new org.Locators.AggregatorLocators(driver);
@@ -525,7 +464,7 @@ public class AggregatorOnboardingTestcases {
 		Thread.sleep(6000);
 
 		A.ClickOnCompanyInfo();
-		
+
 	}
 
 	@Then("the label name should be \"Legal Name\"")
@@ -555,11 +494,7 @@ public class AggregatorOnboardingTestcases {
 		A.ClickOnLegalName();
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.DisplayedOnThisFieldisRequired();
 	}
@@ -592,33 +527,15 @@ public class AggregatorOnboardingTestcases {
 		A.EnterOnLegalName(legal);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
-
+		
+	    performTabKeyPress();
+	    
 		Thread.sleep(2000);
 		A.ClearOnLegalName();
 
 		B.DisplayedOnThisInvalidFormat();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Legal Name</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + legal + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Legal Name" }, { legal },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
-
+		LoginInputDatas("Legal Name", legal);
 	}
 
 	@Then("the \"Legal Name\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
@@ -649,30 +566,12 @@ public class AggregatorOnboardingTestcases {
 		A.EnterOnLegalName(legal);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+     	performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Legal Name</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + legal + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Legal Name" }, { legal },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
-
+		LoginInputDatas("Legal Name", legal);
 	}
 //Brand Name
 
@@ -701,11 +600,7 @@ public class AggregatorOnboardingTestcases {
 		A.ClickOnBrandName();
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.DisplayedOnThisFieldisRequired();
 
@@ -739,11 +634,7 @@ public class AggregatorOnboardingTestcases {
 		A.EnterOnBrandName(brand);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+	    performTabKeyPress();
 
 		Thread.sleep(2000);
 
@@ -751,21 +642,7 @@ public class AggregatorOnboardingTestcases {
 
 		B.DisplayedOnThisInvalidFormat();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Brand Name</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + brand + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Brand Name" }, { brand },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		LoginInputDatas("Brand Name", brand);
 
 	}
 
@@ -797,29 +674,11 @@ public class AggregatorOnboardingTestcases {
 		A.EnterOnBrandName(brand);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
-
+		performTabKeyPress();
+		
 		B.NOTDisplayedOnInvalidFormat();
-
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Brand Name</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + brand + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Brand Name" }, { brand },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		
+		LoginInputDatas("Brand Name", brand);
 
 	}
 
@@ -848,11 +707,7 @@ public class AggregatorOnboardingTestcases {
 		A.ClickOnRegisteredAddress();
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.DisplayedOnThisFieldisRequired();
 
@@ -881,29 +736,11 @@ public class AggregatorOnboardingTestcases {
 		A.EnterOnRegisteredAddress(Address);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+	     performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
-
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Registered Address</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + Address + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Registered Address" }, { Address },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		
+		LoginInputDatas("Registered Address", Address);
 
 	}
 
@@ -953,11 +790,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.SelectOnRegisteredPincode();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+	    performTabKeyPress();
 		Thread.sleep(2000);
 
 		String SelectedPincode = A.getRegisteredPincode();
@@ -1105,11 +938,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.CLickOnRegisterNumber();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+	    performTabKeyPress();
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -1150,23 +979,9 @@ public class AggregatorOnboardingTestcases {
 		r.keyRelease(KeyEvent.VK_TAB);
 
 		B.NOTDisplayedOnInvalidFormat();
-
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Registered Number</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + registeredNumber + "</td></tr>"
-				+ "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Registered Number" }, { registeredNumber },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		
+		
+		LoginInputDatas("Registered Number", registeredNumber);
 
 	}
 
@@ -1192,11 +1007,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.CLickOnCompanyPAN();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+         performTabKeyPress();
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -1231,11 +1042,8 @@ public class AggregatorOnboardingTestcases {
 		A.EnterOnCompanyPAN(pan);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		Thread.sleep(2000);
 
@@ -1243,22 +1051,7 @@ public class AggregatorOnboardingTestcases {
 
 		B.DisplayedOnThisInvalidFormat();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Company Pan</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + pan + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Company Pan" }, { pan },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
-
+		LoginInputDatas("Company PAN", pan);
 	}
 
 	@Then("the \"Company PAN\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
@@ -1286,30 +1079,11 @@ public class AggregatorOnboardingTestcases {
 		A.EnterOnCompanyPAN(pan);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+	    performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Company Pan</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + pan + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Company Pan" }, { pan },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
-
+		LoginInputDatas("Company PAN", pan);
 	}
 
 //GSTIN
@@ -1336,11 +1110,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.CLickOnGSTIN();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -1375,11 +1145,7 @@ public class AggregatorOnboardingTestcases {
 		A.EnterOnGSTIN(GstIN);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		Thread.sleep(2000);
 
@@ -1387,21 +1153,7 @@ public class AggregatorOnboardingTestcases {
 
 		B.DisplayedOnThisInvalidFormat();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>GstIN</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + GstIN + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "GstIN" }, { GstIN },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		LoginInputDatas("GstIN", GstIN);
 
 	}
 
@@ -1430,29 +1182,11 @@ public class AggregatorOnboardingTestcases {
 		A.EnterOnGSTIN(GstIN);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
-
+	    performTabKeyPress();
+	     
 		B.NOTDisplayedOnInvalidFormat();
-
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>GstIN</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + GstIN + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "GstIN" }, { GstIN },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		
+		LoginInputDatas("GstIN", GstIN);
 
 	}
 
@@ -1546,11 +1280,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.CLickOnEmailDomain();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+	performTabKeyPress();
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -1597,21 +1327,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.EmailDomainClear();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Email Domain</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + domain + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Email Domain" }, { domain },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		LoginInputDatas("Domain", domain);
 
 	}
 
@@ -1654,22 +1370,8 @@ public class AggregatorOnboardingTestcases {
 		Thread.sleep(2000);
 
 		A.EmailDomainClear();
-
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Email Domain</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + domain + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Email Domain" }, { domain },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		
+		LoginInputDatas("Domain", domain);
 
 	}
 
@@ -1698,30 +1400,11 @@ public class AggregatorOnboardingTestcases {
 		A.EnterOnEmailDomain(domain);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+	     performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Email Domain</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + domain + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Email Domain" }, { domain },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
-
+		LoginInputDatas("Domain", domain);
 	}
 
 	@Then("the \"NextStep\" button should be prompted to click on Company Info")
@@ -1737,7 +1420,7 @@ public class AggregatorOnboardingTestcases {
 		B.ClickOnNextStep();
 
 	}
-	
+
 //Personal Info	
 
 	@When("I visit the Personal Info")
@@ -1836,11 +1519,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClickOnFirstNamePersonal();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -1884,22 +1563,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClearOnFirstNamePersonal();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>First Name</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + FirstName + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "First Name" }, { FirstName },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
-
+		LoginInputDatas("First Name", FirstName);
 	}
 
 	@Then("the \"First Name\" field should not allow special characters using sheetname {string} and rownumber {int}")
@@ -1939,21 +1603,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClearOnFirstNamePersonal();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>First Name</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + FirstName + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "First Name" }, { FirstName },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		LoginInputDatas("First Name", FirstName);
 
 	}
 
@@ -1982,31 +1632,13 @@ public class AggregatorOnboardingTestcases {
 		A.EnterOnFirstNamePersonal(FirstName);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		Thread.sleep(2000);
 
 		B.NOTDisplayedOnInvalidFormat();
-
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>First Name</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + FirstName + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "First Name" }, { FirstName },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		
+		LoginInputDatas("First Name", FirstName);
 
 	}
 
@@ -2047,11 +1679,7 @@ public class AggregatorOnboardingTestcases {
 		A.EnterOnLastNamePersonal(LastName);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.DisplayedOnThisInvalidFormat();
 
@@ -2059,21 +1687,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClearOnLastNamePersonal();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Last Name</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + LastName + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Last Name" }, { LastName },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		LoginInputDatas("Last Name", LastName);
 
 	}
 
@@ -2114,21 +1728,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClearOnLastNamePersonal();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Last Name</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + LastName + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Last Name" }, { LastName },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		LoginInputDatas("Last Name", LastName);
 
 	}
 
@@ -2167,22 +1767,7 @@ public class AggregatorOnboardingTestcases {
 
 		B.NOTDisplayedOnInvalidFormat();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Last Name</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + LastName + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Last Name" }, { LastName },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
-
+		LoginInputDatas("Last Name", LastName);
 	}
 
 	@Then("the label name should be \"Date of Birth\" in Personal Info")
@@ -2207,11 +1792,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClickOnDOBPersonal();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+	    performTabKeyPress();
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -2242,11 +1823,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClickOnApplyPersonal();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 		Thread.sleep(2000);
 
 		B.NOTDisplayedOnInvalidFormat();
@@ -2309,31 +1886,17 @@ public class AggregatorOnboardingTestcases {
 		A.EnterOnPanPersonal(pan);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.DisplayedOnThisInvalidFormat();
 
 		B.ClearPAN();
-
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>PAN</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + pan + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "PAN" }, { pan },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		
+		
+		LoginInputDatas("PAN", pan);
+		
+		
 
 	}
 
@@ -2362,29 +1925,12 @@ public class AggregatorOnboardingTestcases {
 		A.EnterOnPanPersonal(pan);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
-
+		
+		performTabKeyPress();
+		
 		B.NOTDisplayedOnInvalidFormat();
-
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>PAN</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + pan + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "PAN" }, { pan },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		
+		LoginInputDatas("PAN", pan);
 
 	}
 
@@ -2457,22 +2003,8 @@ public class AggregatorOnboardingTestcases {
 		r.keyRelease(KeyEvent.VK_TAB);
 
 		B.NOTDisplayedOnInvalidFormat();
-
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Address</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + Address + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Address" }, { Address },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		
+		LoginInputDatas("Address", Address);
 
 	}
 
@@ -2498,11 +2030,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClickOnPincodePersonal();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -2523,11 +2051,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.SelectOnRegisteredPincode();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+	    performTabKeyPress();
 		Thread.sleep(2000);
 
 		String SelectedPincode = A.getPincodePersonal();
@@ -2601,11 +2125,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClickOnMobileNumberPersonal();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -2637,11 +2157,7 @@ public class AggregatorOnboardingTestcases {
 		A.EnterOnMobileNumberPersonal(Mobilenumber);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+    	performTabKeyPress();
 
 		B.DisplayedOnShouldbe10digits();
 
@@ -2649,22 +2165,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClearOnMobileNumberPersonal();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Mobile Number</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + Mobilenumber + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Mobile Number" }, { Mobilenumber },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
-
+		LoginInputDatas("Mobile Number", Mobilenumber);
 	}
 
 	@Then("the \"Mobile Number\" field should not allow inputs with more digits than required in Personal Info using sheetname {string} and rownumber {int}")
@@ -2706,21 +2207,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClearOnMobileNumberPersonal();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Mobile Number</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + Mobilenumber + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Mobile Number" }, { Mobilenumber },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		LoginInputDatas("Mobile Number", Mobilenumber);
 
 	}
 
@@ -2758,22 +2245,8 @@ public class AggregatorOnboardingTestcases {
 		Thread.sleep(2000);
 
 		B.NOTDisplayedOnInvalidFormat();
-
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Mobile Number</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + Mobilenumber + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Mobile Number" }, { Mobilenumber },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		
+		LoginInputDatas("Mobile Number", Mobilenumber);
 
 	}
 
@@ -2824,22 +2297,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClearOnTelephonePersonal();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Telephone</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + Telephone + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Telephone" }, { Telephone },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
-
+		LoginInputDatas("Telephone", Telephone);
 	}
 
 	@Then("the \"Telephone\" field should not allow inputs with more digits than required in Personal Info using sheetname {string} and rownumber {int}")
@@ -2878,21 +2336,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClearOnTelephonePersonal();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Telephone</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + Telephone + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Telephone" }, { Telephone },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		LoginInputDatas("Telephone", Telephone);
 
 	}
 
@@ -2922,33 +2366,16 @@ public class AggregatorOnboardingTestcases {
 		A.EnterOnTelephonePersonal(Telephone);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
-
+	  
+		performTabKeyPress();
+		
 		B.DisplayedOnThisInvalidFormat();
 
 		Thread.sleep(2000);
 
 		A.ClearOnTelephonePersonal();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Telephone</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + Telephone + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Telephone" }, { Telephone },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		LoginInputDatas("Telephone", Telephone);
 
 	}
 
@@ -3053,22 +2480,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClearOnEmailPersonal();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Email</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + emailid + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Email" }, { emailid },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
-
+		LoginInputDatas("Email ID", emailid);
 	}
 
 	@Then("the \"Email ID\" field should not allow inputs missing the domain name in Personal Info using sheetname {string} and rownumber {int}")
@@ -3108,22 +2520,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClearOnEmailPersonal();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Email</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + emailid + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Email" }, { emailid },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
-
+		LoginInputDatas("Email ID", emailid);
 	}
 
 	@Then("the Personal Info \"Email ID\" field should not allow consecutive dots in the email address using sheetname {string} and rownumber {int}")
@@ -3163,21 +2560,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClearOnEmailPersonal();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Email</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + emailid + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Email" }, { emailid },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		LoginInputDatas("Email ID", emailid);
 
 	}
 
@@ -3218,21 +2601,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClearOnEmailPersonal();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Email</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + emailid + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Email" }, { emailid },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		LoginInputDatas("Email ID", emailid);
 
 	}
 
@@ -3269,21 +2638,7 @@ public class AggregatorOnboardingTestcases {
 
 		B.NOTDisplayedOnInvalidFormat();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Email</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + emailid + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Email" }, { emailid },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		LoginInputDatas("Email ID", emailid);
 
 	}
 
@@ -3357,21 +2712,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClearOnNationalityPersonal();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Nationality</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + Nationality + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Nationality" }, { Nationality },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		LoginInputDatas("Nationality", Nationality);
 
 	}
 
@@ -3411,22 +2752,8 @@ public class AggregatorOnboardingTestcases {
 		Thread.sleep(2000);
 
 		A.ClearOnNationalityPersonal();
-
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Nationality</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + Nationality + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Nationality" }, { Nationality },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		
+		LoginInputDatas("Nationality", Nationality);
 
 	}
 
@@ -3455,31 +2782,14 @@ public class AggregatorOnboardingTestcases {
 		A.EnterOnNationalitypersonal(Nationality);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		Thread.sleep(2000);
 
 		B.NOTDisplayedOnInvalidFormat();
-
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Nationality</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + Nationality + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Nationality" }, { Nationality },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		
+		LoginInputDatas("Nationality", Nationality);
 
 	}
 
@@ -3519,33 +2829,15 @@ public class AggregatorOnboardingTestcases {
 		A.EnterOnAadhaarNumberPersonal(Aadhaar);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
-
+		
+		performTabKeyPress();
 		B.DisplayedOnShouldbe10digits();
 
 		Thread.sleep(2000);
 
 		A.ClearOnAadhaarNumberPersonal();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Aadhaar Number</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + Aadhaar + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Aadhaar Number" }, { Aadhaar },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		LoginInputDatas("Aadhaar Number", Aadhaar);
 
 	}
 
@@ -3578,31 +2870,13 @@ public class AggregatorOnboardingTestcases {
 
 		Thread.sleep(2000);
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		Thread.sleep(2000);
 
 		A.ClearOnAadhaarNumberPersonal();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Aadhaar Number</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + Aadhaar + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Aadhaar Number" }, { Aadhaar },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		LoginInputDatas("Aadhaar Number", Aadhaar);
 
 	}
 
@@ -3641,21 +2915,8 @@ public class AggregatorOnboardingTestcases {
 
 		B.NOTDisplayedOnInvalidFormat();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Aadhaar Number</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + Aadhaar + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Aadhaar Number" }, { Aadhaar },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+				
+		LoginInputDatas("Aadhaar Number", Aadhaar);
 
 	}
 
@@ -3706,22 +2967,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClearOnPassportNumberPersonal();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Passport</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + Passport + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Passport" }, { Passport },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
-
+		LoginInputDatas("Passport", Passport);
 	}
 
 	@Then("the \"Passport\" field should not allow special characters using sheetname {string} and rownumber {int}")
@@ -3761,21 +3007,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClearOnPassportNumberPersonal();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Passport</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + Passport + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Passport" }, { Passport },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		LoginInputDatas("Passport", Passport);
 
 	}
 
@@ -3813,22 +3045,8 @@ public class AggregatorOnboardingTestcases {
 		Thread.sleep(2000);
 
 		B.NOTDisplayedOnInvalidFormat();
-
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Passport</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + Passport + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Passport" }, { Passport },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		
+		LoginInputDatas("Passport", Passport);
 
 	}
 
@@ -3863,9 +3081,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClickOnApplyPersonal();
 
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 		Thread.sleep(2000);
 
 		B.NOTDisplayedOnInvalidFormat();
@@ -3899,875 +3115,740 @@ public class AggregatorOnboardingTestcases {
 
 		B.ClickOnNextStep();
 	}
-	
-	//Channel Config	
 
-		@When("I visit the Channel Config in Aggregator")
-		public void I_visit_the_Channel_Config() throws InterruptedException {
+	// Channel Config
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+	@When("I visit the Channel Config in Aggregator")
+	public void I_visit_the_Channel_Config() throws InterruptedException {
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			Thread.sleep(2000);
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-			A.ClickOnChannelConfig();
+		Thread.sleep(2000);
 
-		}
+		A.ClickOnChannelConfig();
 
-		@Then("the Channel Config \"Add\" button should be prompted to click in Aggregator")
-		public void the_Add_button_should_be_prompted_to_click_inchannel_config() throws InterruptedException {
+	}
 
-			B = new org.Locators.BankLocators(driver);
+	@Then("the Channel Config \"Add\" button should be prompted to click in Aggregator")
+	public void the_Add_button_should_be_prompted_to_click_inchannel_config() throws InterruptedException {
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+		B = new org.Locators.BankLocators(driver);
 
-			Thread.sleep(3000);
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-			B.ChannelADD();
-		}
+		Thread.sleep(3000);
 
-		@Then("the label name should be \"Bank Name\" in Channel Config")
-		public void labelName_should_be_bankname() {
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+		B.ChannelADD();
+	}
 
-			A.ChannelBankNameLabel();
+	@Then("the label name should be \"Bank Name\" in Channel Config")
+	public void labelName_should_be_bankname() {
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-		}
+		A.ChannelBankNameLabel();
 
-		@Then("the Channel Config \"Bank Name\" field should not allow to proceed without any input data")
-		public void the_Channel_Config_BankName_field_should_not_allow_to_proceedwithout_any_input_data()
-				throws AWTException, InterruptedException {
+	}
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+	@Then("the Channel Config \"Bank Name\" field should not allow to proceed without any input data")
+	public void the_Channel_Config_BankName_field_should_not_allow_to_proceedwithout_any_input_data()
+			throws AWTException, InterruptedException {
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			A.ClickOnChannelBankName();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
-			Robot r = new Robot();
+		A.ClickOnChannelBankName();
 
-			r.keyPress(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		Thread.sleep(2000);
 
-			r.keyRelease(KeyEvent.VK_TAB);
-			Thread.sleep(2000);
+		B.DisplayedOnThisFieldisRequired();
 
-			B.DisplayedOnThisFieldisRequired();
+	}
 
-		}
+	@Then("the Channel Config \"Bank Name\" field prompts for invalid input if a number is entered using sheetname {string} and rownumber {int}")
 
-		@Then("the Channel Config \"Bank Name\" field prompts for invalid input if a number is entered using sheetname {string} and rownumber {int}")
+	public void the_ChannelConfig_BankName_field_prompts_for_invalid_input_ifanumber_is_entered(String sheetName,
+			int rowNumber) throws InvalidFormatException, IOException, InterruptedException, AWTException {
 
-		public void the_ChannelConfig_BankName_field_prompts_for_invalid_input_ifanumber_is_entered(String sheetName,
-				int rowNumber) throws InvalidFormatException, IOException, InterruptedException, AWTException {
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		ExcelReader reader = new ExcelReader();
 
-			ExcelReader reader = new ExcelReader();
+		List<Map<String, String>> testdata = reader
+				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
 
-			List<Map<String, String>> testdata = reader
-					.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+		System.out.println("sheet name: " + testdata);
 
-			System.out.println("sheet name: " + testdata);
+		String BankName = testdata.get(rowNumber).get("Channel Bank Name");
 
-			String BankName = testdata.get(rowNumber).get("Channel Bank Name");
+		System.out.println("0" + testdata.get(0));
 
-			System.out.println("0" + testdata.get(0));
+		A.ClearOnChannelBankName();
 
-			A.ClearOnChannelBankName();
+		A.EnterOnChannelBankName(BankName);
 
-			A.EnterOnChannelBankName(BankName);
+		Thread.sleep(2000);
 
-			Thread.sleep(2000);
-			Robot r = new Robot();
+		performTabKeyPress();
 
-			r.keyPress(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
 
-			r.keyRelease(KeyEvent.VK_TAB);
+		A.DisplayedOnInvalidBankName();
 
-			Thread.sleep(2000);
+		LoginInputDatas("Bank Name", BankName);
 
-			A.DisplayedOnInvalidBankName();
+	}
 
-			test = ExtentCucumberAdapter.getCurrentStep();
+	@Then("the Channel Config \"Bank Name\" field prompts for invalid input if special characters are entered using sheetname {string} and rownumber {int}")
 
-			String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-					+ "<tr><td style='border: 1px solid black;color: black'>Bank Name</td></tr>"
-					+ "<tr><td style='border: 1px solid black;color: black'>" + BankName + "</td></tr>" + "</table>";
+	public void the_ChannelConfig_BankName_field_prompts_for_invalid_input_ifaSpecialCharacter_is_entered(
+			String sheetName, int rowNumber)
+			throws InvalidFormatException, IOException, InterruptedException, AWTException {
 
-			Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			String[][] data = { { "Bank Name" }, { BankName },
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
-			};
-			Markup m = MarkupHelper.createTable(data);
+		ExcelReader reader = new ExcelReader();
 
-			// or
-			test.log(Status.PASS, m);
+		List<Map<String, String>> testdata = reader
+				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
 
-		}
+		System.out.println("sheet name: " + testdata);
 
-		@Then("the Channel Config \"Bank Name\" field prompts for invalid input if special characters are entered using sheetname {string} and rownumber {int}")
+		String BankName = testdata.get(rowNumber).get("Channel Bank Name");
 
-		public void the_ChannelConfig_BankName_field_prompts_for_invalid_input_ifaSpecialCharacter_is_entered(
-				String sheetName, int rowNumber)
-				throws InvalidFormatException, IOException, InterruptedException, AWTException {
+		System.out.println("0" + testdata.get(0));
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+		A.ClearOnChannelBankName();
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		A.EnterOnChannelBankName(BankName);
 
-			ExcelReader reader = new ExcelReader();
+		Thread.sleep(2000);
 
-			List<Map<String, String>> testdata = reader
-					.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+		performTabKeyPress();
 
-			System.out.println("sheet name: " + testdata);
+		Thread.sleep(2000);
 
-			String BankName = testdata.get(rowNumber).get("Channel Bank Name");
+		A.DisplayedOnInvalidBankName();
 
-			System.out.println("0" + testdata.get(0));
+		LoginInputDatas("Bank Name", BankName);
+	}
 
-			A.ClearOnChannelBankName();
+	@Then("the Channel Config \"Bank Name\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
 
-			A.EnterOnChannelBankName(BankName);
+	public void the_ChannelConfig_BankName_field_prompts_for_valid_input(String sheetName, int rowNumber)
+			throws InvalidFormatException, IOException, InterruptedException, AWTException {
 
-			Thread.sleep(2000);
-			Robot r = new Robot();
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			r.keyPress(KeyEvent.VK_TAB);
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
-			r.keyRelease(KeyEvent.VK_TAB);
+		ExcelReader reader = new ExcelReader();
 
-			Thread.sleep(2000);
+		List<Map<String, String>> testdata = reader
+				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
 
-			A.DisplayedOnInvalidBankName();
+		System.out.println("sheet name: " + testdata);
 
-			test = ExtentCucumberAdapter.getCurrentStep();
+		String BankName = testdata.get(rowNumber).get("Channel Bank Name");
 
-			String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-					+ "<tr><td style='border: 1px solid black;color: black'>Bank Name</td></tr>"
-					+ "<tr><td style='border: 1px solid black;color: black'>" + BankName + "</td></tr>" + "</table>";
+		System.out.println("0" + testdata.get(0));
 
-			Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
+		A.ClearOnChannelBankName();
 
-			String[][] data = { { "Bank Name" }, { BankName },
+		A.EnterOnChannelBankName(BankName);
 
-			};
-			Markup m = MarkupHelper.createTable(data);
+		Thread.sleep(2000);
+		Robot r = new Robot();
 
-			// or
-			test.log(Status.PASS, m);
+		r.keyPress(KeyEvent.VK_DOWN);
 
-		}
+		r.keyRelease(KeyEvent.VK_DOWN);
 
-		@Then("the Channel Config \"Bank Name\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
+		Thread.sleep(3000);
 
-		public void the_ChannelConfig_BankName_field_prompts_for_valid_input(String sheetName, int rowNumber)
-				throws InvalidFormatException, IOException, InterruptedException, AWTException {
+		r.keyPress(KeyEvent.VK_ENTER);
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+		r.keyRelease(KeyEvent.VK_ENTER);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		B.NOTDisplayedOnInvalidFormat();
 
-			ExcelReader reader = new ExcelReader();
+		LoginInputDatas("Bank Name", BankName);
 
-			List<Map<String, String>> testdata = reader
-					.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+	}
 
-			System.out.println("sheet name: " + testdata);
+	@Then("the label name should be \"Channel\" in Channel Config")
+	public void labelName_should_be_Channel() {
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			String BankName = testdata.get(rowNumber).get("Channel Bank Name");
+		A.ChannelLabel();
 
-			System.out.println("0" + testdata.get(0));
+	}
 
-			A.ClearOnChannelBankName();
+	@Then("the Channel Config \"Channel\" field should not allow to proceed without any input data in Aggregator")
+	public void the_Channel_Config_POSChannel_field_should_not_allow_to_proceedwithout_any_input_data()
+			throws AWTException, InterruptedException {
 
-			A.EnterOnChannelBankName(BankName);
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			Thread.sleep(2000);
-			Robot r = new Robot();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
-			r.keyPress(KeyEvent.VK_DOWN);
+		A.ClickOnChannel();
 
-			r.keyRelease(KeyEvent.VK_DOWN);
+		Robot r = new Robot();
 
-			Thread.sleep(3000);
+		r.keyPress(KeyEvent.VK_ESCAPE);
 
-			r.keyPress(KeyEvent.VK_ENTER);
+		r.keyRelease(KeyEvent.VK_ESCAPE);
+		Thread.sleep(2000);
 
-			r.keyRelease(KeyEvent.VK_ENTER);
+		B.DisplayedOnThisFieldisRequired();
 
-			B.NOTDisplayedOnInvalidFormat();
+	}
 
-			test = ExtentCucumberAdapter.getCurrentStep();
+	@Then("the \"POS Channel\" field should prompt to select the channels based on the given input in Aggregator")
+	public void POS_Channel_fieldshould_promptto_select_thetransaction_setsbased_onthe_giveninput_inAggregator()
+			throws AWTException, InterruptedException {
 
-			String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-					+ "<tr><td style='border: 1px solid black;color: black'>Bank Name</td></tr>"
-					+ "<tr><td style='border: 1px solid black;color: black'>" + BankName + "</td></tr>" + "</table>";
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
-			String[][] data = { { "Bank Name" }, { BankName },
+		A.ClickOnChannel();
 
-			};
-			Markup m = MarkupHelper.createTable(data);
+		A.SelectOnPOSChannel();
 
-			// or
-			test.log(Status.PASS, m);
+		Thread.sleep(2000);
 
-		}
+		performTabKeyPress();
 
-		@Then("the label name should be \"Channel\" in Channel Config")
-		public void labelName_should_be_Channel() {
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+		B.NOTDisplayedOnInvalidFormat();
 
-			A.ChannelLabel();
+	}
 
-		}
+	// Network
+	@Then("the label name should be \"Network\" in Channel Config")
+	public void labelName_should_be_Network() {
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-		@Then("the Channel Config \"Channel\" field should not allow to proceed without any input data in Aggregator")
-		public void the_Channel_Config_POSChannel_field_should_not_allow_to_proceedwithout_any_input_data()
-				throws AWTException, InterruptedException {
+		A.CHannelNetworkLabel();
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+	}
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+	@Then("the Channel Config \"Network\" field should not allow to proceed without any input data in Aggregator")
+	public void the_Channel_Config_POSNetwork_field_should_not_allow_to_proceedwithout_any_input_data()
+			throws AWTException, InterruptedException {
 
-			A.ClickOnChannel();
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			Robot r = new Robot();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
-			r.keyPress(KeyEvent.VK_ESCAPE);
+		A.ClickOnChannelNetwork();
 
-			r.keyRelease(KeyEvent.VK_ESCAPE);
-			Thread.sleep(2000);
+		Robot r = new Robot();
 
-			B.DisplayedOnThisFieldisRequired();
+		r.keyPress(KeyEvent.VK_ESCAPE);
 
-		}
+		r.keyRelease(KeyEvent.VK_ESCAPE);
+		Thread.sleep(2000);
 
-		@Then("the \"POS Channel\" field should prompt to select the channels based on the given input in Aggregator")
-		public void POS_Channel_fieldshould_promptto_select_thetransaction_setsbased_onthe_giveninput_inAggregator()
-				throws AWTException, InterruptedException {
+		B.DisplayedOnThisFieldisRequired();
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+	}
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+	@Then("the \"POS Network\" field should prompt to select the channels based on the given input in Aggregator")
+	public void POS_Network_fieldshould_promptto_select_thetransaction_setsbased_onthe_giveninput_inAggregator()
+			throws AWTException, InterruptedException {
 
-			A.ClickOnChannel();
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			A.SelectOnPOSChannel();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
-			Thread.sleep(2000);
+		Thread.sleep(2000);
 
-			Robot r = new Robot();
+		A.ClickOnChannelNetwork();
 
-			r.keyPress(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
 
-			r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
-			B.NOTDisplayedOnInvalidFormat();
+		B.NOTDisplayedOnInvalidFormat();
 
-		}
+	}
 
-	//Network	
-		@Then("the label name should be \"Network\" in Channel Config")
-		public void labelName_should_be_Network() {
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
-
-			A.CHannelNetworkLabel();
-
-		}
-
-		@Then("the Channel Config \"Network\" field should not allow to proceed without any input data in Aggregator")
-		public void the_Channel_Config_POSNetwork_field_should_not_allow_to_proceedwithout_any_input_data()
-				throws AWTException, InterruptedException {
-
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
-
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-			A.ClickOnChannelNetwork();
-
-			Robot r = new Robot();
-
-			r.keyPress(KeyEvent.VK_ESCAPE);
-
-			r.keyRelease(KeyEvent.VK_ESCAPE);
-			Thread.sleep(2000);
-
-			B.DisplayedOnThisFieldisRequired();
-
-		}
-
-		@Then("the \"POS Network\" field should prompt to select the channels based on the given input in Aggregator")
-		public void POS_Network_fieldshould_promptto_select_thetransaction_setsbased_onthe_giveninput_inAggregator()
-				throws AWTException, InterruptedException {
-
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
-
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-			Thread.sleep(2000);
-
-			A.ClickOnChannelNetwork();
-
-			Thread.sleep(2000);
-
-			Robot r = new Robot();
-
-			r.keyPress(KeyEvent.VK_TAB);
-
-			r.keyRelease(KeyEvent.VK_TAB);
-
-			B.NOTDisplayedOnInvalidFormat();
-
-		}
-
-		
-		
 	// TransactionSets
-		@Then("the label name should be \"Transaction Sets\" in Channel Config")
-		public void labelName_should_be_Transactionsets() {
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+	@Then("the label name should be \"Transaction Sets\" in Channel Config")
+	public void labelName_should_be_Transactionsets() {
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			A.ChannelTransactionsetsLabel();
+		A.ChannelTransactionsetsLabel();
 
-		}
+	}
 
-		@Then("the Channel Config \"Transaction Sets\" field should not allow to proceed without any input data in Aggregator")
-		public void the_Channel_Config_TransactionSets_field_should_not_allow_to_proceedwithout_any_input_data()
-				throws AWTException, InterruptedException {
+	@Then("the Channel Config \"Transaction Sets\" field should not allow to proceed without any input data in Aggregator")
+	public void the_Channel_Config_TransactionSets_field_should_not_allow_to_proceedwithout_any_input_data()
+			throws AWTException, InterruptedException {
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
-			A.ClickOnChannelTransactionsets();
+		A.ClickOnChannelTransactionsets();
 
-			Robot r = new Robot();
+		Robot r = new Robot();
 
-			r.keyPress(KeyEvent.VK_ESCAPE);
+		r.keyPress(KeyEvent.VK_ESCAPE);
 
-			r.keyRelease(KeyEvent.VK_ESCAPE);
-			Thread.sleep(2000);
+		r.keyRelease(KeyEvent.VK_ESCAPE);
+		Thread.sleep(2000);
 
-			B.DisplayedOnThisFieldisRequired();
+		B.DisplayedOnThisFieldisRequired();
 
-		}
+	}
 
-		@Then("the \"POS Transaction Sets\" field should prompt to select the transaction sets based on the given input in Aggregator")
-		public void POSTransaction_Sets_fieldshould_promptto_select_thetransaction_setsbased_onthe_giveninput_inAggregator()
-				throws AWTException, InterruptedException {
+	@Then("the \"POS Transaction Sets\" field should prompt to select the transaction sets based on the given input in Aggregator")
+	public void POSTransaction_Sets_fieldshould_promptto_select_thetransaction_setsbased_onthe_giveninput_inAggregator()
+			throws AWTException, InterruptedException {
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
-			A.ClickOnChannelTransactionsets();
+		A.ClickOnChannelTransactionsets();
 
-			Thread.sleep(2000);
+		Thread.sleep(2000);
 
-			Robot r = new Robot();
+		Robot r = new Robot();
 
-			r.keyPress(KeyEvent.VK_ENTER);
+		r.keyPress(KeyEvent.VK_ENTER);
 
-			r.keyRelease(KeyEvent.VK_ENTER);
-			Thread.sleep(1000);
+		r.keyRelease(KeyEvent.VK_ENTER);
+		Thread.sleep(1000);
 
-			r.keyPress(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
-			r.keyRelease(KeyEvent.VK_TAB);
+		B.NOTDisplayedOnInvalidFormat();
 
-			B.NOTDisplayedOnInvalidFormat();
+	}
 
-		}
+	@Then("the label name should be \"Start Date\" in Channel Config")
+	public void labelName_should_be_Startdate() {
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-		@Then("the label name should be \"Start Date\" in Channel Config")
-		public void labelName_should_be_Startdate() {
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+		A.ChannelStartDateLabel();
 
-			A.ChannelStartDateLabel();
+	}
 
-		}
+	@Then("the \"Start Date\" field should prompt to select the transaction sets based on the given input in Aggregator")
+	public void POSStartDate_fieldshould_promptto_select_thetransaction_setsbased_onthe_giveninput_inAggregator()
+			throws AWTException, InterruptedException {
 
-		@Then("the \"Start Date\" field should prompt to select the transaction sets based on the given input in Aggregator")
-		public void POSStartDate_fieldshould_promptto_select_thetransaction_setsbased_onthe_giveninput_inAggregator()
-				throws AWTException, InterruptedException {
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		A.ClickOnChannelStartDate();
 
-			A.ClickOnChannelStartDate();
+		Thread.sleep(2000);
 
-			Thread.sleep(2000);
+		A.ClickOnChannelApply();
+		performTabKeyPress();
 
-			A.ClickOnChannelApply();
+		B.NOTDisplayedOnInvalidFormat();
 
-			Robot r = new Robot();
+	}
 
-			r.keyPress(KeyEvent.VK_TAB);
+	@Then("the label name should be \"END Date\" in Channel Config")
+	public void labelName_should_be_Enddate() {
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			r.keyRelease(KeyEvent.VK_TAB);
+		A.ChannelEndDateLabel();
 
-			B.NOTDisplayedOnInvalidFormat();
+	}
 
-		}
+	@Then("the \"End Date\" field should prompt to select the transaction sets based on the given input in Aggregator")
+	public void POSEndDate_fieldshould_promptto_select_thetransaction_setsbased_onthe_giveninput_inAggregator()
+			throws AWTException, InterruptedException {
 
-		@Then("the label name should be \"END Date\" in Channel Config")
-		public void labelName_should_be_Enddate() {
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			A.ChannelEndDateLabel();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
-		}
+		A.ClickOnChannelENDDate();
 
-		@Then("the \"End Date\" field should prompt to select the transaction sets based on the given input in Aggregator")
-		public void POSEndDate_fieldshould_promptto_select_thetransaction_setsbased_onthe_giveninput_inAggregator()
-				throws AWTException, InterruptedException {
+		Thread.sleep(2000);
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+		A.ClickOnChannelApply();
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		performTabKeyPress();
 
-			A.ClickOnChannelENDDate();
+		B.NOTDisplayedOnInvalidFormat();
 
-			Thread.sleep(2000);
+	}
 
-			A.ClickOnChannelApply();
+	@Then("the \"Save\" button should be prompted to click on POS Channel Config")
+	public void Save_button_to_clickOn_POS_Channel_Config() throws InterruptedException {
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			Robot r = new Robot();
+		Thread.sleep(2000);
 
-			r.keyPress(KeyEvent.VK_TAB);
+		A.ClickOnChannelSave();
 
-			r.keyRelease(KeyEvent.VK_TAB);
+	}
 
-			B.NOTDisplayedOnInvalidFormat();
+	@Then("the \"Save\" button should be prompted to click on AEPS Channel Config")
+	public void Save_button_to_clickOn_AEPS_Channel_Config() throws InterruptedException {
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-		}
+		Thread.sleep(2000);
 
-		@Then("the \"Save\" button should be prompted to click on POS Channel Config")
-		public void Save_button_to_clickOn_POS_Channel_Config() throws InterruptedException {
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+		A.ClickOnChannelSave();
 
-			Thread.sleep(2000);
+	}
 
-			A.ClickOnChannelSave();
+	@Then("the \"Save\" button should be prompted to click on UPI Channel Config")
+	public void Save_button_to_clickOn_UPI_Channel_Config() throws InterruptedException {
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-		}
-		
-		@Then("the \"Save\" button should be prompted to click on AEPS Channel Config")
-		public void Save_button_to_clickOn_AEPS_Channel_Config() throws InterruptedException {
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+		Thread.sleep(2000);
 
-			Thread.sleep(2000);
+		A.ClickOnChannelSave();
 
-			A.ClickOnChannelSave();	
+	}
 
-		}
-		
-		@Then("the \"Save\" button should be prompted to click on UPI Channel Config")
-		public void Save_button_to_clickOn_UPI_Channel_Config() throws InterruptedException {
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+	@Then("the \"UPI Channel\" field should prompt to select the channels based on the given input in Aggregator")
+	public void UPI_Channel_fieldshould_promptto_select_thetransaction_setsbased_onthe_giveninput_inAggregator()
+			throws AWTException, InterruptedException {
 
-			Thread.sleep(2000);
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			A.ClickOnChannelSave();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
-		}
+		A.ClickOnChannel();
 
-		@Then("the \"UPI Channel\" field should prompt to select the channels based on the given input in Aggregator")
-		public void UPI_Channel_fieldshould_promptto_select_thetransaction_setsbased_onthe_giveninput_inAggregator()
-				throws AWTException, InterruptedException {
+		Thread.sleep(2000);
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+		A.SelectonUPIChannel();
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		Thread.sleep(2000);
 
-			A.ClickOnChannel();
-			
-			Thread.sleep(2000);	
+		performTabKeyPress();
 
-			A.SelectonUPIChannel();
+		B.NOTDisplayedOnInvalidFormat();
 
-			Thread.sleep(2000);
+	}
 
-			Robot r = new Robot();
+	@Then("the \"UPI Transaction Sets\" field should prompt to select the transaction sets based on the given input in Aggregator")
+	public void UPIransaction_Sets_fieldshould_promptto_select_thetransaction_setsbased_onthe_giveninput_inAggregator()
+			throws AWTException, InterruptedException {
 
-			r.keyPress(KeyEvent.VK_TAB);
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			r.keyRelease(KeyEvent.VK_TAB);
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
-			B.NOTDisplayedOnInvalidFormat();
+		A.ClickOnChannelTransactionsets();
 
-		}
+		Thread.sleep(2000);
 
-		@Then("the \"UPI Transaction Sets\" field should prompt to select the transaction sets based on the given input in Aggregator")
-		public void UPIransaction_Sets_fieldshould_promptto_select_thetransaction_setsbased_onthe_giveninput_inAggregator()
-				throws AWTException, InterruptedException {
+		Robot r = new Robot();
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+		r.keyPress(KeyEvent.VK_ENTER);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		r.keyRelease(KeyEvent.VK_ENTER);
+		Thread.sleep(1000);
 
-			A.ClickOnChannelTransactionsets();
+		performTabKeyPress();
 
-			Thread.sleep(2000);
+		B.NOTDisplayedOnInvalidFormat();
 
-			Robot r = new Robot();
+	}
 
-			r.keyPress(KeyEvent.VK_ENTER);
+	@Then("the \"AEPS Channel\" field should prompt to select the channels based on the given input in Aggregator")
+	public void AEPS_Channel_fieldshould_promptto_select_thetransaction_setsbased_onthe_giveninput_inAggregator()
+			throws AWTException, InterruptedException {
 
-			r.keyRelease(KeyEvent.VK_ENTER);
-			Thread.sleep(1000);
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			r.keyPress(KeyEvent.VK_TAB);
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
-			r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(2000);
 
-			B.NOTDisplayedOnInvalidFormat();
+		A.ClickOnChannel();
 
-		}
+		Thread.sleep(2000);
 
-		@Then("the \"AEPS Channel\" field should prompt to select the channels based on the given input in Aggregator")
-		public void AEPS_Channel_fieldshould_promptto_select_thetransaction_setsbased_onthe_giveninput_inAggregator()
-				throws AWTException, InterruptedException {
+		A.SelectOnAEPSChannel();
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+		Thread.sleep(2000);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-			
-			Thread.sleep(2000);
+		performTabKeyPress();
 
-			A.ClickOnChannel();
-			
-			Thread.sleep(2000);
+		B.NOTDisplayedOnInvalidFormat();
 
-			A.SelectOnAEPSChannel();
+	}
 
-			Thread.sleep(2000);
+	@Then("the \"AEPS Transaction Sets\" field should prompt to select the transaction sets based on the given input in Aggregator")
+	public void AEPSransaction_Sets_fieldshould_promptto_select_thetransaction_setsbased_onthe_giveninput_inAggregator()
+			throws AWTException, InterruptedException {
 
-			Robot r = new Robot();
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			r.keyPress(KeyEvent.VK_TAB);
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
-			r.keyRelease(KeyEvent.VK_TAB);
+		A.ClickOnChannelTransactionsets();
 
-			B.NOTDisplayedOnInvalidFormat();
+		Thread.sleep(2000);
 
-		}
+		Robot r = new Robot();
 
-		@Then("the \"AEPS Transaction Sets\" field should prompt to select the transaction sets based on the given input in Aggregator")
-		public void AEPSransaction_Sets_fieldshould_promptto_select_thetransaction_setsbased_onthe_giveninput_inAggregator()
-				throws AWTException, InterruptedException {
+		r.keyPress(KeyEvent.VK_ENTER);
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+		r.keyRelease(KeyEvent.VK_ENTER);
+		Thread.sleep(1000);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		performTabKeyPress();
 
-			A.ClickOnChannelTransactionsets();
+		B.NOTDisplayedOnInvalidFormat();
 
-			Thread.sleep(2000);
+	}
 
-			Robot r = new Robot();
+	// KYC
 
-			r.keyPress(KeyEvent.VK_ENTER);
+	@When("I visit the KYC in Aggregator")
+	public void I_visit_the_KYC_in_Aggregator() throws InterruptedException {
 
-			r.keyRelease(KeyEvent.VK_ENTER);
-			Thread.sleep(1000);
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			r.keyPress(KeyEvent.VK_TAB);
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-			r.keyRelease(KeyEvent.VK_TAB);
+		Thread.sleep(17000);
 
-			B.NOTDisplayedOnInvalidFormat();
+		A.ClickOnKYC();
 
-		}
+	}
 
-	//KYC
+	@Then("the KYC \"Company PAN\" field should not allow to proceed without any input data in Aggregator")
+	public void the_KYC_CompanyPAN_field_should_not_allow_to_proceedwithout_any_input_data()
+			throws AWTException, InterruptedException {
 
-		@When("I visit the KYC in Aggregator")
-		public void I_visit_the_KYC_in_Aggregator() throws InterruptedException {
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+		Thread.sleep(4000);
 
-			Thread.sleep(17000);
+		B.ClickOnNextStep();
 
-			A.ClickOnKYC();
+		A.DisplayedOnInvalidDocumenterror();
 
-		}
+	}
 
-		@Then("the KYC \"Company PAN\" field should not allow to proceed without any input data in Aggregator")
-		public void the_KYC_CompanyPAN_field_should_not_allow_to_proceedwithout_any_input_data()
-				throws AWTException, InterruptedException {
+	@Then("the KYC \"Company PAN\" field should prompt a selection based on the uploaded image in the Aggregator using sheetname {string} and rownumber {int}")
+	public void the_KYC_CompanyPAN_Certificate_fieldshouldprompt_aselectionbased_onthe_uploadedimage_inthe_Aggregator(
+			String sheetName, int rowNumber)
+			throws InvalidFormatException, IOException, InterruptedException, AWTException {
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
-			Thread.sleep(4000);
+		ExcelReader reader = new ExcelReader();
 
-			B.ClickOnNextStep();
+		List<Map<String, String>> testdata = reader
+				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
 
-			A.DisplayedOnInvalidDocumenterror();
+		System.out.println("sheet name: " + testdata);
 
-		}
+		String panImage = testdata.get(rowNumber).get("Company Pan Image");
 
-		@Then("the KYC \"Company PAN\" field should prompt a selection based on the uploaded image in the Aggregator using sheetname {string} and rownumber {int}")
-		public void the_KYC_CompanyPAN_Certificate_fieldshouldprompt_aselectionbased_onthe_uploadedimage_inthe_Aggregator(
-				String sheetName, int rowNumber)
-				throws InvalidFormatException, IOException, InterruptedException, AWTException {
+		System.out.println("0" + testdata.get(0));
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
-
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader
-					.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
-
-			System.out.println("sheet name: " + testdata);
-
-			String panImage = testdata.get(rowNumber).get("Company Pan Image");
-
-			System.out.println("0" + testdata.get(0));
-
-			A.UploadCompanyPAN(panImage);
+		A.UploadCompanyPAN(panImage);
 
 //		    	driver.switchTo().activeElement().sendKeys(panImage);
 
-			Thread.sleep(2000);
+		Thread.sleep(2000);
 
-			B.NOTDisplayedOnInvalidFormat();
+		B.NOTDisplayedOnInvalidFormat();
 
-			test = ExtentCucumberAdapter.getCurrentStep();
+		LoginInputDatas("Pan Image", panImage);
 
-			String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-					+ "<tr><td style='border: 1px solid black;color: black'>Upload Pan Image Link</td></tr>"
-					+ "<tr><td style='border: 1px solid black;color: black'>" + panImage + "</td></tr>" + "</table>";
+		B.NOTDisplayedOnInvalidFormat();
 
-			Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
+	}
 
-			String[][] data = { { "Upload Pan Image Link" }, { panImage },
+	@Then("the KYC \"GST Registration Certificate\" field should not allow to proceed without any input data in Aggregator")
+	public void the_KYC_GST_RegistrationCertificate_field_should_not_allow_to_proceedwithout_any_input_data()
+			throws AWTException, InterruptedException {
 
-			};
-			Markup m = MarkupHelper.createTable(data);
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			// or
-			test.log(Status.PASS, m);
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
-			B.NOTDisplayedOnInvalidFormat();
+		B.ClickOnNextStep();
 
-		}
+		A.DisplayedOnInvalidDocumenterror();
 
-		@Then("the KYC \"GST Registration Certificate\" field should not allow to proceed without any input data in Aggregator")
-		public void the_KYC_GST_RegistrationCertificate_field_should_not_allow_to_proceedwithout_any_input_data()
-				throws AWTException, InterruptedException {
+	}
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+	@Then("the KYC \"GST Registration Certificate\" field should prompt a selection based on the uploaded image in the Aggregator using sheetname {string} and rownumber {int}")
+	public void the_KYC_GSTRegistration_Certificate_fieldshouldprompt_aselectionbased_onthe_uploadedimage_inthe_Aggregator(
+			String sheetName, int rowNumber)
+			throws InvalidFormatException, IOException, InterruptedException, AWTException {
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			B.ClickOnNextStep();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
-			A.DisplayedOnInvalidDocumenterror();
+		ExcelReader reader = new ExcelReader();
 
-		}
+		List<Map<String, String>> testdata = reader
+				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
 
-		@Then("the KYC \"GST Registration Certificate\" field should prompt a selection based on the uploaded image in the Aggregator using sheetname {string} and rownumber {int}")
-		public void the_KYC_GSTRegistration_Certificate_fieldshouldprompt_aselectionbased_onthe_uploadedimage_inthe_Aggregator(
-				String sheetName, int rowNumber)
-				throws InvalidFormatException, IOException, InterruptedException, AWTException {
+		System.out.println("sheet name: " + testdata);
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+		String gst = testdata.get(rowNumber).get("GST Registration Certificate");
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		System.out.println("0" + testdata.get(0));
 
-			ExcelReader reader = new ExcelReader();
+		A.UploadGSTCertificate(gst);
 
-			List<Map<String, String>> testdata = reader
-					.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+		// driver.switchTo().activeElement().sendKeys(gst);
 
-			System.out.println("sheet name: " + testdata);
+		Thread.sleep(2000);
 
-			String gst = testdata.get(rowNumber).get("GST Registration Certificate");
+		B.NOTDisplayedOnInvalidFormat();
 
-			System.out.println("0" + testdata.get(0));
+		LoginInputDatas("GST Certificate Image", gst);
 
-			A.UploadGSTCertificate(gst);
+		B.NOTDisplayedOnInvalidFormat();
 
-			// driver.switchTo().activeElement().sendKeys(gst);
+	}
 
-			Thread.sleep(2000);
+	@Then("the KYC \"Aadhaar\" field should prompt a selection based on the uploaded image in the Aggregator using sheetname {string} and rownumber {int}")
+	public void the_KYC_Aadhaar_fieldshouldprompt_aselectionbased_onthe_uploadedimage_inthe_Aggregator(String sheetName,
+			int rowNumber) throws InvalidFormatException, IOException, InterruptedException, AWTException {
 
-			B.NOTDisplayedOnInvalidFormat();
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			test = ExtentCucumberAdapter.getCurrentStep();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
-			String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-					+ "<tr><td style='border: 1px solid black;color: black'>GST Certificate Image Link</td></tr>"
-					+ "<tr><td style='border: 1px solid black;color: black'>" + gst + "</td></tr>" + "</table>";
+		ExcelReader reader = new ExcelReader();
 
-			Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
+		List<Map<String, String>> testdata = reader
+				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
 
-			String[][] data = { { "GST Certificate Image Link" }, { gst },
+		System.out.println("sheet name: " + testdata);
 
-			};
-			Markup m = MarkupHelper.createTable(data);
+		String Aadhaar = testdata.get(rowNumber).get("Aadhaar Image");
 
-			// or
-			test.log(Status.PASS, m);
+		System.out.println("0" + testdata.get(0));
 
-			B.NOTDisplayedOnInvalidFormat();
+		A.Aadhaar(Aadhaar);
 
-		}
-		
-		
-		@Then("the KYC \"Aadhaar\" field should prompt a selection based on the uploaded image in the Aggregator using sheetname {string} and rownumber {int}")
-		public void the_KYC_Aadhaar_fieldshouldprompt_aselectionbased_onthe_uploadedimage_inthe_Aggregator(
-				String sheetName, int rowNumber)
-				throws InvalidFormatException, IOException, InterruptedException, AWTException {
+		// driver.switchTo().activeElement().sendKeys(gst);
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+		Thread.sleep(2000);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		B.NOTDisplayedOnInvalidFormat();
 
-			ExcelReader reader = new ExcelReader();
+		LoginInputDatas("Aadhaar Image", Aadhaar);
 
-			List<Map<String, String>> testdata = reader
-					.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+		B.NOTDisplayedOnInvalidFormat();
 
-			System.out.println("sheet name: " + testdata);
+	}
 
-			String Aadhaar = testdata.get(rowNumber).get("Aadhaar Image");
+	// RiskInfo
 
-			System.out.println("0" + testdata.get(0));
+	@When("I visit the Risk Info")
+	public void I_visit_RiskInfo() throws InterruptedException {
 
-			A.Aadhaar(Aadhaar);
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			// driver.switchTo().activeElement().sendKeys(gst);
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-			Thread.sleep(2000);
+		Thread.sleep(3000);
 
-			B.NOTDisplayedOnInvalidFormat();
+		A.ClickOnRiskInfo();
 
-			test = ExtentCucumberAdapter.getCurrentStep();
+	}
 
-			String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-					+ "<tr><td style='border: 1px solid black;color: black'>Aadhaar Image Link</td></tr>"
-					+ "<tr><td style='border: 1px solid black;color: black'>" + Aadhaar + "</td></tr>" + "</table>";
+	@Then("the FRMParameterscheckbox should be checked")
 
-			Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
+	public void the_FRMParameterscheckbox_shouldbe_checked() throws InterruptedException {
 
-			String[][] data = { { "Aadhaar Image Link" }, { Aadhaar },
+		B = new org.Locators.BankLocators(driver);
 
-			};
-			Markup m = MarkupHelper.createTable(data);
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-			// or
-			test.log(Status.PASS, m);
+		Thread.sleep(3000);
 
-			B.NOTDisplayedOnInvalidFormat();
+		B.checkboxGlobalfrm();
 
-		}
+	}
 
-	
+	@Then("the FRMParameterscheckbox should be unchecked")
 
+	public void the_FRMParameterscheckbox_shouldbe_unchecked() throws InterruptedException {
 
+		B = new org.Locators.BankLocators(driver);
 
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-	//RiskInfo	
+		Thread.sleep(3000);
 
-		@When("I visit the Risk Info")
-		public void I_visit_RiskInfo() throws InterruptedException {
+		B.uncheckboxGlobalfrm();
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+		Thread.sleep(4000);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+		B.checkboxGlobalfrm();
 
-			Thread.sleep(3000);
-
-			A.ClickOnRiskInfo();
-
-		}
-
-		@Then("the FRMParameterscheckbox should be checked")
-
-		public void the_FRMParameterscheckbox_shouldbe_checked() throws InterruptedException {
-
-			B = new org.Locators.BankLocators(driver);
-
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
-
-			Thread.sleep(3000);
-
-			B.checkboxGlobalfrm();
-
-		}
-
-		@Then("the FRMParameterscheckbox should be unchecked")
-
-		public void the_FRMParameterscheckbox_shouldbe_unchecked() throws InterruptedException {
-
-			B = new org.Locators.BankLocators(driver);
-
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
-
-			Thread.sleep(3000);
-
-			B.uncheckboxGlobalfrm();
-
-			Thread.sleep(4000);
-
-			B.checkboxGlobalfrm();
-
-		}
+	}
 
 	@When("I click on the \"Velocity Check Minutes\" field in Risk Info")
 	public void I_Click_On_the_VelocityCheckMinutes_Field() {
@@ -4801,11 +3882,8 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClickOnVelocityCheckMinute();
 
-		Robot r = new Robot();
+		performTabKeyPress();
 
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -4835,11 +3913,7 @@ public class AggregatorOnboardingTestcases {
 		A.EnterOnVelocityCheckMinute(VelocityCheckMinutes);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
@@ -4877,11 +3951,8 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClickOnVelocityCheckCount();
 
-		Robot r = new Robot();
+		performTabKeyPress();
 
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -4911,31 +3982,12 @@ public class AggregatorOnboardingTestcases {
 		A.EnterOnVelocityCheckCount(VelocityCheckCount);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
 
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Velocity Check Count</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + VelocityCheckCount + "</td></tr>"
-				+ "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Velocity Check Count" }, { VelocityCheckCount },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
-
+		LoginInputDatas("Velocity Check Count", VelocityCheckCount);
 	}
 
 	@When("I click on the \"Cash@POS Count\" field in Risk Info")
@@ -4970,11 +4022,8 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClickOnCashpOScount();
 
-		Robot r = new Robot();
+		performTabKeyPress();
 
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -5004,29 +4053,12 @@ public class AggregatorOnboardingTestcases {
 		A.EnterOnCashpOScount(CashPOSCount);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
 
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>CashPOSCount</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + CashPOSCount + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "CashPOSCount" }, { CashPOSCount },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		LoginInputDatas("CashPOSCount", CashPOSCount);
 
 	}
 
@@ -5094,11 +4126,8 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClickonICAdaily();
 
-		Robot r = new Robot();
+		performTabKeyPress();
 
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -5130,30 +4159,12 @@ public class AggregatorOnboardingTestcases {
 		A.EnteronICAdaily(ICADAILY);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
 
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>ICA DAILY</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + ICADAILY + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "ICA DAILY" }, { ICADAILY },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
-
+		LoginInputDatas("ICA DAILY", ICADAILY);
 	}
 
 //ICA Weekly					
@@ -5190,11 +4201,7 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClickonICAWeekly();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -5226,11 +4233,8 @@ public class AggregatorOnboardingTestcases {
 		A.EnteronICAWeekly(ICAWEEKLY);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
 
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.MustbegreaterthanDailyLimit();
 
@@ -5263,29 +4267,12 @@ public class AggregatorOnboardingTestcases {
 		A.EnteronICAWeekly(ICAWEEKLY);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
 
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>ICA WEEKLY</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + ICAWEEKLY + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "ICA WEEKLY" }, { ICAWEEKLY },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		LoginInputDatas("ICA WEEKLY", ICAWEEKLY);
 
 	}
 
@@ -5323,11 +4310,8 @@ public class AggregatorOnboardingTestcases {
 
 		A.ClickonICAMonthly();
 
-		Robot r = new Robot();
+		performTabKeyPress();
 
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -5360,11 +4344,8 @@ public class AggregatorOnboardingTestcases {
 		A.EnteronICAMonthly(ICAMonthly);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
 
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.Mustbegreaterthanweeklylimit();
 
@@ -5397,29 +4378,11 @@ public class AggregatorOnboardingTestcases {
 		A.EnteronICAMonthly(ICAMonthly);
 
 		Thread.sleep(1000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>ICA MONTHLY</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + ICAMonthly + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "ICA MONTHLY" }, { ICAMonthly },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		LoginInputDatas("ICA MONTHLY", ICAMonthly);
 
 	}
 
@@ -5436,233 +4399,231 @@ public class AggregatorOnboardingTestcases {
 		B.ClickOnNextStep();
 
 	}
-	
-	
-	//Settlement Info	
 
-		@Then("the label name should be \"Settlement Mode\"")
-		public void the_label_Name_Should_be_SettlementType() {
+	// Settlement Info
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+	@Then("the label name should be \"Settlement Mode\"")
+	public void the_label_Name_Should_be_SettlementType() {
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			A.SettlementModeLabel();
-		}
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		@Then("the Settlement Info \"Settlement Mode\" field should not allow proceeding without any input data")
-		public void SettlementInfo_SettlementType_field_Shouldnot_allow_Proceeding_without_any_Input_data()
-				throws InterruptedException, AWTException {
+		A.SettlementModeLabel();
+	}
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+	@Then("the Settlement Info \"Settlement Mode\" field should not allow proceeding without any input data")
+	public void SettlementInfo_SettlementType_field_Shouldnot_allow_Proceeding_without_any_Input_data()
+			throws InterruptedException, AWTException {
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			Thread.sleep(3000);
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-			A.ClickOnSettlementMode();
+		Thread.sleep(3000);
 
-			Thread.sleep(2000);
-			Robot r = new Robot();
+		A.ClickOnSettlementMode();
 
-			r.keyPress(KeyEvent.VK_ESCAPE);
+		Thread.sleep(2000);
+		Robot r = new Robot();
 
-			r.keyRelease(KeyEvent.VK_ESCAPE);
+		r.keyPress(KeyEvent.VK_ESCAPE);
 
-			B.DisplayedOnThisFieldisRequired();
+		r.keyRelease(KeyEvent.VK_ESCAPE);
 
-		}
+		B.DisplayedOnThisFieldisRequired();
 
-		@Then("the Settlement Info \"Settlement Mode\" dropdown should prompt to select valid inputs")
-		public void the_settlement_SettlementType_dropdown_Should_Prompt_toSelect_Valid_inputs()
-				throws InterruptedException {
+	}
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+	@Then("the Settlement Info \"Settlement Mode\" dropdown should prompt to select valid inputs")
+	public void the_settlement_SettlementType_dropdown_Should_Prompt_toSelect_Valid_inputs()
+			throws InterruptedException {
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			Thread.sleep(3000);
-			A.ClickOnSettlementMode();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-			Thread.sleep(3000);
-			A.SelectOnSettlementMode();
-		}
+		Thread.sleep(3000);
+		A.ClickOnSettlementMode();
 
-		@Then("the label name should be \"Payment Flag\"")
-		public void the_label_Name_Should_be_paymentflag() {
+		Thread.sleep(3000);
+		A.SelectOnSettlementMode();
+	}
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+	@Then("the label name should be \"Payment Flag\"")
+	public void the_label_Name_Should_be_paymentflag() {
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			A.PaymentFlagLabel();
-		}
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		@Then("the Settlement Info \"Payment Flag\" field should not allow proceeding without any input data")
-		public void SettlementInfo_PaymentFlag_field_Shouldnot_allow_Proceeding_without_any_Input_data()
-				throws InterruptedException, AWTException {
+		A.PaymentFlagLabel();
+	}
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+	@Then("the Settlement Info \"Payment Flag\" field should not allow proceeding without any input data")
+	public void SettlementInfo_PaymentFlag_field_Shouldnot_allow_Proceeding_without_any_Input_data()
+			throws InterruptedException, AWTException {
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			Thread.sleep(3000);
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-			A.ClickOnPaymentFlag();
+		Thread.sleep(3000);
 
-			Thread.sleep(2000);
-			Robot r = new Robot();
+		A.ClickOnPaymentFlag();
 
-			r.keyPress(KeyEvent.VK_ESCAPE);
+		Thread.sleep(2000);
+		Robot r = new Robot();
 
-			r.keyRelease(KeyEvent.VK_ESCAPE);
+		r.keyPress(KeyEvent.VK_ESCAPE);
 
-			B.DisplayedOnThisFieldisRequired();
+		r.keyRelease(KeyEvent.VK_ESCAPE);
 
-		}
+		B.DisplayedOnThisFieldisRequired();
 
-		@Then("the Settlement Info \"Payment Flag\" dropdown should prompt to select valid inputs")
-		public void the_settlement_PaymentFlag_dropdown_Should_Prompt_toSelect_Valid_inputs() throws InterruptedException {
+	}
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+	@Then("the Settlement Info \"Payment Flag\" dropdown should prompt to select valid inputs")
+	public void the_settlement_PaymentFlag_dropdown_Should_Prompt_toSelect_Valid_inputs() throws InterruptedException {
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			Thread.sleep(3000);
-			A.ClickOnPaymentFlag();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-			Thread.sleep(3000);
-			A.SelectOnPaymentFlag();
-		}
+		Thread.sleep(3000);
+		A.ClickOnPaymentFlag();
 
-	//WhiteLabel
+		Thread.sleep(3000);
+		A.SelectOnPaymentFlag();
+	}
 
-		@Then("the \"Whitelabel\" label name should be \"Allow to Create Merchant User\"")
-		public void the_whitelabel_labelName_Shouldbe_CreateMerchantUser() {
+	// WhiteLabel
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+	@Then("the \"Whitelabel\" label name should be \"Allow to Create Merchant User\"")
+	public void the_whitelabel_labelName_Shouldbe_CreateMerchantUser() {
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			A.AllowtocreateMerchantLabel();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		}
+		A.AllowtocreateMerchantLabel();
 
-		@Then("the Whitelabel \"Allow to Create Merchant User\" dropdown should prompt to select valid inputs")
-		public void the_Whitelabel_MerchantUser_dropdown_should_prompt_to_select_valid_inputs()
-				throws InterruptedException {
+	}
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+	@Then("the Whitelabel \"Allow to Create Merchant User\" dropdown should prompt to select valid inputs")
+	public void the_Whitelabel_MerchantUser_dropdown_should_prompt_to_select_valid_inputs()
+			throws InterruptedException {
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			Thread.sleep(1000);
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-			A.ClickOnAllowCreateMerchantOnboard();
+		Thread.sleep(1000);
 
-			Thread.sleep(2000);
+		A.ClickOnAllowCreateMerchantOnboard();
 
-			B.SelectOnWhiteLabelYes();
+		Thread.sleep(2000);
 
-		}
+		B.SelectOnWhiteLabelYes();
 
-		@Then("the \"Whitelabel\" label name should be \"UserName As\"")
-		public void the_whitelabel_labelName_Shouldbe_UserNameAs() {
+	}
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+	@Then("the \"Whitelabel\" label name should be \"UserName As\"")
+	public void the_whitelabel_labelName_Shouldbe_UserNameAs() {
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			A.UserNameAsLabel();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		}
+		A.UserNameAsLabel();
 
-		@Then("the Whitelabel \"UserName As\" dropdown should prompt to select valid inputs")
-		public void the_Whitelabel_UserNameAs_dropdown_should_prompt_to_select_valid_inputs() throws InterruptedException {
+	}
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+	@Then("the Whitelabel \"UserName As\" dropdown should prompt to select valid inputs")
+	public void the_Whitelabel_UserNameAs_dropdown_should_prompt_to_select_valid_inputs() throws InterruptedException {
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			Thread.sleep(1000);
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-			A.ClickOnUserNameAs();
+		Thread.sleep(1000);
 
-			Thread.sleep(2000);
+		A.ClickOnUserNameAs();
 
-			A.SelectOnUserNameAs();
+		Thread.sleep(2000);
 
-		}
-		
+		A.SelectOnUserNameAs();
+
+	}
+
 //Discount Rate
-		
-		@When("I visit the Discount Rate")
-		public void I_visit_the_Discount_Rate() throws InterruptedException {
-			
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
-			
-			 Thread.sleep(2000);
+	@When("I visit the Discount Rate")
+	public void I_visit_the_Discount_Rate() throws InterruptedException {
 
-			A.ClickOnDiscountRate();
-			
-	
-        }
-		
-          @Then("the Discount Rate \"ADD\" button should be prompted to click")
-          public void the_DiscountRate_ADD_button_should_be_prompted_to_click() throws InterruptedException {
-        	  
-        	B = new org.Locators.BankLocators(driver);
-  			A = new org.Locators.AggregatorLocators(driver);
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-  			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-  			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
-  			
-  			Thread.sleep(3000);
-  			
-  			B.ChannelADD();
-        	  
-          }
-          
-      	@Then("the POS \"Pricing Plan\" field should prompt to select the channels based on the given input in Aggregator")
-		public void POS_PricingPlan_fieldshould_promptto_select_thetransaction_setsbased_onthe_giveninput_inAggregator()
-				throws AWTException, InterruptedException {
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+		Thread.sleep(2000);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-			
-			Thread.sleep(3000);
+		A.ClickOnDiscountRate();
 
-			A.ClickOnDiscountRatePricingPlan();
+	}
 
-			A.SelectOnPOSPricingPlan();
+	@Then("the Discount Rate \"ADD\" button should be prompted to click")
+	public void the_DiscountRate_ADD_button_should_be_prompted_to_click() throws InterruptedException {
 
-			Thread.sleep(2000);
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
+
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+
+		Thread.sleep(3000);
+
+		B.ChannelADD();
+
+	}
+
+	@Then("the POS \"Pricing Plan\" field should prompt to select the channels based on the given input in Aggregator")
+	public void POS_PricingPlan_fieldshould_promptto_select_thetransaction_setsbased_onthe_giveninput_inAggregator()
+			throws AWTException, InterruptedException {
+
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
+
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+
+		Thread.sleep(3000);
+
+		A.ClickOnDiscountRatePricingPlan();
+
+		A.SelectOnPOSPricingPlan();
+
+		Thread.sleep(2000);
 
 //			Robot r = new Robot();
 //
@@ -5670,57 +4631,57 @@ public class AggregatorOnboardingTestcases {
 //
 //			r.keyRelease(KeyEvent.VK_TAB);
 
-			B.NOTDisplayedOnInvalidFormat();
+		B.NOTDisplayedOnInvalidFormat();
 
-		}
-      	
-      	@Then("the AEPS \"Pricing Plan\" field should prompt to select the channels based on the given input in Aggregator")
-    		public void AEPS_PricingPlan_fieldshould_promptto_select_thetransaction_setsbased_onthe_giveninput_inAggregator()
-    				throws AWTException, InterruptedException {
+	}
 
-    			B = new org.Locators.BankLocators(driver);
-    			A = new org.Locators.AggregatorLocators(driver);
+	@Then("the AEPS \"Pricing Plan\" field should prompt to select the channels based on the given input in Aggregator")
+	public void AEPS_PricingPlan_fieldshould_promptto_select_thetransaction_setsbased_onthe_giveninput_inAggregator()
+			throws AWTException, InterruptedException {
 
-    			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-    			
-    			Thread.sleep(2000);
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-    			A.ClickOnDiscountRatePricingPlan();
-    			
-    			Thread.sleep(2000);
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
-    			A.SelectOnAEPSPricingPlan();
+		Thread.sleep(2000);
 
-    			Thread.sleep(2000);
+		A.ClickOnDiscountRatePricingPlan();
+
+		Thread.sleep(2000);
+
+		A.SelectOnAEPSPricingPlan();
+
+		Thread.sleep(2000);
 
 //    			Robot r = new Robot();
-   
+
 //    			r.keyPress(KeyEvent.VK_TAB);
-    
+
 //    			r.keyRelease(KeyEvent.VK_TAB);
 
-    			B.NOTDisplayedOnInvalidFormat();
+		B.NOTDisplayedOnInvalidFormat();
 
-    		}
-      	      	
-    	@Then("the UPI \"Pricing Plan\" field should prompt to select the channels based on the given input in Aggregator")
-		public void UPI_PricingPlan_fieldshould_promptto_select_thetransaction_setsbased_onthe_giveninput_inAggregator()
-				throws AWTException, InterruptedException {
+	}
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
+	@Then("the UPI \"Pricing Plan\" field should prompt to select the channels based on the given input in Aggregator")
+	public void UPI_PricingPlan_fieldshould_promptto_select_thetransaction_setsbased_onthe_giveninput_inAggregator()
+			throws AWTException, InterruptedException {
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-			
-			Thread.sleep(2000);
+		B = new org.Locators.BankLocators(driver);
+		A = new org.Locators.AggregatorLocators(driver);
 
-			A.ClickOnDiscountRatePricingPlan();
-			
-			Thread.sleep(2000);
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
-			A.SelectOnUPIPricingPlan();
+		Thread.sleep(2000);
 
-			Thread.sleep(2000);
+		A.ClickOnDiscountRatePricingPlan();
+
+		Thread.sleep(2000);
+
+		A.SelectOnUPIPricingPlan();
+
+		Thread.sleep(2000);
 
 //			Robot r = new Robot();
 
@@ -5728,34 +4689,45 @@ public class AggregatorOnboardingTestcases {
 
 //			r.keyRelease(KeyEvent.VK_TAB);
 
-			B.NOTDisplayedOnInvalidFormat();
+		B.NOTDisplayedOnInvalidFormat();
 
-		}
-      	
-      	
-      	@Then("the DiscountRate \"Save\" button should be prompted to click")
-    	public void the_savebutton_shouldbe_prompted_toclick_On_discountRate() throws InterruptedException {
+	}
 
-    		B = new org.Locators.BankLocators(driver);
+	@Then("the DiscountRate \"Save\" button should be prompted to click")
+	public void the_savebutton_shouldbe_prompted_toclick_On_discountRate() throws InterruptedException {
 
-    		A = new org.Locators.AggregatorLocators(driver);
+		B = new org.Locators.BankLocators(driver);
 
-    		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-    		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+		A = new org.Locators.AggregatorLocators(driver);
 
-    		A.ClickOnSAVEPersonal();
-    		
-    	}
-      	
-      	
-      						
-      		
-		
-	
-		
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
+		A.ClickOnSAVEPersonal();
 
+	}
 
+	private void performTabKeyPress() throws AWTException {
+		Robot robot = new Robot();
+		robot.keyPress(KeyEvent.VK_TAB);
+		robot.keyRelease(KeyEvent.VK_TAB);
+	}
 
-	
+	private void LoginInputDatas(String fieldName, String fieldValue) {
+
+		test = ExtentCucumberAdapter.getCurrentStep();
+
+		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
+				+ "<tr><td style='border: 1px solid black;color: black'>" + fieldName + "</td></tr>"
+				+ "<tr><td style='border: 1px solid black;color: black'>" + fieldValue + "</td></tr>" + "</table>";
+
+		Allure.addAttachment("Input Data", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
+
+		String[][] data = { { fieldName }, { fieldValue }, };
+		Markup m = MarkupHelper.createTable(data);
+
+		// Log the table in Extent Report
+		test.log(Status.PASS, m);
+	}
+
 }

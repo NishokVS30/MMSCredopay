@@ -49,6 +49,8 @@ Scenario: System Maker can enter mandatory fields in "General Info" of Bank Onbo
       Then the "GST" field should prompt to enter valid inputs with GST format using sheetname "Bank Regression" and rownumber 0
       Then the "PAN" field should prompt to enter valid inputs with PAN format using sheetname "Bank Regression" and rownumber 0
       Then the "MarsId" field	should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
+      Then the "Statement Frequency" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
+      Then the "Statement Type" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
       Then the "Domain" field should prompt to enter the valid domain name using sheetname "Bank Regression" and rownumber 0
       Then the "Domain" field should prompt to enter the valid domain name using sheetname "Bank Regression" and rownumber 1
       Then the "Domain" field should prompt to enter the valid domain name using sheetname "Bank Regression" and rownumber 2
@@ -63,7 +65,7 @@ Scenario: System Maker can enter mandatory fields and click Next step in "Commun
     Then the "Position" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
     Then the "Mobile Number" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0 
     Then the "Email ID" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "AD User" field should prompt to select Yes or No based on the given input
+    Then the "AD User" field should prompt to select Yes or No based on the given input using sheetname "Bank Regression" and rownumber 0 
     Then the "Save" button should be prompted to click on Communication Info
     Then The "NextStep" button should prompt a click on Communication Info
     
@@ -71,7 +73,8 @@ Scenario: System Maker can enter mandatory fields and click Next step in "Commun
 @run
 Scenario: System Maker can enter mandatory fields and click Next step in "Channel Config" of Bank Onboarding
      When I visit the Channel Config
-      Then the Channel Bank Onboarding should prompt users to enter valid inputs using the sheet name "Channel"
+     Then the Channel Bank Onboarding should prompt users to enter valid inputs using the sheet name "Channel"
+     Then the "ONUS Routing" field should prompt to select the Bin based on the given input using the sheet name "Channel" 
      #Then the "Add" button should be prompted to click
      #Then the "POS Channel" field should prompt to select the channels based on the given input
      #Then the "POS Network" field should prompt to select the Network based on the given input
@@ -92,10 +95,10 @@ Scenario: System Maker can enter mandatory fields and click Next step in "Channe
      #Then the "MATM Transaction Sets" field should prompt to select the transaction sets based on the given input
      #Then the "MATM Routing" field should prompt to select the routing based on the given input
      #Then the "Save" button should be prompted to click on Channel COnfig
-     #Then the "NextStep" button should be prompted to click on channel config
-     #Then the "POS ADD BIN" field should prompt to select the Bin based on the given input
-     #Then the "MATM ADD BIN" field should prompt to select the Bin based on the given input
-     #Then the "NextStep" button should be prompted to click on ONUS Routing
+     Then the "NextStep" button should be prompted to click on channel config
+     Then the "POS ADD BIN" field should prompt to select the Bin based on the given input
+     Then the "MATM ADD BIN" field should prompt to select the Bin based on the given input
+     Then the "NextStep" button should be prompted to click on ONUS Routing
      
      
      

@@ -50,6 +50,9 @@ public class BankOnboardingTestcases {
 	@Given("I visit the SuperAdmin Login using sheetname {string} and rownumber {int}")
 	public void i_visit_the_SuperAdmin_maker_login(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException {
+		
+		ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+	    
 
 		try {
 
@@ -69,7 +72,7 @@ public class BankOnboardingTestcases {
 
 			L.EnterOnPassword(password);
 
-			test = ExtentCucumberAdapter.getCurrentStep();
+		test = ExtentCucumberAdapter.getCurrentStep();
 
 			String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
 					+ "<tr><td style='border: 1px solid black;color: black'>UserName</td><td style='border: 1px solid black;color: black'>Password</td></tr>"
@@ -87,10 +90,10 @@ public class BankOnboardingTestcases {
 			test.log(Status.PASS, m);
 
 		} catch (Exception e) {
-			takeScreenshotStr("Login Screen"); // Take screenshot on exception
-			ExtentCucumberAdapter.getCurrentStep().log(Status.FAIL, "An error occurred: " + e.getMessage());
-			throw e; // Re-throw to ensure the test fails
-		}
+	        // Handle any exception and capture a screenshot with context (e.g., SuperAdmin Login, row number)
+	        exceptionHandler.handleException(e,"Sheet: " + sheetName);
+	        throw e;  // Re-throw the exception to ensure the test fails
+	    }
 
 	}
 
@@ -130,7 +133,7 @@ public class BankOnboardingTestcases {
 
 			L.EnterOnPassword(password);
 
-			test = ExtentCucumberAdapter.getCurrentStep();
+		test = ExtentCucumberAdapter.getCurrentStep();
 
 			String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
 					+ "<tr><td style='border: 1px solid black;color: black'>UserName</td><td style='border: 1px solid black;color: black'>Password</td></tr>"
@@ -261,11 +264,7 @@ public class BankOnboardingTestcases {
 
 			Thread.sleep(2000);
 
-			Robot r = new Robot();
-
-			r.keyPress(KeyEvent.VK_TAB);
-
-			r.keyRelease(KeyEvent.VK_TAB);
+			performTabKeyPress();
 
 			LoginInputDatas("Bank Name", Bankname);
 
@@ -304,11 +303,7 @@ public class BankOnboardingTestcases {
 
 		Thread.sleep(2000);
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.clearBankName();
 
@@ -342,11 +337,7 @@ public class BankOnboardingTestcases {
 
 		Thread.sleep(2000);
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.clearBankName();
 
@@ -377,11 +368,7 @@ public class BankOnboardingTestcases {
 
 		Thread.sleep(2000);
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.DisplayedOnThisInvalidFormat();
 
@@ -414,12 +401,8 @@ public class BankOnboardingTestcases {
 
 		Thread.sleep(2000);
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
-
+		performTabKeyPress();
+		
 		B.DisplayedOnThisInvalidFormat();
 
 		B.clearBankName();
@@ -437,11 +420,7 @@ public class BankOnboardingTestcases {
 
 		B.ClickonBankName();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.DisplayedOnThisFieldisRequired();
 
@@ -492,12 +471,9 @@ public class BankOnboardingTestcases {
 			B.EnterOnAddress(Address);
 
 			Thread.sleep(2000);
-			Robot r = new Robot();
-
-			r.keyPress(KeyEvent.VK_TAB);
-
-			r.keyRelease(KeyEvent.VK_TAB);
-
+			
+			performTabKeyPress();
+			
 			B.NOTDisplayedOnInvalidFormat();
 
 			LoginInputDatas("Address", Address);
@@ -522,11 +498,7 @@ public class BankOnboardingTestcases {
 
 		B.ClickonAddressLine();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		Thread.sleep(2000);
 
@@ -567,11 +539,8 @@ public class BankOnboardingTestcases {
 
 			B.SelectonPincode();
 
-			Robot r = new Robot();
-
-			r.keyPress(KeyEvent.VK_TAB);
-
-			r.keyRelease(KeyEvent.VK_TAB);
+			performTabKeyPress();
+			
 			Thread.sleep(2000);
 
 			String SelectedPincode = B.getPincode();
@@ -597,11 +566,8 @@ public class BankOnboardingTestcases {
 
 		B.ClickonPincode();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -704,12 +670,9 @@ public class BankOnboardingTestcases {
 			B.EnterOnGst(gst);
 
 			Thread.sleep(2000);
-			Robot r = new Robot();
-
-			r.keyPress(KeyEvent.VK_TAB);
-
-			r.keyRelease(KeyEvent.VK_TAB);
-
+			
+			performTabKeyPress(); 
+			
 			B.NOTDisplayedOnInvalidFormat();
 
 			LoginInputDatas("GST", gst);
@@ -742,11 +705,8 @@ public class BankOnboardingTestcases {
 		B.EnterOnGst(gst);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.DisplayedOnThisInvalidFormat();
 
@@ -766,11 +726,8 @@ public class BankOnboardingTestcases {
 
 		B.ClickOnGst();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -823,12 +780,9 @@ public class BankOnboardingTestcases {
 		B.EnterOnPAN(pan);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
-
+		
+		performTabKeyPress();
+		
 		B.NOTDisplayedOnInvalidFormat();
 
 		LoginInputDatas("PAN", pan);
@@ -854,11 +808,8 @@ public class BankOnboardingTestcases {
 		B.EnterOnPAN(pan);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.DisplayedOnThisInvalidFormat();
 
@@ -877,12 +828,9 @@ public class BankOnboardingTestcases {
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
 		B.ClickonPan();
-
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
+		
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -931,11 +879,8 @@ public class BankOnboardingTestcases {
 		B.EnteronMarsid(marsid);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
@@ -964,21 +909,34 @@ public class BankOnboardingTestcases {
 
 	}
 
-	@Then("the \"Statement Frequency\" dropdown should prompt to select valid inputs")
-	public void the_Statement_Frequency_dropdown_should_prompt_to_select_valid_inputs() throws InterruptedException {
+	@Then("the \"Statement Frequency\" dropdown should prompt to select valid inputs using sheetname {string} and rownumber {int}")
+	public void the_Statement_Frequency_dropdown_should_prompt_to_select_valid_inputs(String sheetName, int rowNumber)
+			throws InvalidFormatException, IOException, InterruptedException, AWTException {
 
 		B = new org.Locators.BankLocators(driver);
 
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
-		B.SelectOnStatementFrequency();
+		ExcelReader reader = new ExcelReader();
+
+		List<Map<String, String>> testdata = reader
+				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+
+		System.out.println("sheet name: " + testdata);
+
+		String StatementFrequency = testdata.get(rowNumber).get("Statement Frequency");
+		
+		B.ClickOnStatementFrequency();
+
+		B.selectDropdownOption(StatementFrequency);
 
 		Thread.sleep(2000);
+		
+		performTabKeyPress();
 
-		String StatementFrequency = B.getStatementFrequency();
-//	    assertEquals("Daily", StatementFrequency);
+		B.NOTDisplayedOnInvalidFormat();
 
-		LoginInputDatas("StatementFrequency", StatementFrequency);
+		LoginInputDatas("Statement Frequency", StatementFrequency);
 
 	}
 
@@ -1004,28 +962,35 @@ public class BankOnboardingTestcases {
 
 	}
 
-	@Then("the \"Statement Type\" dropdown should prompt to select valid inputs")
-	public void the_Statement_Type_dropdown_should_prompt_to_select_valid_inputs() throws InterruptedException {
+	@Then("the \"Statement Type\" dropdown should prompt to select valid inputs using sheetname {string} and rownumber {int}")
+	public void the_Statement_Type_dropdown_should_prompt_to_select_valid_inputs(String sheetName, int rowNumber)
+			throws InvalidFormatException, IOException, InterruptedException, AWTException {
 
 		B = new org.Locators.BankLocators(driver);
 
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
+		ExcelReader reader = new ExcelReader();
+
+		List<Map<String, String>> testdata = reader
+				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+
+		System.out.println("sheet name: " + testdata);
+
+		String StatementType = testdata.get(rowNumber).get("Statement Type");
+		
 		B.ClickOnStatementType();
 
-		B.SelectOnStatementType();
+		B.selectDropdownOption(StatementType);
 
-		B.NOTDisplayedOnThisfieldisrequired();
+		Thread.sleep(2000);
+		
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
-		Thread.sleep(2000);
-
-		String StatementType = B.getStatementType();
-//	    assertEquals("Pdf", StatementType);
-
-		LoginInputDatas("StatementType", StatementType);
-
+		LoginInputDatas("Statement Type", StatementType);
+	
 	}
 
 	@When("I click on the \"Domain\" field")
@@ -1064,11 +1029,8 @@ public class BankOnboardingTestcases {
 
 		Thread.sleep(2000);
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -1097,11 +1059,8 @@ public class BankOnboardingTestcases {
 		B.EnterOnDomain(domain);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
@@ -1129,11 +1088,8 @@ public class BankOnboardingTestcases {
 		B.EnterOnDomain(domain);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		Thread.sleep(2000);
 
@@ -1167,12 +1123,9 @@ public class BankOnboardingTestcases {
 		B.EnterOnDomain(domain);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
-
+		
+		performTabKeyPress();
+		
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisInvalidFormat();
@@ -1217,12 +1170,8 @@ public class BankOnboardingTestcases {
 		assertTrue("Bank Name field does not accept valid input within 30 characters.", enteredBankName.length() <= 30);
 
 		Thread.sleep(2000);
-
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		Thread.sleep(2000);
 
@@ -1296,11 +1245,8 @@ public class BankOnboardingTestcases {
 
 		B.ClickOnCommName();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -1329,11 +1275,8 @@ public class BankOnboardingTestcases {
 		B.EnterOnCommName(CommunicationName);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		Thread.sleep(2000);
 
@@ -1365,12 +1308,9 @@ public class BankOnboardingTestcases {
 		B.EnterOnCommName(CommunicationName);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
-
+		
+		performTabKeyPress();
+		
 		B.DisplayedOnThisInvalidFormat();
 
 		Thread.sleep(2000);
@@ -1404,11 +1344,8 @@ public class BankOnboardingTestcases {
 		B.EnterOnCommName(CommunicationName);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.DisplayedOnThisInvalidFormat();
 
@@ -1454,11 +1391,8 @@ public class BankOnboardingTestcases {
 
 		B.ClickOnCommPosition();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -1487,12 +1421,9 @@ public class BankOnboardingTestcases {
 		B.EnterOnCommunicationPosition(CommunicationPosition);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
-
+		
+		performTabKeyPress();
+		
 		Thread.sleep(2000);
 
 		B.NOTDisplayedOnInvalidFormat();
@@ -1523,12 +1454,9 @@ public class BankOnboardingTestcases {
 		B.EnterOnCommunicationPosition(CommunicationPosition);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
-
+		
+		performTabKeyPress();
+		
 		B.DisplayedOnThisInvalidFormat();
 
 		Thread.sleep(2000);
@@ -1560,12 +1488,9 @@ public class BankOnboardingTestcases {
 		B.EnterOnCommunicationPosition(CommunicationPosition);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
-
+		
+		performTabKeyPress();
+		
 		B.DisplayedOnThisInvalidFormat();
 
 		Thread.sleep(2000);
@@ -1622,11 +1547,8 @@ public class BankOnboardingTestcases {
 		B.EnteronCommPhoneNumber(CommunicationPhonenumber);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.DisplayedOnThisInvalidFormat();
 
@@ -1659,12 +1581,9 @@ public class BankOnboardingTestcases {
 		B.EnteronCommPhoneNumber(CommunicationPhonenumber);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
-
+		
+		performTabKeyPress();
+		
 		B.DisplayedOnThisInvalidFormat();
 
 		Thread.sleep(2000);
@@ -1697,11 +1616,8 @@ public class BankOnboardingTestcases {
 		B.EnteronCommPhoneNumber(CommunicationPhonenumber);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.DisplayedOnThisInvalidFormat();
 
@@ -1728,11 +1644,8 @@ public class BankOnboardingTestcases {
 			B.EnteronCommPhoneNumber(Phonenumber);
 
 			Thread.sleep(2000);
-			Robot r = new Robot();
-
-			r.keyPress(KeyEvent.VK_TAB);
-
-			r.keyRelease(KeyEvent.VK_TAB);
+			
+			performTabKeyPress();
 
 			Thread.sleep(2000);
 
@@ -1787,11 +1700,8 @@ public class BankOnboardingTestcases {
 		B.EnteronCommMobileNumber(CommunicationMobilenumber);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.DisplayedOnShouldbe10digits();
 
@@ -1828,11 +1738,7 @@ public class BankOnboardingTestcases {
 
 		Thread.sleep(2000);
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		Thread.sleep(2000);
 
@@ -1863,12 +1769,7 @@ public class BankOnboardingTestcases {
 		B.EnteronCommMobileNumber(CommunicationMobilenumber);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
-
+		performTabKeyPress();
 		Thread.sleep(2000);
 
 		B.NOTDisplayedOnInvalidFormat();
@@ -1887,11 +1788,8 @@ public class BankOnboardingTestcases {
 
 		B.ClickonCommMobileNumber();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -1932,11 +1830,7 @@ public class BankOnboardingTestcases {
 
 		B.ClickonCommEmailid();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -1967,11 +1861,7 @@ public class BankOnboardingTestcases {
 		B.EnteronCommEmailid(Communicationemailid);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.DisplayedOnThisInvalidFormat();
 
@@ -2006,12 +1896,9 @@ public class BankOnboardingTestcases {
 		B.EnteronCommEmailid(Communicationemailid);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
-
+		
+		performTabKeyPress();
+		
 		B.DisplayedOnThisInvalidFormat();
 
 		Thread.sleep(2000);
@@ -2046,11 +1933,8 @@ public class BankOnboardingTestcases {
 		B.EnteronCommEmailid(Communicationemailid);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.DisplayedOnThisInvalidFormat();
 
@@ -2085,11 +1969,8 @@ public class BankOnboardingTestcases {
 		B.EnteronCommEmailid(Communicationemailid);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.DisplayedOnThisInvalidFormat();
 
@@ -2124,12 +2005,9 @@ public class BankOnboardingTestcases {
 		B.EnteronCommEmailid(Communicationemailid);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
-
+		
+		performTabKeyPress();
+		
 		B.NOTDisplayedOnInvalidFormat();
 
 		LoginInputDatas("Communication EmailID", Communicationemailid);
@@ -2196,34 +2074,54 @@ public class BankOnboardingTestcases {
 
 	}
 
-	@Then("the \"AD User\" field should prompt to select Yes or No based on the given input")
-	public void the_ADUser_field_should_prompt_to_select_YesNO_basedon_the_given_input() throws InterruptedException {
+	@Then("the \"AD User\" field should prompt to select Yes or No based on the given input using sheetname {string} and rownumber {int}")
+	public void the_ADUser_field_should_prompt_to_select_YesNO_basedon_the_given_input(String sheetName, int rowNumber)
+			throws InvalidFormatException, IOException, InterruptedException, AWTException {
 
 		B = new org.Locators.BankLocators(driver);
 
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
+		ExcelReader reader = new ExcelReader();
+
+		List<Map<String, String>> testdata = reader
+				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+
+		System.out.println("sheet name: " + testdata);
+
+		String ADUSer = testdata.get(rowNumber).get("AD User");
+		
 		B.ClickOnAdUser();
 
-		B.SelectOnYesAdUser();
+		B.selectDropdownOption(ADUSer);
 
 		Thread.sleep(2000);
+		
+		performTabKeyPress();
 
-//		B.YesAdUesrdisplayed();
+		B.NOTDisplayedOnInvalidFormat();
 
-		Thread.sleep(3000);
-
-		B.ClickOnAdUser();
-
-		B.SelectOnNOAdUser();
-
-		Thread.sleep(2000);
-
-		String aduSer = B.getADUSer();
-
-		LoginInputDatas("Ad User", aduSer);
-
-//		B.NOAdUesrdisplayed();
+		LoginInputDatas("AD USER", ADUSer);	
+		
+//		B = new org.Locators.BankLocators(driver);
+//
+//		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+//
+//		B.ClickOnAdUser();
+//
+//		B.SelectOnYesAdUser();
+//
+//		Thread.sleep(3000);
+//
+//		B.ClickOnAdUser();
+//
+//		B.SelectOnNOAdUser();
+//
+//		Thread.sleep(2000);
+//
+//		String aduSer = B.getADUSer();
+//
+//		LoginInputDatas("Ad User", aduSer);
 
 	}
 
@@ -2473,12 +2371,9 @@ public class BankOnboardingTestcases {
 		B.SelectonTransactionsetkUPI();
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
-
+		
+		performTabKeyPress();
+		
 		B.NOTDisplayedOnInvalidFormat();
 
 		String SelectonTransactionsetkUPI = B.getSelectonTransactionsetkUPI();
@@ -2504,11 +2399,8 @@ public class BankOnboardingTestcases {
 		B.SelectonTransactionsetAEPS();
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
@@ -2762,11 +2654,8 @@ try {
 
 		B.ClickOnVelocityCheckMinute();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -2795,11 +2684,8 @@ try {
 		B.EnterOnVelocityCheckMinute(VelocityCheckMinutes);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
@@ -2835,12 +2721,9 @@ try {
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
 		B.ClickOnVelocityCheckCount();
-
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
+		
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -2869,11 +2752,8 @@ try {
 		B.EnterOnVelocityCheckCount(VelocityCheckCount);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
@@ -2910,11 +2790,8 @@ try {
 
 		B.ClickOnCashpOScount();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -2943,11 +2820,8 @@ try {
 		B.EnterOnCashpOScount(CashPOSCount);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
@@ -2983,11 +2857,8 @@ try {
 
 		B.ClickOnMicroATMCount();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -3016,29 +2887,9 @@ try {
 		B.EnterOnMicroATMCount(MicroATMCount);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
-
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Micro Atm Count</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + MicroATMCount + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Micro Atm Count" }, { MicroATMCount },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
 
 		LoginInputDatas("Micro ATM Count", MicroATMCount);
 
@@ -3107,11 +2958,8 @@ try {
 
 		B.ClickonICAdaily();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -3140,12 +2988,9 @@ try {
 		B.EnteronICAdaily(ICADAILY);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
-
+		
+		performTabKeyPress();
+		
 		B.NOTDisplayedOnInvalidFormat();
 
 		LoginInputDatas("ICA DAILY", ICADAILY);
@@ -3183,11 +3028,8 @@ try {
 
 		B.ClickonICAWeekly();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -3217,12 +3059,9 @@ try {
 		B.EnteronICAWeekly(ICAWEEKLY);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
-
+		
+		performTabKeyPress();
+		
 		B.MustbegreaterthanDailyLimit();
 
 		B.ClearonICAWeekly();
@@ -3251,11 +3090,8 @@ try {
 		B.EnteronICAWeekly(ICAWEEKLY);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
@@ -3294,11 +3130,8 @@ try {
 
 		B.ClickonICAMonthly();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -3328,11 +3161,8 @@ try {
 		B.EnteronICAMonthly(ICAMonthly);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.Mustbegreaterthanweeklylimit();
 
@@ -3362,12 +3192,9 @@ try {
 		B.EnteronICAMonthly(ICAMonthly);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
-
+		
+		performTabKeyPress();
+		
 		B.NOTDisplayedOnInvalidFormat();
 
 		LoginInputDatas("ICA Monthly", ICAMonthly);
@@ -3385,11 +3212,8 @@ try {
 
 		B.ClickonPosdaily();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(2000);
 
 		B.DisplayedOnDailyLimitRequired();
@@ -3420,11 +3244,7 @@ try {
 		B.EnteronPosdaily(POSDAILY);
 
 		Thread.sleep(1000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
@@ -3444,11 +3264,8 @@ try {
 
 		B.ClickonPosWeekly();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(1000);
 
 		B.DisplayedOnWeeklyLimitRequired();
@@ -3479,11 +3296,7 @@ try {
 		B.EnteronPosWeekly(POSWEEKLY);
 
 		Thread.sleep(1000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
@@ -3502,11 +3315,8 @@ try {
 
 		B.ClickonPosMonthly();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(1000);
 
 		B.DisplayedOnMonthlyLimitRequired();
@@ -3537,12 +3347,9 @@ try {
 		B.EnteronPosMonthly(POSMonthly);
 
 		Thread.sleep(1000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
-
+		
+		performTabKeyPress();
+		
 		B.NOTDisplayedOnInvalidFormat();
 
 		LoginInputDatas("POS Monthly", POSMonthly);
@@ -3559,11 +3366,8 @@ try {
 
 //		B.ClickonPOSMinimum();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(1000);
 
 		B.DisplayedOnMinimumAmountRequired();
@@ -3594,11 +3398,8 @@ try {
 		B.EnteronPOSMinimum(Minimum);
 
 		Thread.sleep(1000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
@@ -3615,11 +3416,8 @@ try {
 
 		B.ClickonPOSMaximum();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(1000);
 
 		B.DisplayedOnMaximumAmountRequired();
@@ -3650,12 +3448,9 @@ try {
 		B.EnteronPOSMaximum(Maximum);
 
 		Thread.sleep(1000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
-
+		
+		performTabKeyPress();
+		
 		B.NOTDisplayedOnInvalidFormat();
 
 		LoginInputDatas("POS Maximum", Maximum);
@@ -3673,11 +3468,8 @@ try {
 
 		B.ClickonAEPSdaily();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(1000);
 
 		B.DisplayedOnDailyLimitRequired();
@@ -3708,11 +3500,8 @@ try {
 		B.EnteronAEPSdaily(AEPSDAILY);
 
 		Thread.sleep(1000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
@@ -3731,11 +3520,8 @@ try {
 
 		B.ClickonAEPSWeekly();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(1000);
 
 		B.DisplayedOnWeeklyLimitRequired();
@@ -3766,11 +3552,8 @@ try {
 		B.EnteronAEPSWeekly(AEPSWEEKLY);
 
 		Thread.sleep(1000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
@@ -3790,11 +3573,8 @@ try {
 
 		B.ClickonAEPSMonthly();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(1000);
 
 		B.DisplayedOnMonthlyLimitRequired();
@@ -3825,12 +3605,9 @@ try {
 		B.EnteronAEPSMonthly(AEPSMonthly);
 
 		Thread.sleep(1000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
-
+		
+		performTabKeyPress();
+		
 		B.NOTDisplayedOnInvalidFormat();
 
 		LoginInputDatas("AEPS Monthly", AEPSMonthly);
@@ -3847,11 +3624,8 @@ try {
 
 		B.ClickonAEPSMinimum();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(1000);
 
 		B.DisplayedOnMinimumAmountRequired();
@@ -3882,12 +3656,9 @@ try {
 		B.EnteronAEPSMinimum(Minimum);
 
 		Thread.sleep(1000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
-
+		
+		performTabKeyPress();
+		
 		B.NOTDisplayedOnInvalidFormat();
 
 		LoginInputDatas("AEPS Minimum", Minimum);
@@ -3904,11 +3675,8 @@ try {
 
 		B.ClickonAEPSMaximum();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(1000);
 
 		B.DisplayedOnMaximumAmountRequired();
@@ -3939,11 +3707,8 @@ try {
 		B.EnteronAEPSMaximum(Maximum);
 
 		Thread.sleep(1000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
@@ -3962,11 +3727,8 @@ try {
 
 		B.ClickonUPIdaily();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(1000);
 
 		B.DisplayedOnDailyLimitRequired();
@@ -3997,11 +3759,8 @@ try {
 		B.EnteronUPIdaily(UPIDAILY);
 
 		Thread.sleep(1000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
@@ -4020,11 +3779,8 @@ try {
 
 		B.ClickonUPIWeekly();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(1000);
 
 		B.DisplayedOnWeeklyLimitRequired();
@@ -4055,11 +3811,8 @@ try {
 		B.EnteronUPIWeekly(UPIWEEKLY);
 
 		Thread.sleep(1000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
@@ -4078,11 +3831,8 @@ try {
 
 		B.ClickonUPIMonthly();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(1000);
 
 		B.DisplayedOnMonthlyLimitRequired();
@@ -4113,11 +3863,7 @@ try {
 		B.EnteronUPIMonthly(UPIMonthly);
 
 		Thread.sleep(1000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
@@ -4134,11 +3880,8 @@ try {
 
 		B.ClickonUPIMinimum();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(1000);
 
 		B.DisplayedOnMinimumAmountRequired();
@@ -4169,11 +3912,8 @@ try {
 		B.EnteronUPIMinimum(Minimum);
 
 		Thread.sleep(1000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
@@ -4191,11 +3931,8 @@ try {
 
 		B.ClickonUPIMaximum();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(1000);
 
 		B.DisplayedOnMaximumAmountRequired();
@@ -4226,11 +3963,7 @@ try {
 		B.EnteronUPIMaximum(Maximum);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
@@ -4307,11 +4040,7 @@ try {
 		B.EnteronMATMdaily(MATMDAILY);
 
 		Thread.sleep(1000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
@@ -4331,11 +4060,7 @@ try {
 
 		B.ClickonMATMWeekly();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 		Thread.sleep(1000);
 
 		B.DisplayedOnWeeklyLimitRequired();
@@ -4366,11 +4091,7 @@ try {
 		B.EnteronMATMWeekly(WEEKLY);
 
 		Thread.sleep(1000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
@@ -4389,11 +4110,7 @@ try {
 
 		B.ClickonMATMMonthly();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 		Thread.sleep(1000);
 
 		B.DisplayedOnMonthlyLimitRequired();
@@ -4424,11 +4141,7 @@ try {
 		B.EnteronMATMMonthly(Monthly);
 
 		Thread.sleep(1000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
@@ -4446,11 +4159,7 @@ try {
 
 //		B.ClickonPOSMinimum();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 		Thread.sleep(1000);
 
 		B.DisplayedOnMinimumAmountRequired();
@@ -4481,11 +4190,8 @@ try {
 		B.EnteronMATMMinimum(Minimum);
 
 		Thread.sleep(1000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
@@ -4502,11 +4208,7 @@ try {
 
 		B.ClickonMATMMaximum();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 		Thread.sleep(1000);
 
 		B.DisplayedOnMaximumAmountRequired();
@@ -4537,11 +4239,7 @@ try {
 		B.EnteronMATMMaximum(Maximum);
 
 		Thread.sleep(1000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
@@ -5065,11 +4763,8 @@ try {
 
 		B.ClickOnBankAccountNumber();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
+		
 		Thread.sleep(2000);
 
 		B.DisplayedOnThisFieldisRequired();
@@ -5100,11 +4795,8 @@ try {
 		B.EnterOnBankAccountNumber(BanKAccountNumber);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.DisplayedOnThisMinimumLengtherror();
 
@@ -5140,11 +4832,8 @@ try {
 		B.EnterOnBankAccountNumber(BanKAccountNumber);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
@@ -5175,11 +4864,8 @@ try {
 		B.ClickOnIFSCCode();
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		Thread.sleep(3000);
 
@@ -5532,11 +5218,7 @@ try {
 		B.EnterOnMaximumNoofPlatform(Maximum);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+	    performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
@@ -5659,11 +5341,7 @@ try {
 
 		B.ClickOnWebhooksURL();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.DisplayedOnThisFieldisRequired();
 
@@ -5695,11 +5373,7 @@ try {
 		B.EnterOnWebhooksURL(webhookurl);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 
 		B.DisplayedOnThisInvalidFormat();
 
@@ -5736,11 +5410,8 @@ try {
 		B.EnterOnWebhooksURL(Webhookurl);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		
+		performTabKeyPress();
 
 		B.NOTDisplayedOnInvalidFormat();
 
@@ -5821,11 +5492,7 @@ try {
 
 		B.SelectOnKYCBusinessTypeTrust();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 		
 		String SelectOnBusinessType = B.getSelectOnKYCBusinessTypeTrust();
 
@@ -5846,11 +5513,7 @@ try {
 
 		B.SelectOnProofOfIdentityCompany();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 		
 		String SelectOnProofOfIdentityCompany = B.getSelectOnProofOfIdentityCompany();
 
@@ -5870,11 +5533,7 @@ try {
 
 		B.SelectOnProofOfAddressCompany();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 		
 		String SelectOnProofOfAddressCompany = B.getSelectOnProofOfAddressCompany();
 
@@ -5894,11 +5553,7 @@ try {
 
 		B.SelectOnBankDocumentCompany();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 		
 		String SelectOnBankDocumentCompany = B.getSelectOnBankDocumentCompany();
 
@@ -5918,11 +5573,7 @@ try {
 
 		B.SelectOnTaxDocumentCompany();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 		
 		String SelectOnTaxDocumentCompany = B.getSelectOnTaxDocumentCompany();
 
@@ -5943,11 +5594,7 @@ try {
 
 		B.SelectOnProofOfIdentityIndividual();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 		
 		String SelectOnProofOfIdentityIndividual = B.getSelectOnProofOfIdentityIndividual();
 
@@ -5967,11 +5614,7 @@ try {
 
 		B.SelectOnProofOfAddressIndividual();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 		
 		String SelectOnProofOfAddressIndividual = B.getSelectOnProofOfAddressIndividual();
 
@@ -5991,11 +5634,7 @@ try {
 
 		B.SelectOnOtherDocumentIndividual();
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
+		performTabKeyPress();
 			
 			String SelectOnOtherDocumentIndividual = B.getSelectOnOtherDocumentIndividual();
 	
@@ -6102,6 +5741,12 @@ try {
 			e.printStackTrace();
 
 		}
+	}
+
+	private void performTabKeyPress() throws AWTException {
+		Robot robot = new Robot();
+		robot.keyPress(KeyEvent.VK_TAB);
+		robot.keyRelease(KeyEvent.VK_TAB);
 	}
 
 	private void LoginInputDatas(String fieldName, String fieldValue) {

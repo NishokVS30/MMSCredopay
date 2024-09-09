@@ -155,7 +155,7 @@ Scenario: Verify Statement Frequency label
    
 Scenario: Verify Statement Frequency dropdown prompts for valid inputs
     Then the "Statement Frequency" dropdown should prompt to select valid inputs
-    
+   
     
 Scenario: Verify Statement Type label
     Then the label name should be "Statement Type"

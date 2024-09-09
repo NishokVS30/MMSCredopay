@@ -9,6 +9,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -153,11 +154,7 @@ try {
 
 		Thread.sleep(2000);
 
-		Robot r = new Robot();
-
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);	
+	     performTabKeyPress();
 		
 	    } catch (Exception e) {
 	        takeScreenshotStr("General Info"); // Take screenshot on exception
@@ -190,12 +187,9 @@ try {
 		B.EnterOnAddress(Address);
 
 		Thread.sleep(2000);
-		Robot r = new Robot();
 
-		r.keyPress(KeyEvent.VK_TAB);
-
-		r.keyRelease(KeyEvent.VK_TAB);
-
+		performTabKeyPress();
+		
 		B.NOTDisplayedOnInvalidFormat();
 
 		LoginInputDatas("Address", Address);
@@ -312,6 +306,10 @@ try {
 	    // Loop through all the rows
 	    for (int currentRow = 1; currentRow <= numberOfRows; currentRow++) {
 	        System.out.println("Running test for row number: " + currentRow);
+	    	ArrayList<String> key = new ArrayList<>();
+	    	ArrayList<String> value = new ArrayList<>();
+	    	
+
 
 	        // Fetch the current row's data
 	        Map<String, String> testData = ExcelUtils.getRowData(sheetName, currentRow);
@@ -322,6 +320,7 @@ try {
 	        String network = testData.get("Network");
 	        String transactionSet = testData.get("Transaction Sets");
 	        String routing = testData.get("Routing");
+	        
 
 	        // Check if any of the data fields are null or empty and skip that field
 	        if (channel != null && !channel.trim().isEmpty()) {
@@ -333,7 +332,9 @@ try {
 	            Thread.sleep(2000); 
 	            // Select the channel based on the Excel value (e.g., POS, AEPS, etc.)
 	            B.selectDropdownOption(channel);
-	            LoginInputDatas("Channel-" + currentRow, channel);
+//	            LoginInputDatas("Channel-" + currentRow, channel);
+		    	key.add("Channel-" + currentRow);
+		    	value.add(channel);
 	            
 	            performTabKeyPress();
 	            // Log input data for the channel
@@ -345,7 +346,11 @@ try {
 	            // Network selection
 	            B.clickonNetwork(); // Click on the network dropdown
 	            B.selectDropdownOption(network); // Select network from Excel
-	            LoginInputDatas("Network-" + currentRow, network); 
+//	            LoginInputDatas("Network-" + currentRow, network); 
+	            
+	            key.add("Network-" + currentRow);
+		    	value.add(network);
+	            
 	            performTabKeyPress();
 	            // Log input data for the network
 	        } else {
@@ -356,7 +361,9 @@ try {
 	            // Transaction Set selection
 	            B.clickonTransactionsetPoS(); // Click on the transaction set dropdown
 	            B.selectDropdownOption(transactionSet); // Select transaction set from Excel
-	            LoginInputDatas("Transaction Set-" + currentRow, transactionSet);
+//	            LoginInputDatas("Transaction Set-" + currentRow, transactionSet);
+	            key.add("Transaction Set-" + currentRow);
+		    	value.add(transactionSet);
 	            performTabKeyPress();
 	            // Log input data for transaction set
 	        } else {
@@ -367,17 +374,22 @@ try {
 	            // Routing selection
 	            B.clickonRouting(); // Click on the routing dropdown
 	            B.selectDropdownOption(routing); // Select routing from Excel
-	            LoginInputDatas("Routing-" + currentRow, routing);
+//	            LoginInputDatas("Routing-" + currentRow, routing);
+	            key.add("Routing-" + currentRow);
+		    	value.add(routing);
 	            performTabKeyPress();
 	            // Log input data for routing
 	        } else {
 	            System.out.println("Routing data is null or empty for row: " + currentRow);
 	        }
-
+ 
 	        // Save the configuration (Only after filling all required fields)
 	        B.CommuSavebutton();
+	        LoginInputData(key,value);
 	    }
 	}
+	
+
 
 
 	@Then("the Settlement Info \"Channel\" dropdown should prompt to select the valid inputs")
@@ -1880,21 +1892,8 @@ try {
 //	
 			B.NOTDisplayedOnInvalidFormat();
 
-		test = ExtentCucumberAdapter.getCurrentStep();
-
-		String styledTable = "<table style='color: black; border: 1px solid black; border-collapse: collapse;'>"
-				+ "<tr><td style='border: 1px solid black;color: black'>Aggregator Name</td></tr>"
-				+ "<tr><td style='border: 1px solid black;color: black'>" + code + "</td></tr>" + "</table>";
-
-		Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-
-		String[][] data = { { "Aggregator Name" }, { code },
-
-		};
-		Markup m = MarkupHelper.createTable(data);
-
-		// or
-		test.log(Status.PASS, m);
+		
+		LoginInputDatas("Aggregator Name", code);
 
 	}
 
@@ -2019,6 +2018,47 @@ try {
 
 		// Log the table in Extent Report
 		test.log(Status.PASS, m);
+	}
+	
+	
+	
+	 public void LoginInputData(ArrayList<String> Keys, ArrayList<String> Values) {
+		// Convert ArrayLists to arrays
+		String[] keys = Keys.toArray(new String[0]);
+		String[] values = Values.toArray(new String[0]);
+
+		// Prepare data for Extent Report
+		String[][] data = new String[2][keys.length];
+		data[0] = keys; // Header row
+		data[1] = values; // Data row
+
+		// Create table markup and log to Extent Report
+		Markup m = MarkupHelper.createTable(data);
+		ExtentCucumberAdapter.getCurrentStep().log(Status.PASS, m);
+
+		// Construct HTML table for Allure report
+		StringBuilder tableBuilder = new StringBuilder();
+		tableBuilder.append("<table style='color: black; border: 1px solid black; border-collapse: collapse;'>");
+
+		// Add header row
+		tableBuilder.append("<tr>");
+		for (String key : keys) {
+			tableBuilder.append("<th style='border: 1px solid black; color: black;'>").append(key).append("</th>");
+		}
+		tableBuilder.append("</tr>");
+
+		// Add data row
+		tableBuilder.append("<tr>");
+		for (String value : values) {
+			tableBuilder.append("<td style='border: 1px solid black; color: black;'>").append(value).append("</td>");
+		}
+		tableBuilder.append("</tr>");
+
+		tableBuilder.append("</table>");
+
+		// Attach HTML table to Allure report
+		Allure.addAttachment("Input Data", "text/html", new ByteArrayInputStream(tableBuilder.toString().getBytes()),
+				"html");
 	}
 	
 

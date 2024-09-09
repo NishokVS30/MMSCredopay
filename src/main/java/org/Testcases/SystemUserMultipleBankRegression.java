@@ -36,7 +36,7 @@ public class SystemUserMultipleBankRegression {
 	org.Locators.AggregatorLocators A;
 	org.Locators.SystemUserLocatores S;
 
-	private ExtentTest test;
+     ExtentTest test;
 
 	public SystemUserMultipleBankRegression() {
 		this.driver = CustomWebDriverManager.getDriver();

@@ -17,7 +17,7 @@ import io.cucumber.junit.CucumberOptions;
 
  //            features = "src/test/resources/Aggregator.feature",
 
-             features = "src/test/resources/SystemUser-Bank.feature",
+              features = "src/test/resources/SystemUser-Bank.feature",
 
 //               features = "src/test/resources/SystemUser-MultipleBank.feature",
 

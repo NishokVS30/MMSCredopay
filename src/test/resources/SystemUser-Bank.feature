@@ -20,216 +20,356 @@ Feature: System Users - Bank Onboarding Regression
 
  This feature aims to test the functionality of the 'BankOnboarding' within the application.
 
-@run
+
 Scenario: SystemMaker Login
  Given I visit the System Maker Login using sheetname "Credentials" and rownumber 1
  And I enter the credentials and click a login button
  
-@run
+
 Scenario: System Maker sees Onboarding in Sidemenu
    When System Maker - Onboarding should be displayed in the side menu
     
-@run
+
 Scenario: System Maker sees side menu items in Onboarding
   Then the System Maker should see Bank, Aggregators, ISO,SUB ISO, Groupmerchant, Merchant, and Terminal in the side menu of Onboarding
  
-@run 
- Scenario: SystemMaker clicks the bank module
+
+Scenario: SystemMaker clicks the bank module
     When the SystemMaker clicks the bank module
-    
-@run
- Scenario: SystemMaker clicks the Create Button
+   
+
+Scenario: SystemMaker clicks the Create Button
     When the SystemMaker clicks the Create Button
     
-@run 
-Scenario: System Maker can enter mandatory fields in "General Info" of Bank Onboarding
+
+ Scenario: Visiting the General Info in Bank Onboarding
+    When I Visit the General Info
+
+Scenario: the "Bank Name" field should prompt to enter valid inputs in Bank Onboarding
       Then the "Bank Name" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
+      
+Scenario: the "Address" field should prompt to enter valid inputs in Bank Onboarding     
       Then the "Address" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-      Then the "Pincode" dropdown should prompt to select valid inputs
+      
+Scenario: the "Pincode" field should prompt to select valid inputs in Bank Onboarding     
+      Then the "Pincode" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
+      
+Scenario: the "GST" field should prompt to enter valid inputs in Bank Onboarding     
       Then the "GST" field should prompt to enter valid inputs with GST format using sheetname "Bank Regression" and rownumber 0
+      
+Scenario: the "PAN" field should prompt to enter valid inputs in Bank Onboarding      
       Then the "PAN" field should prompt to enter valid inputs with PAN format using sheetname "Bank Regression" and rownumber 0
+      
+Scenario: the "MarsId" field should prompt to enter valid inputs in Bank Onboarding    
       Then the "MarsId" field	should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
+      
+ Scenario: the "Statement Frequency" field should prompt to select valid inputs in Bank Onboarding    
       Then the "Statement Frequency" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
+      
+ Scenario: the "Statement Type" field should prompt to select valid inputs in Bank Onboarding          
       Then the "Statement Type" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
+      
+Scenario: the "Domain" field should prompt to enter valid inputs in Bank Onboarding      
       Then the "Domain" field should prompt to enter the valid domain name using sheetname "Bank Regression" and rownumber 0
       Then the "Domain" field should prompt to enter the valid domain name using sheetname "Bank Regression" and rownumber 1
       Then the "Domain" field should prompt to enter the valid domain name using sheetname "Bank Regression" and rownumber 2
+      
+Scenario: the "NextStep" field should should be prompted to click on General Info       
       Then the "NextStep" button should be prompted to click on General Info
       
    
-@run
-Scenario: System Maker can enter mandatory fields and click Next step in "Communication Info" of Bank Onboarding
+
+Scenario: Visiting the Communication Info in Bank Onboarding
     When I visit the Communication Info
+    
+Scenario: the "Add" button should be prompted to click in Bank Onboarding      
     Then the "Add" button should be prompted to click
+    
+Scenario: the "Name" field should prompt to enter valid inputs in Bank Onboarding    
     Then the "Name" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+Scenario: the "Position" field should prompt to enter valid inputs in Bank Onboarding
     Then the "Position" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+Scenario: the "Mobile Number" field should prompt to enter valid inputs in Bank Onboarding    
     Then the "Mobile Number" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0 
+    
+Scenario: the "Email ID" field should prompt to enter valid inputs in Bank Onboarding    
     Then the "Email ID" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "AD User" field should prompt to select Yes or No based on the given input using sheetname "Bank Regression" and rownumber 0 
+    
+Scenario: the "AD User" field should prompt to select Yes or No based on the given input in Bank Onboarding    
+    Then the "AD User" field should prompt to select Yes or No based on the given input using sheetname "Bank Regression" and rownumber 0
+    
+Scenario: the "Save" button should be prompted to click on Communication Info in Bank Onboarding     
     Then the "Save" button should be prompted to click on Communication Info
+    
+Scenario: the "NextStep" button should prompt a click on Communication Info in Bank Onboarding    
     Then The "NextStep" button should prompt a click on Communication Info
     
 
-@run
-Scenario: System Maker can enter mandatory fields and click Next step in "Channel Config" of Bank Onboarding
+
+Scenario: Visiting the "Channel Config" in Bank Onboarding
      When I visit the Channel Config
-     Then the Channel Bank Onboarding should prompt users to enter valid inputs using the sheet name "Channel"
-     Then the "ONUS Routing" field should prompt to select the Bin based on the given input using the sheet name "Channel" 
-     #Then the "Add" button should be prompted to click
-     #Then the "POS Channel" field should prompt to select the channels based on the given input
-     #Then the "POS Network" field should prompt to select the Network based on the given input
-     #Then the "POS Transaction Sets" field should prompt to select the transaction sets based on the given input
-     #Then the "POS Routing" field should prompt to select the routing based on the given input
-     #Then the "Save" button should be prompted to click on Channel COnfig
-     #Then the "Add" button should be prompted to click
-     #Then the "UPI Channel" field should prompt to select the channels based on the given input
-     #Then the "UPI Transaction Sets" field should prompt to select the transaction sets based on the given input
-     #Then the "Save" button should be prompted to click on Channel COnfig
-     #Then the "Add" button should be prompted to click
-     #Then the "AEPS Channel" field should prompt to select the channels based on the given input
-     #Then the "AEPS Transaction Sets" field should prompt to select the transaction sets based on the given input
-     #Then the "Save" button should be prompted to click on Channel COnfig
-     #Then the "Add" button should be prompted to click
-     #Then the "MATM Channel" field should prompt to select the channels based on the given input
-     #Then the "MATM Network" field should prompt to select the Network based on the given input
-     #Then the "MATM Transaction Sets" field should prompt to select the transaction sets based on the given input
-     #Then the "MATM Routing" field should prompt to select the routing based on the given input
-     #Then the "Save" button should be prompted to click on Channel COnfig
+     
+Scenario: the Channel Bank Onboarding should prompt users to enter valid inputs in Bank Onboarding              
+     Then the Channel Bank Onboarding should prompt users to enter valid inputs using the sheet name "Channel Bank"
+     
+Scenario: the "NextStep" button should be prompted to click on channel config in Bank Onboarding     
      Then the "NextStep" button should be prompted to click on channel config
-     Then the "POS ADD BIN" field should prompt to select the Bin based on the given input
-     Then the "MATM ADD BIN" field should prompt to select the Bin based on the given input
+     
+ 
+Scenario: Visiting the ONUS Routing in Bank Onboarding
+     When I visit the ONUS Routing
+     
+Scenario: the "POS ADD BIN" field should prompt to select the Bin based on the given input in Bank Onboarding        
+     Then the "POS ADD BIN" field should prompt to select the Bin based on the given input using sheetname "Channel Bank" and rownumber 0
+     
+Scenario: the "MATM ADD BIN" field should prompt to select the Bin based on the given input in Bank Onboarding     
+     Then the "MATM ADD BIN" field should prompt to select the Bin based on the given input using sheetname "Channel Bank" and rownumber 0
+     
+Scenario: the "NextStep" button should be prompted to click on ONUS Routing in Bank Onboarding     
      Then the "NextStep" button should be prompted to click on ONUS Routing
      
      
+    Scenario: Visiting the "Global FRM" in Bank Onboarding
+    When I visit the Global FRM
      
-
-
-Scenario: System Maker can enter mandatory fields and click Next step in "Global FRM" of Bank Onboarding
-    When I visit the Global FRM 
+    Scenario: the GlobalFRMcheckbox should be checked in Bank Onboarding
     Then the GlobalFRMcheckbox should be checked
-    Then the "Velocity Check Minutes" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "Velocity Check Count" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "Cash@POS Count" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "Micro ATM Count" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "International Card Acceptence" field should prompt to select Yes or No based on the given input
-    Then the "ICA Daily" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "ICA Weekly" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "ICA Monthly" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "POS Daily" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "POS Weekly" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "POS Monthly" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "POS Minimum" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "POS Maximum" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "UPI Daily" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "UPI Weekly" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "UPI Monthly" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "UPI Minimum" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "UPI Maximum" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "AEPS Daily" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "AEPS Weekly" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "AEPS Monthly" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "AEPS Minimum" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "AEPS Maximum" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "MATM Daily" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "MATM Weekly" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "MATM Monthly" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "MATM Minimum" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-    Then the "MATM Maximum" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "Velocity Check Minutes" field should prompt to enter the valid inputs in Bank Onboarding 
+    Then the "Velocity Check Minutes" field should prompt to enter the valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "Velocity Check Count" field should prompt to enter the valid inputs in Bank Onboarding 
+    Then the "Velocity Check Count" field should prompt to enter the valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "Cash@POS Count" field should prompt to enter the valid inputs in Bank Onboarding 
+    Then the "Cash@POS Count" field should prompt to enter the valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "Micro ATM Count" field should prompt to enter the valid inputs in Bank Onboarding 
+    Then the "Micro ATM Count" field should prompt to enter the valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "International Card Acceptence" field should prompt to select the Yes or No based on the given input in Bank Onboarding 
+    Then the "International Card Acceptence" field should prompt to select the Yes or No based on the given input using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "ICA Daily" field should prompt to enter the valid inputs in Bank Onboarding 
+    Then the "ICA Daily" field should prompt to enter the valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "ICA Weekly" field should prompt to enter the valid inputs in Bank Onboarding 
+    Then the "ICA Weekly" field should prompt to enter the valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "ICA Monthly" field should prompt to enter the valid inputs in Bank Onboarding 
+    Then the "ICA Monthly" field should prompt to enter the valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "POS Daily" field should prompt to enter the valid inputs in Bank Onboarding 
+    Then the "POS Daily" field should prompt to enter the valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "POS Weekly" field should prompt to enter the valid inputs in Bank Onboarding 
+    Then the "POS Weekly" field should prompt to enter the valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "POS Monthly" field should prompt to enter the valid inputs in Bank Onboarding 
+    Then the "POS Monthly" field should prompt to enter the valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "POS Minimum" field should prompt to enter the valid inputs in Bank Onboarding 
+    Then the "POS Minimum" field should prompt to enter the valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "POS Maximum" field should prompt to enter the valid inputs in Bank Onboarding 
+    Then the "POS Maximum" field should prompt to enter the valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "UPI Daily" field should prompt to enter the valid inputs in Bank Onboarding 
+    Then the "UPI Daily" field should prompt to enter the valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "UPI Weekly" field should prompt to enter the valid inputs in Bank Onboarding 
+    Then the "UPI Weekly" field should prompt to enter the valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "UPI Monthly" field should prompt to enter the valid inputs in Bank Onboarding 
+    Then the "UPI Monthly" field should prompt to enter the valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "UPI Minimum" field should prompt to enter the valid inputs in Bank Onboarding 
+    Then the "UPI Minimum" field should prompt to enter the valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "UPI Maximum" field should prompt to enter the valid inputs in Bank Onboarding 
+    Then the "UPI Maximum" field should prompt to enter the valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "AEPS Daily" field should prompt to enter the valid inputs in Bank Onboarding 
+    Then the "AEPS Daily" field should prompt to enter the valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "AEPS Weekly" field should prompt to enter the valid inputs in Bank Onboarding 
+    Then the "AEPS Weekly" field should prompt to enter the valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "AEPS Monthly" field should prompt to enter the valid inputs in Bank Onboarding 
+    Then the "AEPS Monthly" field should prompt to enter the valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "AEPS Minimum" field should prompt to enter the valid inputs in Bank Onboarding 
+    Then the "AEPS Minimum" field should prompt to enter the valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "AEPS Maximum" field should prompt to enter the valid inputs in Bank Onboarding 
+    Then the "AEPS Maximum" field should prompt to enter the valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "MATM Daily" field should prompt to enter the valid inputs in Bank Onboarding 
+    Then the "MATM Daily" field should prompt to enter the valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "MATM Weekly" field should prompt to enter the valid inputs in Bank Onboarding 
+    Then the "MATM Weekly" field should prompt to enter the valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "MATM Monthly" field should prompt to enter the valid inputs in Bank Onboarding 
+    Then the "MATM Monthly" field should prompt to enter the valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "MATM Minimum" field should prompt to enter the valid inputs in Bank Onboarding 
+    Then the "MATM Minimum" field should prompt to enter the valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "MATM Maximum" field should prompt to enter the valid inputs in Bank Onboarding 
+    Then the "MATM Maximum" field should prompt to enter the valid inputs using sheetname "Bank Regression" and rownumber 0
+    
+    Scenario: the "NextStep" button should be prompted to click on Global FRM in Bank Onboarding 
     Then the "NextStep" button should be prompted to click on Global FRM
- 
- 
-             
- Scenario: System Maker can enter mandatory fields and click Next step in "Commercial" of Bank Onboarding
-      When I visit the Commercial
-      Then the "Interchange Plan Add" button should be prompted to click
-      Then the "Interchange Plan Channel - POS" dropdown should prompt to select valid inputs
-      When the "Interchange Pricing Plan - BANK TEST PLAN" dropdown should prompt to select valid inputs
-      Then the Commercial "Save" button should be prompted to click
+     
+     
+     
+Scenario: I visit the Commercial in Bank Onboarding 
+      When I visit the Commercial 
+
+Scenario: the Commercial "Interchange Plan" should prompt users to enter valid inputs in Bank Onboarding
+      Then the Commercial "Interchange Plan" should prompt users to enter valid inputs using the sheet name "Commercial"
       
+      Scenario: the Commercial "Bank Onboarding" should prompt users to enter valid inputs in Bank Onboarding
+      Then the Commercial "Bank Onboarding" should prompt users to enter valid inputs using the sheet name "Commercial"
       
-      Then the "Interchange Plan Add" button should be prompted to click
-      Then the "Interchange Plan Channel - AEPS" dropdown should prompt to select valid inputs
-      When the "Interchange Pricing Plan - AEPS" dropdown should prompt to select valid inputs
-      Then the Commercial "Save" button should be prompted to click
-      
-      
-      Then the "Bank Onboarding Commercial Add" button should be prompted to click
-      Then the "Bank Onboarding Commercial Channel - POS" dropdown should prompt to select valid inputs
-      When the "Bank Onboarding Commercial Pricing Plan - POS" dropdown should prompt to select valid inputs
-      Then the Commercial "Save" button should be prompted to click
-      
-      Then the "Bank Onboarding Commercial Add" button should be prompted to click
-      Then the "Bank Onboarding Commercial Channel - AEPS" dropdown should prompt to select valid inputs
-      When the "Bank Onboarding Commercial Pricing Plan - BANK AEPS PLAN" dropdown should prompt to select valid inputs
-      Then the Commercial "Save" button should be prompted to click
-      
-      Then the "Bank Onboarding Commercial Add" button should be prompted to click
-      Then the "Bank Onboarding Commercial Channel - UPI" dropdown should prompt to select valid inputs
-      When the "Bank Onboarding Commercial Pricing Plan - UPI" dropdown should prompt to select valid inputs
-      Then the Commercial "Save" button should be prompted to click
-      
+      Scenario: the "NextStep" button should be prompted to click on Commercial in Bank Onboarding
       Then the "NextStep" button should be prompted to click on Commercial
-      
-Scenario: System Maker can enter mandatory fields and click Next step in "Settlement Info" of Bank Onboarding
+ 
+     
+      Scenario: I visit the Settlement Info in Bank Onboarding in Bank Onboarding
        When I visit the Settlement Info
+       
+       Scenario: the Settlement Info "ADD" button should be prompted to click in Bank Onboarding       
        Then the Settlement Info "ADD" button should be prompted to click
-       Then the Settlement Info "Channel" dropdown should prompt to select the valid inputs
-       Then the Settlement Info "Account Type" dropdown should prompt to select the valid inputs
+       
+       Scenario: the Settlement Info "Channel" dropdown should prompt to select the valid inputs in Bank Onboarding
+       Then the Settlement Info "Channel" dropdown should prompt to select the valid inputs using sheetname "Bank Regression" and rownumber 0
+       
+       Scenario: the Settlement Info "Account Type" dropdown should prompt to select the valid inputs in Bank Onboarding
+       Then the Settlement Info "Account Type" dropdown should prompt to select the valid inputs using sheetname "Bank Regression" and rownumber 0
+       
+       Scenario: the Settlement Info "Bank Account Number" field should prompt to enter valid inputs in Bank Onboarding
        Then the Settlement Info "Bank Account Number" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-       Then the Settlement Info "IFSC Code" dropdown should prompt to select valid inputs
+       
+       Scenario: the Settlement Info "IFSC Code" dropdown should prompt to select valid inputs in Bank Onboarding
+       Then the Settlement Info "IFSC Code" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
+       
+       Scenario: the SettlementInfo "Save" button should be prompted to click in Bank Onboarding
        Then the SettlementInfo "Save" button should be prompted to click
-       Then the Settlement Info "Settlement Type" dropdown should prompt to select valid inputs
+       
+       Scenario: the Settlement Info "Settlement Type" dropdown should prompt to select valid inputs in Bank Onboarding 
+       Then the Settlement Info "Settlement Type" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
+       
+       Scenario: the "NextStep" button should be prompted to click on Settlement Info in Bank Onboarding
        Then the "NextStep" button should be prompted to click on Settlement Info
        
-       
-Scenario: System Maker can enter mandatory fields and click Next step in "Whitelabel" of Bank Onboarding
+      
+Scenario: I visit the Whitelabel in Bank Onboarding
        When I visit the Whitelabel
-       Then the Whitelabel "BankOwnDeployment" dropdown should prompt to select valid inputs
-       Then the Whitelabel "Payfac Onboarding" dropdown should prompt to select valid inputs
-       Then the Whitelabel "ISO Onboarding" dropdown should prompt to select valid inputs
-       Then the Whitelabel "Sales Team Onboarding" dropdown should prompt to select valid inputs
+       
+       Scenario: the Whitelabel "BankOwnDeployment" dropdown should prompt to select valid inputs in Bank Onboarding
+       Then the Whitelabel "BankOwnDeployment" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
+       
+       Scenario: the Whitelabel "Payfac Onboarding" dropdown should prompt to select valid inputs in Bank Onboarding
+       Then the Whitelabel "Payfac Onboarding" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
+       
+       Scenario: the Whitelabel "ISO Onboarding" dropdown should prompt to select valid inputs in Bank Onboarding
+       Then the Whitelabel "ISO Onboarding" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
+       
+       Scenario: the Whitelabel "Sales Team Onboarding" dropdown should prompt to select valid inputs in Bank Onboarding
+       Then the Whitelabel "Sales Team Onboarding" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
+       
+       Scenario: the Whitelabel "Max Number of platform" field should prompt to enter valid inputs in Bank Onboarding
        Then the Whitelabel "Max Number of platform" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
+       
+       Scenario: the "NextStep" button should be prompted to click on WHiteLabel in Bank Onboarding
        Then the "NextStep" button should be prompted to click on WHiteLabel
-       
-Scenario: System Maker can enter mandatory fields and click Next step in "Webhook" of Bank Onboarding
+
+    
+Scenario: I visit the Webhooks in Bank Onboarding
        When I visit the Webhooks
+      
+       Scenario: the Webhooks "Add" button should be prompted to click in Bank Onboarding
        Then the Webhooks "Add" button should be prompted to click
-       Then the Webhooks "Webhook Type" dropdown should prompt to select valid inputs
-       Then the Webhooks "Webhook URL" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-       Then the Webhooks "Save" button should be prompted to click
-       Then the "NextStep" button should be prompted to click on Webhooks
        
-Scenario: System Maker can enter mandatory fields and click Next step in "KYC Config" of Bank Onboarding
+       Scenario: the Webhooks "Webhook Type" dropdown should prompt to select valid inputs in Bank Onboarding
+       Then the Webhooks "Webhook Type" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
+       
+       Scenario: the Webhooks "Webhook URL" field should prompt to enter valid inputs in Bank Onboarding
+        Then the Webhooks "Webhook URL" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
+       
+       Scenario: the Webhooks "Save" button should be prompted to click in Bank Onboarding
+       Then the Webhooks "Save" button should be prompted to click
+       
+       Scenario: the "NextStep" button should be prompted to click on Webhooks in Bank Onboarding
+       Then the "NextStep" button should be prompted to click on Webhooks
+    
+       
+Scenario: I visit the KYC Config
      When I visit the KYC Config
+
+   
+     Scenario: the KYC Config "Add" button should be prompted to click in Bank Onboarding
      Then the KYC Config "Add" button should be prompted to click
-     Then the KYC Config "Business Type" dropdown should prompt to select valid inputs
-     Then the Company KYC "Proof of Identity" dropdown should prompt to select valid inputs
-     Then the Company KYC "Proof of Address" dropdown should prompt to select valid inputs
-     Then the Company KYC "Bank Documents" dropdown should prompt to select valid inputs
-     Then the Company KYC "Tax Documents" dropdown should prompt to select valid inputs
-     Then the Individual "Proof of Identity" dropdown should prompt to select valid inputs
-     Then the Individual "Proof of Address" dropdown should prompt to select valid inputs
-     Then the Individual "Other Documents" dropdown should prompt to select valid inputs
+ 
+    
+     Scenario: the KYC Config "Business Type" dropdown should prompt to select valid inputs in Bank Onboarding
+     Then the KYC Config "Business Type" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
+   
+    
+     Scenario: the Company KYC "Proof of Identity" dropdown should prompt to select valid inputs in Bank Onboarding
+     Then the Company KYC "Proof of Identity" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
+     
+     
+     Scenario: the Individual "Proof of Identity" dropdown should prompt to select valid inputs in Bank Onboarding
+     Then the Individual "Proof of Identity" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
+     
+     
+     Scenario: the Individual "Proof of Address" dropdown should prompt to select valid inputs in Bank Onboarding
+     Then the Individual "Proof of Address" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
+     
+     
+     Scenario: the Individual "Bank Documents" dropdown should prompt to select valid inputs in Bank Onboarding
+     Then the Individual "Bank Document" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
+     
+     
+     Scenario: the Individual "Tax Documents" dropdown should prompt to select valid inputs in Bank Onboarding
+     Then the Individual "Tax Document" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
+     
+     Scenario: the Individual "Other Documents" dropdown should prompt to select valid inputs in Bank Onboarding
+     Then the Individual "Other Document" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
+     
+     Scenario: the KYC "Save" button should be prompted to click in Bank Onboarding
      Then the KYC "Save" button should be prompted to click
+     @run
+     Scenario: the "NextStep" button should be prompted to click on KYC in Bank Onboarding
      Then the "NextStep" button should be prompted to click on KYC
-  
-  Scenario: System Maker submits the application for verification
-  When the System Maker clicks the "Submit for verification" button in Bank Onboarding
+     
+     
+    
+     
 
-Scenario: System Maker confirms submission by clicking the "Yes" button
-  When the System Maker clicks the "Yes" button to confirm submission in Bank Onboarding
+  
+  Scenario: System Maker submits the application for verification in Bank Onboarding
+  When the System Maker clicks the "Submit for verification" button
+
+Scenario: System Maker confirms submission by clicking the "Yes" button in Bank Onboarding
+  When the System Maker clicks the "Yes" button to confirm submission
   
 
-Scenario: System Maker logs out by clicking profile and log-out button
+Scenario: System Maker logs out by clicking profile and log-out button in Bank Onboarding
   When the System Maker clicks on the profile and log-out button
 
-Scenario: System Maker handles the pop-up and is redirected to the login page
+Scenario: System Maker handles the pop-up and is redirected to the login page in Bank Onboarding
   When the System Maker handles the pop-up by selecting the "Yes" button and redirected to login page
   
   
 
 Scenario: System verifier Login
- Given I visit the System Verifier Login using sheetname "Bank Regression" and rownumber 1
+ Given I visit the System Verifier Login using sheetname "Credentials" and rownumber 2
  And I enter the credentials and click a login button
     
   	 
@@ -294,11 +434,11 @@ Scenario: System Verifier - click on action (Three dot button) and select the vi
   
   
   Scenario: System verifier submits the application for Approval
-  When the System verifier clicks the "Submit for Approval" button in Bank Onboarding
+  When the System verifier clicks the "Submit for Approval" button
 
   
   Scenario: System verifier confirms submission by clicking the "Yes" button
-  When the System verifier clicks the "Yes" button to confirm submission in Bank Onboarding
+  When the System verifier clicks the "Yes" button to confirm submission
   
  
   Scenario: System verifier logs out by clicking profile and log-out button
@@ -311,7 +451,7 @@ Scenario: System Verifier - click on action (Three dot button) and select the vi
   
   
 Scenario: System Approver Login
-  Given I visit the System Approver Login using sheetname "Bank Regression" and rownumber 2
+  Given I visit the System Approver Login using sheetname "Credentials" and rownumber 3
   And I enter the credentials and click a login button
    
   
@@ -377,11 +517,11 @@ Scenario: System Approver - click on action (Three dot button) and select the vi
         
        
   Scenario: System Approver submits the application for Approve
-  When the System Approver clicks the "Submit for Approve" button in Bank Onboarding
+  When the System Approver clicks the "Submit for Approve" button
 
 
   Scenario: System Approver confirms submission by clicking the "Yes" button
-     When the System Approver clicks the "Yes" button to confirm submission in Bank Onboarding
+     When the System Approver clicks the "Yes" button to confirm submission
    
      
    Scenario: Verify that Bank CPID is generated after changing the status to Approved

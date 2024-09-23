@@ -67,6 +67,40 @@ public class AggregatorLocators {
 
 	@FindBy(xpath = "//span[text()='Change Log']")
 	private WebElement ChangeLog;
+	
+	
+//IntroMenu
+	
+	@FindBy(xpath = "//h6[text()='Brand Info']")
+	private WebElement IntroCompanyInfo;
+	
+	@FindBy(xpath = "//h6[text()='Partner / Director / Owner / Trustee Details']")
+	private WebElement IntroPersonalInfo;
+	
+	@FindBy(xpath = "//h6[text()='ADMIN USER Details']")
+	private WebElement IntroCommunicationInfo;
+	
+	@FindBy(xpath = "//h6[text()='Channel Configuration']")
+	private WebElement IntroChannelConfig;
+	
+	@FindBy(xpath = "//h6[text()='Personal Documents']")
+	private WebElement IntroKYC;
+	
+	@FindBy(xpath = "//h6[text()='FRM Parameters']")
+	private WebElement IntroRiskInfo;
+	
+	@FindBy(xpath = "//h6[text()='Aggregator Discounts']")
+	private WebElement IntroDiscountRate;
+	
+	@FindBy(xpath = "//h6[text()='Bank Details']")
+	private WebElement IntroSettlementInfo;
+	
+	@FindBy(xpath = "//h6[text()='Aggregator Onboarding Configuration']")
+	private WebElement IntroWhitelabel;
+	
+	@FindBy(xpath = "//h6[text()='Payment Bridge']")
+	private WebElement IntroWebhooks;
+	
 
 //SalesInfo
 
@@ -359,7 +393,8 @@ public class AggregatorLocators {
 	@FindBy(xpath = "(//button[@aria-label='Open calendar'])[2]")
 	private WebElement OpenCalenderPasswordExpiryDate;
 
-	@FindBy(xpath = "//span[text()='Save'] | //span[text()=' Save ']")
+//	@FindBy(xpath = "//span[text()='Save'] | //span[text()=' Save ']")
+	@FindBy(xpath = "//span[contains(text(), 'Save')]")
 	private WebElement SAVEPersonal;
 
 //Channel Config
@@ -416,6 +451,10 @@ public class AggregatorLocators {
 	private WebElement ChannelSave;
 	
 //KYC
+	
+	@FindBy(xpath = "(//input[@type='file'])[2]")
+	private WebElement CompanyProofofaddressUpload;
+	
 	@FindBy(xpath = "(//input[@type='file'])[8]")
 	private WebElement CompanyPANUpload;
 	
@@ -423,11 +462,7 @@ public class AggregatorLocators {
 	private WebElement GSTCertificateUpload;
 	
 	@FindBy(xpath = "(//input[@type='file'])[4]")
-	private WebElement AadhaarUpload;
-	
-	
-	
-	
+	private WebElement AadhaarUpload;	
 
 //RiskInfo
 
@@ -463,6 +498,9 @@ public class AggregatorLocators {
 
 	@FindBy(xpath = "//input[@formcontrolname='posPerDayCount']")
 	private WebElement CashPOSCount;
+	
+	@FindBy(xpath = "//input[@formcontrolname='matmCount']")
+	private WebElement microatmcount;
 
 	@FindBy(xpath = "//mat-select[@formcontrolname='iCardAcceptance']")
 	private WebElement InternationalCardCount;
@@ -614,6 +652,104 @@ public class AggregatorLocators {
 		PageFactory.initElements(driver, this);
 
 	}
+	
+//IntroPage
+	
+	public void DisplayedOnIntroCompanyInfo() {
+		try {
+			assertTrue("Company Info Page should be displayed", IntroCompanyInfo.isDisplayed());
+		} catch (NoSuchElementException e) {
+			// Fail the test if the button is not found
+			fail("Company Info Page Should be displayed But not found.");
+		}
+	}
+	
+	public void DisplayedOnIntroPersonalInfo() {
+		try {
+			assertTrue("Personal Info Page should be displayed", IntroPersonalInfo.isDisplayed());
+		} catch (NoSuchElementException e) {
+			// Fail the test if the button is not found
+			fail("Personal Info Page Should be displayed But not found.");
+		}
+	}
+	
+	
+	public void DisplayedOnIntroCommunicationInfo() {
+		try {
+			assertTrue("Communication Info Page should be displayed", IntroCommunicationInfo.isDisplayed());
+		} catch (NoSuchElementException e) {
+			// Fail the test if the button is not found
+			fail("Communication Info Page Should be displayed But not found.");
+		}
+	}
+	
+	
+	public void DisplayedOnIntroChannelConfig() {
+		try {
+			assertTrue("Channel Config Page should be displayed", IntroChannelConfig.isDisplayed());
+		} catch (NoSuchElementException e) {
+			// Fail the test if the button is not found
+			fail("Channel Config Page Should be displayed But not found.");
+		}
+	}
+	
+	public void DisplayedOnIntroKYC() {
+		try {
+			assertTrue("KYC Page should be displayed", IntroKYC.isDisplayed());
+		} catch (NoSuchElementException e) {
+			// Fail the test if the button is not found
+			fail("KYC Page Should be displayed But not found.");
+		}
+	}
+	
+	public void DisplayedOnIntroRiskInfo() {
+		try {
+			assertTrue("Risk Info Page should be displayed", IntroRiskInfo.isDisplayed());
+		} catch (NoSuchElementException e) {
+			// Fail the test if the button is not found
+			fail("Risk Info Page Should be displayed But not found.");
+		}
+	}
+	
+	
+	public void DisplayedOnIntroDiscountRate() {
+		try {
+			assertTrue("Discount Rate Page should be displayed", IntroDiscountRate.isDisplayed());
+		} catch (NoSuchElementException e) {
+			// Fail the test if the button is not found
+			fail("Discount Rate Page Should be displayed But not found.");
+		}
+	}
+	
+	public void DisplayedOnIntroSettlement() {
+		try {
+			assertTrue("Settlement Info Page should be displayed", IntroSettlementInfo.isDisplayed());
+		} catch (NoSuchElementException e) {
+			// Fail the test if the button is not found
+			fail("Settlement Info Page Should be displayed But not found.");
+		}
+	}
+	
+	
+	public void DisplayedOnIntroWhiteLabel() {
+		try {
+			assertTrue("Whitelabel Page should be displayed", IntroWhitelabel.isDisplayed());
+		} catch (NoSuchElementException e) {
+			// Fail the test if the button is not found
+			fail("Whitelabel Page Should be displayed But not found.");
+		}
+	}
+	
+	
+	public void DisplayedOnIntroWebhook() {
+		try {
+			assertTrue("Webhook Page should be displayed", IntroWebhooks.isDisplayed());
+		} catch (NoSuchElementException e) {
+			// Fail the test if the button is not found
+			fail("Webhook Page Should be displayed But not found.");
+		}
+	}
+	
 	
 	
 	
@@ -1537,6 +1673,14 @@ public class AggregatorLocators {
 
 
 	}
+	
+	public void EnterOnRegisteredPincode(String pin) {
+		RegisteredPincode.sendKeys(pin);
+		
+	}
+	
+	
+	
 
 	public String getRegisteredPincode() {
 		return RegisteredPincode.getAttribute("value");
@@ -1729,9 +1873,13 @@ public class AggregatorLocators {
 //
 //	}
 
-	public void EnterOnRegisterNumber(Integer num) {
-		RegisterNumber.sendKeys(num.toString());
-	}
+//	public void EnterOnRegisterNumber(Integer num) {
+//		RegisterNumber.sendKeys(num.toString());
+//	}
+	
+	public void EnterOnRegisterNumber(String num) {
+	RegisterNumber.sendKeys(num);
+}
 
 	public void CompanyPANLabel() {
 		try {
@@ -2937,6 +3085,14 @@ public class AggregatorLocators {
    
 //KYC   
    
+   public void UploadCompanyProofofaddress(String proofofaddress) {
+		
+	   //    CompanyPANUpload.click();
+		   CompanyProofofaddressUpload.sendKeys(proofofaddress);
+
+		}
+   
+   
    public void UploadCompanyPAN(String pan) {
 		
    //    CompanyPANUpload.click();
@@ -3042,6 +3198,13 @@ public class AggregatorLocators {
 		CashPOSCount.click();
 
 	}
+	
+	public void ClickOnMicroAtmcount() {
+
+		microatmcount.click();
+
+	}
+
 
 	public void ClickOnInternationalcardCount() {
 
@@ -3066,6 +3229,15 @@ public class AggregatorLocators {
 		CashPOSCount.sendKeys(cashposcount);
 
 	}
+	
+	
+	public void EnterOnMicroAtmcount(String icroatmcount) {
+   
+		microatmcount.sendKeys(icroatmcount);
+
+	}
+	
+	
 
 	public void yesInternationalcardCount() {
 
@@ -3175,11 +3347,13 @@ public class AggregatorLocators {
 	}
 
 	public void ClickOnSettlementMode() {
-
-		SettlementMode.click();
-
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	    wait.until(ExpectedConditions.elementToBeClickable(SettlementMode));
+	    
+	    SettlementMode.click();
 	}
 
+	
 	public void ClickOnPaymentFlag() {
 
 		PaymentFlag.click();

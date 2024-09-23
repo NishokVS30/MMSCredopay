@@ -23,12 +23,12 @@ Feature: Bank Onboarding Form Validation
  
 
 Scenario: SuperAdmin Login
- Given I visit the SuperAdmin Login using sheetname "Bank" and rownumber 1
+ Given I visit the SuperAdmin Login using sheetname "Credentials" and rownumber 0
  And I enter the credentials and click the login button
     
    
 Scenario: Verify Bank Name label
-    Given I visit the bank onboarding page
+    Given I visit the bank onboarding page in Super Admin
     When I click on the "Bank Name" field
     Then the label name should be "Bank Name"
 
@@ -82,7 +82,7 @@ Scenario: Verify Pincode field does not allow proceeding without input
     
      
 Scenario: Verify Pincode dropdown prompts for valid inputs
-    Then the "Pincode" dropdown should prompt to select valid inputs
+    Then the "Pincode" dropdown should prompt to select valid inputs using sheetname "Bank" and rownumber 0
     
 
     
@@ -154,15 +154,14 @@ Scenario: Verify Statement Frequency label
     
    
 Scenario: Verify Statement Frequency dropdown prompts for valid inputs
-    Then the "Statement Frequency" dropdown should prompt to select valid inputs
-   
-    
+    Then the "Statement Frequency" dropdown should prompt to select valid inputs using sheetname "Bank" and rownumber 0
+      
 Scenario: Verify Statement Type label
     Then the label name should be "Statement Type"
     
-     
+     	
 Scenario: Verify Statement Type dropdown prompts for valid inputs
-    Then the "Statement Type" dropdown should prompt to select valid inputs
+    Then the "Statement Type" dropdown should prompt to select valid inputs using sheetname "Bank" and rownumber 0
  
     
 Scenario: Verify Domain label
@@ -340,7 +339,7 @@ Scenario: Verify "Communication Info" Label Name is "AD User"
 
     
 Scenario: Verify "AD User" Field Prompts to Select Yes/No
-    Then the "AD User" field should prompt to select Yes or No based on the given input    
+    Then the "AD User" field should prompt to select Yes or No based on the given input using sheetname "Bank" and rownumber 0
 
 
 Scenario: Verify "Save" Button is Prompted to Click on Communication Info
@@ -785,7 +784,7 @@ Scenario: Verify Settlement Info "Channel" Field Does Not Allow Proceeding Witho
     
      
  Scenario: Verify Settlement Info "Channel" dropdown prompts for valid inputs
-    Then the Settlement Info "Channel" dropdown should prompt to select valid inputs
+    Then the Settlement Info "Channel" dropdown should prompt to select valid inputs using sheetname "Bank" and rownumber 0
     
         
    
@@ -799,7 +798,7 @@ Scenario: Verify Settlement Info "Account Type" Field Does Not Allow Proceeding 
     
  
  Scenario: Verify Settlement Info "Account Type" dropdown prompts for valid inputs
-    Then the Settlement Info "Account Type" dropdown should prompt to select valid inputs 
+    Then the Settlement Info "Account Type" dropdown should prompt to select valid inputs using sheetname "Bank" and rownumber 0
        
 
 
@@ -817,7 +816,7 @@ Scenario: Verify Settlement Info "Bank Account Number" Field Does Not Allow Proc
          
   
    Scenario: Verify Settlement Info "Bank Account Number" Field Prompts for valid Inputs
-    Then the Settlement Info "Bank Account Number" field should prompt to enter valid inputs using sheetname "Bank" and rownumber 0 
+    Then the Settlement Info "Bank Account Number" field should prompt to enter valid inputs using sheetname "Bank" and rownumber 0
     
     
     
@@ -831,8 +830,7 @@ Scenario: Verify Settlement Info "IFSC Code" Field Does Not Allow Proceeding Wit
     
   
  Scenario: Verify Settlement Info "IFSC Code" dropdown prompts for valid inputs
-    Then the Settlement Info "IFSC Code" dropdown should prompt to select valid inputs
-    
+    Then the Settlement Info "IFSC Code" dropdown should prompt to select valid inputs using sheetname "Bank" and rownumber 0 
   
 Scenario: Verify SettlementInfo "Bank Details" Label Name is "Bank Name".
     Then the "SettlementInfo" label name should be "Bank Name"
@@ -868,7 +866,7 @@ Scenario: Verify Settlement Info "Settlement Type" Field Does Not Allow Proceedi
      
    
  Scenario: Verify Settlement Info "Settlement Type" dropdown prompts for valid inputs
-    Then the Settlement Info "Settlement Type" dropdown should prompt to select valid inputs    
+    Then the Settlement Info "Settlement Type" dropdown should prompt to select valid inputs using sheetname "Bank" and rownumber 0    
      
     
   Scenario: Verify "NextStep" Button is Prompted to Click on Settlement Info
@@ -882,7 +880,7 @@ Scenario: Verify Whitelabel Label Name is "Bank Own Deployment".
     
     
  Scenario: Verify Whitelabel "BankOwnDeployment" dropdown prompts for valid inputs
-    Then the Whitelabel "BankOwnDeployment" dropdown should prompt to select valid inputs
+    Then the Whitelabel "BankOwnDeployment" dropdown should prompt to select valid inputs using sheetname "Bank" and rownumber 0 
     
   
 Scenario: Verify Whitelabel Label Name is "Payfac Onboarding".
@@ -890,7 +888,7 @@ Scenario: Verify Whitelabel Label Name is "Payfac Onboarding".
     
     
  Scenario: Verify Whitelabel "Payfac Onboarding" dropdown prompts for valid inputs
-    Then the Whitelabel "Payfac Onboarding" dropdown should prompt to select valid inputs
+    Then the Whitelabel "Payfac Onboarding" dropdown should prompt to select valid inputs using sheetname "Bank" and rownumber 0 
     
     
  
@@ -899,7 +897,7 @@ Scenario: Verify Whitelabel Label Name is "ISO Onboarding".
     
    
  Scenario: Verify Whitelabel "ISO Onboarding" dropdown prompts for valid inputs
-    Then the Whitelabel "ISO Onboarding" dropdown should prompt to select valid inputs
+    Then the Whitelabel "ISO Onboarding" dropdown should prompt to select valid inputs using sheetname "Bank" and rownumber 0 
     
   
 Scenario: Verify Whitelabel Label Name is "Sales Team Onboarding".
@@ -907,7 +905,7 @@ Scenario: Verify Whitelabel Label Name is "Sales Team Onboarding".
     
     
  Scenario: Verify Whitelabel "Sales Team Onboarding" dropdown prompts for valid inputs
-    Then the Whitelabel "Sales Team Onboarding" dropdown should prompt to select valid inputs
+    Then the Whitelabel "Sales Team Onboarding" dropdown should prompt to select valid inputs using sheetname "Bank" and rownumber 0
     
 
    Scenario: Verify Whitelabel "Max Number of platform" Field Prompts for valid Inputs
@@ -932,7 +930,7 @@ Scenario: Verify Webhooks "Webhook Type" Field Does Not Allow Proceeding Without
      
    
  Scenario: Verify Webhooks "Webhook Type" dropdown prompts for valid inputs
-    Then the Webhooks "Webhook Type" dropdown should prompt to select valid inputs  
+    Then the Webhooks "Webhook Type" dropdown should prompt to select valid inputs using sheetname "Bank" and rownumber 0 
     
   
 Scenario: Verify Webhooks Label Name is "Webhook Url".
@@ -971,43 +969,41 @@ Scenario: Verify Webhooks "Webhook Url" Field Does Not Allow Proceeding Without 
     
        
  Scenario: Verify KYC Config "Business Type" dropdown prompts for valid inputs
-    Then the KYC Config "Business Type" dropdown should prompt to select valid inputs
+    Then the KYC Config "Business Type" dropdown should prompt to select valid inputs using sheetname "Bank" and rownumber 0 
     
     
         
  Scenario: Verify Company KYC "Proof of Identity" dropdown prompts for valid inputs
-    Then the Company KYC "Proof of Identity" dropdown should prompt to select valid inputs
+    Then the Company KYC "Proof of Identity" dropdown should prompt to select valid inputs using sheetname "Bank" and rownumber 0 
     
     
-         
- Scenario: Verify Company KYC "Proof of Address" dropdown prompts for valid inputs
-    Then the Company KYC "Proof of Address" dropdown should prompt to select valid inputs
-    
-         
- Scenario: Verify Company KYC "Bank Documents" dropdown prompts for valid inputs
-    Then the Company KYC "Bank Documents" dropdown should prompt to select valid inputs
-    
-       
- Scenario: Verify Company KYC "Tax Documents" dropdown prompts for valid inputs
-    Then the Company KYC "Tax Documents" dropdown should prompt to select valid inputs
-    
-    
-       
- Scenario: Verify Individual "Proof of Identity" dropdown prompts for valid inputs
-    Then the Individual "Proof of Identity" dropdown should prompt to select valid inputs
+Scenario: Verify Individual "Proof of Identity" dropdown prompts for valid inputs
+    Then the Individual "Proof of Identity" dropdown should prompt to select valid inputs using sheetname "Bank" and rownumber 0 
     
     
         
  Scenario: Verify Individual "Proof of Address" dropdown prompts for valid inputs
-    Then the Individual "Proof of Address" dropdown should prompt to select valid inputs
+    Then the Individual "Proof of Address" dropdown should prompt to select valid inputs using sheetname "Bank" and rownumber 0
+    
+    
+Scenario: Verify Individual "Bank Documents" dropdown prompts for valid inputs     
+    Then the Individual "Bank Documents" dropdown should prompt to select valid inputs using sheetname "Bank" and rownumber 0
     
         
  Scenario: Verify Individual "Other Documents" dropdown prompts for valid inputs
-    Then the Individual "Other Documents" dropdown should prompt to select valid inputs
+    Then the Individual "Other Documents" dropdown should prompt to select valid inputs using sheetname "Bank" and rownumber 0 
     
        
    Scenario: Verify KYC "SAVE" Button is Prompted to Click
     Then the KYC "Save" button should be prompted to click   
+    
+    
+     Then the KYC Config "Business Type" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
+     Then the Company KYC "Proof of Identity" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
+     Then the Individual "Proof of Identity" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
+     Then the Individual "Proof of Address" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
+     Then the Individual "Bank Documents" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
+     Then the Individual "Other Documents" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
     
     
      

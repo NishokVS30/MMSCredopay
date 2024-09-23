@@ -29,7 +29,7 @@ public class SystemUserTestCases {
 
 	private ExtentTest test;
 
-	public SystemUserTestCases() {
+	public SystemUserTestCases() throws InterruptedException {
 
 		this.driver = CustomWebDriverManager.getDriver();
 		System.setProperty("webdriver.chrome.logfile", "chromedriver.log");

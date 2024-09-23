@@ -88,6 +88,9 @@ public class BankLocators {
 
 	@FindBy(xpath = "//button[@class='logo ng-tns-c471-3']")
 	private WebElement ClickOnDownArrow;
+	
+	@FindBy(xpath = "//button[@class='logo ng-tns-c479-3']")
+	private WebElement ClickOnDownArrowSuperadmin;
 
 	@FindBy(xpath = "//span[text()='Onboarding']")
 	private WebElement ClickOnOnboarding;
@@ -160,6 +163,9 @@ public class BankLocators {
 
 	@FindBy(xpath = "//span[text()='Channel Config']")
 	private WebElement ChannelConfig;
+	
+	@FindBy(xpath = "//span[text()='ONUS Routing']")
+	private WebElement ONUSRouting;
 
 	@FindBy(xpath = "//span[text()='Global FRM']")
 	private WebElement GlobalFrm;
@@ -278,6 +284,9 @@ public class BankLocators {
 
 	@FindBy(xpath = "(//span[text()='Add'])[1]")
 	private WebElement ClickonCommADD;
+	
+	@FindBy(xpath = "(//span[text()='Add'])[2]")
+	private WebElement ClickonCommSettlementandReconADD;
 
 	@FindBy(xpath = "//input[@formcontrolname='name']")
 	private WebElement ClickonCommuName;
@@ -826,8 +835,14 @@ public class BankLocators {
 	@FindBy(xpath = "//input[@formcontrolname='numberofDocinPoa']")
 	private WebElement KycNumberOfDocinPoaIndividual2;
 
-	@FindBy(xpath = "//mat-select[@formcontrolname=\"keyPersonotherDoc\"]")
+	@FindBy(xpath = "//mat-select[@formcontrolname='keyPersonotherDoc']")
 	private WebElement KYCIndividualOtherDocument;
+	
+	@FindBy(xpath = "//mat-select[@formcontrolname='keyPersonTaxDoc']")
+	private WebElement KYCIndividualTaxDocument;
+	
+	@FindBy(xpath = "//mat-select[@formcontrolname='keyPersonBankDoc']")
+	private WebElement KYCIndividualBankDocument;
 
 	@FindBy(xpath = "//span[text()='Alternate Document ']")
 	private WebElement KYCIndividualSelectOnOtherDocument;
@@ -865,25 +880,48 @@ public class BankLocators {
 	
 	
 	
-	@FindBy(xpath = "//span[text()='View']")
+//	@FindBy(xpath = "//span[text()='View']")
+//	private WebElement ViewButton;
+//
+//	@FindBy(xpath = "//span[text()=' Verified & Next']")
+//	private WebElement VerifiedandNext;
+//
+//	@FindBy(xpath = "//span[text()=' SUBMIT FOR APPROVAL ']")
+//	private WebElement SubmitforApproval;
+//
+//	@FindBy(xpath = "//span[text()=' Verified']")
+//	private WebElement Verified;
+//
+//	@FindBy(xpath = "//span[text()=' APPROVE ']")
+//	private WebElement Approve;
+//
+//	@FindBy(xpath = "//span[text()=' CANCEL ']")
+//	private WebElement ApproveCancel;
+	
+	
+	
+	@FindBy(xpath = "//span[contains(text(),'View')]")
 	private WebElement ViewButton;
 
-	@FindBy(xpath = "//span[text()=' Verified & Next']")
+	@FindBy(xpath = "//span[contains(text(),'Verified & Next')]")
 	private WebElement VerifiedandNext;
 
-	@FindBy(xpath = "//span[text()=' SUBMIT FOR APPROVAL ']")
+	@FindBy(xpath = "//span[contains(text(),'SUBMIT FOR APPROVAL')]")
 	private WebElement SubmitforApproval;
 
-	@FindBy(xpath = "//span[text()=' Verified']")
+	@FindBy(xpath = "//span[contains(text(),'Verified')]")
 	private WebElement Verified;
 
-	@FindBy(xpath = "//span[text()=' APPROVE ']")
+	@FindBy(xpath = "//span[contains(text(),'APPROVE')]")
 	private WebElement Approve;
 
-	@FindBy(xpath = "//span[text()=' CANCEL ']")
+	@FindBy(xpath = "//span[contains(text(),'CANCEL')]")
 	private WebElement ApproveCancel;
 
-	@FindBy(xpath = "//input[@formcontrolname='cpId']")
+	
+	//@FindBy(xpath = "//input[translate(@formcontrolname, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')='cpid']")
+	
+	@FindBy(xpath = "//input[@formcontrolname='cpid'] | //input[@formcontrolname='cpId']")
 	private WebElement CPID;
 
 	public BankLocators(WebDriver driver) {
@@ -928,6 +966,9 @@ public class BankLocators {
 	        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", optionElement);
 	    }
 	}
+	
+
+
 
 
 	
@@ -1434,6 +1475,28 @@ public class BankLocators {
 		}
 
 	}
+	
+	public void CLickOnONUSRouting() {
+//		GeneralInfo.click();
+
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			wait.until(ExpectedConditions.elementToBeClickable(ONUSRouting));
+			ONUSRouting.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			wait.until(ExpectedConditions.elementToBeClickable(ONUSRouting));
+			ONUSRouting.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+
+	}
 
 	public void DisplayedOnGlobalFrm() {
 		try {
@@ -1766,6 +1829,31 @@ public class BankLocators {
 			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnDownArrow));
 			ClickOnDownArrow.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+
+		// wait.until(ExpectedConditions.elementToBeClickable(ClickOnDownArrow)).click();
+	}
+
+	
+	
+	public void ClickOnDownArrowSuperAdmin() {
+//		ClickOnDownArrow.click();
+
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnDownArrowSuperadmin));
+			ClickOnDownArrowSuperadmin.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnDownArrowSuperadmin));
+			ClickOnDownArrowSuperadmin.click();
 		} catch (Exception e) {
 			// Handle other potential exceptions
 			System.err.println("An unexpected error occurred: " + e.getMessage());
@@ -2480,6 +2568,35 @@ public class BankLocators {
 
 	}
 
+	
+	public void CommSettlementandReconADD() {
+
+//		ClickonCommADD.click();
+
+		try {
+			// Wait for the loading spinner to disappear
+
+			// Wait for the NextStep element to be clickable
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickonCommSettlementandReconADD));
+
+			// Perform the click action
+			ClickonCommSettlementandReconADD.click();
+		} catch (ElementClickInterceptedException e) {
+			// Handle the exception if the click is intercepted
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			// Optionally, wait again for the spinner to disappear and retry clicking
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickonCommSettlementandReconADD));
+			ClickonCommSettlementandReconADD.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+
+	}
+	
 	public void ClickOnCommName() {
 
 //		ClickonCommuName.click();
@@ -3392,6 +3509,35 @@ public class BankLocators {
 		}
 
 	}
+	
+	
+	public void ClickonADDBIN() {
+
+//		ClickonCommuEmailId.click();
+
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnAddBin));
+			ClickOnAddBin.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnAddBin));
+			ClickOnAddBin.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+	}
+
+	public void EnterOnAddBin(String BIN) {
+
+		ClickOnAddBin.sendKeys(BIN);
+	}
+
 
 	public void SelectonBin() {
 
@@ -6180,6 +6326,8 @@ public class BankLocators {
 		KycNumberOfDocinPOiIndividual1.sendKeys(in1);
 
 	}
+	
+	
 
 	public void ClickOnProofOfAddressIndividual() {
 
@@ -6259,6 +6407,32 @@ public class BankLocators {
 		KycNumberOfDocinPoaIndividual2.sendKeys(in2);
 
 	}
+	
+	
+	
+	public void ClickOnBankDocumentIndividual() {
+
+//		KYCIndividualOtherDocument.click();
+
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			wait.until(ExpectedConditions.elementToBeClickable(KYCIndividualBankDocument));
+			KYCIndividualBankDocument.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			wait.until(ExpectedConditions.elementToBeClickable(KYCIndividualBankDocument));
+			KYCIndividualBankDocument.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+
+	}
+
 
 	public void ClickOnOtherDocumentIndividual() {
 
@@ -6276,6 +6450,29 @@ public class BankLocators {
 			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCIndividualOtherDocument));
 			KYCIndividualOtherDocument.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+
+	}
+	
+	public void ClickOnTaxDocumentIndividual() {
+
+//		KYCIndividualOtherDocument.click();
+
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			wait.until(ExpectedConditions.elementToBeClickable(KYCIndividualTaxDocument));
+			KYCIndividualTaxDocument.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			wait.until(ExpectedConditions.elementToBeClickable(KYCIndividualTaxDocument));
+			KYCIndividualTaxDocument.click();
 		} catch (Exception e) {
 			// Handle other potential exceptions
 			System.err.println("An unexpected error occurred: " + e.getMessage());

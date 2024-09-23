@@ -12,7 +12,7 @@ public class Hooks {
 	
 	 WebDriver driver;
 	 @Before
-	    public void setUp() {
+	    public void setUp() throws InterruptedException {
 		  driver = CustomWebDriverManager.getDriver();
 	    }
 

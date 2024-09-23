@@ -31,7 +31,7 @@ Scenario: Verify VAS Commission label
     Then the First label name should be "VAS Commission"
     
 Scenario: Verify "VAS Commission" Field Prompts to Select Yes/No
-    Then the First "VAS Commission" field should prompt to select Yes or No based on the given input
+    Then the First "VAS Commission" field should prompt to select Yes or No based on the given input using sheetname "Aggregator" and rownumber 0
     
 
  Scenario: Verify Aggregator Application Date label
@@ -61,7 +61,7 @@ Scenario: Verify Aggregator Code field does not allow proceeding without input
     Then the label name should be "Allow Self Merchant Onboard"
     
 Scenario: Verify "Allow Self Merchant Onboard" Field Prompts to Select Yes/No
-    Then the "Allow Self Merchant Onboard" field should prompt to select Yes or No based on the given input
+    Then the "Allow Self Merchant Onboard" field should prompt to select Yes or No based on the given input using sheetname "Aggregator" and rownumber 0
     
     
  Scenario: Verify Marsid label in Sales Info
@@ -91,14 +91,14 @@ Scenario: Verify "VAS Commission" Field Prompts to Select Yes/No
     Then the label name should be "IS TMS Aggregator"
     
 Scenario: Verify "IS TMS Aggregator" Field Prompts to Select Yes/No
-    Then the "IS TMS Aggregator" field should prompt to select Yes or No based on the given input       
+    Then the "IS TMS Aggregator" field should prompt to select Yes or No based on the given input using sheetname "Aggregator Regression" and rownumber 0      
     
     
  Scenario: Verify EKyc Required label
     Then the label name should be "EKyc Required"
     
 Scenario: Verify "EKyc Required" Field Prompts to Select Yes/No
-    Then the "EKyc Required" field should prompt to select Yes or No based on the given input
+    Then the "EKyc Required" field should prompt to select Yes or No based on the given input using sheetname "Aggregator Regression" and rownumber 0
     
     
  Scenario: Verify "Next" Button is Clickable and Moves to Company Info 

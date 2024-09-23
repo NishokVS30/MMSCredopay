@@ -38,7 +38,7 @@ public class SystemUserMultipleBankRegression {
 
      ExtentTest test;
 
-	public SystemUserMultipleBankRegression() {
+	public SystemUserMultipleBankRegression() throws InterruptedException {
 		this.driver = CustomWebDriverManager.getDriver();
 		System.setProperty("webdriver.chrome.logfile", "chromedriver.log");
 		System.setProperty("webdriver.chrome.verboseLogging", "true");

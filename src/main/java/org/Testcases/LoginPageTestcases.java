@@ -27,7 +27,7 @@ public class LoginPageTestcases {
    	org.Locators.LoginLocators L;
    	
 	
-	 public LoginPageTestcases() {
+	 public LoginPageTestcases() throws InterruptedException {
 	      this.driver = CustomWebDriverManager.getDriver();
 	      System.setProperty("webdriver.chrome.logfile", "chromedriver.log");
 	      System.setProperty("webdriver.chrome.verboseLogging", "true");

@@ -8,7 +8,11 @@ import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -17,18 +21,16 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 
-import com.aventstack.extentreports.ExtentTest;
-import com.aventstack.extentreports.Status;
+import com.aventstack.extentreports.ExtentTest; 
 import com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter;
 import com.aventstack.extentreports.markuputils.Markup;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
+import com.github.javafaker.Faker;
 
 import io.cucumber.java.en.Then;
-import io.qameta.allure.Allure;
-
-public class SystemUserMultipleBankRegression {
-	
-	
+import io.opentelemetry.exporter.logging.SystemOutLogRecordExporter;
+import io.qameta.allure.Allure; 
+public class SystemUserMultipleBankRegression { 
 	private WebDriver driver;
 
 	org.Locators.LoginLocators L;
@@ -37,6 +39,7 @@ public class SystemUserMultipleBankRegression {
 	org.Locators.SystemUserLocatores S;
 
      ExtentTest test;
+     ExcelDataCache cache = ExcelDataCache.getInstance();
 
 	public SystemUserMultipleBankRegression() throws InterruptedException {
 		this.driver = CustomWebDriverManager.getDriver();
@@ -44,37 +47,122 @@ public class SystemUserMultipleBankRegression {
 		System.setProperty("webdriver.chrome.verboseLogging", "true");
 
 	}
+	int totalTestCaseCount = 0; 
 	
 	@Then("the System Maker Bank Onboarding should prompt users to enter valid inputs using the sheet name {string}")
+//	public void processAllData(String sheetName)
+//			throws InvalidFormatException, IOException, InterruptedException, AWTException {
+//		// Set the Excel file and sheet
+//		ExcelUtils.setExcelFile("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx",
+//				sheetName);
+//		
+//		// Get the total number of non-empty rows
+//		int numberOfRows = ExcelUtils.getRowCount(sheetName);
+//		System.out.println("Total rows found: " + numberOfRows);
+//		for (int rowNumber = 1; rowNumber <= numberOfRows; rowNumber++) {
+//			System.out.println("Running test for row number: " + rowNumber);
+//
+//			Map<String, String> rowData = ExcelUtils.getRowData(sheetName, rowNumber);
+////		        logInputDataa(rowData);
+//			try {
+//	            // Run the test for the current row
+//	            runTestForRow(sheetName, rowNumber);
+//	        } catch (Exception e) {
+//	            // Handle the exception: take a screenshot and fail the scenario
+//	            takeScreenshot(rowNumber);
+//	            Assert.fail("Exception encountered while processing row " + rowNumber + ": " + e.getMessage());
+//	        }
+//
+//	        if (rowNumber == numberOfRows) {
+//	            System.out.println("Finished processing the last row. Logging out...");
+//	            performLogout();
+//	        }
+//	    }
+//	} 
+	 // Track the total test case count
+
 	public void processAllData(String sheetName)
-			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		// Set the Excel file and sheet
-		ExcelUtils.setExcelFile("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx",
-				sheetName);
+	        throws InvalidFormatException, IOException, InterruptedException, AWTException {
+	    
+	    // Set the Excel file and sheet
+	    ExcelUtils.setExcelFile("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx",
+	            sheetName);
+	    
+	    // Get the total number of non-empty rows
+	    int numberOfRows = ExcelUtils.getRowCount(sheetName);
+	    System.out.println("Total rows found: " + numberOfRows);
+	    
+	    TestCaseManager testCaseManager = new TestCaseManager();
+	    
+	    for (int rowNumber = 1; rowNumber <= numberOfRows; rowNumber++) {
+	        System.out.println("Running test for row number: " + rowNumber);
 
-		// Get the total number of non-empty rows
-		int numberOfRows = ExcelUtils.getRowCount(sheetName);
-		System.out.println("Total rows found: " + numberOfRows);
-		for (int rowNumber = 1; rowNumber <= numberOfRows; rowNumber++) {
-			System.out.println("Running test for row number: " + rowNumber);
+	        // Get data for the current row
+	        Map<String, String> rowData = ExcelUtils.getRowData(sheetName, rowNumber);
 
-			Map<String, String> rowData = ExcelUtils.getRowData(sheetName, rowNumber);
-//		        logInputDataa(rowData);
-			try {
+	        testCaseManager.startNewTestCase("Test Case for Row " + rowNumber,true);
+
+	        try {
 	            // Run the test for the current row
-	            runTestForRow(sheetName, rowNumber);
+	            int rowTestCaseCount = runTestForRow(sheetName, rowNumber);
+	            totalTestCaseCount += rowTestCaseCount;  // Add the row's test case count to the total count 
+	            testCaseManager.logInputDataa(key,value);
 	        } catch (Exception e) {
 	            // Handle the exception: take a screenshot and fail the scenario
 	            takeScreenshot(rowNumber);
 	            Assert.fail("Exception encountered while processing row " + rowNumber + ": " + e.getMessage());
-	        }
+	        } 
 
+//	        testCaseManager.endTestCase();
+	        
+	        // If the last row has been processed, log out
 	        if (rowNumber == numberOfRows) {
 	            System.out.println("Finished processing the last row. Logging out...");
 	            performLogout();
 	        }
 	    }
+
+	    // Log total dashboard count in Extent and Allure reports after all rows are processed
+	    logDashboardCount();
 	}
+
+	private void logDashboardCount() {
+	    String message = "Total Dashboard Count: " + totalTestCaseCount;
+	    
+	    // Log to Extent Report
+	    ExtentCucumberAdapter.addTestStepLog(message);
+	    Allure.parameter("Total Test Case Count", totalTestCaseCount);
+
+	    // Log to Allure Report
+//	    Allure.addAttachment("Total Dashboard Count", new ByteArrayInputStream(message.getBytes()));
+
+	    // Optionally, print to console for debugging
+	    System.out.println(message);
+	}
+
+	private int runTestForRow(String sheetName, int rowNumber)
+	        throws InvalidFormatException, IOException, InterruptedException, AWTException {
+	    
+	    // Get data for the specified row
+	    Map<String, String> testData = ExcelUtils.getRowData(sheetName, rowNumber);
+	    System.out.println("Data for row " + rowNumber + ": " + testData);
+	    
+	    // Initialize the locators (if necessary)
+	    B = new org.Locators.BankLocators(driver);
+
+	    // Set implicit wait and page load timeout
+	    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+	    driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+
+	    int testCaseCount = 0;  // Initialize test case count for the row
+       
+	    // Perform test actions and validations (increase count as each test case is executed)
+	    testCaseCount += validateFieldsForRow(sheetName, testData,rowNumber);
+
+         
+ 	    return testCaseCount;  // Return the test case count for this row
+	}
+
 	
 	private void takeScreenshot(int rowNumber) {
 	    try {
@@ -113,8 +201,8 @@ public class SystemUserMultipleBankRegression {
 
 		// Create table markup and log to Extent Report
 		Markup m = MarkupHelper.createTable(data);
-		ExtentCucumberAdapter.getCurrentStep().log(Status.PASS, m);
-
+//		ExtentCucumberAdapter.getCurrentStep().log(Status.PASS, m);
+		ExtentCucumberAdapter.getCurrentStep().log(null, m);
 		// Construct HTML table for Allure report
 		StringBuilder tableBuilder = new StringBuilder();
 		tableBuilder.append("<table style='color: black; border: 1px solid black; border-collapse: collapse;'>");
@@ -140,69 +228,127 @@ public class SystemUserMultipleBankRegression {
 				"html");
 	}
 
-	private void runTestForRow(String sheetName, int rowNumber)
-			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		// Get data for the specified row
-
-		Map<String, String> testData = ExcelUtils.getRowData(sheetName, rowNumber);
-		System.out.println("Data for row " + rowNumber + ": " + testData);
-
-		// Execute validation with the extracted row data
-		validateFieldsForRow(sheetName, testData);
-	}
+	
 
 	@SuppressWarnings("unused")
-	private void validateFieldsForRow(String sheetName, Map<String, String> testData)
-			throws InvalidFormatException, IOException, InterruptedException, AWTException {
+//	private void validateFieldsForRow(String sheetName, Map<String, String> testData)
+//			throws InvalidFormatException, IOException, InterruptedException, AWTException {
+//
+//		// Initialize the locators
+//		B = new org.Locators.BankLocators(driver);
+//
+//		// Set implicit wait and page load timeout
+//		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+//		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+//
+//		// Bank Details Section
+//		fillBankDetails(testData);
+//
+//		// Communication Details Section
+//		fillCommunicationDetails(testData);
+//
+//		// Channel Config Section
+//		configureChannel();
+//
+//		// ONUS Section
+//		configureONUS();
+//
+//		// Global Form Section
+//		fillGlobalForm(testData);
+//
+//		// Commercial Section
+//		configureCommercial();
+//
+//		// Settlement Info Section
+//		fillSettlementInfo(testData);
+//
+//		// White Label Section
+//		configureWhiteLabel(testData);
+//
+//		// Webhooks Section
+//		configureWebhooks(testData);
+//
+//		// KYC Section
+//		fillKYCDetails();
+//
+//		// Final Submission
+//		submitForVerification();
+//	}
+	
+	private int validateFieldsForRow(String sheetName, Map<String, String> testData,int TescaseNo)
+	        throws InvalidFormatException, IOException, InterruptedException, AWTException {
 
-		// Initialize the locators
-		B = new org.Locators.BankLocators(driver);
+	    // Initialize the locators
+	    B = new org.Locators.BankLocators(driver);
 
-		// Set implicit wait and page load timeout
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+	    // Set implicit wait and page load timeout
+	    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+	    driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		// Bank Details Section
-		fillBankDetails(testData);
+	    // Initialize a counter to track the number of validated fields/sections
+	    int validatedFieldsCount = 0;
 
-		// Communication Details Section
-		fillCommunicationDetails(testData);
+	    // Bank Details Section
+	    fillBankDetails(testData,TescaseNo);
+	    validatedFieldsCount++;  // Increment count after successfully filling the section
 
-		// Channel Config Section
-		configureChannel();
+	    // Communication Details Section
+//	    fillCommunicationDetails(testData);
+//	    validatedFieldsCount++;
+//
+//	    // Channel Config Section
+//	    configureChannel();
+//	    validatedFieldsCount++;
+//
+//	    // ONUS Section
+//	    configureONUS();
+//	    validatedFieldsCount++;
+//
+//	    // Global Form Section
+//	    fillGlobalForm(testData);
+//	    validatedFieldsCount++;
+//
+//	    // Commercial Section
+//	    configureCommercial();
+//	    validatedFieldsCount++;
+//
+//	    // Settlement Info Section
+//	    fillSettlementInfo(testData);
+//	    validatedFieldsCount++;
+//
+//	    // White Label Section
+//	    configureWhiteLabel(testData);
+//	    validatedFieldsCount++;
+//
+//	    // Webhooks Section
+//	    configureWebhooks(testData);
+//	    validatedFieldsCount++;
+//
+//	    // KYC Section
+//	    fillKYCDetails();
+//	    validatedFieldsCount++;
+//
+//	    // Final Submission
+//	    submitForVerification();
+//	    validatedFieldsCount++;  // Increment count for the final submission
 
-		// ONUS Section
-		configureONUS();
-
-		// Global Form Section
-		fillGlobalForm(testData);
-
-		// Commercial Section
-		configureCommercial();
-
-		// Settlement Info Section
-		fillSettlementInfo(testData);
-
-		// White Label Section
-		configureWhiteLabel(testData);
-
-		// Webhooks Section
-		configureWebhooks(testData);
-
-		// KYC Section
-		fillKYCDetails();
-
-		// Final Submission
-		submitForVerification();
+	    // Return the total count of validated fields/sections
+	    return validatedFieldsCount;
 	}
 
+	private Set<String> existingBankNames = new HashSet<>();
 	// Method to fill Bank Details
-	private void fillBankDetails(Map<String, String> testData) throws InterruptedException, AWTException {
+	private void fillBankDetails(Map<String, String> testData,int TescaseNo) throws InterruptedException, AWTException {
 		
 		B = new org.Locators.BankLocators(driver);
+		
+		 Faker faker = new Faker();
+		
+		int testcaseCount = 0;
 
-		String bankName = testData.get("BankName");
+		String bankName = testData.get("bankName");
 		String address = testData.get("Address");
+		String pincode = testData.get("Pincode");
 		String gst = testData.get("GST");
 		String pan = testData.get("PAN");
 		String Marsid = testData.get("Mars id");
@@ -210,6 +356,10 @@ public class SystemUserMultipleBankRegression {
 
 		key.clear();
 		value.clear();
+		
+		if (bankName == null || bankName.trim().isEmpty()) {
+	        bankName = generateValidBankName(faker);
+	    }
 
 		if (bankName != null && !bankName.trim().isEmpty()) {
 			B.ClickOnCreatebutton();
@@ -217,30 +367,49 @@ public class SystemUserMultipleBankRegression {
 			B.clearBankName();
 			B.EnteronBankName(bankName);
 			logInputData("Bank Name", bankName);
+			++testcaseCount;
+			logTestStep( TescaseNo, "Bank Name", bankName);
 		}
 
 		if (address != null && !address.trim().isEmpty()) {
 			B.EnterOnAddress(address);
 			logInputData("Address", address);
+			++testcaseCount;
+			logTestStep(TescaseNo, "Address Name", address);
 		}
-
+		
+		if (pincode != null && pincode.matches("\\d+\\.0")) {
+			pincode = pincode.substring(0, pincode.indexOf(".0"));
 		B.ClickonPincode();
-		B.SelectonPincode();
+		B.selectDropdownOption(pincode);
 		logInputData("Pincode", B.getPincode());
 
+		++testcaseCount;
+		logTestStep(TescaseNo, "Pincode", pincode);
+		
+		}
+
 		if (gst != null && !gst.trim().isEmpty()) {
+			B.ClickOnGst();
 			B.EnterOnGst(gst);
 			logInputData("GST", gst);
+			logTestStep(++testcaseCount, "GST", gst);
 		}
 
 		if (pan != null && !pan.trim().isEmpty()) {
 			B.EnterOnPAN(pan);
 			logInputData("PAN", pan);
+			++testcaseCount;
+			logTestStep(TescaseNo, "PAN", pan);
 		}
 
 		if (Marsid != null && !Marsid.trim().isEmpty()) {
 			B.EnteronMarsid(Marsid);
 			logInputData("Marsid", Marsid);
+
+			++testcaseCount;
+			logTestStep(TescaseNo, "Marsid", Marsid);
+			
 		}
 
 		for (String domain : domains) {
@@ -249,11 +418,52 @@ public class SystemUserMultipleBankRegression {
 				B.EnterOnDomain(domain);
 				performTabKeyPress();
 				logInputData("Domain", domain);
+				++testcaseCount;
+				logTestStep(TescaseNo, "Domain", domain);
 			}
 		}
-
+//		logInputDataa();
 		Thread.sleep(2000);
 		B.ClickOnNextStep();
+	}
+	
+	private String generateValidBankName(Faker faker) {
+	    String bankName;
+	    
+	    do {
+	        // Generate a random bank name
+	        bankName = faker.company().name();
+	        
+	        // Check if the generated name meets the required conditions
+	    } while (bankName.length() < 7 || bankName.length() > 30 
+	             || existingBankNames.contains(bankName) 
+	             || !bankName.matches("[a-zA-Z\\s]+"));
+	    
+	    // Return a valid and unique bank name
+	    return bankName;
+	}
+	
+	private void logTestStep(int testcaseCount, String fieldName, String fieldValue) {
+	    String message = "Test Case " + testcaseCount + ": " + fieldName + " with value '" + fieldValue + "' passed.";
+	    
+	    // Log to Extent Report
+	    ExtentCucumberAdapter.addTestStepLog(message);
+	    List<String> keys = new ArrayList<>();
+        List<String> values = new ArrayList<>();
+
+	    TestCaseManager testCaseManager = new TestCaseManager();
+	 // Start a new test case
+        testCaseManager.startNewTestCase(message, true);
+ 
+        // Add field name and value to the lists
+        keys.add(fieldName);
+        values.add(fieldValue);
+        
+	    testCaseManager.logInputDataa(keys,values);
+	    Allure.step("Test case for row " + testcaseCount); 
+        testCaseManager.endTestCase(); 
+	    // Optionally, print to console for debugging
+	    System.out.println(message);
 	}
 
 	// Method to fill Communication Details

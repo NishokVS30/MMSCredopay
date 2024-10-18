@@ -373,7 +373,7 @@ Scenario: Verify "POS Network" Field is Prompted to Select Based on Given Input
     
         
  Scenario: Verify "Channel Config" Label Name is "Transaction Sets"
-    Then the label name should be "Transaction Sets"
+    Then the label n	ame should be "Transaction Sets"
 
 
 Scenario: Verify "POS Transaction Sets" Field is Prompted to Select Based on Given Input

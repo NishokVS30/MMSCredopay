@@ -64,10 +64,8 @@ public class LoginPageTestcases {
 		   
 		   
 		   
-		   ExcelReader reader = new ExcelReader();
-			
-			List<Map<String, String>> testdata = reader.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
-		    
+		   ExcelDataCache cache = ExcelDataCache.getInstance();
+	        List<Map<String, String>> testdata = cache.getCachedData(sheetName);
 			
 			 System.out.println("sheet name: " + testdata);
 			
@@ -138,12 +136,10 @@ public class LoginPageTestcases {
     	 
     	 L = new org.Locators.LoginLocators(driver);
 		   driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		  
+		   ExcelDataCache cache = ExcelDataCache.getInstance();
+	        List<Map<String, String>> testdata = cache.getCachedData(sheetName);
 		   
-		   ExcelReader reader = new ExcelReader();
-			
-			List<Map<String, String>> testdata = reader.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
-		    
-			
 			 System.out.println("sheet name: " + testdata);
 			 
 			  String Password = testdata.get(rowNumber).get("Password");

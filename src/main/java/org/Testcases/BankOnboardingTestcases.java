@@ -2,7 +2,6 @@ package org.Testcases;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
@@ -24,7 +23,9 @@ import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter;
 import com.aventstack.extentreports.markuputils.Markup;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
+import com.github.javafaker.Faker;
 
+import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -39,13 +40,25 @@ public class BankOnboardingTestcases {
 	org.Locators.BankLocators B;
 
 	private ExtentTest test;
-
+	
+	ExcelDataCache cache = ExcelDataCache.getInstance();
+	
+//	@Before("@loadDataExcelReader") 
+//    public static void setUp() throws InvalidFormatException, IOException {
+//       ExcelDataCache cache = ExcelDataCache.getInstance();
+//        System.out.println("BEFORE ALL WORK");
+//        cache.loadData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx"); // Load data only once
+//    }
+	
+	
 	public BankOnboardingTestcases() throws InterruptedException {
 		this.driver = CustomWebDriverManager.getDriver();
 		System.setProperty("webdriver.chrome.logfile", "chromedriver.log");
 		System.setProperty("webdriver.chrome.verboseLogging", "true");
 
 	}
+	
+	 
 
 	@Given("I visit the SuperAdmin Login using sheetname {string} and rownumber {int}")
 	public void i_visit_the_SuperAdmin_maker_login(String sheetName, int rowNumber)
@@ -55,10 +68,11 @@ public class BankOnboardingTestcases {
 
 		try {
 
-			ExcelReader reader = new ExcelReader();
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
+		        List<Map<String, String>> testdata = cache.getCachedData(sheetName);
 
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -89,10 +103,10 @@ public class BankOnboardingTestcases {
 			test.log(Status.PASS, m);
 
 		} catch (Exception e) {
-			
-	       exceptionHandler.handleException(e, "LoginScreen");
-	        throw e; 
-	    }
+
+			exceptionHandler.handleException(e, "LoginScreen");
+			throw e;
+		}
 
 	}
 
@@ -103,12 +117,12 @@ public class BankOnboardingTestcases {
 			L = new org.Locators.LoginLocators(driver);
 			Thread.sleep(9000);
 			L.ClickOnSignIn();
-			
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "LoginScreen");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "LoginScreen");
+			throw e;
+		}
 	}
 
 	@Given("I visit the System Maker Login using sheetname {string} and rownumber {int}")
@@ -116,10 +130,11 @@ public class BankOnboardingTestcases {
 			throws InvalidFormatException, IOException, InterruptedException {
 
 		try {
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			
+			
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
+		        List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -151,9 +166,9 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "LoginScreen");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "LoginScreen");
+			throw e;
+		}
 	}
 
 	@And("I enter the credentials and click a login button")
@@ -164,14 +179,13 @@ public class BankOnboardingTestcases {
 			Thread.sleep(9000);
 			L.ClickOnSignIn();
 
-			Thread.sleep(5000);
 			L.ClickOnOk();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "LoginScreen");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "LoginScreen");
+			throw e;
+		}
 
 	}
 
@@ -180,32 +194,21 @@ public class BankOnboardingTestcases {
 
 		B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 		try {
-			Thread.sleep(3000);
 
 			B.ClickOnDownArrowSuperAdmin();
 
-			Thread.sleep(2000);
-
 			B.ClickOnOnboarding();
-
-			Thread.sleep(2000);
 
 			B.ClickOnOnBank();
 
-			Thread.sleep(2000);
-
 			B.ClickOnCreatebutton();
-
-			Thread.sleep(1000);
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "Onboarding List");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "Onboarding List");
+			throw e;
+		}
 
 	}
 
@@ -214,32 +217,21 @@ public class BankOnboardingTestcases {
 
 		B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 		try {
-			Thread.sleep(3000);
 
 			B.ClickOnDownArrow();
 
-			Thread.sleep(2000);
-
 			B.ClickOnOnboarding();
-
-			Thread.sleep(2000);
 
 			B.ClickOnOnBank();
 
-			Thread.sleep(2000);
-
 			B.ClickOnCreatebutton();
 
-			Thread.sleep(1000);
-			
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "Onboarding List");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "Onboarding List");
+			throw e;
+		}
 
 	}
 
@@ -249,17 +241,13 @@ public class BankOnboardingTestcases {
 		try {
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-			Thread.sleep(2000);
-
 			B.CLickOnGenralInfo();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -267,8 +255,6 @@ public class BankOnboardingTestcases {
 	public void I_click_on_the_Bank_Name() {
 
 		B = new org.Locators.BankLocators(driver);
-
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
 		B.ClickonBankName();
 
@@ -278,8 +264,6 @@ public class BankOnboardingTestcases {
 	public void the_label_name_should_be_BankName() {
 
 		B = new org.Locators.BankLocators(driver);
-
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
 		B.BankNameLabel();
 
@@ -292,20 +276,11 @@ public class BankOnboardingTestcases {
 		try {
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
-
-			System.out.println("sheet name: " + testdata);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
 
 			String Bankname = testdata.get(rowNumber).get("BankName");
 
-			System.out.println("0" + testdata.get(0));
-
-			Thread.sleep(2000);
+			B.ClickonBankName();
 
 			B.EnteronBankName(Bankname);
 
@@ -314,17 +289,15 @@ public class BankOnboardingTestcases {
 			assertTrue("Bank Name field does not accept valid input within 30 characters.",
 					enteredBankName.length() <= 30);
 
-			Thread.sleep(2000);
-
 			performTabKeyPress();
 
 			LoginInputDatas("Bank Name", Bankname);
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -335,12 +308,10 @@ public class BankOnboardingTestcases {
 		try {
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+		        List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -348,14 +319,14 @@ public class BankOnboardingTestcases {
 
 			System.out.println("0" + testdata.get(0));
 
+			B.ClickonBankName();
+
 			B.EnteronBankName(Bankname);
 
 			String enteredBankName = B.getBankName();
 
 			assertTrue("Bank Name field does not accept valid input within 30 characters.",
 					enteredBankName.length() <= 30);
-
-			Thread.sleep(2000);
 
 			performTabKeyPress();
 
@@ -365,9 +336,9 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 	}
 
 	@Then("the \"Bank Name\" field should prompts for Invalid inputs within Lessthan 30 characters using sheetname {string} and rownumber {int}")
@@ -377,12 +348,10 @@ public class BankOnboardingTestcases {
 		try {
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -396,8 +365,6 @@ public class BankOnboardingTestcases {
 			assertTrue("Bank Name field does not accept valid input within 30 characters.",
 					enteredBankName.length() <= 30);
 
-			Thread.sleep(2000);
-
 			performTabKeyPress();
 
 			B.clearBankName();
@@ -406,9 +373,9 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 	}
 
 	@Then("the \"Bank Name\" field prompts for invalid input if a number is entered using sheetname {string} and rownumber {int}")
@@ -418,12 +385,10 @@ public class BankOnboardingTestcases {
 		try {
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			 
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -432,8 +397,6 @@ public class BankOnboardingTestcases {
 			System.out.println("0" + testdata.get(0));
 
 			B.EnteronBankName(Bankname);
-
-			Thread.sleep(2000);
 
 			performTabKeyPress();
 
@@ -445,9 +408,9 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -458,12 +421,10 @@ public class BankOnboardingTestcases {
 		try {
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -472,8 +433,6 @@ public class BankOnboardingTestcases {
 			System.out.println("0" + testdata.get(0));
 
 			B.EnteronBankName(Bankname);
-
-			Thread.sleep(2000);
 
 			performTabKeyPress();
 
@@ -485,9 +444,9 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -498,8 +457,6 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.ClickonBankName();
 
 			performTabKeyPress();
@@ -508,9 +465,9 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 	}
 
 	@When("I click on the \"Address\" field")
@@ -520,15 +477,13 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.ClickonAddressLine();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -539,15 +494,13 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.AddressLabel();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -558,12 +511,8 @@ public class BankOnboardingTestcases {
 		try {
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
+		        List<Map<String, String>> testdata = cache.getCachedData(sheetName);
 
 			System.out.println("sheet name: " + testdata);
 
@@ -571,11 +520,9 @@ public class BankOnboardingTestcases {
 
 			System.out.println("0" + testdata.get(0));
 
+			B.ClickonAddressLine();
+
 			B.EnterOnAddress(Address);
-
-			Thread.sleep(2000);
-
-			performTabKeyPress();
 
 			B.NOTDisplayedOnInvalidFormat();
 
@@ -583,9 +530,9 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -597,23 +544,17 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-			Thread.sleep(2000);
-
 			B.ClickonAddressLine();
 
 			performTabKeyPress();
-
-			Thread.sleep(2000);
 
 			B.DisplayedOnThisFieldisRequired();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -624,15 +565,13 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.ClickonPincode();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 	}
 
 	@Then("the label name should be \"Pincode\"")
@@ -641,15 +580,13 @@ public class BankOnboardingTestcases {
 		try {
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.PincodeLabel();
-			
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 	}
 
 	@Then("the \"Pincode\" dropdown should prompt to select valid inputs using sheetname {string} and rownumber {int}")
@@ -659,12 +596,8 @@ public class BankOnboardingTestcases {
 		try {
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
+		        List<Map<String, String>> testdata = cache.getCachedData(sheetName);
 
 			System.out.println("sheet name: " + testdata);
 
@@ -679,8 +612,6 @@ public class BankOnboardingTestcases {
 
 				B.selectDropdownOption(pincode);
 
-				Thread.sleep(2000);
-
 				performTabKeyPress();
 
 				B.NOTDisplayedOnInvalidFormat();
@@ -691,9 +622,9 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 	}
 
 	@Then("the \"Pincode\" field should not allow to proceed without any input data")
@@ -704,21 +635,17 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.ClickonPincode();
 
 			performTabKeyPress();
-
-			Thread.sleep(2000);
 
 			B.DisplayedOnThisFieldisRequired();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -729,16 +656,14 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			String City = B.getCity();
 			assertEquals("chennai", City);
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 	}
 
 	@Then("the state name should be displayed.")
@@ -748,16 +673,14 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			String State = B.getState();
 			assertEquals("tamilnadu", State);
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -768,16 +691,14 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			String Country = B.getCountry();
 			assertEquals("d test", Country);
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -788,18 +709,14 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			String CurrencyCode = B.getCurrencycode();
 			assertEquals("588", CurrencyCode);
 
-			Thread.sleep(3000);
-
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -810,15 +727,13 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.ClickOnGst();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -829,15 +744,13 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.GSTLabel();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -849,22 +762,16 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
-
-			System.out.println("sheet name: " + testdata);
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
+		        List<Map<String, String>> testdata = cache.getCachedData(sheetName);
 
 			String gst = testdata.get(rowNumber).get("GST");
 
 			System.out.println("0" + testdata.get(0));
 
-			B.EnterOnGst(gst);
+			B.ClickOnGst();
 
-			Thread.sleep(2000);
+			B.EnterOnGst(gst);
 
 			performTabKeyPress();
 
@@ -874,9 +781,9 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -887,20 +794,16 @@ public class BankOnboardingTestcases {
 		try {
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
 			String gst = testdata.get(rowNumber).get("GST");
 
 			B.EnterOnGst(gst);
-
-			Thread.sleep(2000);
 
 			performTabKeyPress();
 
@@ -912,9 +815,9 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 	}
 
 	@Then("the \"GST\" field should not allow to proceed without any input data")
@@ -924,21 +827,17 @@ public class BankOnboardingTestcases {
 		try {
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.ClickOnGst();
 
 			performTabKeyPress();
-
-			Thread.sleep(2000);
 
 			B.DisplayedOnThisFieldisRequired();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -951,15 +850,13 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.ClickonPan();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -969,8 +866,6 @@ public class BankOnboardingTestcases {
 		try {
 
 			B = new org.Locators.BankLocators(driver);
-
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
 			B.PANLabel();
 
@@ -990,12 +885,10 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -1003,11 +896,9 @@ public class BankOnboardingTestcases {
 
 			System.out.println("0" + testdata.get(0));
 
+			B.ClickonPan();
+
 			B.EnterOnPAN(pan);
-
-			Thread.sleep(2000);
-
-			performTabKeyPress();
 
 			B.NOTDisplayedOnInvalidFormat();
 
@@ -1015,9 +906,9 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 	}
 
 	@Then("the \"PAN\" field should prompt to enter Invalid inputs with PAN format using sheetname {string} and rownumber {int}")
@@ -1028,20 +919,16 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
 			String pan = testdata.get(rowNumber).get("PAN");
 
 			B.EnterOnPAN(pan);
-
-			Thread.sleep(2000);
 
 			performTabKeyPress();
 
@@ -1053,9 +940,9 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -1067,21 +954,17 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.ClickonPan();
 
 			performTabKeyPress();
-
-			Thread.sleep(2000);
 
 			B.DisplayedOnThisFieldisRequired();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -1092,15 +975,13 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.ClickonMarsid();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -1111,15 +992,13 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.MarsidLabel();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -1131,12 +1010,10 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -1146,8 +1023,6 @@ public class BankOnboardingTestcases {
 				marsid = marsid.substring(0, marsid.indexOf(".0"));
 
 				B.EnteronMarsid(marsid);
-
-				Thread.sleep(2000);
 
 				performTabKeyPress();
 
@@ -1159,9 +1034,9 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -1172,15 +1047,13 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.ClickOnStatementFrequency();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -1191,15 +1064,13 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.StatementFrequencyLabel();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -1211,26 +1082,18 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
 			String StatementFrequency = testdata.get(rowNumber).get("Statement Frequency");
 
-			performTabKeyPress();
-
 			B.ClickOnStatementFrequency();
 
 			B.selectDropdownOption(StatementFrequency);
-
-			Thread.sleep(2000);
-
-			performTabKeyPress();
 
 			B.NOTDisplayedOnInvalidFormat();
 
@@ -1238,9 +1101,9 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 	}
 
 	@When("I click on the \"Statement Type\" field")
@@ -1250,15 +1113,13 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.ClickOnStatementType();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -1269,15 +1130,13 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.StatementTypeLabel();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -1289,26 +1148,18 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
 			String StatementType = testdata.get(rowNumber).get("Statement Type");
 
-			performTabKeyPress();
-
 			B.ClickOnStatementType();
 
 			B.selectDropdownOption(StatementType);
-
-			Thread.sleep(2000);
-
-			performTabKeyPress();
 
 			B.NOTDisplayedOnInvalidFormat();
 
@@ -1316,9 +1167,9 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 	}
 
 	@When("I click on the \"Domain\" field")
@@ -1328,15 +1179,13 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.ClickOnDomain();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -1346,15 +1195,13 @@ public class BankOnboardingTestcases {
 		try {
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.DomainLabel();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -1366,17 +1213,9 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-			Thread.sleep(2000);
-
 			B.ClickOnDomain();
 
-			Thread.sleep(2000);
-
 			performTabKeyPress();
-
-			Thread.sleep(2000);
 
 			B.DisplayedOnThisFieldisRequired();
 
@@ -1395,22 +1234,16 @@ public class BankOnboardingTestcases {
 		try {
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
 			String domain = testdata.get(rowNumber).get("Domain");
 
-			Thread.sleep(3000);
-
 			B.EnterOnDomain(domain);
-
-			Thread.sleep(2000);
 
 			performTabKeyPress();
 
@@ -1420,9 +1253,9 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -1434,12 +1267,10 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -1447,15 +1278,9 @@ public class BankOnboardingTestcases {
 
 			B.EnterOnDomain(domain);
 
-			Thread.sleep(2000);
-
 			performTabKeyPress();
 
-			Thread.sleep(2000);
-
 			B.DisplayedOnThisInvalidFormat();
-
-			Thread.sleep(2000);
 
 			B.Domainclear();
 
@@ -1463,9 +1288,9 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 	}
 
 	@Then("the \"Domain\" field should prompt to enter invalid number domain names using sheetname {string} and rownumber {int}")
@@ -1476,12 +1301,10 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -1489,15 +1312,9 @@ public class BankOnboardingTestcases {
 
 			B.EnterOnDomain(domain);
 
-			Thread.sleep(2000);
-
 			performTabKeyPress();
 
-			Thread.sleep(2000);
-
 			B.DisplayedOnThisInvalidFormat();
-
-			Thread.sleep(2000);
 
 			B.Domainclear();
 
@@ -1505,9 +1322,9 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	       exceptionHandler.handleException(e, "General Info");
-	        throw e; 
-	    }
+			exceptionHandler.handleException(e, "General Info");
+			throw e;
+		}
 
 	}
 
@@ -1521,20 +1338,16 @@ public class BankOnboardingTestcases {
 			B = new org.Locators.BankLocators(driver);
 			L = new org.Locators.LoginLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
 			String Bankname = testdata.get(rowNumber).get("BankName");
 
 			System.out.println("0" + testdata.get(0));
-
-			Thread.sleep(2000);
 
 			B.clearBankName();
 
@@ -1545,11 +1358,7 @@ public class BankOnboardingTestcases {
 			assertTrue("Bank Name field does not accept valid input within 30 characters.",
 					enteredBankName.length() <= 30);
 
-			Thread.sleep(2000);
-
 			performTabKeyPress();
-
-			Thread.sleep(2000);
 
 			B.ClickOnSaveasdraft();
 
@@ -1571,24 +1380,17 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-			Thread.sleep(2000);
-
 			B.DisplayedOnCommunicationInfo();
 
 			B.CLickOnCommunicationInfo();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
 
 	}
-	
-	
-
 
 	@Then("the \"Add\" button should be prompted to click")
 	public void the_Add_button_should_be_prompted_to_click() throws InterruptedException {
@@ -1597,17 +1399,13 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-			Thread.sleep(4000);
-
 			B.CommADD();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-			   exceptionHandler.handleException(e, "Communication Info");
-			    throw e; 
-			}
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
+		}
 
 	}
 
@@ -1619,16 +1417,12 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-			Thread.sleep(2000);
-
 			B.CommSettlementandReconADD();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
 	}
 
@@ -1641,14 +1435,12 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.ClickOnCommName();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
 	}
 
@@ -1659,14 +1451,12 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.LabelCommName();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
 
 	}
@@ -1679,20 +1469,16 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.ClickOnCommName();
 
 			performTabKeyPress();
-
-			Thread.sleep(2000);
 
 			B.DisplayedOnThisFieldisRequired();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
 	}
 
@@ -1704,12 +1490,10 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -1719,11 +1503,7 @@ public class BankOnboardingTestcases {
 
 			B.EnterOnCommName(CommunicationName);
 
-			Thread.sleep(2000);
-
 			performTabKeyPress();
-
-			Thread.sleep(2000);
 
 			B.NOTDisplayedOnInvalidFormat();
 
@@ -1731,8 +1511,8 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
 
 	}
@@ -1745,12 +1525,10 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -1760,13 +1538,9 @@ public class BankOnboardingTestcases {
 
 			B.EnterOnCommName(CommunicationName);
 
-			Thread.sleep(2000);
-
 			performTabKeyPress();
 
 			B.DisplayedOnThisInvalidFormat();
-
-			Thread.sleep(2000);
 
 			B.clearCommunicationName();
 
@@ -1776,8 +1550,8 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
 	}
 
@@ -1788,12 +1562,10 @@ public class BankOnboardingTestcases {
 		try {
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -1803,13 +1575,9 @@ public class BankOnboardingTestcases {
 
 			B.EnterOnCommName(CommunicationName);
 
-			Thread.sleep(2000);
-
 			performTabKeyPress();
 
 			B.DisplayedOnThisInvalidFormat();
-
-			Thread.sleep(2000);
 
 			B.clearCommunicationName();
 
@@ -1817,8 +1585,8 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
 
 	}
@@ -1832,16 +1600,13 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.ClickOnCommPosition();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
-
 
 	}
 
@@ -1852,14 +1617,12 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.LabelCommPosition();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
 
 	}
@@ -1872,23 +1635,17 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.ClickOnCommPosition();
 
 			performTabKeyPress();
-
-			Thread.sleep(2000);
 
 			B.DisplayedOnThisFieldisRequired();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
-
-
 
 	}
 
@@ -1900,12 +1657,10 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -1915,11 +1670,7 @@ public class BankOnboardingTestcases {
 
 			B.EnterOnCommunicationPosition(CommunicationPosition);
 
-			Thread.sleep(2000);
-
 			performTabKeyPress();
-
-			Thread.sleep(2000);
 
 			B.NOTDisplayedOnInvalidFormat();
 
@@ -1927,10 +1678,9 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
-
 
 	}
 
@@ -1942,12 +1692,10 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -1957,13 +1705,9 @@ public class BankOnboardingTestcases {
 
 			B.EnterOnCommunicationPosition(CommunicationPosition);
 
-			Thread.sleep(2000);
-
 			performTabKeyPress();
 
 			B.DisplayedOnThisInvalidFormat();
-
-			Thread.sleep(2000);
 
 			B.clearCommunicationPosition();
 
@@ -1971,8 +1715,8 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
 
 	}
@@ -1985,12 +1729,10 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -2000,13 +1742,9 @@ public class BankOnboardingTestcases {
 
 			B.EnterOnCommunicationPosition(CommunicationPosition);
 
-			Thread.sleep(2000);
-
 			performTabKeyPress();
 
 			B.DisplayedOnThisInvalidFormat();
-
-			Thread.sleep(2000);
 
 			B.clearCommunicationPosition();
 
@@ -2014,10 +1752,9 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
-
 
 	}
 
@@ -2030,16 +1767,13 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.ClickOnCommPhoneNumber();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
-
 
 	}
 
@@ -2050,16 +1784,13 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.LabelCommPhoneNumber();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
-
 
 	}
 
@@ -2071,12 +1802,10 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -2086,13 +1815,9 @@ public class BankOnboardingTestcases {
 
 			B.EnteronCommPhoneNumber(CommunicationPhonenumber);
 
-			Thread.sleep(2000);
-
 			performTabKeyPress();
 
 			B.DisplayedOnThisInvalidFormat();
-
-			Thread.sleep(2000);
 
 			B.clearCommunicationPhoneNumber();
 
@@ -2100,8 +1825,8 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
 
 	}
@@ -2114,12 +1839,10 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -2129,13 +1852,9 @@ public class BankOnboardingTestcases {
 
 			B.EnteronCommPhoneNumber(CommunicationPhonenumber);
 
-			Thread.sleep(2000);
-
 			performTabKeyPress();
 
 			B.DisplayedOnThisInvalidFormat();
-
-			Thread.sleep(2000);
 
 			B.clearCommunicationPhoneNumber();
 
@@ -2143,10 +1862,9 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
-
 
 	}
 
@@ -2158,12 +1876,10 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -2173,13 +1889,9 @@ public class BankOnboardingTestcases {
 
 			B.EnteronCommPhoneNumber(CommunicationPhonenumber);
 
-			Thread.sleep(2000);
-
 			performTabKeyPress();
 
 			B.DisplayedOnThisInvalidFormat();
-
-			Thread.sleep(2000);
 
 			B.clearCommunicationPhoneNumber();
 
@@ -2187,10 +1899,9 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
-
 
 	}
 
@@ -2205,23 +1916,18 @@ public class BankOnboardingTestcases {
 				B = new org.Locators.BankLocators(driver);
 				L = new org.Locators.LoginLocators(driver);
 
-				driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 				String Phonenumber = row.get("PhoneNumber");
 				B.EnteronCommPhoneNumber(Phonenumber);
 
-				Thread.sleep(2000);
-
 				performTabKeyPress();
-
-				Thread.sleep(2000);
 
 				B.NOTDisplayedOnInvalidFormat();
 
 			} catch (Exception e) {
-				ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-			   exceptionHandler.handleException(e, "Communication Info");
-			    throw e; 
+				ExceptionHandler exceptionHandler = new ExceptionHandler(driver,
+						ExtentCucumberAdapter.getCurrentStep());
+				exceptionHandler.handleException(e, "Communication Info");
+				throw e;
 			}
 
 		}
@@ -2231,38 +1937,34 @@ public class BankOnboardingTestcases {
 
 	@When("I click on the \"Mobile Number\" field")
 	public void I_Click_On_the_Mobilenumber_Field() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.ClickonCommMobileNumber();
 
-		B.ClickonCommMobileNumber();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
 
 	}
 
 	@Then("the label name should be \"Mobile Number\"")
 	public void the_label_name_shouldbe_MobileNumber() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.LabelCommMobileNumber();
 
-		B.LabelCommMobileNumber();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
 
 	}
@@ -2275,12 +1977,10 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -2290,13 +1990,9 @@ public class BankOnboardingTestcases {
 
 			B.EnteronCommMobileNumber(CommunicationMobilenumber);
 
-			Thread.sleep(2000);
-
 			performTabKeyPress();
 
-			B.DisplayedOnShouldbe10digits();
-
-			Thread.sleep(2000);
+			B.DisplayedOnShouldbe30digits();
 
 			B.clearCommunicationMobileNumber();
 
@@ -2304,8 +2000,8 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
 
 	}
@@ -2318,12 +2014,10 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -2336,11 +2030,7 @@ public class BankOnboardingTestcases {
 			String enteredMobileNumber = B.getMobileNumber();
 			assertTrue("Mobile Number field allows more than 10 digits.", enteredMobileNumber.length() <= 10);
 
-			Thread.sleep(2000);
-
 			performTabKeyPress();
-
-			Thread.sleep(2000);
 
 			B.clearCommunicationMobileNumber();
 
@@ -2348,43 +2038,78 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
 
 	}
 
-
+//	@Then("the \"Mobile Number\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
+//	public void the_Mobile_field_should_promptto_enter_valid_inputs(String sheetName, int rowNumber)
+//			throws InvalidFormatException, IOException, InterruptedException, AWTException {
+//
+//		try {
+//			B = new org.Locators.BankLocators(driver);
+//
+//			// ExcelDataCache cache = ExcelDataCache.getInstance();
+//			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+//					
+//
+//			System.out.println("Sheet name: " + sheetName);
+//
+//			// Fetch the mobile number for the specified row
+//			String communicationMobileNumber = String
+//					.valueOf(testdata.get(rowNumber).get("Communication MobileNumber"));
+//			System.out.println("Mobile Number: " + communicationMobileNumber);
+//
+//			// Remove scientific notation if present
+//			if (communicationMobileNumber.contains("E")) {
+//				Double mobileNumber = Double.valueOf(communicationMobileNumber);
+//				communicationMobileNumber = String.format("%.0f", mobileNumber); // Convert to string without decimal
+//			}
+//
+//			B.EnteronCommMobileNumber(communicationMobileNumber);
+//
+//			// Consider replacing with explicit wait
+//			performTabKeyPress();
+//			// Consider replacing with explicit wait
+//
+//			// Validate mobile number format
+//			B.NOTDisplayedOnInvalidFormat();
+//
+//			// Log input data
+//			LoginInputDatas("Communication MobileNumber", communicationMobileNumber);
+//
+//		} catch (Exception e) {
+//			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+//			exceptionHandler.handleException(e, "Communication Info");
+//			throw e;
+//		}
+//	}
+	
 	
 	@Then("the \"Mobile Number\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
-	public void the_Mobile_field_should_promptto_enter_valid_inputs(String sheetName, int rowNumber)
+	public void the_Mobile_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
 	        throws InvalidFormatException, IOException, InterruptedException, AWTException {
 
 	    try {
 	        B = new org.Locators.BankLocators(driver);
-	        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+	        
+	        // Initialize Faker
+	        Faker faker = new Faker();
 
-	        ExcelReader reader = new ExcelReader();
-	        List<Map<String, String>> testdata = reader.getData(
-	                "C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
-
-	        System.out.println("Sheet name: " + sheetName);
-
-	        // Fetch the mobile number for the specified row
-	        String communicationMobileNumber = String.valueOf(testdata.get(rowNumber).get("Communication MobileNumber"));
-	        System.out.println("Mobile Number: " + communicationMobileNumber);
-
-	        // Remove scientific notation if present
-	        if (communicationMobileNumber.contains("E")) {
-	            Double mobileNumber = Double.valueOf(communicationMobileNumber);
-	            communicationMobileNumber = String.format("%.0f", mobileNumber); // Convert to string without decimal
-	        }
+	        // Generate a valid mobile number starting with 9, 8, 7, or 6
+	        String firstDigit = faker.number().numberBetween(6, 10) + ""; // Randomly choose 6, 7, 8, or 9
+	        String remainingDigits = faker.number().digits(9); // Generate 9 random digits
+	        String communicationMobileNumber = firstDigit + remainingDigits;
+	        
+	        System.out.println("Generated Mobile Number: " + communicationMobileNumber);
 
 	        B.EnteronCommMobileNumber(communicationMobileNumber);
 
-	        Thread.sleep(2000); // Consider replacing with explicit wait
+	        // Consider replacing with explicit wait
 	        performTabKeyPress();
-	        Thread.sleep(2000); // Consider replacing with explicit wait
+	        // Consider replacing with explicit wait
 
 	        // Validate mobile number format
 	        B.NOTDisplayedOnInvalidFormat();
@@ -2395,9 +2120,10 @@ public class BankOnboardingTestcases {
 	    } catch (Exception e) {
 	        ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
 	        exceptionHandler.handleException(e, "Communication Info");
-	        throw e; 
+	        throw e;
 	    }
 	}
+
 
 
 	@Then("the \"Mobile Number\" field should not allow proceeding without any input data")
@@ -2408,22 +2134,17 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.ClickonCommMobileNumber();
 
 			performTabKeyPress();
-
-			Thread.sleep(2000);
 
 			B.DisplayedOnThisFieldisRequired();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
-
 
 	}
 
@@ -2436,16 +2157,13 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.ClickonCommEmailid();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
-
 
 	}
 
@@ -2456,14 +2174,12 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.LabelCommEmailid();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
 
 	}
@@ -2476,21 +2192,17 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.ClickonCommEmailid();
 
 			performTabKeyPress();
-			Thread.sleep(2000);
 
 			B.DisplayedOnThisFieldisRequired();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
-
 
 	}
 
@@ -2502,12 +2214,10 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -2519,12 +2229,9 @@ public class BankOnboardingTestcases {
 
 			B.EnteronCommEmailid(Communicationemailid);
 
-			Thread.sleep(2000);
 			performTabKeyPress();
 
 			B.DisplayedOnThisInvalidFormat();
-
-			Thread.sleep(2000);
 
 			B.ClearCommEmailid();
 
@@ -2532,8 +2239,8 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
 
 	}
@@ -2546,12 +2253,10 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -2563,13 +2268,9 @@ public class BankOnboardingTestcases {
 
 			B.EnteronCommEmailid(Communicationemailid);
 
-			Thread.sleep(2000);
-
 			performTabKeyPress();
 
 			B.DisplayedOnThisInvalidFormat();
-
-			Thread.sleep(2000);
 
 			B.ClearCommEmailid();
 
@@ -2577,8 +2278,8 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
 
 	}
@@ -2591,12 +2292,10 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -2608,22 +2307,18 @@ public class BankOnboardingTestcases {
 
 			B.EnteronCommEmailid(Communicationemailid);
 
-			Thread.sleep(2000);
-
 			performTabKeyPress();
 
 			B.DisplayedOnThisInvalidFormat();
 
-			Thread.sleep(4000);
-
 			B.ClearCommEmailid();
 
 			LoginInputDatas("Communication EmailID", Communicationemailid);
-			
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
 
 	}
@@ -2636,12 +2331,10 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -2652,68 +2345,94 @@ public class BankOnboardingTestcases {
 			B.ClearCommEmailid();
 
 			B.EnteronCommEmailid(Communicationemailid);
-
-			Thread.sleep(2000);
 
 			performTabKeyPress();
 
 			B.DisplayedOnThisInvalidFormat();
 
-			Thread.sleep(2000);
-
 			B.ClearCommEmailid();
 
 			LoginInputDatas("Communication EmailID", Communicationemailid);
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
 
 	}
 
+//	@Then("the \"Email ID\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
+//	public void the_EmailID_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
+//			throws InvalidFormatException, IOException, InterruptedException, AWTException {
+//
+//		try {
+//
+//			B = new org.Locators.BankLocators(driver);
+//
+//			// ExcelDataCache cache = ExcelDataCache.getInstance();
+//
+//			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+//					
+//
+//			System.out.println("sheet name: " + testdata);
+//
+//			String Communicationemailid = testdata.get(rowNumber).get("Communication EmailId");
+//
+//			System.out.println("0" + testdata.get(0));
+//
+//			B.ClearCommEmailid();
+//
+//			B.EnteronCommEmailid(Communicationemailid);
+//
+//			performTabKeyPress();
+//
+//			B.NOTDisplayedOnInvalidFormat();
+//
+//			LoginInputDatas("Communication EmailID", Communicationemailid);
+//
+//		} catch (Exception e) {
+//			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+//			exceptionHandler.handleException(e, "Communication Info");
+//			throw e;
+//		}
+//
+//	}
+	
+	
 	@Then("the \"Email ID\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
 	public void the_EmailID_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
-			throws InvalidFormatException, IOException, InterruptedException, AWTException {
+	        throws InvalidFormatException, IOException, InterruptedException, AWTException {
 
-		try {
+	    try {
+	        B = new org.Locators.BankLocators(driver);
 
-			B = new org.Locators.BankLocators(driver);
+	        // Initialize Faker
+	        Faker faker = new Faker();
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+	        // Generate a random email address with @gmail.com
+	        String randomEmailPrefix = faker.internet().slug(); // Generate a random string for the prefix
+	        String Communicationemailid = randomEmailPrefix + "@gmail.com"; // Append @gmail.com
+	        System.out.println("Generated Email ID: " + Communicationemailid);
 
-			ExcelReader reader = new ExcelReader();
+	        B.ClearCommEmailid();
+	        B.EnteronCommEmailid(Communicationemailid);
 
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+	        performTabKeyPress();
 
-			System.out.println("sheet name: " + testdata);
+	        // Validate the email format
+	        B.NOTDisplayedOnInvalidFormat();
 
-			String Communicationemailid = testdata.get(rowNumber).get("Communication EmailId");
+	        // Log input data
+	        LoginInputDatas("Communication EmailID", Communicationemailid);
 
-			System.out.println("0" + testdata.get(0));
-
-			B.ClearCommEmailid();
-
-			B.EnteronCommEmailid(Communicationemailid);
-
-			Thread.sleep(2000);
-
-			performTabKeyPress();
-
-			B.NOTDisplayedOnInvalidFormat();
-
-			LoginInputDatas("Communication EmailID", Communicationemailid);
-
-		} catch (Exception e) {
-			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
-		}
-
-
+	    } catch (Exception e) {
+	        ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+	        exceptionHandler.handleException(e, "Communication Info");
+	        throw e;
+	    }
 	}
+
 
 	@When("I click on the \"UserName\" field")
 	public void I_Click_On_the_UserName_Field() {
@@ -2722,16 +2441,13 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.ClickOnCommUsername();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
-
 
 	}
 
@@ -2742,16 +2458,13 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.LabelCommUserName();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
-
 
 	}
 
@@ -2763,12 +2476,10 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -2784,8 +2495,8 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
 
 	}
@@ -2797,16 +2508,13 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.LabelCommADUser();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
-
 
 	}
 
@@ -2818,12 +2526,10 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -2833,8 +2539,6 @@ public class BankOnboardingTestcases {
 
 			B.selectDropdownOption(ADUSer);
 
-			Thread.sleep(2000);
-
 			performTabKeyPress();
 
 			B.NOTDisplayedOnInvalidFormat();
@@ -2843,10 +2547,9 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Communication Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Communication Info");
+			throw e;
 		}
-
 
 	}
 
@@ -2857,7 +2560,6 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
 			B.CommuSavebutton();
@@ -2874,16 +2576,11 @@ public class BankOnboardingTestcases {
 
 		B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		Thread.sleep(3000);
 		try {
-			Thread.sleep(2000);
 
 			B.ClickOnNextStep();
-
-			Thread.sleep(3000);
 
 			B.DisplayedOnChannelConfiguration();
 
@@ -2903,11 +2600,7 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
-
-			Thread.sleep(3000);
 
 			B.DisplayedOnChannelConfig();
 
@@ -2915,13 +2608,10 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Channel Config");
-		    throw e; 
+			exceptionHandler.handleException(e, "Channel Config");
+			throw e;
 		}
 	}
-	
-
-
 
 	@Then("the label name should be \"Channel\"")
 	public void labelName_should_be_Channel() {
@@ -2930,14 +2620,12 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.LabelChannel();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Channel Config");
-		    throw e; 
+			exceptionHandler.handleException(e, "Channel Config");
+			throw e;
 		}
 	}
 
@@ -2948,14 +2636,12 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.LabelNetwork();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Channel Config");
-		    throw e; 
+			exceptionHandler.handleException(e, "Channel Config");
+			throw e;
 		}
 	}
 
@@ -2966,25 +2652,21 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.LabelTransactionSet();
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Channel Config");
-		    throw e; 
+			exceptionHandler.handleException(e, "Channel Config");
+			throw e;
 		}
 	}
-	
+
 	@Then("the label name should be \"Routing\"")
 	public void labelName_should_be_Routing() {
 
 		try {
 
 			B = new org.Locators.BankLocators(driver);
-
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
 			B.LabelRouting();
 
@@ -3003,11 +2685,7 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.clickonChannel();
-
-			Thread.sleep(3000);
 
 			B.SelectonPOSChannel();
 
@@ -3017,8 +2695,8 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Channel Config");
-		    throw e; 
+			exceptionHandler.handleException(e, "Channel Config");
+			throw e;
 		}
 	}
 
@@ -3030,11 +2708,7 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.clickonChannel();
-
-			Thread.sleep(3000);
 
 			B.SelectonUPIChannel();
 
@@ -3044,8 +2718,8 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Channel Config");
-		    throw e; 
+			exceptionHandler.handleException(e, "Channel Config");
+			throw e;
 		}
 	}
 
@@ -3057,11 +2731,7 @@ public class BankOnboardingTestcases {
 
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
 			B.clickonChannel();
-
-			Thread.sleep(3000);
 
 			B.SelectonAEPSChannel();
 
@@ -3071,289 +2741,235 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Channel Config");
-		    throw e; 
+			exceptionHandler.handleException(e, "Channel Config");
+			throw e;
 		}
 	}
-	
-	
+
 	@Then("the \"MATM Channel\" field should prompt to select the channels based on the given input")
 	public void the_MATMChannel_fieldshouldprompt_toselect_thechannelsbased_onthe_giveninput()
 			throws InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.clickonChannel();
 
-		B.clickonChannel();
+			B.SelectonMATMChannel();
 
-		Thread.sleep(3000);
+			String selectonAEPSChannel = B.getSelectonAEPSChannel();
 
-		B.SelectonMATMChannel();
+			LoginInputDatas("Channel", selectonAEPSChannel);
 
-		String selectonAEPSChannel = B.getSelectonAEPSChannel();
-
-		LoginInputDatas("Channel", selectonAEPSChannel);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Channel Config");
-		    throw e; 
+			exceptionHandler.handleException(e, "Channel Config");
+			throw e;
 		}
 	}
-	
 
 	@Then("the \"POS Network\" field should prompt to select the Network based on the given input")
 	public void the_Network_fieldshouldprompt_toselect_thechannelsbased_onthe_giveninput() throws InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.clickonNetwork();
 
-		Thread.sleep(3000);
+			B.SelectonNetworkPOS();
 
-		B.clickonNetwork();
+			String selectonPosNetwork = B.getSelectonNetworkPOS();
 
-		Thread.sleep(2000);
+			LoginInputDatas("Network", selectonPosNetwork);
 
-		B.SelectonNetworkPOS();
-
-		String selectonPosNetwork = B.getSelectonNetworkPOS();
-
-		LoginInputDatas("Network", selectonPosNetwork);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Channel Config");
-		    throw e; 
+			exceptionHandler.handleException(e, "Channel Config");
+			throw e;
 		}
 	}
 
 	@Then("the \"MATM Network\" field should prompt to select the Network based on the given input")
 	public void the_MATMNetwork_fieldshouldprompt_toselect_thechannelsbased_onthe_giveninput()
 			throws InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.clickonNetwork();
 
-		Thread.sleep(3000);
+			B.SelectonNetworkMATM();
 
-		B.clickonNetwork();
+			String selectonPosNetwork = B.getSelectonNetworkMATM();
 
-		Thread.sleep(2000);
+			LoginInputDatas("Network", selectonPosNetwork);
 
-		B.SelectonNetworkMATM();
-
-		String selectonPosNetwork = B.getSelectonNetworkMATM();
-
-		LoginInputDatas("Network", selectonPosNetwork);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Channel Config");
-		    throw e; 
+			exceptionHandler.handleException(e, "Channel Config");
+			throw e;
 		}
 	}
+
 	@Then("the \"POS Transaction Sets\" field should prompt to select the transaction sets based on the given input")
 	public void the_TransactionSets_fieldshouldprompt_toselect_thechannelsbased_onthe_giveninput()
 			throws InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.clickonTransactionsetPoS();
 
-		Thread.sleep(3000);
+			B.SelectonTransactionsetpos();
 
-		B.clickonTransactionsetPoS();
+			String SelectonTransactionsetpos = B.getSelectonTransactionsetpos();
 
-		Thread.sleep(2000);
+			LoginInputDatas("Transaction Set", SelectonTransactionsetpos);
 
-		B.SelectonTransactionsetpos();
-
-		String SelectonTransactionsetpos = B.getSelectonTransactionsetpos();
-
-		LoginInputDatas("Transaction Set", SelectonTransactionsetpos);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Channel Config");
-		    throw e; 
+			exceptionHandler.handleException(e, "Channel Config");
+			throw e;
 		}
 	}
 
 	@Then("the \"UPI Transaction Sets\" field should prompt to select the transaction sets based on the given input")
 	public void the_UPITransactionSets_fieldshouldprompt_toselect_thechannelsbased_onthe_giveninput()
 			throws InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.clickonTransactionset();
 
-		Thread.sleep(3000);
+			B.SelectonTransactionsetkUPI();
 
-		B.clickonTransactionset();
+			performTabKeyPress();
 
-		Thread.sleep(2000);
+			B.NOTDisplayedOnInvalidFormat();
 
-		B.SelectonTransactionsetkUPI();
+			String SelectonTransactionsetkUPI = B.getSelectonTransactionsetkUPI();
 
-		Thread.sleep(2000);
+			LoginInputDatas("Transaction Set", SelectonTransactionsetkUPI);
 
-		performTabKeyPress();
-
-		B.NOTDisplayedOnInvalidFormat();
-
-		String SelectonTransactionsetkUPI = B.getSelectonTransactionsetkUPI();
-
-		LoginInputDatas("Transaction Set", SelectonTransactionsetkUPI);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Channel Config");
-		    throw e; 
+			exceptionHandler.handleException(e, "Channel Config");
+			throw e;
 		}
 	}
 
 	@Then("the \"AEPS Transaction Sets\" field should prompt to select the transaction sets based on the given input")
 	public void the_AEPSTransactionSets_fieldshouldprompt_toselect_thechannelsbased_onthe_giveninput()
 			throws InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.clickonTransactionset();
 
-		Thread.sleep(3000);
+			B.SelectonTransactionsetAEPS();
 
-		B.clickonTransactionset();
+			performTabKeyPress();
 
-		Thread.sleep(3000);
+			B.NOTDisplayedOnInvalidFormat();
 
-		B.SelectonTransactionsetAEPS();
+			String SelectonTransactionsetAEPS = B.getSelectonTransactionsetAEPS();
 
-		Thread.sleep(2000);
+			LoginInputDatas("Transaction Set", SelectonTransactionsetAEPS);
 
-		performTabKeyPress();
-
-		B.NOTDisplayedOnInvalidFormat();
-
-		String SelectonTransactionsetAEPS = B.getSelectonTransactionsetAEPS();
-
-		LoginInputDatas("Transaction Set", SelectonTransactionsetAEPS);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Channel Config");
-		    throw e; 
+			exceptionHandler.handleException(e, "Channel Config");
+			throw e;
 		}
 	}
 
 	@Then("the \"MATM Transaction Sets\" field should prompt to select the transaction sets based on the given input")
 	public void the_MATMTransactionSets_fieldshouldprompt_toselect_thechannelsbased_onthe_giveninput()
 			throws InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.clickonTransactionsetPoS();
 
-		Thread.sleep(3000);
+			B.SelectonTransactionsetMATM();
 
-		B.clickonTransactionsetPoS();
+			String SelectonTransactionsetpos = B.getSelectonTransactionsetkMATM();
 
-		Thread.sleep(2000);
+			LoginInputDatas("Transaction Set", SelectonTransactionsetpos);
 
-		B.SelectonTransactionsetMATM();
-
-		String SelectonTransactionsetpos = B.getSelectonTransactionsetkMATM();
-
-		LoginInputDatas("Transaction Set", SelectonTransactionsetpos);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Channel Config");
-		    throw e; 
+			exceptionHandler.handleException(e, "Channel Config");
+			throw e;
 		}
 	}
-	
+
 	@Then("the \"POS Routing\" field should prompt to select the routing based on the given input")
 	public void the_Routing_fieldshouldprompt_toselect_theroutingsbased_onthe_giveninput() throws InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.clickonRouting();
 
-		B.clickonRouting();
+			B.SelectonRouting();
 
-		Thread.sleep(3000);
+			String SelectonRouting = B.getSelectonRouting();
 
-		B.SelectonRouting();
+			LoginInputDatas("Routing", SelectonRouting);
 
-		String SelectonRouting = B.getSelectonRouting();
-
-		LoginInputDatas("Routing", SelectonRouting);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Channel Config");
-		    throw e; 
+			exceptionHandler.handleException(e, "Channel Config");
+			throw e;
 		}
 	}
-	
+
 	@Then("the \"MATM Routing\" field should prompt to select the routing based on the given input")
 	public void the_MATMRouting_fieldshouldprompt_toselect_theroutingsbased_onthe_giveninput()
 			throws InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.clickonRouting();
 
-		B.clickonRouting();
+			B.SelectonRoutingMATM();
 
-		Thread.sleep(3000);
+			String SelectonRouting = B.getSelectonRouting();
 
-		B.SelectonRoutingMATM();
+			LoginInputDatas("Routing", SelectonRouting);
 
-		String SelectonRouting = B.getSelectonRouting();
-
-		LoginInputDatas("Routing", SelectonRouting);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Channel Config");
-		    throw e; 
+			exceptionHandler.handleException(e, "Channel Config");
+			throw e;
 		}
 	}
 
 	@Then("the \"Save\" button should be prompted to click on Channel COnfig")
 	public void the_Save_button_should_be_prompted_to_click_on_Channel_COnfig() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.CommuSavebutton();
-		
+			B.CommuSavebutton();
+
 		} catch (AssertionError ae) {
 			takeScreenshotStr("Channel Config"); // Take screenshot on assertion error
 			ExtentCucumberAdapter.getCurrentStep().log(Status.FAIL, "Assertion failed: " + ae.getMessage());
@@ -3365,19 +2981,15 @@ public class BankOnboardingTestcases {
 	public void the_Nextbutton_shouldbe_prompted_toclick_On_COmmunicationconfig() throws InterruptedException {
 
 		try {
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		
 			B.ClickOnNextStep();
-
-			Thread.sleep(3000);
 
 			B.DisplayedOnRoutingONUS();
 
-		} catch (AssertionError ae) {
+		} catch (AssertionError | Exception ae) {
 			takeScreenshotStr("Channel Config"); // Take screenshot on assertion error
 			ExtentCucumberAdapter.getCurrentStep().log(Status.FAIL, "Assertion failed: " + ae.getMessage());
 			throw ae;
@@ -3390,29 +3002,24 @@ public class BankOnboardingTestcases {
 	@When("I visit the ONUS Routing")
 
 	public void I_visit_the_ONUS_Routing() throws InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			B.DisplayedOnRoutingONUS();
 
-		Thread.sleep(3000);
+			B.CLickOnONUSRouting();
 
-		B.DisplayedOnRoutingONUS();
-
-		B.CLickOnONUSRouting();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "ONUS");
-		    throw e; 
+			exceptionHandler.handleException(e, "ONUS");
+			throw e;
 		}
 	}
-	
-	
+
 	@Then("the \"POS ADD BIN\" field should prompt to select the Bin based on the given input using sheetname {string} and rownumber {int}")
 	public void the_POSAddbin_field_should_prompt_to_select_thebin_basedonthegiveninput(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
@@ -3420,12 +3027,10 @@ public class BankOnboardingTestcases {
 		try {
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -3442,10 +3047,7 @@ public class BankOnboardingTestcases {
 
 				System.out.println("0" + testdata.get(0));
 
-				Thread.sleep(2000);
-
 				B.EnterOnAddBin(BIN);
-				Thread.sleep(1000);
 
 				performTabKeyPress();
 
@@ -3459,11 +3061,11 @@ public class BankOnboardingTestcases {
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "ONUS");
-		    throw e; 
+			exceptionHandler.handleException(e, "ONUS");
+			throw e;
 		}
 	}
-	
+
 	@Then("the \"MATM ADD BIN\" field should prompt to select the Bin based on the given input using sheetname {string} and rownumber {int}")
 	public void the_Addbin_field_should_prompt_to_select_thebin_basedonthegiveninput(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
@@ -3471,12 +3073,10 @@ public class BankOnboardingTestcases {
 		try {
 			B = new org.Locators.BankLocators(driver);
 
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-			ExcelReader reader = new ExcelReader();
-
-			List<Map<String, String>> testdata = reader.getData(
-					"C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
 			System.out.println("sheet name: " + testdata);
 
@@ -3493,10 +3093,7 @@ public class BankOnboardingTestcases {
 
 				System.out.println("0" + testdata.get(0));
 
-				Thread.sleep(2000);
-
 				B.EnterOnAddBin(BIN);
-				Thread.sleep(1000);
 
 				performTabKeyPress();
 
@@ -3519,20 +3116,12 @@ public class BankOnboardingTestcases {
 	@Then("the \"NextStep\" button should be prompted to click on ONUS Routing")
 	public void the_Nextbutton_shouldbe_prompted_toclick_On_ONUSRouting() throws InterruptedException {
 
-		
 		try {
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
-
-		
-
-			Thread.sleep(2000);
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
 			B.ClickOnNextStep();
-
-			Thread.sleep(3000);
 
 			B.DisplayedOnGlobalFRMParameters();
 
@@ -3546,28 +3135,22 @@ public class BankOnboardingTestcases {
 
 	@When("I visit the Global FRM")
 	public void I_visit_GlobalFRM() throws InterruptedException {
-		
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		Thread.sleep(2000);
+			driver.navigate().refresh();
 
-		driver.navigate().refresh();
+			B.CLickOnglobalfrm();
 
-		B.CLickOnglobalfrm();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
-		
-		
 
 	}
 
@@ -3576,19 +3159,16 @@ public class BankOnboardingTestcases {
 	public void the_GlobalFRMcheckbox_shouldbe_checked() throws InterruptedException {
 
 		try {
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		Thread.sleep(1000);
+			B.checkboxGlobalfrm();
 
-		B.checkboxGlobalfrm();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 
 	}
@@ -3596,192 +3176,171 @@ public class BankOnboardingTestcases {
 	@Then("the GlobalFRMcheckbox should be unchecked")
 
 	public void the_GlobalFRMcheckbox_shouldbe_unchecked() throws InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		Thread.sleep(3000);
+			B.uncheckboxGlobalfrm();
 
-		B.uncheckboxGlobalfrm();
+			B.checkboxGlobalfrm();
 
-		Thread.sleep(4000);
-
-		B.checkboxGlobalfrm();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
-		
+
 	}
 
 	@When("I click on the \"Velocity Check Minutes\" field")
 	public void I_Click_On_the_VelocityCheckMinutes_Field() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.ClickOnVelocityCheckMinute();
 
-		B.ClickOnVelocityCheckMinute();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
-		
+
 	}
 
 	@Then("the label name should be \"Velocity Check Minutes\"")
 	public void labelName_should_be_VelocityCheckMinutes() {
-		
-		try {
-		B = new org.Locators.BankLocators(driver);
 
-		B.VelocityCheckMinuteLabel();
-		
+		try {
+			B = new org.Locators.BankLocators(driver);
+
+			B.VelocityCheckMinuteLabel();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
-		
+
 	}
 
 	@Then("the \"Velocity Check Minutes\" field should not allow proceeding without any input data")
 	public void the_VelocityCheckMinutes_field_shouldnot_allow_proceeding_withoutany_inputdata()
 			throws AWTException, InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.ClickOnVelocityCheckMinute();
 
-		B.ClickOnVelocityCheckMinute();
+			performTabKeyPress();
 
-		performTabKeyPress();
+			B.DisplayedOnThisFieldisRequired();
 
-		Thread.sleep(2000);
-
-		B.DisplayedOnThisFieldisRequired();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
-		
+
 	}
-	
 
 	@Then("the \"Velocity Check Minutes\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
 	public void the_Velocity_Check_Minutes_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String VelocityCheckMinutes = testdata.get(rowNumber).get("Velocity Check Minutes");
 
-		String VelocityCheckMinutes = testdata.get(rowNumber).get("Velocity Check Minutes");
+			if (VelocityCheckMinutes != null && VelocityCheckMinutes.matches("\\d+\\.0")) {
+				VelocityCheckMinutes = VelocityCheckMinutes.substring(0, VelocityCheckMinutes.indexOf(".0"));
 
-		if (VelocityCheckMinutes != null && VelocityCheckMinutes.matches("\\d+\\.0")) {
-			VelocityCheckMinutes = VelocityCheckMinutes.substring(0, VelocityCheckMinutes.indexOf(".0"));
+				System.out.println("0" + testdata.get(0));
 
-			System.out.println("0" + testdata.get(0));
+				B.EnterOnVelocityCheckMinute(VelocityCheckMinutes);
 
-			B.EnterOnVelocityCheckMinute(VelocityCheckMinutes);
+//				performTabKeyPress();
 
-			performTabKeyPress();
+				B.NOTDisplayedOnInvalidFormat();
 
-			B.NOTDisplayedOnInvalidFormat();
+				LoginInputDatas("Velocity Check Minutes", VelocityCheckMinutes);
 
-			LoginInputDatas("Velocity Check Minutes", VelocityCheckMinutes);
+			}
 
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
-		
+
 	}
-	
+
 	@When("I click on the \"Velocity Check Count\" field")
 	public void I_Click_On_the_VelocityCheckCount_Field() {
-		
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.ClickOnVelocityCheckCount();
 
-		B.ClickOnVelocityCheckCount();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
-		
+
 	}
 
 	@Then("the label name should be \"Velocity Check Count\"")
 	public void labelName_should_be_Velocity_Check_Count() {
-		
-		try {
-		B = new org.Locators.BankLocators(driver);
 
-		B.VelocityCheckCountLabel();
-		
+		try {
+			B = new org.Locators.BankLocators(driver);
+
+			B.VelocityCheckCountLabel();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
-		
+
 	}
 
 	@Then("the \"Velocity Check Count\" field should not allow proceeding without any input data")
 	public void the_VelocityCheckCount_field_shouldnot_allow_proceeding_withoutany_inputdata()
 			throws AWTException, InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.ClickOnVelocityCheckCount();
 
-		B.ClickOnVelocityCheckCount();
+			performTabKeyPress();
 
-		performTabKeyPress();
+			B.DisplayedOnThisFieldisRequired();
 
-		Thread.sleep(2000);
-
-		B.DisplayedOnThisFieldisRequired();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 
 	}
@@ -3789,602 +3348,548 @@ public class BankOnboardingTestcases {
 	@Then("the \"Velocity Check Count\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
 	public void the_Velocity_Check_Count_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
-		
 
 		B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
-
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+		 List<Map<String, String>> testdata = cache.getCachedData(sheetName);
 
 		System.out.println("sheet name: " + testdata);
-		
+
 		try {
 
-		String VelocityCheckCount = testdata.get(rowNumber).get("Velocity Check Count");
+			String VelocityCheckCount = testdata.get(rowNumber).get("Velocity Check Count");
 
-		if (VelocityCheckCount != null && VelocityCheckCount.matches("\\d+\\.0")) {
-			VelocityCheckCount = VelocityCheckCount.substring(0, VelocityCheckCount.indexOf(".0"));
+			if (VelocityCheckCount != null && VelocityCheckCount.matches("\\d+\\.0")) {
+				VelocityCheckCount = VelocityCheckCount.substring(0, VelocityCheckCount.indexOf(".0"));
 
-			System.out.println("0" + testdata.get(0));
+				System.out.println("0" + testdata.get(0));
 
-			B.EnterOnVelocityCheckCount(VelocityCheckCount);
+				B.EnterOnVelocityCheckCount(VelocityCheckCount);
 
-			performTabKeyPress();
+//				performTabKeyPress();
 
-			B.NOTDisplayedOnInvalidFormat();
+				B.NOTDisplayedOnInvalidFormat();
 
-			LoginInputDatas("Velocity Check Count", VelocityCheckCount);
+				LoginInputDatas("Velocity Check Count", VelocityCheckCount);
 
-		}
-		
+			}
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
-		
-		
+
 	}
 
 	@When("I click on the \"Cash@POS Count\" field")
 	public void I_Click_On_the_CashPOSCount_Field() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.ClickOnCashpOScount();
 
-		B.ClickOnCashpOScount();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
 	@Then("the label name should be \"Cash@POS Count\"")
 	public void labelName_should_be_CashPOSCount() {
 		B = new org.Locators.BankLocators(driver);
-		
+
 		try {
 
-		B.CashpOScountLabel();
-		
+			B.CashpOScountLabel();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
 	@Then("the \"Cash@POS Count\" field should not allow proceeding without any input data")
 	public void the_CashPOSCount_field_shouldnot_allow_proceeding_withoutany_inputdata()
 			throws AWTException, InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.ClickOnCashpOScount();
 
-		B.ClickOnCashpOScount();
+			performTabKeyPress();
 
-		performTabKeyPress();
+			B.DisplayedOnThisFieldisRequired();
 
-		Thread.sleep(2000);
-
-		B.DisplayedOnThisFieldisRequired();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
 	@Then("the \"Cash@POS Count\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
 	public void the_CashPOSCount_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String CashPOSCount = testdata.get(rowNumber).get("CashPOS Count");
 
-		String CashPOSCount = testdata.get(rowNumber).get("CashPOS Count");
+			if (CashPOSCount != null && CashPOSCount.matches("\\d+\\.0")) {
+				CashPOSCount = CashPOSCount.substring(0, CashPOSCount.indexOf(".0"));
 
-		if (CashPOSCount != null && CashPOSCount.matches("\\d+\\.0")) {
-			CashPOSCount = CashPOSCount.substring(0, CashPOSCount.indexOf(".0"));
+				System.out.println("0" + testdata.get(0));
 
-			System.out.println("0" + testdata.get(0));
+				B.EnterOnCashpOScount(CashPOSCount);
 
-			B.EnterOnCashpOScount(CashPOSCount);
+//				performTabKeyPress();
 
-			performTabKeyPress();
+				B.NOTDisplayedOnInvalidFormat();
 
-			B.NOTDisplayedOnInvalidFormat();
+				LoginInputDatas("CashPOSCount", CashPOSCount);
+			}
 
-			LoginInputDatas("CashPOSCount", CashPOSCount);
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
 	@When("I click on the \"Micro ATM Count\" field")
 	public void I_Click_On_the_MicroATMCount_Field() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.ClickOnMicroATMCount();
 
-		B.ClickOnMicroATMCount();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
-	
+
 	@Then("the label name should be \"Micro ATM Count\"")
 	public void labelName_should_be_MicroATMCount() {
-		
-		try {
-		B = new org.Locators.BankLocators(driver);
 
-		B.MicroATMCountLabel();
-		
+		try {
+			B = new org.Locators.BankLocators(driver);
+
+			B.MicroATMCountLabel();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
 	@Then("the \"Micro ATM Count\" field should not allow proceeding without any input data")
 	public void the_MicroATMCount_field_shouldnot_allow_proceeding_withoutany_inputdata()
 			throws AWTException, InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.ClickOnMicroATMCount();
 
-		B.ClickOnMicroATMCount();
+			performTabKeyPress();
 
-		performTabKeyPress();
+			B.DisplayedOnThisFieldisRequired();
 
-		Thread.sleep(2000);
-
-		B.DisplayedOnThisFieldisRequired();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
 	@Then("the \"Micro ATM Count\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
 	public void the_MicroATM_Count_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String MicroATMCount = testdata.get(rowNumber).get("Micro ATM Count");
 
-		String MicroATMCount = testdata.get(rowNumber).get("Micro ATM Count");
+			if (MicroATMCount != null && MicroATMCount.matches("\\d+\\.0")) {
+				MicroATMCount = MicroATMCount.substring(0, MicroATMCount.indexOf(".0"));
 
-		if (MicroATMCount != null && MicroATMCount.matches("\\d+\\.0")) {
-			MicroATMCount = MicroATMCount.substring(0, MicroATMCount.indexOf(".0"));
+				System.out.println("0" + testdata.get(0));
 
-			System.out.println("0" + testdata.get(0));
+				B.EnterOnMicroATMCount(MicroATMCount);
 
-			B.EnterOnMicroATMCount(MicroATMCount);
+//				performTabKeyPress();
 
-			performTabKeyPress();
+				B.NOTDisplayedOnInvalidFormat();
 
-			B.NOTDisplayedOnInvalidFormat();
+				LoginInputDatas("Micro ATM Count", MicroATMCount);
 
-			LoginInputDatas("Micro ATM Count", MicroATMCount);
+			}
 
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
-	
+
 	@Then("the label name should be \"International Card Acceptence\"")
 	public void labelName_should_be_InternationalCardAcceptence() {
-		
-	try {	
-		B = new org.Locators.BankLocators(driver);
 
-		B.InternationalcardCountLabel();
-		
-	} catch (Exception e) {
-		ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	   exceptionHandler.handleException(e, "Global FRM");
-	    throw e; 
+		try {
+			B = new org.Locators.BankLocators(driver);
+
+			B.InternationalcardCountLabel();
+
+		} catch (Exception e) {
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
+		}
 	}
-}
 
 	@Then("the \"International Card Acceptence\" field should prompt to select the Yes or No based on the given input using sheetname {string} and rownumber {int}")
 	public void the_InternationalCardAcceptence_field_should_prompt_to_select_YesNO_basedon_the_given_input(
 			String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String card = testdata.get(rowNumber).get("International Card Acceptance");
 
-		String card = testdata.get(rowNumber).get("International Card Acceptance");
+			System.out.println("0" + testdata.get(0));
 
-		System.out.println("0" + testdata.get(0));
+			B.ClickOnInternationalcardCount();
 
-		B.ClickOnInternationalcardCount();
+			B.selectDropdownOption(card);
 
-		B.selectDropdownOption(card);
+			performTabKeyPress();
 
-		performTabKeyPress();
+			B.NOTDisplayedOnInvalidFormat();
 
-		B.NOTDisplayedOnInvalidFormat();
+			LoginInputDatas("International Card Acceptance", card);
 
-		LoginInputDatas("International Card Acceptance", card);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
 	@When("I click on the \"ICA Daily\" field")
 	public void I_Click_On_the_ICADaily_Field() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.ClickonICAdaily();
 
-		B.ClickonICAdaily();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
 	@Then("the label name should be \"Daily\"")
 	public void labelName_should_be_daily() {
-		
-		try {
-		B = new org.Locators.BankLocators(driver);
 
-		B.DailyLabel();
-		
+		try {
+			B = new org.Locators.BankLocators(driver);
+
+			B.DailyLabel();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
 	@Then("the \"ICA Daily\" field should not allow proceeding without any input data")
 	public void the_ICADaily_field_shouldnot_allow_proceeding_withoutany_inputdata()
 			throws AWTException, InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.ClickonICAdaily();
 
-		B.ClickonICAdaily();
+			performTabKeyPress();
 
-		performTabKeyPress();
+			B.DisplayedOnThisFieldisRequired();
 
-		Thread.sleep(2000);
-
-		B.DisplayedOnThisFieldisRequired();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
 	@Then("the \"ICA Daily\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
 	public void the_ICADaily_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String ICADAILY = testdata.get(rowNumber).get("ICA Daily");
 
-		String ICADAILY = testdata.get(rowNumber).get("ICA Daily");
+			if (ICADAILY != null && ICADAILY.matches("\\d+\\.0")) {
+				ICADAILY = ICADAILY.substring(0, ICADAILY.indexOf(".0"));
 
-		if (ICADAILY != null && ICADAILY.matches("\\d+\\.0")) {
-			ICADAILY = ICADAILY.substring(0, ICADAILY.indexOf(".0"));
+				System.out.println("0" + testdata.get(0));
 
-			System.out.println("0" + testdata.get(0));
+				B.EnteronICAdaily(ICADAILY);
 
-			B.EnteronICAdaily(ICADAILY);
+				performTabKeyPress();
 
-			performTabKeyPress();
+				B.NOTDisplayedOnInvalidFormat();
 
-			B.NOTDisplayedOnInvalidFormat();
+				LoginInputDatas("ICA DAILY", ICADAILY);
 
-			LoginInputDatas("ICA DAILY", ICADAILY);
+			}
 
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
-	
 
 //ICA Weekly					
 
 	@When("I click on the \"ICA Weekly\" field")
 	public void I_Click_On_the_ICAWeekly_Field() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.ClickonICAWeekly();
 
-		B.ClickonICAWeekly();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
-
-	
 
 	@Then("the label name should be \"Weekly\"")
 	public void labelName_should_be_weekly() {
-		
-		try {
-		B = new org.Locators.BankLocators(driver);
 
-		B.WeeklyLabel();
-		
+		try {
+			B = new org.Locators.BankLocators(driver);
+
+			B.WeeklyLabel();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
-
 
 	@Then("the \"ICA Weekly\" field should not allow proceeding without any input data")
 	public void the_ICAWeekly_field_shouldnot_allow_proceeding_withoutany_inputdata()
 			throws AWTException, InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.ClickonICAWeekly();
 
-		B.ClickonICAWeekly();
+			performTabKeyPress();
 
-		performTabKeyPress();
+			B.DisplayedOnThisFieldisRequired();
 
-		Thread.sleep(2000);
-
-		B.DisplayedOnThisFieldisRequired();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
-
-
 
 	@Then("the \"ICA Weekly\" field Must be greater than \"ICA Daily\" using sheetname {string} and rownumber {int}")
 
 	public void the_ICAWeekly_field_Mustbe_greaterthan_ICA_D(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String ICAWEEKLY = testdata.get(rowNumber).get("ICA Weekly");
 
-		String ICAWEEKLY = testdata.get(rowNumber).get("ICA Weekly");
+			if (ICAWEEKLY != null && ICAWEEKLY.matches("\\d+\\.0")) {
+				ICAWEEKLY = ICAWEEKLY.substring(0, ICAWEEKLY.indexOf(".0"));
 
-		if (ICAWEEKLY != null && ICAWEEKLY.matches("\\d+\\.0")) {
-			ICAWEEKLY = ICAWEEKLY.substring(0, ICAWEEKLY.indexOf(".0"));
+				System.out.println("0" + testdata.get(0));
 
-			System.out.println("0" + testdata.get(0));
+				B.EnteronICAWeekly(ICAWEEKLY);
 
-			B.EnteronICAWeekly(ICAWEEKLY);
+				performTabKeyPress();
 
-			performTabKeyPress();
+				B.MustbegreaterthanDailyLimit();
 
-			B.MustbegreaterthanDailyLimit();
+				B.ClearonICAWeekly();
+			}
 
-			B.ClearonICAWeekly();
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
-
 
 	@Then("the \"ICA Weekly\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
 	public void the_ICAWeekly_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String ICAWEEKLY = testdata.get(rowNumber).get("ICA Weekly");
 
-		String ICAWEEKLY = testdata.get(rowNumber).get("ICA Weekly");
+			if (ICAWEEKLY != null && ICAWEEKLY.matches("\\d+\\.0")) {
+				ICAWEEKLY = ICAWEEKLY.substring(0, ICAWEEKLY.indexOf(".0"));
 
-		if (ICAWEEKLY != null && ICAWEEKLY.matches("\\d+\\.0")) {
-			ICAWEEKLY = ICAWEEKLY.substring(0, ICAWEEKLY.indexOf(".0"));
+				System.out.println("0" + testdata.get(0));
 
-			System.out.println("0" + testdata.get(0));
+				B.EnteronICAWeekly(ICAWEEKLY);
 
-			B.EnteronICAWeekly(ICAWEEKLY);
+				performTabKeyPress();
 
-			performTabKeyPress();
+				B.NOTDisplayedOnInvalidFormat();
 
-			B.NOTDisplayedOnInvalidFormat();
+				LoginInputDatas("ICA Weekly", ICAWEEKLY);
 
-			LoginInputDatas("ICA Weekly", ICAWEEKLY);
+			}
 
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 //Monthly
 
 	@When("I click on the \"ICA Monthly\" field")
 	public void I_Click_On_the_ICAMonthly_Field() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.ClickonICAMonthly();
 
-		B.ClickonICAMonthly();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
 	@Then("the label name should be \"Monthly\"")
 	public void labelName_should_be_Monthly() {
-		
-		try {
-		B = new org.Locators.BankLocators(driver);
 
-		B.MonthlyLabel();
-		
+		try {
+			B = new org.Locators.BankLocators(driver);
+
+			B.MonthlyLabel();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
+
 	@Then("the \"ICA Monthly\" field should not allow proceeding without any input data")
 	public void the_ICAMonthly_field_shouldnot_allow_proceeding_withoutany_inputdata()
 			throws AWTException, InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.ClickonICAMonthly();
 
-		B.ClickonICAMonthly();
+			performTabKeyPress();
 
-		performTabKeyPress();
+			B.DisplayedOnThisFieldisRequired();
 
-		Thread.sleep(2000);
-
-		B.DisplayedOnThisFieldisRequired();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
@@ -4392,80 +3897,77 @@ public class BankOnboardingTestcases {
 
 	public void the_ICAMonthly_field_Mustbe_greaterthan_ICA_Weekly(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String ICAMonthly = testdata.get(rowNumber).get("ICA Monthly");
 
-		String ICAMonthly = testdata.get(rowNumber).get("ICA Monthly");
+			if (ICAMonthly != null && ICAMonthly.matches("\\d+\\.0")) {
+				ICAMonthly = ICAMonthly.substring(0, ICAMonthly.indexOf(".0"));
 
-		if (ICAMonthly != null && ICAMonthly.matches("\\d+\\.0")) {
-			ICAMonthly = ICAMonthly.substring(0, ICAMonthly.indexOf(".0"));
+				System.out.println("0" + testdata.get(0));
 
-			System.out.println("0" + testdata.get(0));
+				B.EnteronICAMonthly(ICAMonthly);
 
-			B.EnteronICAMonthly(ICAMonthly);
+				performTabKeyPress();
 
-			performTabKeyPress();
+				B.Mustbegreaterthanweeklylimit();
 
-			B.Mustbegreaterthanweeklylimit();
+				B.ClearonICAMonthly();
 
-			B.ClearonICAMonthly();
+			}
 
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
+
 	@Then("the \"ICA Monthly\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
 	public void the_ICAmonthly_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String ICAMonthly = testdata.get(rowNumber).get("ICA Monthly");
 
-		String ICAMonthly = testdata.get(rowNumber).get("ICA Monthly");
+			if (ICAMonthly != null && ICAMonthly.matches("\\d+\\.0")) {
+				ICAMonthly = ICAMonthly.substring(0, ICAMonthly.indexOf(".0"));
 
-		if (ICAMonthly != null && ICAMonthly.matches("\\d+\\.0")) {
-			ICAMonthly = ICAMonthly.substring(0, ICAMonthly.indexOf(".0"));
+				System.out.println("0" + testdata.get(0));
 
-			System.out.println("0" + testdata.get(0));
+				B.EnteronICAMonthly(ICAMonthly);
 
-			B.EnteronICAMonthly(ICAMonthly);
+				performTabKeyPress();
 
-			performTabKeyPress();
+				B.NOTDisplayedOnInvalidFormat();
 
-			B.NOTDisplayedOnInvalidFormat();
+				LoginInputDatas("ICA Monthly", ICAMonthly);
+			}
 
-			LoginInputDatas("ICA Monthly", ICAMonthly);
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 //POS
@@ -4473,68 +3975,62 @@ public class BankOnboardingTestcases {
 	@Then("the \"POS Daily\" field should not allow proceeding without any input data")
 	public void the_POSDaily_field_shouldnot_allow_proceeding_withoutany_inputdata()
 			throws AWTException, InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.ClickonPosdaily();
 
-		B.ClickonPosdaily();
+			performTabKeyPress();
 
-		performTabKeyPress();
+			B.DisplayedOnDailyLimitRequired();
 
-		Thread.sleep(2000);
-
-		B.DisplayedOnDailyLimitRequired();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
 	@Then("the \"POS Daily\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
 	public void the_POSDaily_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String POSDAILY = testdata.get(rowNumber).get("POS Daily");
 
-		String POSDAILY = testdata.get(rowNumber).get("POS Daily");
+			if (POSDAILY != null && POSDAILY.matches("\\d+\\.0")) {
+				POSDAILY = POSDAILY.substring(0, POSDAILY.indexOf(".0"));
 
-		if (POSDAILY != null && POSDAILY.matches("\\d+\\.0")) {
-			POSDAILY = POSDAILY.substring(0, POSDAILY.indexOf(".0"));
+				System.out.println("0" + testdata.get(0));
 
-			System.out.println("0" + testdata.get(0));
+				B.ClearonPosdaily();
 
-			B.ClearonPosdaily();
+				B.EnteronPosdaily(POSDAILY);
 
-			B.EnteronPosdaily(POSDAILY);
+				performTabKeyPress();
 
-			performTabKeyPress();
+				B.NOTDisplayedOnInvalidFormat();
 
-			B.NOTDisplayedOnInvalidFormat();
+				LoginInputDatas("POS Daily", POSDAILY);
 
-			LoginInputDatas("POS Daily", POSDAILY);
+			}
 
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 	// POS Weekly
@@ -4542,67 +4038,61 @@ public class BankOnboardingTestcases {
 	@Then("the \"POS Weekly\" field should not allow proceeding without any input data")
 	public void the_POSWeekly_field_shouldnot_allow_proceeding_withoutany_inputdata()
 			throws AWTException, InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-		B.ClickonPosWeekly();
-
-		performTabKeyPress();
-
-		Thread.sleep(1000);
-
-		B.DisplayedOnWeeklyLimitRequired();
-		
-		} catch (Exception e) {
-			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
-		}
-	}
-	
-	@Then("the \"POS Weekly\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
-	public void the_POSWeekly_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
-			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
-		try {
-
-		B = new org.Locators.BankLocators(driver);
-
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-		ExcelReader reader = new ExcelReader();
-
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
-
-		System.out.println("sheet name: " + testdata);
-
-		String POSWEEKLY = testdata.get(rowNumber).get("POS Weekly");
-
-		if (POSWEEKLY != null && POSWEEKLY.matches("\\d+\\.0")) {
-			POSWEEKLY = POSWEEKLY.substring(0, POSWEEKLY.indexOf(".0"));
-
-			System.out.println("0" + testdata.get(0));
-
-			B.ClearonPosWeekly();
-
-			B.EnteronPosWeekly(POSWEEKLY);
+			B.ClickonPosWeekly();
 
 			performTabKeyPress();
 
-			B.NOTDisplayedOnInvalidFormat();
+			B.DisplayedOnWeeklyLimitRequired();
 
-			LoginInputDatas("POS Weekly", POSWEEKLY);
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
+		}
+	}
+
+	@Then("the \"POS Weekly\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
+	public void the_POSWeekly_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
+			throws InvalidFormatException, IOException, InterruptedException, AWTException {
+
+		try {
+
+			B = new org.Locators.BankLocators(driver);
+
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
+
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
+
+			System.out.println("sheet name: " + testdata);
+
+			String POSWEEKLY = testdata.get(rowNumber).get("POS Weekly");
+
+			if (POSWEEKLY != null && POSWEEKLY.matches("\\d+\\.0")) {
+				POSWEEKLY = POSWEEKLY.substring(0, POSWEEKLY.indexOf(".0"));
+
+				System.out.println("0" + testdata.get(0));
+
+				B.ClearonPosWeekly();
+
+				B.EnteronPosWeekly(POSWEEKLY);
+
+				performTabKeyPress();
+
+				B.NOTDisplayedOnInvalidFormat();
+
+				LoginInputDatas("POS Weekly", POSWEEKLY);
+			}
+
+		} catch (Exception e) {
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
@@ -4611,203 +4101,184 @@ public class BankOnboardingTestcases {
 	@Then("the \"POS Monthly\" field should not allow proceeding without any input data")
 	public void the_POSMonthly_field_shouldnot_allow_proceeding_withoutany_inputdata()
 			throws AWTException, InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.ClickonPosMonthly();
 
-		B.ClickonPosMonthly();
+			performTabKeyPress();
 
-		performTabKeyPress();
+			B.DisplayedOnMonthlyLimitRequired();
 
-		Thread.sleep(1000);
-
-		B.DisplayedOnMonthlyLimitRequired();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
 	@Then("the \"POS Monthly\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
 	public void the_POSmonthly_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String POSMonthly = testdata.get(rowNumber).get("POS Monthly");
 
-		String POSMonthly = testdata.get(rowNumber).get("POS Monthly");
+			if (POSMonthly != null && POSMonthly.matches("\\d+\\.0")) {
+				POSMonthly = POSMonthly.substring(0, POSMonthly.indexOf(".0"));
 
-		if (POSMonthly != null && POSMonthly.matches("\\d+\\.0")) {
-			POSMonthly = POSMonthly.substring(0, POSMonthly.indexOf(".0"));
+				System.out.println("0" + testdata.get(0));
 
-			System.out.println("0" + testdata.get(0));
+				B.ClearonPosMonthly();
 
-			B.ClearonPosMonthly();
+				B.EnteronPosMonthly(POSMonthly);
 
-			B.EnteronPosMonthly(POSMonthly);
+				performTabKeyPress();
 
-			performTabKeyPress();
+				B.NOTDisplayedOnInvalidFormat();
 
-			B.NOTDisplayedOnInvalidFormat();
+				LoginInputDatas("POS Monthly", POSMonthly);
 
-			LoginInputDatas("POS Monthly", POSMonthly);
+			}
 
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
-	
+
 	@Then("the \"POS Minimum\" field should not allow proceeding without any input data")
 	public void the_Minimum_field_shouldnot_allow_proceeding_withoutany_inputdata()
 			throws AWTException, InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
-
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B = new org.Locators.BankLocators(driver);
 
 //		B.ClickonPOSMinimum();
 
-		performTabKeyPress();
+			performTabKeyPress();
 
-		Thread.sleep(1000);
+			B.DisplayedOnMinimumAmountRequired();
 
-		B.DisplayedOnMinimumAmountRequired();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
-	
+
 	@Then("the \"POS Minimum\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
 	public void the_Minimum_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String Minimum = testdata.get(rowNumber).get("POS Minimum");
 
-		String Minimum = testdata.get(rowNumber).get("POS Minimum");
+			if (Minimum != null && Minimum.matches("\\d+\\.0")) {
+				Minimum = Minimum.substring(0, Minimum.indexOf(".0"));
 
-		if (Minimum != null && Minimum.matches("\\d+\\.0")) {
-			Minimum = Minimum.substring(0, Minimum.indexOf(".0"));
+				System.out.println("0" + testdata.get(0));
 
-			System.out.println("0" + testdata.get(0));
+				B.ClearonPOSMinimum();
 
-			B.ClearonPOSMinimum();
+				B.EnteronPOSMinimum(Minimum);
 
-			B.EnteronPOSMinimum(Minimum);
+				performTabKeyPress();
 
-			performTabKeyPress();
+				B.NOTDisplayedOnInvalidFormat();
 
-			B.NOTDisplayedOnInvalidFormat();
+				LoginInputDatas("POS Minimum", Minimum);
+			}
 
-			LoginInputDatas("POS Minimum", Minimum);
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
 	@Then("the \"POS Maximum\" field should not allow proceeding without any input data")
 	public void the_Maximum_field_shouldnot_allow_proceeding_withoutany_inputdata()
 			throws AWTException, InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.ClickonPOSMaximum();
 
-		B.ClickonPOSMaximum();
+			performTabKeyPress();
 
-		performTabKeyPress();
+			B.DisplayedOnMaximumAmountRequired();
 
-		Thread.sleep(1000);
-
-		B.DisplayedOnMaximumAmountRequired();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
 	@Then("the \"POS Maximum\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
 	public void the_Maximum_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String Maximum = testdata.get(rowNumber).get("POS Maximum");
 
-		String Maximum = testdata.get(rowNumber).get("POS Maximum");
+			if (Maximum != null && Maximum.matches("\\d+\\.0")) {
+				Maximum = Maximum.substring(0, Maximum.indexOf(".0"));
 
-		if (Maximum != null && Maximum.matches("\\d+\\.0")) {
-			Maximum = Maximum.substring(0, Maximum.indexOf(".0"));
+				System.out.println("0" + testdata.get(0));
 
-			System.out.println("0" + testdata.get(0));
+				B.ClearonPOSMaximum();
 
-			B.ClearonPOSMaximum();
+				B.EnteronPOSMaximum(Maximum);
 
-			B.EnteronPOSMaximum(Maximum);
+				performTabKeyPress();
 
-			performTabKeyPress();
+				B.NOTDisplayedOnInvalidFormat();
 
-			B.NOTDisplayedOnInvalidFormat();
+				LoginInputDatas("POS Maximum", Maximum);
+			}
 
-			LoginInputDatas("POS Maximum", Maximum);
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
@@ -4816,344 +4287,312 @@ public class BankOnboardingTestcases {
 	@Then("the \"AEPS Daily\" field should not allow proceeding without any input data")
 	public void the_AEPSDaily_field_shouldnot_allow_proceeding_withoutany_inputdata()
 			throws AWTException, InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-		B.ClickonAEPSdaily();
-
-		performTabKeyPress();
-
-		Thread.sleep(1000);
-
-		B.DisplayedOnDailyLimitRequired();
-		
-		} catch (Exception e) {
-			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
-		}
-	}
-	
-	@Then("the \"AEPS Daily\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
-	public void the_AEPSDaily_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
-			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
-		try {
-
-		B = new org.Locators.BankLocators(driver);
-
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-		ExcelReader reader = new ExcelReader();
-
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
-
-		System.out.println("sheet name: " + testdata);
-
-		String AEPSDAILY = testdata.get(rowNumber).get("AEPS Daily");
-
-		if (AEPSDAILY != null && AEPSDAILY.matches("\\d+\\.0")) {
-			AEPSDAILY = AEPSDAILY.substring(0, AEPSDAILY.indexOf(".0"));
-
-			System.out.println("0" + testdata.get(0));
-
-			B.ClearonAEPSdaily();
-
-			B.EnteronAEPSdaily(AEPSDAILY);
+			B.ClickonAEPSdaily();
 
 			performTabKeyPress();
 
-			B.NOTDisplayedOnInvalidFormat();
+			B.DisplayedOnDailyLimitRequired();
 
-			LoginInputDatas("AEPS Daily", AEPSDAILY);
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
-	
+
+	@Then("the \"AEPS Daily\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
+	public void the_AEPSDaily_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
+			throws InvalidFormatException, IOException, InterruptedException, AWTException {
+
+		try {
+
+			B = new org.Locators.BankLocators(driver);
+
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
+
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
+
+			System.out.println("sheet name: " + testdata);
+
+			String AEPSDAILY = testdata.get(rowNumber).get("AEPS Daily");
+
+			if (AEPSDAILY != null && AEPSDAILY.matches("\\d+\\.0")) {
+				AEPSDAILY = AEPSDAILY.substring(0, AEPSDAILY.indexOf(".0"));
+
+				System.out.println("0" + testdata.get(0));
+
+				B.ClearonAEPSdaily();
+
+				B.EnteronAEPSdaily(AEPSDAILY);
+
+				performTabKeyPress();
+
+				B.NOTDisplayedOnInvalidFormat();
+
+				LoginInputDatas("AEPS Daily", AEPSDAILY);
+			}
+
+		} catch (Exception e) {
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
+		}
+	}
+
 	// AEPS Weekly
 
 	@Then("the \"AEPS Weekly\" field should not allow proceeding without any input data")
 	public void the_AEPSWeekly_field_shouldnot_allow_proceeding_withoutany_inputdata()
 			throws AWTException, InterruptedException {
-		
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.ClickonAEPSWeekly();
 
-		B.ClickonAEPSWeekly();
+			performTabKeyPress();
 
-		performTabKeyPress();
+			B.DisplayedOnWeeklyLimitRequired();
 
-		Thread.sleep(1000);
-
-		B.DisplayedOnWeeklyLimitRequired();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
-	
 
 	@Then("the \"AEPS Weekly\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
 	public void the_AEPSWeekly_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String AEPSWEEKLY = testdata.get(rowNumber).get("AEPS Weekly");
 
-		String AEPSWEEKLY = testdata.get(rowNumber).get("AEPS Weekly");
+			if (AEPSWEEKLY != null && AEPSWEEKLY.matches("\\d+\\.0")) {
+				AEPSWEEKLY = AEPSWEEKLY.substring(0, AEPSWEEKLY.indexOf(".0"));
 
-		if (AEPSWEEKLY != null && AEPSWEEKLY.matches("\\d+\\.0")) {
-			AEPSWEEKLY = AEPSWEEKLY.substring(0, AEPSWEEKLY.indexOf(".0"));
+				System.out.println("0" + testdata.get(0));
 
-			System.out.println("0" + testdata.get(0));
+				B.ClearonAEPSWeekly();
 
-			B.ClearonAEPSWeekly();
+				B.EnteronAEPSWeekly(AEPSWEEKLY);
 
-			B.EnteronAEPSWeekly(AEPSWEEKLY);
+				performTabKeyPress();
 
-			performTabKeyPress();
+				B.NOTDisplayedOnInvalidFormat();
 
-			B.NOTDisplayedOnInvalidFormat();
+				LoginInputDatas("AEPS Weekly", AEPSWEEKLY);
 
-			LoginInputDatas("AEPS Weekly", AEPSWEEKLY);
+			}
 
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
-	
+
 	// Monthly
 
 	@Then("the \"AEPS Monthly\" field should not allow proceeding without any input data")
 	public void the_AEPSMonthly_field_shouldnot_allow_proceeding_withoutany_inputdata()
 			throws AWTException, InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-		B.ClickonAEPSMonthly();
-
-		performTabKeyPress();
-
-		Thread.sleep(1000);
-
-		B.DisplayedOnMonthlyLimitRequired();
-		
-		} catch (Exception e) {
-			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
-		}
-	}
-	
-	@Then("the \"AEPS Monthly\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
-	public void the_AEPSmonthly_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
-			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
-		try {
-
-		B = new org.Locators.BankLocators(driver);
-
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-		ExcelReader reader = new ExcelReader();
-
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
-
-		System.out.println("sheet name: " + testdata);
-
-		String AEPSMonthly = testdata.get(rowNumber).get("AEPS Monthly");
-
-		if (AEPSMonthly != null && AEPSMonthly.matches("\\d+\\.0")) {
-			AEPSMonthly = AEPSMonthly.substring(0, AEPSMonthly.indexOf(".0"));
-
-			System.out.println("0" + testdata.get(0));
-
-			B.ClearonAEPSMonthly();
-
-			B.EnteronAEPSMonthly(AEPSMonthly);
+			B.ClickonAEPSMonthly();
 
 			performTabKeyPress();
 
-			B.NOTDisplayedOnInvalidFormat();
+			B.DisplayedOnMonthlyLimitRequired();
 
-			LoginInputDatas("AEPS Monthly", AEPSMonthly);
-
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
+		}
+	}
+
+	@Then("the \"AEPS Monthly\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
+	public void the_AEPSmonthly_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
+			throws InvalidFormatException, IOException, InterruptedException, AWTException {
+
+		try {
+
+			B = new org.Locators.BankLocators(driver);
+
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
+
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
+
+			System.out.println("sheet name: " + testdata);
+
+			String AEPSMonthly = testdata.get(rowNumber).get("AEPS Monthly");
+
+			if (AEPSMonthly != null && AEPSMonthly.matches("\\d+\\.0")) {
+				AEPSMonthly = AEPSMonthly.substring(0, AEPSMonthly.indexOf(".0"));
+
+				System.out.println("0" + testdata.get(0));
+
+				B.ClearonAEPSMonthly();
+
+				B.EnteronAEPSMonthly(AEPSMonthly);
+
+				performTabKeyPress();
+
+				B.NOTDisplayedOnInvalidFormat();
+
+				LoginInputDatas("AEPS Monthly", AEPSMonthly);
+
+			}
+
+		} catch (Exception e) {
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
 	@Then("the \"AEPS Minimum\" field should not allow proceeding without any input data")
 	public void the_AEPSMinimum_field_shouldnot_allow_proceeding_withoutany_inputdata()
 			throws AWTException, InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-		B.ClickonAEPSMinimum();
-
-		performTabKeyPress();
-
-		Thread.sleep(1000);
-
-		B.DisplayedOnMinimumAmountRequired();
-		
-		} catch (Exception e) {
-			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
-		}
-	}
-	
-	@Then("the \"AEPS Minimum\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
-	public void the_AEPSMinimum_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
-			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
-		try {
-
-		B = new org.Locators.BankLocators(driver);
-
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-		ExcelReader reader = new ExcelReader();
-
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
-
-		System.out.println("sheet name: " + testdata);
-
-		String Minimum = testdata.get(rowNumber).get("AEPS Minimum");
-
-		if (Minimum != null && Minimum.matches("\\d+\\.0")) {
-			Minimum = Minimum.substring(0, Minimum.indexOf(".0"));
-
-			System.out.println("0" + testdata.get(0));
-
-			B.ClearonAEPSMinimum();
-
-			B.EnteronAEPSMinimum(Minimum);
+			B.ClickonAEPSMinimum();
 
 			performTabKeyPress();
 
-			B.NOTDisplayedOnInvalidFormat();
+			B.DisplayedOnMinimumAmountRequired();
 
-			LoginInputDatas("AEPS Minimum", Minimum);
-
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
+		}
+	}
+
+	@Then("the \"AEPS Minimum\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
+	public void the_AEPSMinimum_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
+			throws InvalidFormatException, IOException, InterruptedException, AWTException {
+
+		try {
+
+			B = new org.Locators.BankLocators(driver);
+
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
+
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
+
+			System.out.println("sheet name: " + testdata);
+
+			String Minimum = testdata.get(rowNumber).get("AEPS Minimum");
+
+			if (Minimum != null && Minimum.matches("\\d+\\.0")) {
+				Minimum = Minimum.substring(0, Minimum.indexOf(".0"));
+
+				System.out.println("0" + testdata.get(0));
+
+				B.ClearonAEPSMinimum();
+
+				B.EnteronAEPSMinimum(Minimum);
+
+				performTabKeyPress();
+
+				B.NOTDisplayedOnInvalidFormat();
+
+				LoginInputDatas("AEPS Minimum", Minimum);
+
+			}
+
+		} catch (Exception e) {
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
 	@Then("the \"AEPS Maximum\" field should not allow proceeding without any input data")
 	public void the_AEPSMaximum_field_shouldnot_allow_proceeding_withoutany_inputdata()
 			throws AWTException, InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-		B.ClickonAEPSMaximum();
-
-		performTabKeyPress();
-
-		Thread.sleep(1000);
-
-		B.DisplayedOnMaximumAmountRequired();
-		
-		} catch (Exception e) {
-			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
-		}
-	}
-	
-	@Then("the \"AEPS Maximum\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
-	public void the_AEPSMaximum_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
-			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
-		try {
-
-		B = new org.Locators.BankLocators(driver);
-
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-		ExcelReader reader = new ExcelReader();
-
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
-
-		System.out.println("sheet name: " + testdata);
-
-		String Maximum = testdata.get(rowNumber).get("AEPS Maximum");
-
-		if (Maximum != null && Maximum.matches("\\d+\\.0")) {
-			Maximum = Maximum.substring(0, Maximum.indexOf(".0"));
-
-			System.out.println("0" + testdata.get(0));
-
-			B.ClearonAEPSMaximum();
-
-			B.EnteronAEPSMaximum(Maximum);
+			B.ClickonAEPSMaximum();
 
 			performTabKeyPress();
 
-			B.NOTDisplayedOnInvalidFormat();
+			B.DisplayedOnMaximumAmountRequired();
 
-			LoginInputDatas("AEPS Maximum", Maximum);
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
+		}
+	}
+
+	@Then("the \"AEPS Maximum\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
+	public void the_AEPSMaximum_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
+			throws InvalidFormatException, IOException, InterruptedException, AWTException {
+
+		try {
+
+			B = new org.Locators.BankLocators(driver);
+
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
+
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
+
+			System.out.println("sheet name: " + testdata);
+
+			String Maximum = testdata.get(rowNumber).get("AEPS Maximum");
+
+			if (Maximum != null && Maximum.matches("\\d+\\.0")) {
+				Maximum = Maximum.substring(0, Maximum.indexOf(".0"));
+
+				System.out.println("0" + testdata.get(0));
+
+				B.ClearonAEPSMaximum();
+
+				B.EnteronAEPSMaximum(Maximum);
+
+				performTabKeyPress();
+
+				B.NOTDisplayedOnInvalidFormat();
+
+				LoginInputDatas("AEPS Maximum", Maximum);
+			}
+
+		} catch (Exception e) {
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
@@ -5162,69 +4601,61 @@ public class BankOnboardingTestcases {
 	@Then("the \"UPI Daily\" field should not allow proceeding without any input data")
 	public void the_UPIDaily_field_shouldnot_allow_proceeding_withoutany_inputdata()
 			throws AWTException, InterruptedException {
-		
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-		B.ClickonUPIdaily();
-
-		performTabKeyPress();
-
-		Thread.sleep(1000);
-
-		B.DisplayedOnDailyLimitRequired();
-		
-		} catch (Exception e) {
-			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
-		}
-	}
-	
-	@Then("the \"UPI Daily\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
-	public void the_UPIDaily_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
-			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
-		
-		try {
-
-		B = new org.Locators.BankLocators(driver);
-
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-		ExcelReader reader = new ExcelReader();
-
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
-
-		System.out.println("sheet name: " + testdata);
-
-		String UPIDAILY = testdata.get(rowNumber).get("UPI Daily");
-
-		if (UPIDAILY != null && UPIDAILY.matches("\\d+\\.0")) {
-			UPIDAILY = UPIDAILY.substring(0, UPIDAILY.indexOf(".0"));
-
-			System.out.println("0" + testdata.get(0));
-
-			B.ClearonUPIdaily();
-
-			B.EnteronUPIdaily(UPIDAILY);
+			B.ClickonUPIdaily();
 
 			performTabKeyPress();
 
-			B.NOTDisplayedOnInvalidFormat();
+			B.DisplayedOnDailyLimitRequired();
 
-			LoginInputDatas("UPI Daily", UPIDAILY);
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
+		}
+	}
+
+	@Then("the \"UPI Daily\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
+	public void the_UPIDaily_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
+			throws InvalidFormatException, IOException, InterruptedException, AWTException {
+
+		try {
+
+			B = new org.Locators.BankLocators(driver);
+
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
+
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
+
+			System.out.println("sheet name: " + testdata);
+
+			String UPIDAILY = testdata.get(rowNumber).get("UPI Daily");
+
+			if (UPIDAILY != null && UPIDAILY.matches("\\d+\\.0")) {
+				UPIDAILY = UPIDAILY.substring(0, UPIDAILY.indexOf(".0"));
+
+				System.out.println("0" + testdata.get(0));
+
+				B.ClearonUPIdaily();
+
+				B.EnteronUPIdaily(UPIDAILY);
+
+				performTabKeyPress();
+
+				B.NOTDisplayedOnInvalidFormat();
+
+				LoginInputDatas("UPI Daily", UPIDAILY);
+			}
+
+		} catch (Exception e) {
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
@@ -5233,292 +4664,261 @@ public class BankOnboardingTestcases {
 	@Then("the \"UPI Weekly\" field should not allow proceeding without any input data")
 	public void the_UPIWeekly_field_shouldnot_allow_proceeding_withoutany_inputdata()
 			throws AWTException, InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.ClickonUPIWeekly();
 
-		B.ClickonUPIWeekly();
+			performTabKeyPress();
 
-		performTabKeyPress();
+			B.DisplayedOnWeeklyLimitRequired();
 
-		Thread.sleep(1000);
-
-		B.DisplayedOnWeeklyLimitRequired();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
 	@Then("the \"UPI Weekly\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
 	public void the_UPIWeekly_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String UPIWEEKLY = testdata.get(rowNumber).get("UPI Weekly");
 
-		String UPIWEEKLY = testdata.get(rowNumber).get("UPI Weekly");
+			if (UPIWEEKLY != null && UPIWEEKLY.matches("\\d+\\.0")) {
+				UPIWEEKLY = UPIWEEKLY.substring(0, UPIWEEKLY.indexOf(".0"));
 
-		if (UPIWEEKLY != null && UPIWEEKLY.matches("\\d+\\.0")) {
-			UPIWEEKLY = UPIWEEKLY.substring(0, UPIWEEKLY.indexOf(".0"));
+				System.out.println("0" + testdata.get(0));
 
-			System.out.println("0" + testdata.get(0));
+				B.ClearonUPIWeekly();
 
-			B.ClearonUPIWeekly();
+				B.EnteronUPIWeekly(UPIWEEKLY);
 
-			B.EnteronUPIWeekly(UPIWEEKLY);
+				performTabKeyPress();
 
-			performTabKeyPress();
+				B.NOTDisplayedOnInvalidFormat();
 
-			B.NOTDisplayedOnInvalidFormat();
+				LoginInputDatas("UPI Weekly", UPIWEEKLY);
+			}
 
-			LoginInputDatas("UPI Weekly", UPIWEEKLY);
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
-	
+
 	// Monthly
 
 	@Then("the \"UPI Monthly\" field should not allow proceeding without any input data")
 	public void the_UPIMonthly_field_shouldnot_allow_proceeding_withoutany_inputdata()
 			throws AWTException, InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.ClickonUPIMonthly();
 
-		B.ClickonUPIMonthly();
+			performTabKeyPress();
 
-		performTabKeyPress();
+			B.DisplayedOnMonthlyLimitRequired();
 
-		Thread.sleep(1000);
-
-		B.DisplayedOnMonthlyLimitRequired();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
-	
+
 	@Then("the \"UPI Monthly\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
 	public void the_UPImonthly_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String UPIMonthly = testdata.get(rowNumber).get("UPI Monthly");
 
-		String UPIMonthly = testdata.get(rowNumber).get("UPI Monthly");
+			if (UPIMonthly != null && UPIMonthly.matches("\\d+\\.0")) {
+				UPIMonthly = UPIMonthly.substring(0, UPIMonthly.indexOf(".0"));
 
-		if (UPIMonthly != null && UPIMonthly.matches("\\d+\\.0")) {
-			UPIMonthly = UPIMonthly.substring(0, UPIMonthly.indexOf(".0"));
+				System.out.println("0" + testdata.get(0));
 
-			System.out.println("0" + testdata.get(0));
+				B.ClearonUPIMonthly();
 
-			B.ClearonUPIMonthly();
+				B.EnteronUPIMonthly(UPIMonthly);
 
-			B.EnteronUPIMonthly(UPIMonthly);
+				performTabKeyPress();
 
-			performTabKeyPress();
+				B.NOTDisplayedOnInvalidFormat();
 
-			B.NOTDisplayedOnInvalidFormat();
+				LoginInputDatas("UPI Monthly", UPIMonthly);
+			}
 
-			LoginInputDatas("UPI Monthly", UPIMonthly);
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
-	
-	
+
 	@Then("the \"UPI Minimum\" field should not allow proceeding without any input data")
 	public void the_UPIMinimum_field_shouldnot_allow_proceeding_withoutany_inputdata()
 			throws AWTException, InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-		B.ClickonUPIMinimum();
-
-		performTabKeyPress();
-
-		Thread.sleep(1000);
-
-		B.DisplayedOnMinimumAmountRequired();
-		
-		} catch (Exception e) {
-			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
-		}
-	}
-	
-	@Then("the \"UPI Minimum\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
-	public void the_UPIMinimum_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
-			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
-		try {
-
-		B = new org.Locators.BankLocators(driver);
-
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-		ExcelReader reader = new ExcelReader();
-
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
-
-		System.out.println("sheet name: " + testdata);
-
-		String Minimum = testdata.get(rowNumber).get("UPI Minimum");
-
-		if (Minimum != null && Minimum.matches("\\d+\\.0")) {
-			Minimum = Minimum.substring(0, Minimum.indexOf(".0"));
-
-			System.out.println("0" + testdata.get(0));
-
-			B.ClearonUPIMinimum();
-
-			B.EnteronUPIMinimum(Minimum);
+			B.ClickonUPIMinimum();
 
 			performTabKeyPress();
 
-			B.NOTDisplayedOnInvalidFormat();
+			B.DisplayedOnMinimumAmountRequired();
 
-			LoginInputDatas("UPI Minimum", Minimum);
-
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
-	
+
+	@Then("the \"UPI Minimum\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
+	public void the_UPIMinimum_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
+			throws InvalidFormatException, IOException, InterruptedException, AWTException {
+
+		try {
+
+			B = new org.Locators.BankLocators(driver);
+
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
+
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
+
+			System.out.println("sheet name: " + testdata);
+
+			String Minimum = testdata.get(rowNumber).get("UPI Minimum");
+
+			if (Minimum != null && Minimum.matches("\\d+\\.0")) {
+				Minimum = Minimum.substring(0, Minimum.indexOf(".0"));
+
+				System.out.println("0" + testdata.get(0));
+
+				B.ClearonUPIMinimum();
+
+				B.EnteronUPIMinimum(Minimum);
+
+				performTabKeyPress();
+
+				B.NOTDisplayedOnInvalidFormat();
+
+				LoginInputDatas("UPI Minimum", Minimum);
+
+			}
+
+		} catch (Exception e) {
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
+		}
+	}
+
 	@Then("the \"UPI Maximum\" field should not allow proceeding without any input data")
 	public void the_UPIMaximum_field_shouldnot_allow_proceeding_withoutany_inputdata()
 			throws AWTException, InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.ClickonUPIMaximum();
 
-		B.ClickonUPIMaximum();
+			performTabKeyPress();
 
-		performTabKeyPress();
+			B.DisplayedOnMaximumAmountRequired();
 
-		Thread.sleep(1000);
-
-		B.DisplayedOnMaximumAmountRequired();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
 	@Then("the \"UPI Maximum\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
 	public void the_UPIMaximum_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String Maximum = testdata.get(rowNumber).get("UPI Maximum");
 
-		String Maximum = testdata.get(rowNumber).get("UPI Maximum");
+			if (Maximum != null && Maximum.matches("\\d+\\.0")) {
+				Maximum = Maximum.substring(0, Maximum.indexOf(".0"));
 
-		if (Maximum != null && Maximum.matches("\\d+\\.0")) {
-			Maximum = Maximum.substring(0, Maximum.indexOf(".0"));
+				System.out.println("0" + testdata.get(0));
 
-			System.out.println("0" + testdata.get(0));
+				B.ClearonUPIMaximum();
 
-			B.ClearonUPIMaximum();
+				B.EnteronUPIMaximum(Maximum);
 
-			B.EnteronUPIMaximum(Maximum);
+				performTabKeyPress();
 
-			performTabKeyPress();
+				B.NOTDisplayedOnInvalidFormat();
 
-			B.NOTDisplayedOnInvalidFormat();
+				LoginInputDatas("UPI Maximum", Maximum);
 
-			LoginInputDatas("UPI Maximum", Maximum);
+			}
 
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
-	
-	
+
 	@Then("the \"NextStep\" button should be prompted to click on Global FRM")
 	public void the_Nextbutton_shouldbe_prompted_toclick_On_GlobalFRM() throws InterruptedException {
 
 		B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
 		try {
 
-			Thread.sleep(1000);
-
 			B.ClickOnNextStep();
-
-			Thread.sleep(3000);
 
 			B.DisplayedOnCommericial();
 
@@ -5534,71 +4934,66 @@ public class BankOnboardingTestcases {
 	@Then("the \"MATM Daily\" field should not allow proceeding without any input data")
 	public void the_MATMDaily_field_shouldnot_allow_proceeding_withoutany_inputdata()
 			throws AWTException, InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.ClickonMATMdaily();
 
-		B.ClickonMATMdaily();
+			Robot r = new Robot();
 
-		Robot r = new Robot();
+			r.keyPress(KeyEvent.VK_TAB);
 
-		r.keyPress(KeyEvent.VK_TAB);
+			r.keyRelease(KeyEvent.VK_TAB);
 
-		r.keyRelease(KeyEvent.VK_TAB);
-		Thread.sleep(2000);
+			B.DisplayedOnDailyLimitRequired();
 
-		B.DisplayedOnDailyLimitRequired();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
-	
+
 	@Then("the \"MATM Daily\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
 	public void the_MATMDaily_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String MATMDAILY = testdata.get(rowNumber).get("MATM Daily");
 
-		String MATMDAILY = testdata.get(rowNumber).get("MATM Daily");
+			if (MATMDAILY != null && MATMDAILY.matches("\\d+\\.0")) {
+				MATMDAILY = MATMDAILY.substring(0, MATMDAILY.indexOf(".0"));
 
-		if (MATMDAILY != null && MATMDAILY.matches("\\d+\\.0")) {
-			MATMDAILY = MATMDAILY.substring(0, MATMDAILY.indexOf(".0"));
+				System.out.println("0" + testdata.get(0));
 
-			System.out.println("0" + testdata.get(0));
+				B.ClearonMATMdaily();
 
-			B.ClearonMATMdaily();
+				B.EnteronMATMdaily(MATMDAILY);
 
-			B.EnteronMATMdaily(MATMDAILY);
+				performTabKeyPress();
 
-			performTabKeyPress();
+				B.NOTDisplayedOnInvalidFormat();
 
-			B.NOTDisplayedOnInvalidFormat();
+				LoginInputDatas("MATM Daily", MATMDAILY);
 
-			LoginInputDatas("MATM Daily", MATMDAILY);
+			}
 
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
@@ -5607,66 +5002,61 @@ public class BankOnboardingTestcases {
 	@Then("the \"MATM Weekly\" field should not allow proceeding without any input data")
 	public void the_MATMWeekly_field_shouldnot_allow_proceeding_withoutany_inputdata()
 			throws AWTException, InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.ClickonMATMWeekly();
 
-		B.ClickonMATMWeekly();
+			performTabKeyPress();
 
-		performTabKeyPress();
-		Thread.sleep(1000);
+			B.DisplayedOnWeeklyLimitRequired();
 
-		B.DisplayedOnWeeklyLimitRequired();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
 	@Then("the \"MATM Weekly\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
 	public void the_MATMWeekly_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String WEEKLY = testdata.get(rowNumber).get("MATM Weekly");
 
-		String WEEKLY = testdata.get(rowNumber).get("MATM Weekly");
+			if (WEEKLY != null && WEEKLY.matches("\\d+\\.0")) {
+				WEEKLY = WEEKLY.substring(0, WEEKLY.indexOf(".0"));
 
-		if (WEEKLY != null && WEEKLY.matches("\\d+\\.0")) {
-			WEEKLY = WEEKLY.substring(0, WEEKLY.indexOf(".0"));
+				System.out.println("0" + testdata.get(0));
 
-			System.out.println("0" + testdata.get(0));
+				B.ClearonMATMWeekly();
 
-			B.ClearonMATMWeekly();
+				B.EnteronMATMWeekly(WEEKLY);
 
-			B.EnteronMATMWeekly(WEEKLY);
+				performTabKeyPress();
 
-			performTabKeyPress();
+				B.NOTDisplayedOnInvalidFormat();
 
-			B.NOTDisplayedOnInvalidFormat();
+				LoginInputDatas("MATM Weekly", WEEKLY);
+			}
 
-			LoginInputDatas("MATM Weekly", WEEKLY);
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
@@ -5675,470 +5065,424 @@ public class BankOnboardingTestcases {
 	@Then("the \"MATM Monthly\" field should not allow proceeding without any input data")
 	public void the_MATMMonthly_field_shouldnot_allow_proceeding_withoutany_inputdata()
 			throws AWTException, InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.ClickonMATMMonthly();
 
-		B.ClickonMATMMonthly();
+			performTabKeyPress();
 
-		performTabKeyPress();
-		Thread.sleep(1000);
+			B.DisplayedOnMonthlyLimitRequired();
 
-		B.DisplayedOnMonthlyLimitRequired();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
 	@Then("the \"MATM Monthly\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
 	public void the_MATMmonthly_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String Monthly = testdata.get(rowNumber).get("MATM Monthly");
 
-		String Monthly = testdata.get(rowNumber).get("MATM Monthly");
+			if (Monthly != null && Monthly.matches("\\d+\\.0")) {
+				Monthly = Monthly.substring(0, Monthly.indexOf(".0"));
 
-		if (Monthly != null && Monthly.matches("\\d+\\.0")) {
-			Monthly = Monthly.substring(0, Monthly.indexOf(".0"));
+				System.out.println("0" + testdata.get(0));
 
-			System.out.println("0" + testdata.get(0));
+				B.ClearonMATMMonthly();
 
-			B.ClearonMATMMonthly();
+				B.EnteronMATMMonthly(Monthly);
 
-			B.EnteronMATMMonthly(Monthly);
+				performTabKeyPress();
 
-			performTabKeyPress();
+				B.NOTDisplayedOnInvalidFormat();
 
-			B.NOTDisplayedOnInvalidFormat();
+				LoginInputDatas("MATM Monthly", Monthly);
 
-			LoginInputDatas("MATM Monthly", Monthly);
+			}
 
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
 	@Then("the \"MATM Minimum\" field should not allow proceeding without any input data")
 	public void the_MATMMinimum_field_shouldnot_allow_proceeding_withoutany_inputdata()
 			throws AWTException, InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
-
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B = new org.Locators.BankLocators(driver);
 
 //		B.ClickonPOSMinimum();
 
-		performTabKeyPress();
-		Thread.sleep(1000);
+			performTabKeyPress();
 
-		B.DisplayedOnMinimumAmountRequired();
-		
+			B.DisplayedOnMinimumAmountRequired();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
 	@Then("the \"MATM Minimum\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
 	public void the_MATMMinimum_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String Minimum = testdata.get(rowNumber).get("MATM Minimum");
 
-		String Minimum = testdata.get(rowNumber).get("MATM Minimum");
+			if (Minimum != null && Minimum.matches("\\d+\\.0")) {
+				Minimum = Minimum.substring(0, Minimum.indexOf(".0"));
 
-		if (Minimum != null && Minimum.matches("\\d+\\.0")) {
-			Minimum = Minimum.substring(0, Minimum.indexOf(".0"));
+				System.out.println("0" + testdata.get(0));
 
-			System.out.println("0" + testdata.get(0));
+				B.ClearonMATMMinimum();
 
-			B.ClearonMATMMinimum();
+				B.EnteronMATMMinimum(Minimum);
 
-			B.EnteronMATMMinimum(Minimum);
+				performTabKeyPress();
 
-			performTabKeyPress();
+				B.NOTDisplayedOnInvalidFormat();
 
-			B.NOTDisplayedOnInvalidFormat();
+				LoginInputDatas("MATM Minimum", Minimum);
+			}
 
-			LoginInputDatas("MATM Minimum", Minimum);
-		}
-			
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
 	@Then("the \"MATM Maximum\" field should not allow proceeding without any input data")
 	public void the_MATMMaximum_field_shouldnot_allow_proceeding_withoutany_inputdata()
 			throws AWTException, InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			B.ClickonMATMMaximum();
 
-		B.ClickonMATMMaximum();
+			performTabKeyPress();
 
-		performTabKeyPress();
-		Thread.sleep(1000);
+			B.DisplayedOnMaximumAmountRequired();
 
-		B.DisplayedOnMaximumAmountRequired();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
 
 	@Then("the \"MATM Maximum\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
 	public void the_MATMMaximum_field_should_prompt_to_enter_valid_inputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String Maximum = testdata.get(rowNumber).get("MATM Maximum");
 
-		String Maximum = testdata.get(rowNumber).get("MATM Maximum");
+			if (Maximum != null && Maximum.matches("\\d+\\.0")) {
+				Maximum = Maximum.substring(0, Maximum.indexOf(".0"));
 
-		if (Maximum != null && Maximum.matches("\\d+\\.0")) {
-			Maximum = Maximum.substring(0, Maximum.indexOf(".0"));
+				System.out.println("0" + testdata.get(0));
 
-			System.out.println("0" + testdata.get(0));
+				B.ClearonMATMMaximum();
 
-			B.ClearonMATMMaximum();
+				B.EnteronMATMMaximum(Maximum);
 
-			B.EnteronMATMMaximum(Maximum);
+				performTabKeyPress();
 
-			performTabKeyPress();
+				B.NOTDisplayedOnInvalidFormat();
 
-			B.NOTDisplayedOnInvalidFormat();
+				LoginInputDatas("MATM Maximum", Maximum);
+			}
 
-			LoginInputDatas("MATM Maximum", Maximum);
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Global FRM");
-		    throw e; 
+			exceptionHandler.handleException(e, "Global FRM");
+			throw e;
 		}
 	}
-	
+
 //Commercial	
 
 	@When("I visit the Commercial")
 	public void I_visit_Commercial() throws InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		Thread.sleep(2000);
-
-		B.clickOnCommericial();
-		} catch (Exception e) {
+			B.clickOnCommericial();
+		} catch (Exception e) {	
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Commercial");
-		    throw e; 
+			exceptionHandler.handleException(e, "Commercial");
+			throw e;
 		}
 	}
 
 	@Then("the \"Interchange Plan Add\" button should be prompted to click")
 	public void Interchange_plan_ADDButton_ShouldbePrompted_toClick() throws InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		Thread.sleep(2000);
+			B.ClickonCommercialADD1();
 
-		B.ClickonCommercialADD1();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Commercial");
-		    throw e; 
+			exceptionHandler.handleException(e, "Commercial");
+			throw e;
 		}
 	}
 
-	
-
 	@When("I click on the \"Interchange Plan Channel\" field")
 	public void I_Click_Onthe_Interchange_PLan_Channel() throws InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.ClickonCommercialChannel();
-		
+			B.ClickonCommercialChannel();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Commercial");
-		    throw e; 
+			exceptionHandler.handleException(e, "Commercial");
+			throw e;
 		}
 	}
 
 	@Then("the Interchage Plan label name should be \"Channel\"")
 	public void the_interchangePlan_labelName_shouldbe_channel() throws InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.CommercialChannelLabel();
-		
+			B.CommercialChannelLabel();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Commercial");
-		    throw e; 
+			exceptionHandler.handleException(e, "Commercial");
+			throw e;
 		}
 	}
 
 	@Then("the \"Interchange Plan Channel\" field should not allow proceeding without any input data")
 	public void the_InterChangePlan_Channel_field_Should_not_allow_proceeding_without_any_inputdata() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.ClickOnCommercialSave();
+			B.ClickOnCommercialSave();
 
-		B.DisplayedOnThisFieldisRequired();
-		
+			B.DisplayedOnThisFieldisRequired();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Commercial");
-		    throw e; 
+			exceptionHandler.handleException(e, "Commercial");
+			throw e;
 		}
 	}
-	
-	
+
 	@Then("the \"Interchange Plan Channel - POS\" dropdown should prompt to select valid inputs")
 	public void the_interchange_plan_channel_POs_dropdown_should_prompt_toselectValidInputs() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.ClickonCommercialChannel();
+			B.ClickonCommercialChannel();
 
-		B.SelectonCommercialChannelPOS();
+			B.SelectonCommercialChannelPOS();
 
-		String selectonCommercialChannelPOS = B.getSelectonCommercialChannelPOS();
+			String selectonCommercialChannelPOS = B.getSelectonCommercialChannelPOS();
 
-		LoginInputDatas("Commercial Channel", selectonCommercialChannelPOS);
-		
+			LoginInputDatas("Commercial Channel", selectonCommercialChannelPOS);
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Commercial");
-		    throw e; 
+			exceptionHandler.handleException(e, "Commercial");
+			throw e;
 		}
 	}
 
 	@Then("the \"Interchange Plan Channel - AEPS\" dropdown should prompt to select valid inputs")
 	public void the_interchange_plan_channel_AEPS_dropdown_should_prompt_toselectValidInputs() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.ClickonCommercialChannel();
+			B.ClickonCommercialChannel();
 
-		B.SelectonCommercialChannelAEPS();
+			B.SelectonCommercialChannelAEPS();
 
-		String selectonCommercialChannelAEPS = B.getSelectonCommercialChannelAEPS();
+			String selectonCommercialChannelAEPS = B.getSelectonCommercialChannelAEPS();
 
-		LoginInputDatas("Commercial Channel", selectonCommercialChannelAEPS);
-		
+			LoginInputDatas("Commercial Channel", selectonCommercialChannelAEPS);
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Commercial");
-		    throw e; 
+			exceptionHandler.handleException(e, "Commercial");
+			throw e;
 		}
 	}
-	
-	
+
 	@Then("the Interchange Pricing Plan label name should be \"Pricing Plan\"")
 	public void the_interchangePlan_labelName_shouldbe_PricingPlan() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.CommercialPricingPlanLabelinterchange();
-		
+			B.CommercialPricingPlanLabelinterchange();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Commercial");
-		    throw e; 
+			exceptionHandler.handleException(e, "Commercial");
+			throw e;
 		}
 	}
-	
 
 	@Then("the \"Interchange Pricing Plan\" field should not allow proceeding without any input data")
 	public void the_InterChangePricingPlan_field_Should_not_allow_proceeding_without_any_inputdata() {
-		
+
 		try {
-		
-		
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.ClickOnCommercialSave();
+			B.ClickOnCommercialSave();
 
-		B.DisplayedOnThisFieldisRequired();
-		
+			B.DisplayedOnThisFieldisRequired();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Commercial");
-		    throw e; 
+			exceptionHandler.handleException(e, "Commercial");
+			throw e;
 		}
 	}
-	
-	
 
 	@When("the \"Interchange Pricing Plan - BANK TEST PLAN\" dropdown should prompt to select valid inputs")
 	public void the_interchange_pricingplan_BankTestPlan_dropdownShould_Prompt_toSelect_valid_inputs() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.CLickONPricingPlanInterchange();
+			B.CLickONPricingPlanInterchange();
 
-		B.SelectONPricingPlanBankPOSTest();
+			B.SelectONPricingPlanBankPOSTest();
 
-		String SelectONPricingPlanBankTest = B.getSelectONPricingPlanBankTest();
+			String SelectONPricingPlanBankTest = B.getSelectONPricingPlanBankTest();
 
-		LoginInputDatas("Pricing Plan", SelectONPricingPlanBankTest);
-		
+			LoginInputDatas("Pricing Plan", SelectONPricingPlanBankTest);
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Commercial");
-		    throw e; 
+			exceptionHandler.handleException(e, "Commercial");
+			throw e;
 		}
 	}
 
 	@When("the \"Interchange Pricing Plan - AEPS\" dropdown should prompt to select valid inputs")
 	public void the_interchange_pricingplan_AEPS_dropdownShould_Prompt_toSelect_valid_inputs() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.CLickONPricingPlanInterchange();
+			B.CLickONPricingPlanInterchange();
 
-		B.SelectONPricingPlanBankAEPSTest();
+			B.SelectONPricingPlanBankAEPSTest();
 
-		String SelectONPricingPlanBankTest = B.getSelectONPricingPlanBankTest();
+			String SelectONPricingPlanBankTest = B.getSelectONPricingPlanBankTest();
 
-		LoginInputDatas("Pricing Plan", SelectONPricingPlanBankTest);
-		
+			LoginInputDatas("Pricing Plan", SelectONPricingPlanBankTest);
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Commercial");
-		    throw e; 
+			exceptionHandler.handleException(e, "Commercial");
+			throw e;
 		}
 	}
 
 	@Then("the Commercial \"Save\" button should be prompted to click")
 	public void the_CommercialSave_button_SHould_be_prompted_toClick() throws InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		Thread.sleep(1000);
-
-		B.ClickOnCommercialSave();
-
-		Thread.sleep(3000);
-		
+			B.ClickOnCommercialSave();
 
 		} catch (AssertionError ae) {
 			takeScreenshotStr("Commercial"); // Take screenshot on assertion error
@@ -6147,279 +5491,257 @@ public class BankOnboardingTestcases {
 		}
 
 	}
-	
-	
+
 	@Then("the \"Bank Onboarding Commercial Add\" button should be prompted to click")
 	public void the_BankOnboarding_CommercialAdd_Button_Shouldbe_prompted_toClick() throws InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		Thread.sleep(2000);
+			B.ClickonCommercialADD2();
 
-		B.ClickonCommercialADD2();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Commercial");
-		    throw e; 
+			exceptionHandler.handleException(e, "Commercial");
+			throw e;
 		}
 	}
 
 	@Then("the Bank Onboarding Commercial label name should be \"Channel\"")
 	public void the_BankOnboardingCommercialPlan_labelName_shouldbe_channel() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.CommercialChannelLabel();
-		
+			B.CommercialChannelLabel();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Commercial");
-		    throw e; 
+			exceptionHandler.handleException(e, "Commercial");
+			throw e;
 		}
 	}
 
 	@Then("the \"Bank Onboarding Commercial Channel\" field should not allow proceeding without any input data")
 	public void the_BankOnboarding_Channel_field_Should_not_allow_proceeding_without_any_inputdata() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.ClickOnCommercialSave();
+			B.ClickOnCommercialSave();
 
-		B.DisplayedOnThisFieldisRequired();
-		
+			B.DisplayedOnThisFieldisRequired();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Commercial");
-		    throw e; 
+			exceptionHandler.handleException(e, "Commercial");
+			throw e;
 		}
 	}
 
 	@Then("the \"Bank Onboarding Commercial Channel - POS\" dropdown should prompt to select valid inputs")
 	public void Bank_OnboardingCommercial_ChannelPOS_dropdown_should_prompt_toselectValidInputs() {
-		
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.ClickonCommercialChannel();
+			B.ClickonCommercialChannel();
 
-		B.SelectonCommercialChannelPOS();
+			B.SelectonCommercialChannelPOS();
 
-		String selectonCommercialChannelPOS = B.getSelectonCommercialChannelPOS();
+			String selectonCommercialChannelPOS = B.getSelectonCommercialChannelPOS();
 
-		LoginInputDatas("Commercial Channel", selectonCommercialChannelPOS);
-		
+			LoginInputDatas("Commercial Channel", selectonCommercialChannelPOS);
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Commercial");
-		    throw e; 
+			exceptionHandler.handleException(e, "Commercial");
+			throw e;
 		}
 	}
 
 	@Then("the \"Bank Onboarding Commercial Channel - AEPS\" dropdown should prompt to select valid inputs")
 	public void Bank_OnboardingCommercial_ChannelAEPS_dropdown_should_prompt_toselectValidInputs() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.ClickonCommercialChannel();
+			B.ClickonCommercialChannel();
 
-		B.SelectonCommercialChannelAEPS();
+			B.SelectonCommercialChannelAEPS();
 
-		String selectonCommercialChannelAEPS = B.getSelectonCommercialChannelAEPS();
+			String selectonCommercialChannelAEPS = B.getSelectonCommercialChannelAEPS();
 
-		LoginInputDatas("Commercial Channel", selectonCommercialChannelAEPS);
-		
+			LoginInputDatas("Commercial Channel", selectonCommercialChannelAEPS);
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Commercial");
-		    throw e; 
+			exceptionHandler.handleException(e, "Commercial");
+			throw e;
 		}
 	}
 
 	@Then("the \"Bank Onboarding Commercial Channel - UPI\" dropdown should prompt to select valid inputs")
 	public void Bank_OnboardingCommercial_ChannelUPI_dropdown_should_prompt_toselectValidInputs() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.ClickonCommercialChannel();
+			B.ClickonCommercialChannel();
 
-		B.SelectonCommercialChannelUPI();
+			B.SelectonCommercialChannelUPI();
 
-		String selectonCommercialChannelAEPS = B.getSelectonCommercialChannelAEPS();
+			String selectonCommercialChannelAEPS = B.getSelectonCommercialChannelAEPS();
 
-		LoginInputDatas("Commercial Channel", selectonCommercialChannelAEPS);
-		
+			LoginInputDatas("Commercial Channel", selectonCommercialChannelAEPS);
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Commercial");
-		    throw e; 
+			exceptionHandler.handleException(e, "Commercial");
+			throw e;
 		}
 	}
 
 	@Then("the Bank Onboarding Commercial label name should be \"Pricing Plan\"")
 	public void the_BankOnboardingCommercial_labelName_shouldbe_PricingPlan() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.CommercialPricingPlanLabelBankOnboarding();
-		
+			B.CommercialPricingPlanLabelBankOnboarding();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Commercial");
-		    throw e; 
+			exceptionHandler.handleException(e, "Commercial");
+			throw e;
 		}
 	}
 
 	@Then("the \"Bank Onboarding Commercial Pricing Plan\" field should not allow proceeding without any input data")
 	public void the_BankOnboarding_field_Should_not_allow_proceeding_without_any_inputdata() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.ClickOnCommercialSave();
+			B.ClickOnCommercialSave();
 
-		B.DisplayedOnThisFieldisRequired();
-		
+			B.DisplayedOnThisFieldisRequired();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Commercial");
-		    throw e; 
+			exceptionHandler.handleException(e, "Commercial");
+			throw e;
 		}
 	}
 
 	@When("the \"Bank Onboarding Commercial Pricing Plan - POS\" dropdown should prompt to select valid inputs")
 	public void the_BankOnboarding_pricingplan_POS_dropdownShould_Prompt_toSelect_valid_inputs() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.CLickONPricingPlanBankOnboarding();
+			B.CLickONPricingPlanBankOnboarding();
 
-		B.SelectONBankOnboardingPricingBankPOSPlan();
+			B.SelectONBankOnboardingPricingBankPOSPlan();
 
-		String SelectONPricingBankAEPSPlan = B.getSelectONBankOnboardingPricingBankPlan();
+			String SelectONPricingBankAEPSPlan = B.getSelectONBankOnboardingPricingBankPlan();
 
-		LoginInputDatas("Pricing Plan", SelectONPricingBankAEPSPlan);
-		
+			LoginInputDatas("Pricing Plan", SelectONPricingBankAEPSPlan);
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Commercial");
-		    throw e; 
+			exceptionHandler.handleException(e, "Commercial");
+			throw e;
 		}
 	}
 
 	@When("the \"Bank Onboarding Commercial Pricing Plan - BANK AEPS PLAN\" dropdown should prompt to select valid inputs")
 	public void the_BankOnboarding_pricingplan_BankAEPSPlan_dropdownShould_Prompt_toSelect_valid_inputs() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.CLickONPricingPlanBankOnboarding();
+			B.CLickONPricingPlanBankOnboarding();
 
-		B.SelectONBankOnboardingPricingBankAEPSPlan();
+			B.SelectONBankOnboardingPricingBankAEPSPlan();
 
-		String SelectONPricingBankAEPSPlan = B.getSelectONBankOnboardingPricingBankPlan();
+			String SelectONPricingBankAEPSPlan = B.getSelectONBankOnboardingPricingBankPlan();
 
-		LoginInputDatas("Pricing Plan", SelectONPricingBankAEPSPlan);
-		
+			LoginInputDatas("Pricing Plan", SelectONPricingBankAEPSPlan);
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Commercial");
-		    throw e; 
+			exceptionHandler.handleException(e, "Commercial");
+			throw e;
 		}
 	}
 
 	@When("the \"Bank Onboarding Commercial Pricing Plan - UPI\" dropdown should prompt to select valid inputs")
 	public void the_BankOnboarding_pricingplan_UPI_dropdownShould_Prompt_toSelect_valid_inputs() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.CLickONPricingPlanBankOnboarding();
+			B.CLickONPricingPlanBankOnboarding();
 
-		B.SelectONBankOnboardingPricingBankUPIPlan();
+			B.SelectONBankOnboardingPricingBankUPIPlan();
 
-		String SelectONPricingBankAEPSPlan = B.getSelectONBankOnboardingPricingBankPlan();
+			String SelectONPricingBankAEPSPlan = B.getSelectONBankOnboardingPricingBankPlan();
 
-		LoginInputDatas("Pricing Plan", SelectONPricingBankAEPSPlan);
-		
+			LoginInputDatas("Pricing Plan", SelectONPricingBankAEPSPlan);
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Commercial");
-		    throw e; 
+			exceptionHandler.handleException(e, "Commercial");
+			throw e;
 		}
 	}
-	
-	
+
 	@Then("the \"NextStep\" button should be prompted to click on Commercial")
 	public void the_Nextbutton_shouldbe_prompted_toclick_on_Commercial() throws InterruptedException {
 
 		B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
-
-		Thread.sleep(1000);
 
 		try {
 
-			Thread.sleep(1000);
 			B.ClickOnNextStep();
 
-			Thread.sleep(3000);
-
-			B.DisplayedOnSettlementInfo();
+			B.DisplayedOnBankDetails();
 
 		} catch (AssertionError ae) {
 			takeScreenshotStr("Commercial"); // Take screenshot on assertion error
@@ -6431,551 +5753,498 @@ public class BankOnboardingTestcases {
 
 	@When("I visit the Settlement Info")
 	public void I_visit_the_SettlementInfo() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.clickOnSettlementInfo();
-		
+			B.clickOnSettlementInfo();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Settlement Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Settlement Info");
+			throw e;
 		}
 	}
 
 	@Then("the Settlement Info \"ADD\" button should be prompted to click")
 	public void theSettlementInfoAddbuttonShould_be_Prompted_toClick() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.ClickOnSettlementInfoADD();
-		
+			B.ClickOnSettlementInfoADD();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Settlement Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Settlement Info");
+			throw e;
 		}
 	}
 
 	@Then("the Settlement Info \"Channel\" field should not allow proceeding without any input data")
 	public void settlementInfo_Channel_Should_not_allow_proceeding_without_any_inputdata()
 			throws InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.ClickOnSettlementChannel();
+			B.ClickOnSettlementChannel();
 
-		Thread.sleep(2000);
-		Robot r = new Robot();
+			Robot r = new Robot();
 
-		r.keyPress(KeyEvent.VK_ESCAPE);
+			r.keyPress(KeyEvent.VK_ESCAPE);
 
-		r.keyRelease(KeyEvent.VK_ESCAPE);
+			r.keyRelease(KeyEvent.VK_ESCAPE);
 
-		B.DisplayedOnThisFieldisRequired();
-		
+			B.DisplayedOnThisFieldisRequired();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Settlement Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Settlement Info");
+			throw e;
 		}
 	}
 
 	@Then("the Settlement Info \"Channel\" dropdown should prompt to select the valid inputs using sheetname {string} and rownumber {int}")
 	public void SettlementInfo_channel_dropdown_Should_Prompt_toSelect_ValidInputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String channel = testdata.get(rowNumber).get("Settlement Channel");
 
-		String channel = testdata.get(rowNumber).get("Settlement Channel");
+			System.out.println("0" + testdata.get(0));
 
-		System.out.println("0" + testdata.get(0));
+			B.ClickOnSettlementChannel();
 
-		B.ClickOnSettlementChannel();
+			B.selectDropdownOption(channel);
 
-		B.selectDropdownOption(channel);
+			performTabKeyPress();
 
-		Thread.sleep(2000);
+			LoginInputDatas("Settlement Channel", channel);
 
-		performTabKeyPress();
-
-		LoginInputDatas("Settlement Channel", channel);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Settlement Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Settlement Info");
+			throw e;
 		}
 	}
 
 	@Then("the label name should be \"Account Type\"")
 	public void the_labelName_Should_be_AccountType() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.SettlementAccountRypeLabel();
-		
+			B.SettlementAccountRypeLabel();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Settlement Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Settlement Info");
+			throw e;
 		}
 	}
 
 	@Then("the Settlement Info \"Account Type\" field should not allow proceeding without any input data")
 	public void settlementInfo_AccountType_Should_not_allow_proceeding_without_any_inputdata()
 			throws InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.ClickOnSettlementAccountType();
+			B.ClickOnSettlementAccountType();
 
-		Thread.sleep(2000);
-		Robot r = new Robot();
+			Robot r = new Robot();
 
-		r.keyPress(KeyEvent.VK_ESCAPE);
+			r.keyPress(KeyEvent.VK_ESCAPE);
 
-		r.keyRelease(KeyEvent.VK_ESCAPE);
+			r.keyRelease(KeyEvent.VK_ESCAPE);
 
 //		B.DoubleClickOnSettlementAccountType();
 
-		B.DisplayedOnThisFieldisRequired();
-		
+			B.DisplayedOnThisFieldisRequired();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Settlement Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Settlement Info");
+			throw e;
 		}
 	}
-	
+
 	@Then("the Settlement Info \"Account Type\" dropdown should prompt to select the valid inputs using sheetname {string} and rownumber {int}")
 	public void SettlementInfo_AccountType_dropdown_Should_Prompt_toSelect_ValidInputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String Account = testdata.get(rowNumber).get("Account Type");
 
-		String Account = testdata.get(rowNumber).get("Account Type");
+			System.out.println("0" + testdata.get(0));
 
-		System.out.println("0" + testdata.get(0));
+			B.ClickOnSettlementAccountType();
 
-		B.ClickOnSettlementAccountType();
+			B.selectDropdownOption(Account);
 
-		B.selectDropdownOption(Account);
+			performTabKeyPress();
 
-		Thread.sleep(2000);
+			LoginInputDatas("Settlement Account Type", Account);
 
-		performTabKeyPress();
-
-		LoginInputDatas("Settlement Account Type", Account);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Settlement Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Settlement Info");
+			throw e;
 		}
 	}
 
 	@Then("the label name should be \"Bank Account Number\"")
 	public void the_labelName_Shouldbe_BankAccountNumber() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.SettlementBanKAccountNumberLabel();
-		
+			B.SettlementBanKAccountNumberLabel();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Settlement Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Settlement Info");
+			throw e;
 		}
 	}
 
 	@Then("the Settlement Info \"Bank Account Number\" field should not allow proceeding without any input data")
 	public void settlementInfo_BankAccountNumber_Should_not_allow_proceeding_without_any_inputdata()
 			throws InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.ClickOnBankAccountNumber();
+			B.ClickOnBankAccountNumber();
 
-		performTabKeyPress();
+			performTabKeyPress();
 
-		Thread.sleep(2000);
+			B.DisplayedOnThisFieldisRequired();
 
-		B.DisplayedOnThisFieldisRequired();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Settlement Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Settlement Info");
+			throw e;
 		}
 	}
 
 	@Then("the Settlement Info \"Bank Account Number\" field should prompt to enter Invalid inputs using sheetname {string} and rownumber {int}")
 	public void the_SettlementInfo_BankAccountNumberField_ShouldPrompt_toEnterInvalidInputs(String sheetName,
 			int rowNumber) throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String BanKAccountNumber = testdata.get(rowNumber).get("Bank Account Number");
 
-		String BanKAccountNumber = testdata.get(rowNumber).get("Bank Account Number");
+			System.out.println("0" + testdata.get(0));
 
-		System.out.println("0" + testdata.get(0));
+			B.ClickOnBankAccountNumber();
 
-		B.ClickOnBankAccountNumber();
+			B.EnterOnBankAccountNumber(BanKAccountNumber);
 
-		B.EnterOnBankAccountNumber(BanKAccountNumber);
+			performTabKeyPress();
 
-		Thread.sleep(2000);
-		
-		performTabKeyPress();
+			B.DisplayedOnThisMinimumLengtherror();
 
-		B.DisplayedOnThisMinimumLengtherror();
+			B.ClearOnBankAccountNumber();
 
-		Thread.sleep(2000);
+			LoginInputDatas("Bank Account Number", BanKAccountNumber);
 
-		B.ClearOnBankAccountNumber();
-
-		LoginInputDatas("Bank Account Number", BanKAccountNumber);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Settlement Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Settlement Info");
+			throw e;
 		}
 	}
 
-
-	
 	@Then("the Settlement Info \"Bank Account Number\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
 	public void the_SettlementInfo_BankAccountNumberField_ShouldPrompt_toEntervalidInputs(String sheetName,
-	        int rowNumber) throws InvalidFormatException, IOException, InterruptedException, AWTException {
+			int rowNumber) throws InvalidFormatException, IOException, InterruptedException, AWTException {
 
-	    try {
-	        B = new org.Locators.BankLocators(driver);
-	        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		try {
+			B = new org.Locators.BankLocators(driver);
 
-	        ExcelReader reader = new ExcelReader();
-	        List<Map<String, String>> testdata = reader.getData(
-	                "C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-	        System.out.println("Sheet name: " + sheetName);
+			System.out.println("Sheet name: " + sheetName);
 
-	        // Fetch the bank account number for the specified row
-	        String bankAccountNumber = String.valueOf(testdata.get(rowNumber).get("Bank Account Number"));
-	        System.out.println("Bank Account Number: " + bankAccountNumber);
+			// Fetch the bank account number for the specified row
+			String bankAccountNumber = String.valueOf(testdata.get(rowNumber).get("Bank Account Number"));
+			System.out.println("Bank Account Number: " + bankAccountNumber);
 
-	        // Handle scientific notation
-	        if (bankAccountNumber.contains("E")) {
-	            Double accountNumberDouble = Double.valueOf(bankAccountNumber);
-	            bankAccountNumber = String.format("%.0f", accountNumberDouble); // Convert to string without decimals
-	        }
+			// Handle scientific notation
+			if (bankAccountNumber.contains("E")) {
+				Double accountNumberDouble = Double.valueOf(bankAccountNumber);
+				bankAccountNumber = String.format("%.0f", accountNumberDouble); // Convert to string without decimals
+			}
 
-	        B.ClickOnBankAccountNumber();
-	        B.EnterOnBankAccountNumber(bankAccountNumber);
+			B.ClickOnBankAccountNumber();
+			B.EnterOnBankAccountNumber(bankAccountNumber);
 
-	        Thread.sleep(2000); // Consider replacing with explicit wait
-	        performTabKeyPress();
+			// Consider replacing with explicit wait
+			performTabKeyPress();
 
-	        // Validate bank account number format
-	        B.NOTDisplayedOnInvalidFormat();
+			// Validate bank account number format
+			B.NOTDisplayedOnInvalidFormat();
 
-	        // Log input data
-	        LoginInputDatas("Bank Account Number", bankAccountNumber);
+			// Log input data
+			LoginInputDatas("Bank Account Number", bankAccountNumber);
 
-	    } catch (Exception e) {
-	        ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	        exceptionHandler.handleException(e, "Settlement Info");
-	        throw e; 
-	    }
+		} catch (Exception e) {
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+			exceptionHandler.handleException(e, "Settlement Info");
+			throw e;
+		}
 	}
-
 
 	@Then("the label name should be \"IFSC Code\"")
 	public void the_labelName_Should_be_IfscCode() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.SettlementIFSCCODELabel();
-		
+			B.SettlementIFSCCODELabel();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Settlement Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Settlement Info");
+			throw e;
 		}
 	}
 
 	@Then("the Settlement Info \"IFSC Code\" field should not allow proceeding without any input data")
 	public void settlementInfo_IfscCode_Should_not_allow_proceeding_without_any_inputdata()
 			throws InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.ClickOnIFSCCode();
+			B.ClickOnIFSCCode();
 
-		Thread.sleep(2000);
+			performTabKeyPress();
 
-		performTabKeyPress();
+			B.DisplayedOnThisFieldisRequired();
 
-		Thread.sleep(3000);
-
-		B.DisplayedOnThisFieldisRequired();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Settlement Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Settlement Info");
+			throw e;
 		}
 	}
 
 	@Then("the Settlement Info \"IFSC Code\" dropdown should prompt to select valid inputs using sheetname {string} and rownumber {int}")
 	public void SettlementInfo_IFSCCode_dropdown_Should_Prompt_toSelect_ValidInputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String IFSCCode = testdata.get(rowNumber).get("IFSC Code");
 
-		String IFSCCode = testdata.get(rowNumber).get("IFSC Code");
+			System.out.println("0" + testdata.get(0));
 
-		System.out.println("0" + testdata.get(0));
+			B.ClickOnIFSCCode();
 
-		B.ClickOnIFSCCode();
+			B.selectDropdownOption(IFSCCode);
 
-		B.selectDropdownOption(IFSCCode);
+			performTabKeyPress();
 
-		Thread.sleep(2000);
+			LoginInputDatas("IFSC Code", IFSCCode);
 
-		performTabKeyPress();
-
-		LoginInputDatas("IFSC Code", IFSCCode);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Settlement Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Settlement Info");
+			throw e;
 		}
 	}
 
 	@Then("the \"SettlementInfo\" label name should be \"Bank Name\"")
 	public void the_labelName_Shouldbe_BankName() {
-      try {
+		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.SettlementBankNameLabel();
-		
-  	} catch (Exception e) {
-		ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	   exceptionHandler.handleException(e, "Settlement Info");
-	    throw e; 
+			B.SettlementBankNameLabel();
+
+		} catch (Exception e) {
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+			exceptionHandler.handleException(e, "Settlement Info");
+			throw e;
+		}
 	}
-}
-
 
 	@Then("the label name should be \"Branch\"")
 	public void the_labelName_Shouldbe_Branch() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.SettlementBranchLabel();
-		
+			B.SettlementBranchLabel();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Settlement Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Settlement Info");
+			throw e;
 		}
 	}
-	
-	
+
 	@Then("the \"SettlementInfo\" label name should be \"City\"")
 	public void the_labelName_Shouldbe_City() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.SettlementCityLabel();
-		
+			B.SettlementCityLabel();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Settlement Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Settlement Info");
+			throw e;
 		}
 	}
 
 	@Then("the Bank Name should be displayed")
 	public void the_BankName_should_be_displayed() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		String BankName = B.getSettlementBankName();
-		assertEquals("TESTING", BankName);
-		
+			String BankName = B.getSettlementBankName();
+			assertEquals("TESTING", BankName);
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Settlement Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Settlement Info");
+			throw e;
 		}
 	}
 
 	@Then("the Branch should be displayed")
 	public void the_Branch_should_be_displayed() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		String Branch = B.getSettlementBranch();
-		assertEquals("CREDOPAY", Branch);
-		
+			String Branch = B.getSettlementBranch();
+			assertEquals("CREDOPAY", Branch);
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Settlement Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Settlement Info");
+			throw e;
 		}
 	}
 
 	@Then("the CityName should be displayed")
 	public void the_City_should_be_displayed() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		String City = B.getSettlementCity();
-		assertEquals("chennai", City);
-		
+			String City = B.getSettlementCity();
+			assertEquals("chennai", City);
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Settlement Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Settlement Info");
+			throw e;
 		}
 	}
 
 	@Then("the SettlementInfo \"Save\" button should be prompted to click")
 	public void the_Settlement_Info_Save_buttonshould_beprompted_toclick() throws InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		Thread.sleep(3000);
-
-		B.CommuSavebutton();
-
-		Thread.sleep(2000);
-
+			B.CommuSavebutton();
 
 		} catch (AssertionError ae) {
 			takeScreenshotStr("Settlement Info"); // Take screenshot on assertion error
@@ -6987,106 +6256,88 @@ public class BankOnboardingTestcases {
 
 	@Then("the label name should be \"Settlement Type\"")
 	public void the_label_Name_Should_be_SettlementType() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.SettlementTypeLabel();
-		
+			B.SettlementTypeLabel();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Settlement Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Settlement Info");
+			throw e;
 		}
 	}
 
 	@Then("the Settlement Info \"Settlement Type\" dropdown should prompt to select valid inputs using sheetname {string} and rownumber {int}")
 	public void the_settlement_SettlementType_dropdown_Should_Prompt_toSelect_Valid_inputs(String sheetName,
 			int rowNumber) throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String type = testdata.get(rowNumber).get("Settlement Type");
 
-		String type = testdata.get(rowNumber).get("Settlement Type");
+			System.out.println("0" + testdata.get(0));
 
-		System.out.println("0" + testdata.get(0));
+			B.ClickOnSettlementType();
 
-		B.ClickOnSettlementType();
+			B.selectDropdownOption(type);
 
-		B.selectDropdownOption(type);
+			performTabKeyPress();
 
-		Thread.sleep(2000);
+			LoginInputDatas("Settlement Type", type);
 
-		performTabKeyPress();
-
-		LoginInputDatas("Settlement Type", type);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Settlement Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Settlement Info");
+			throw e;
 		}
 	}
-	
-	
+
 	@Then("the Settlement Info \"Settlement Type\" field should not allow proceeding without any input data")
 	public void SettlementInfo_SettlementType_field_Shouldnot_allow_Proceeding_without_any_Input_data()
 			throws InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		Thread.sleep(3000);
+			B.ClickOnNextStep();
 
-		B.ClickOnNextStep();
+			B.DisplayedOnThisFieldisRequired();
 
-		Thread.sleep(1000);
-
-		B.DisplayedOnThisFieldisRequired();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Settlement Info");
-		    throw e; 
+			exceptionHandler.handleException(e, "Settlement Info");
+			throw e;
 		}
 	}
 
 	@Then("the \"NextStep\" button should be prompted to click on Settlement Info")
 	public void the_nextstep_button_Should_be_prompted_to_clickOn_SettlementInfo() throws InterruptedException {
-		
 
 		B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
-
-		Thread.sleep(1000);
 
 		try {
 
-			Thread.sleep(1000);
 			B.ClickOnNextStep();
 
-			Thread.sleep(3000);
 			B.DisplayedOnBankonboardingConfig();
 
 		} catch (AssertionError ae) {
@@ -7099,319 +6350,288 @@ public class BankOnboardingTestcases {
 
 	@When("I visit the Whitelabel")
 	public void I_visit_the_Whitelabel() throws InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		Thread.sleep(2000);
+			B.clickOnWhiteLabel();
 
-		B.clickOnWhiteLabel();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Whitelabel");
-		    throw e; 
+			exceptionHandler.handleException(e, "Whitelabel");
+			throw e;
 		}
 	}
 
 	@Then("the \"Whitelabel\" label name should be \"Bank Own Deployment\"")
 	public void the_whitelabel_labelName_Shouldbe_BankOwnDeployment() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.WhitelabelBankOwnDeploymentLabel();
-		
+			B.WhitelabelBankOwnDeploymentLabel();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Whitelabel");
-		    throw e; 
+			exceptionHandler.handleException(e, "Whitelabel");
+			throw e;
 		}
 	}
-	
-	
+
 	@Then("the Whitelabel \"BankOwnDeployment\" dropdown should prompt to select valid inputs using sheetname {string} and rownumber {int}")
 	public void the_Whitelabel_BankOwnDeployment_dropdown_should_prompt_to_select_valid_inputs(String sheetName,
 			int rowNumber) throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		ExcelReader reader = new ExcelReader();
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		System.out.println("sheet name: " + testdata);
+			System.out.println("sheet name: " + testdata);
 
-		String type = testdata.get(rowNumber).get("Bank Own Deployment");
+			String type = testdata.get(rowNumber).get("Bank Own Deployment");
 
-		System.out.println("0" + testdata.get(0));
+			System.out.println("0" + testdata.get(0));
 
-		B.ClickOnWhitelabelBankOwnDeployment();
+			B.ClickOnWhitelabelBankOwnDeployment();
 
-		B.selectDropdownOption(type);
+			B.selectDropdownOption(type);
 
-		Thread.sleep(2000);
+			performTabKeyPress();
 
-		performTabKeyPress();
+			LoginInputDatas("Whitelabel Bank Own Deployment", type);
 
-		LoginInputDatas("Whitelabel Bank Own Deployment", type);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Whitelabel");
-		    throw e; 
+			exceptionHandler.handleException(e, "Whitelabel");
+			throw e;
 		}
 	}
-	
-	
+
 	@Then("the \"Whitelabel\" label name should be \"Payfac Onboarding\"")
 	public void the_whitelabel_labelName_Shouldbe_PayfacOnboarding() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.WhitelabelPayfacOnboardingLabel();
-		
+			B.WhitelabelPayfacOnboardingLabel();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Whitelabel");
-		    throw e; 
+			exceptionHandler.handleException(e, "Whitelabel");
+			throw e;
 		}
 	}
 
 	@Then("the Whitelabel \"Payfac Onboarding\" dropdown should prompt to select valid inputs using sheetname {string} and rownumber {int}")
 	public void the_Whitelabel_PayfacOnboarding_dropdown_should_prompt_to_select_valid_inputs(String sheetName,
 			int rowNumber) throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		ExcelReader reader = new ExcelReader();
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		System.out.println("sheet name: " + testdata);
+			System.out.println("sheet name: " + testdata);
 
-		String type = testdata.get(rowNumber).get("Payfac Onboarding");
+			String type = testdata.get(rowNumber).get("Payfac Onboarding");
 
-		System.out.println("0" + testdata.get(0));
+			System.out.println("0" + testdata.get(0));
 
-		B.ClickOnWhitelabelPayfacOnboarding();
+			B.ClickOnWhitelabelPayfacOnboarding();
 
-		B.selectDropdownOption(type);
+			B.selectDropdownOption(type);
 
-		Thread.sleep(2000);
+			performTabKeyPress();
 
-		performTabKeyPress();
+			LoginInputDatas("Whitelabel Payfac Onboarding", type);
 
-		LoginInputDatas("Whitelabel Payfac Onboarding", type);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Whitelabel");
-		    throw e; 
+			exceptionHandler.handleException(e, "Whitelabel");
+			throw e;
 		}
 	}
 
 	@Then("the \"Whitelabel\" label name should be \"ISO Onboarding\"")
 	public void the_whitelabel_labelName_Shouldbe_ISOOnboarding() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.WhitelabelISOOnboardingLabel();
-		
+			B.WhitelabelISOOnboardingLabel();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Whitelabel");
-		    throw e; 
+			exceptionHandler.handleException(e, "Whitelabel");
+			throw e;
 		}
 	}
 
 	@Then("the Whitelabel \"ISO Onboarding\" dropdown should prompt to select valid inputs using sheetname {string} and rownumber {int}")
 	public void the_Whitelabel_ISOOnboarding_dropdown_should_prompt_to_select_valid_inputs(String sheetName,
 			int rowNumber) throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		ExcelReader reader = new ExcelReader();
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		System.out.println("sheet name: " + testdata);
+			System.out.println("sheet name: " + testdata);
 
-		String type = testdata.get(rowNumber).get("ISO Onboarding");
+			String type = testdata.get(rowNumber).get("ISO Onboarding");
 
-		System.out.println("0" + testdata.get(0));
+			System.out.println("0" + testdata.get(0));
 
-		B.ClickOnWhitelabelISOOnboarding();
+			B.ClickOnWhitelabelISOOnboarding();
 
-		B.selectDropdownOption(type);
+			B.selectDropdownOption(type);
 
-		Thread.sleep(2000);
+			performTabKeyPress();
 
-		performTabKeyPress();
+			LoginInputDatas("Whitelabel ISO Onboarding", type);
 
-		LoginInputDatas("Whitelabel ISO Onboarding", type);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Whitelabel");
-		    throw e; 
+			exceptionHandler.handleException(e, "Whitelabel");
+			throw e;
 		}
 	}
 
 	@Then("the \"Whitelabel\" label name should be \"Sales Team Onboarding\"")
 	public void the_whitelabel_labelName_Shouldbe_SalesTeamOnboarding() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.WhitelabelSalesTeamOnboardingLabel();
-		
+			B.WhitelabelSalesTeamOnboardingLabel();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Whitelabel");
-		    throw e; 
+			exceptionHandler.handleException(e, "Whitelabel");
+			throw e;
 		}
 	}
 
 	@Then("the Whitelabel \"Sales Team Onboarding\" dropdown should prompt to select valid inputs using sheetname {string} and rownumber {int}")
 	public void the_Whitelabel_SalesTeamOnboarding_dropdown_should_prompt_to_select_valid_inputs(String sheetName,
 			int rowNumber) throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		ExcelReader reader = new ExcelReader();
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		System.out.println("sheet name: " + testdata);
+			System.out.println("sheet name: " + testdata);
 
-		String type = testdata.get(rowNumber).get("Sales Team Onboarding");
+			String type = testdata.get(rowNumber).get("Sales Team Onboarding");
 
-		System.out.println("0" + testdata.get(0));
+			System.out.println("0" + testdata.get(0));
 
-		B.ClickOnWhitelabelSalesTeamOnboarding();
+			B.ClickOnWhitelabelSalesTeamOnboarding();
 
-		B.selectDropdownOption(type);
+			B.selectDropdownOption(type);
 
-		Thread.sleep(2000);
+			performTabKeyPress();
 
-		performTabKeyPress();
+			LoginInputDatas("Whitelabel Sales Team Onboarding", type);
 
-		LoginInputDatas("Whitelabel Sales Team Onboarding", type);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Whitelabel");
-		    throw e; 
+			exceptionHandler.handleException(e, "Whitelabel");
+			throw e;
 		}
 	}
 
 	@Then("the Whitelabel \"Max Number of platform\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
 	public void the_Whitelabel_MaxNumberofplatformField_ShouldPrompt_toEntervalidInputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String Maximum = testdata.get(rowNumber).get("Maximum No of Platform");
 
-		String Maximum = testdata.get(rowNumber).get("Maximum No of Platform");
+			if (Maximum != null && Maximum.matches("\\d+\\.0")) {
+				Maximum = Maximum.substring(0, Maximum.indexOf(".0"));
 
-		if (Maximum != null && Maximum.matches("\\d+\\.0")) {
-			Maximum = Maximum.substring(0, Maximum.indexOf(".0"));
+				System.out.println("0" + testdata.get(0));
 
-			System.out.println("0" + testdata.get(0));
+				B.ClickOnMaximumNoofPlatform();
 
-			B.ClickOnMaximumNoofPlatform();
+				B.EnterOnMaximumNoofPlatform(Maximum);
 
-			B.EnterOnMaximumNoofPlatform(Maximum);
+				performTabKeyPress();
 
-			Thread.sleep(2000);
-			performTabKeyPress();
+				B.NOTDisplayedOnInvalidFormat();
 
-			B.NOTDisplayedOnInvalidFormat();
+				LoginInputDatas("Maximum Number Of Platform", Maximum);
+			}
 
-			LoginInputDatas("Maximum Number Of Platform", Maximum);
-		}
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Whitelabel");
-		    throw e; 
+			exceptionHandler.handleException(e, "Whitelabel");
+			throw e;
 		}
 	}
-	
-	
+
 	@Then("the \"NextStep\" button should be prompted to click on WHiteLabel")
 	public void the_nextstep_button_Should_be_prompted_to_clickOn_WhiteLabel() throws InterruptedException {
 
 		B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
-
-		Thread.sleep(1000);
 
 		try {
 
-			Thread.sleep(1000);
 			B.ClickOnNextStep();
-
-			Thread.sleep(3000);
 
 			B.DisplayedOnPaymentBridge();
 
@@ -7424,20 +6644,19 @@ public class BankOnboardingTestcases {
 
 	@When("I visit the Webhooks")
 	public void I_visit_theWebhooks() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.clickOnWebhooks();
-		
+			B.clickOnWebhooks();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Webhook");
-		    throw e; 
+			exceptionHandler.handleException(e, "Webhook");
+			throw e;
 		}
 	}
 
@@ -7445,247 +6664,217 @@ public class BankOnboardingTestcases {
 	public void the_webhooks_Add_button_should_be_prompted_toClick() throws InterruptedException {
 
 		try {
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		Thread.sleep(3000);
+			B.ClickOnWebhookADD();
 
-		B.ClickOnWebhookADD();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Webhook");
-		    throw e; 
+			exceptionHandler.handleException(e, "Webhook");
+			throw e;
 		}
 	}
 
 	@Then("the \"Webhooks\" label name should be \"Webhook Type\"")
 	public void the_webhooks_label_name_should_be_webhookType() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.WebhooksTypeLabel();
-		
+			B.WebhooksTypeLabel();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Webhook");
-		    throw e; 
+			exceptionHandler.handleException(e, "Webhook");
+			throw e;
 		}
 	}
 
 	@Then("the Webhooks \"Webhook Type\" field should not allow proceeding without any input data")
 	public void the_webhooks_type_field_Shouldnot_allow_proceeding_without_any_input_data() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.ClickOnWebhooksSave();
+			B.ClickOnWebhooksSave();
 
-		B.DisplayedOnThisFieldisRequired();
-		
+			B.DisplayedOnThisFieldisRequired();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Webhook");
-		    throw e; 
+			exceptionHandler.handleException(e, "Webhook");
+			throw e;
 		}
 	}
 
 	@Then("the Webhooks \"Webhook Type\" dropdown should prompt to select valid inputs using sheetname {string} and rownumber {int}")
 	public void the_Webhooks_WebhookType_dropdown_shouldprompt_toselect_valid_inputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		ExcelReader reader = new ExcelReader();
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			 List<Map<String, String>> testdata = cache.getCachedData(sheetName);
 
-		System.out.println("sheet name: " + testdata);
+			System.out.println("sheet name: " + testdata);
 
-		String type = testdata.get(rowNumber).get("Sales Team Onboarding");
+			String type = testdata.get(rowNumber).get("Webhook Type");
 
-		System.out.println("0" + testdata.get(0));
+			System.out.println("0" + testdata.get(0));
 
-		B.ClickOnWebhooksType();
+			B.ClickOnWebhooksType();
 
-		B.selectDropdownOption(type);
+			B.selectDropdownOption(type);
 
-		Thread.sleep(2000);
+			B.NOTDisplayedOnInvalidFormat();
 
-		B.NOTDisplayedOnInvalidFormat();
+			performTabKeyPress();
 
-		performTabKeyPress();
+			LoginInputDatas("Webhook Type", type);
 
-		LoginInputDatas("Webhook Type", type);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Webhook");
-		    throw e; 
+			exceptionHandler.handleException(e, "Webhook");
+			throw e;
 		}
 	}
 
 	@Then("the \"Webhooks\" label name should be \"Webhook Url\"")
 	public void the_webhooks_label_name_should_be_webhookUrl() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.WebhooksURLLabel();
-		
+			B.WebhooksURLLabel();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Webhook");
-		    throw e; 
+			exceptionHandler.handleException(e, "Webhook");
+			throw e;
 		}
 	}
 
 	@Then("the Webhooks \"Webhook Url\" field should not allow proceeding without any input data")
 	public void the_webhooks_type_field_URL_Shouldnot_allow_proceeding_without_any_input_data() throws AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.ClickOnWebhooksURL();
+			B.ClickOnWebhooksURL();
 
-		performTabKeyPress();
+			performTabKeyPress();
 
-		B.DisplayedOnThisFieldisRequired();
-		
+			B.DisplayedOnThisFieldisRequired();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Webhook");
-		    throw e; 
+			exceptionHandler.handleException(e, "Webhook");
+			throw e;
 		}
 	}
 
 	@Then("the Webhooks \"Webhook URL\" field should prompt to enter Invalid inputs using sheetname {string} and rownumber {int}")
 	public void the_Webhooks_WebhookURL_ShouldPrompt_toEnterInvalidInputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			 List<Map<String, String>> testdata = cache.getCachedData(sheetName);
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String webhookurl = testdata.get(rowNumber).get("Webhook url");
 
-		String webhookurl = testdata.get(rowNumber).get("Webhook url");
+			System.out.println("0" + testdata.get(0));
 
-		System.out.println("0" + testdata.get(0));
+			B.ClickOnWebhooksURL();
 
-		Thread.sleep(2000);
+			B.EnterOnWebhooksURL(webhookurl);
 
-		B.ClickOnWebhooksURL();
+			performTabKeyPress();
 
-		B.EnterOnWebhooksURL(webhookurl);
+			B.DisplayedOnThisInvalidFormat();
 
-		Thread.sleep(2000);
-		performTabKeyPress();
+			B.ClearOnWebhooksURL();
 
-		B.DisplayedOnThisInvalidFormat();
+			LoginInputDatas("Webhook URL", webhookurl);
 
-		Thread.sleep(2000);
-
-		B.ClearOnWebhooksURL();
-
-		LoginInputDatas("Webhook URL", webhookurl);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Webhook");
-		    throw e; 
+			exceptionHandler.handleException(e, "Webhook");
+			throw e;
 		}
 	}
 
 	@Then("the Webhooks \"Webhook URL\" field should prompt to enter valid inputs using sheetname {string} and rownumber {int}")
 	public void the_WebhookURL_ShouldPrompt_toEntervalidInputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String Webhookurl = testdata.get(rowNumber).get("Webhook url");
 
-		String Webhookurl = testdata.get(rowNumber).get("Webhook url");
+			System.out.println("0" + testdata.get(0));
 
-		System.out.println("0" + testdata.get(0));
+			B.ClickOnWebhooksURL();
 
-		B.ClickOnWebhooksURL();
+			B.EnterOnWebhooksURL(Webhookurl);
 
-		B.EnterOnWebhooksURL(Webhookurl);
+			performTabKeyPress();
 
-		Thread.sleep(2000);
+			B.NOTDisplayedOnInvalidFormat();
 
-		performTabKeyPress();
+			LoginInputDatas("Webhook URL", Webhookurl);
 
-		B.NOTDisplayedOnInvalidFormat();
-
-		LoginInputDatas("Webhook URL", Webhookurl);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Webhook");
-		    throw e; 
+			exceptionHandler.handleException(e, "Webhook");
+			throw e;
 		}
 	}
 
 	@Then("the Webhooks \"Save\" button should be prompted to click")
 	public void the_webhooks_Save_button_Shouldbe_prompted_toClick() throws InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		Thread.sleep(1000);
-
-		B.ClickOnWebhooksSave();
-
-		Thread.sleep(3000);
-		
-		
+			B.ClickOnWebhooksSave();
 
 		} catch (AssertionError ae) {
 			takeScreenshotStr("Webhook"); // Take screenshot on assertion error
@@ -7700,17 +6889,12 @@ public class BankOnboardingTestcases {
 
 		B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
-
-		Thread.sleep(1000);
 
 		try {
 
-			Thread.sleep(1000);
 			B.ClickOnNextStep();
 
-			Thread.sleep(3000);
 			B.DisplayedOnKYCConfig();
 
 		} catch (AssertionError ae) {
@@ -7723,41 +6907,37 @@ public class BankOnboardingTestcases {
 
 	@When("I visit the KYC Config")
 	public void I_visit_the_Kyc() {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.clickOnKYC();
-		
+			B.clickOnKYC();
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "KYC");
-		    throw e; 
+			exceptionHandler.handleException(e, "KYC");
+			throw e;
 		}
 	}
 
 	@Then("the KYC Config \"Add\" button should be prompted to click")
 	public void theKYC_Config_ADD_Button_should_be_promptedto_CLick() throws InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		Thread.sleep(3000);
+			B.ClickOnWebhookADD();
 
-		B.ClickOnWebhookADD();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "KYC");
-		    throw e; 
+			exceptionHandler.handleException(e, "KYC");
+			throw e;
 		}
 
 	}
@@ -7765,391 +6945,353 @@ public class BankOnboardingTestcases {
 	@Then("the KYC Config \"Business Type\" dropdown should prompt to select valid inputs using sheetname {string} and rownumber {int}")
 	public void the_KYC_Config_BusinessType_dropdown_should_prompt_toselect_validInputs(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String business = testdata.get(rowNumber).get("Business Type");
 
-		String business = testdata.get(rowNumber).get("Business Type");
+			System.out.println("0" + testdata.get(0));
 
-		System.out.println("0" + testdata.get(0));
+			B.ClickOnKYCBusinessType();
 
-		B.ClickOnKYCBusinessType();
+			B.selectDropdownOption(business);
 
-		B.selectDropdownOption(business);
+			performTabKeyPress();
 
-		Thread.sleep(2000);
+			B.NOTDisplayedOnInvalidFormat();
 
-		performTabKeyPress();
+			LoginInputDatas("Business Type", business);
 
-		B.NOTDisplayedOnInvalidFormat();
-
-		LoginInputDatas("Business Type", business);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "KYC");
-		    throw e; 
+			exceptionHandler.handleException(e, "KYC");
+			throw e;
 		}
 	}
 
 	@Then("the Company KYC \"Proof of Identity\" dropdown should prompt to select valid inputs using sheetname {string} and rownumber {int}")
 	public void the_CompanyKYC_Config_BusinessType_dropdown_should_prompt_toselect_validInputs(String sheetName,
 			int rowNumber) throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String Company = testdata.get(rowNumber).get("Company Proof of Identity");
 
-		String Company = testdata.get(rowNumber).get("Company Proof of Identity");
+			System.out.println("0" + testdata.get(0));
 
-		System.out.println("0" + testdata.get(0));
+			B.ClickOnProofOfIdentityCompany();
 
-		B.ClickOnProofOfIdentityCompany();
+			B.selectDropdownOption(Company);
 
-		B.selectDropdownOption(Company);
+			performTabKeyPress();
 
-		Thread.sleep(2000);
+			B.NOTDisplayedOnInvalidFormat();
 
-		performTabKeyPress();
+			LoginInputDatas("Business Type", Company);
 
-		B.NOTDisplayedOnInvalidFormat();
-
-		LoginInputDatas("Business Type", Company);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "KYC");
-		    throw e; 
+			exceptionHandler.handleException(e, "KYC");
+			throw e;
 		}
-		
+
 	}
 
 	@Then("the Company KYC \"Proof of Address\" dropdown should prompt to select valid inputs")
 	public void the_CompanyKYC_ProofOfAddress_dropdown_should_prompt_toselect_validInputs() throws AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.ClickOnProofOfAddressCompany();
+			B.ClickOnProofOfAddressCompany();
 
-		B.SelectOnProofOfAddressCompany();
+			B.SelectOnProofOfAddressCompany();
 
-		performTabKeyPress();
+			performTabKeyPress();
 
-		String SelectOnProofOfAddressCompany = B.getSelectOnProofOfAddressCompany();
+			String SelectOnProofOfAddressCompany = B.getSelectOnProofOfAddressCompany();
 
-		LoginInputDatas("Proof Of Address", SelectOnProofOfAddressCompany);
-		
+			LoginInputDatas("Proof Of Address", SelectOnProofOfAddressCompany);
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "KYC");
-		    throw e; 
+			exceptionHandler.handleException(e, "KYC");
+			throw e;
 		}
-		
+
 	}
 
 	@Then("the Company KYC \"Bank Documents\" dropdown should prompt to select valid inputs")
 	public void the_CompanyKYC_BankDocuments_dropdown_should_prompt_toselect_validInputs() throws AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.ClickOnBankDocumentCompany();
+			B.ClickOnBankDocumentCompany();
 
-		B.SelectOnBankDocumentCompany();
+			B.SelectOnBankDocumentCompany();
 
-		performTabKeyPress();
+			performTabKeyPress();
 
-		String SelectOnBankDocumentCompany = B.getSelectOnBankDocumentCompany();
+			String SelectOnBankDocumentCompany = B.getSelectOnBankDocumentCompany();
 
-		LoginInputDatas("Bank Document", SelectOnBankDocumentCompany);
-		
+			LoginInputDatas("Bank Document", SelectOnBankDocumentCompany);
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "KYC");
-		    throw e; 
+			exceptionHandler.handleException(e, "KYC");
+			throw e;
 		}
-		
+
 	}
 
 	@Then("the Company KYC \"Tax Documents\" dropdown should prompt to select valid inputs")
 	public void the_CompanyKYC_TaxDocuments_dropdown_should_prompt_toselect_validInputs() throws AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.ClickOnTaxDocumentCompany();
+			B.ClickOnTaxDocumentCompany();
 
-		B.SelectOnTaxDocumentCompany();
+			B.SelectOnTaxDocumentCompany();
 
-		performTabKeyPress();
+			performTabKeyPress();
 
-		String SelectOnTaxDocumentCompany = B.getSelectOnTaxDocumentCompany();
+			String SelectOnTaxDocumentCompany = B.getSelectOnTaxDocumentCompany();
 
-		LoginInputDatas("Tax Document", SelectOnTaxDocumentCompany);
-		
+			LoginInputDatas("Tax Document", SelectOnTaxDocumentCompany);
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "KYC");
-		    throw e; 
+			exceptionHandler.handleException(e, "KYC");
+			throw e;
 		}
-		
+
 	}
 
 	@Then("the Individual \"Proof of Identity\" dropdown should prompt to select valid inputs using sheetname {string} and rownumber {int}")
 	public void the_Individual_Config_BusinessType_dropdown_should_prompt_toselect_validInputs(String sheetName,
 			int rowNumber) throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String Individual = testdata.get(rowNumber).get("Individual Proof of Identity");
 
-		String Individual = testdata.get(rowNumber).get("Individual Proof of Identity");
+			System.out.println("0" + testdata.get(0));
 
-		System.out.println("0" + testdata.get(0));
+			B.ClickOnProofOfIdentityIndividual();
 
-		B.ClickOnProofOfIdentityIndividual();
+			B.selectDropdownOption(Individual);
 
-		B.selectDropdownOption(Individual);
+			performTabKeyPress();
 
-		Thread.sleep(2000);
+			B.NOTDisplayedOnInvalidFormat();
 
-		performTabKeyPress();
+			LoginInputDatas("Individual Proof of Identity", Individual);
 
-		B.NOTDisplayedOnInvalidFormat();
-
-		LoginInputDatas("Individual Proof of Identity", Individual);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "KYC");
-		    throw e; 
+			exceptionHandler.handleException(e, "KYC");
+			throw e;
 		}
-		
+
 	}
 
 	@Then("the Individual \"Proof of Address\" dropdown should prompt to select valid inputs using sheetname {string} and rownumber {int}")
 	public void the_Individual_ProofOfAddress_dropdown_should_prompt_toselect_validInputs(String sheetName,
 			int rowNumber) throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String Individual = testdata.get(rowNumber).get("Individual Proof of address");
 
-		String Individual = testdata.get(rowNumber).get("Individual Proof of address");
+			System.out.println("0" + testdata.get(0));
 
-		System.out.println("0" + testdata.get(0));
+			B.ClickOnProofOfAddressIndividual();
 
-		B.ClickOnProofOfAddressIndividual();
+			B.selectDropdownOption(Individual);
 
-		B.selectDropdownOption(Individual);
+			performTabKeyPress();
 
-		Thread.sleep(2000);
+			B.NOTDisplayedOnInvalidFormat();
 
-		performTabKeyPress();
+			LoginInputDatas("Individual Proof of Address", Individual);
 
-		B.NOTDisplayedOnInvalidFormat();
-
-		LoginInputDatas("Individual Proof of Address", Individual);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "KYC");
-		    throw e; 
+			exceptionHandler.handleException(e, "KYC");
+			throw e;
 		}
-		
+
 	}
 
 	@Then("the Individual \"Bank Document\" dropdown should prompt to select valid inputs using sheetname {string} and rownumber {int}")
 	public void the_Individual_BankDocuments_dropdown_should_prompt_toselect_validInputs(String sheetName,
 			int rowNumber) throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String Individual = testdata.get(rowNumber).get("Individual Bank Document");
 
-		String Individual = testdata.get(rowNumber).get("Individual Bank Document");
+			System.out.println("0" + testdata.get(0));
 
-		System.out.println("0" + testdata.get(0));
+			B.ClickOnBankDocumentIndividual();
 
-		B.ClickOnBankDocumentIndividual();
+			B.selectDropdownOption(Individual);
 
-		B.selectDropdownOption(Individual);
+			performTabKeyPress();
 
-		Thread.sleep(2000);
+			B.NOTDisplayedOnInvalidFormat();
 
-		performTabKeyPress();
+			LoginInputDatas("Individual Bank Document", Individual);
 
-		B.NOTDisplayedOnInvalidFormat();
-
-		LoginInputDatas("Individual Bank Document", Individual);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "KYC");
-		    throw e; 
+			exceptionHandler.handleException(e, "KYC");
+			throw e;
 		}
-		
+
 	}
-	
+
 	@Then("the Individual \"Tax Document\" dropdown should prompt to select valid inputs using sheetname {string} and rownumber {int}")
-	public void the_Individual_TaxDocuments_dropdown_should_prompt_toselect_validInputs(String sheetName,
-			int rowNumber) throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+	public void the_Individual_TaxDocuments_dropdown_should_prompt_toselect_validInputs(String sheetName, int rowNumber)
+			throws InvalidFormatException, IOException, InterruptedException, AWTException {
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String Individual = testdata.get(rowNumber).get("Individual Tax Document");
 
-		String Individual = testdata.get(rowNumber).get("Individual Tax Document");
+			System.out.println("0" + testdata.get(0));
 
-		System.out.println("0" + testdata.get(0));
+			B.ClickOnTaxDocumentIndividual();
 
-		B.ClickOnTaxDocumentIndividual();
+			B.selectDropdownOption(Individual);
 
-		B.selectDropdownOption(Individual);
+			performTabKeyPress();
 
-		Thread.sleep(2000);
+			B.NOTDisplayedOnInvalidFormat();
 
-		performTabKeyPress();
+			LoginInputDatas("Individual Tax Document", Individual);
 
-		B.NOTDisplayedOnInvalidFormat();
-
-		LoginInputDatas("Individual Tax Document", Individual);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "KYC");
-		    throw e; 
+			exceptionHandler.handleException(e, "KYC");
+			throw e;
 		}
-		
+
 	}
-	
-	
+
 	@Then("the Individual \"Other Document\" dropdown should prompt to select valid inputs using sheetname {string} and rownumber {int}")
 	public void the_Individual_OtherDocuments_dropdown_should_prompt_toselect_validInputs(String sheetName,
 			int rowNumber) throws InvalidFormatException, IOException, InterruptedException, AWTException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+			// ExcelDataCache cache = ExcelDataCache.getInstance();
 
-		ExcelReader reader = new ExcelReader();
+			List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+					
 
-		List<Map<String, String>> testdata = reader
-				.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			System.out.println("sheet name: " + testdata);
 
-		System.out.println("sheet name: " + testdata);
+			String Individual = testdata.get(rowNumber).get("Individual Other Document");
 
-		String Individual = testdata.get(rowNumber).get("Individual Other Document");
+			System.out.println("0" + testdata.get(0));
 
-		System.out.println("0" + testdata.get(0));
+			B.ClickOnOtherDocumentIndividual();
 
-		B.ClickOnOtherDocumentIndividual();
+			B.selectDropdownOption(Individual);
 
-		B.selectDropdownOption(Individual);
+			performTabKeyPress();
 
-		Thread.sleep(2000);
+			B.NOTDisplayedOnInvalidFormat();
 
-		performTabKeyPress();
+			LoginInputDatas("Individual Other Document", Individual);
 
-		B.NOTDisplayedOnInvalidFormat();
-
-		LoginInputDatas("Individual Other Document", Individual);
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "KYC");
-		    throw e; 
+			exceptionHandler.handleException(e, "KYC");
+			throw e;
 		}
-		
+
 	}
-	
-	
+
 	@Then("the KYC \"Save\" button should be prompted to click")
 	public void the_KYC_Save_button_Shouldbe_prompted_toClick() throws InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		Thread.sleep(1000);
+			B.ClickOnWebhooksSave();
 
-		B.ClickOnWebhooksSave();
-
-		Thread.sleep(3000);
-		
 		} catch (AssertionError ae) {
 			takeScreenshotStr("KYC Config"); // Take screenshot on assertion error
 			ExtentCucumberAdapter.getCurrentStep().log(Status.FAIL, "Assertion failed: " + ae.getMessage());
@@ -8163,17 +7305,11 @@ public class BankOnboardingTestcases {
 
 		B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
-
-		Thread.sleep(1000);
 
 		try {
 
-			Thread.sleep(1000);
 			B.ClickOnNextStep();
-
-			Thread.sleep(3000);
 
 			B.DisplayedOnstatusHistory();
 
@@ -8187,30 +7323,25 @@ public class BankOnboardingTestcases {
 
 	@Then("the \"Submit for verification\" button should be prompted to click on BankOnboarding")
 	public void the_SubmitforVerfication_Shouldbeprompted_toclickOnBank_onboarding() throws InterruptedException {
-		
+
 		try {
 
-		B = new org.Locators.BankLocators(driver);
+			B = new org.Locators.BankLocators(driver);
 
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-		B.ClickOnsubmitforverification();
+			B.ClickOnsubmitforverification();
 
-		Thread.sleep(2000);
+			B.Yesforsubmit();
 
-		B.Yesforsubmit();
+			B.OkforSuccessfully();
 
-		Thread.sleep(5000);
-
-		B.OkforSuccessfully();
-		
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-		   exceptionHandler.handleException(e, "Submit for verification");
-		    throw e; 
+			exceptionHandler.handleException(e, "Submit for verification");
+			throw e;
 		}
-		
+
 	}
 
 	private void takeScreenshot(int rowNumber) {

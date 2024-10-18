@@ -5,9 +5,11 @@ import static org.junit.Assert.fail;
 
 import java.time.Duration;
 
+import org.Testcases.CustomWebDriverManager;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementClickInterceptedException;
+import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
@@ -18,13 +20,16 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class BankLocators {
 
 	WebDriver driver;
 
-    WebDriverWait wait;
+	private int waitTime;
+
+	WebDriverWait wait;
 
 	@FindBy(xpath = "//mat-error[text()=' This field is required ']")
 	private WebElement fieldisrequired;
@@ -47,7 +52,7 @@ public class BankLocators {
 	@FindBy(xpath = "//mat-error[text()=' Invalid format '] | //mat-error[text()=' Invalid Format ']")
 	private WebElement InvalidFormat;
 
-	@FindBy(xpath = "//mat-error[text()=' Mobile Number should be 10 digits ']")
+	@FindBy(xpath = "//mat-error[text()=' Mobile Number should be 30 digits ']")
 	private WebElement lessthanMobilenumber;
 
 	@FindBy(xpath = "//mat-error[text()=' Must be greater than Daily Limit ']")
@@ -77,10 +82,10 @@ public class BankLocators {
 	@FindBy(xpath = "//span[text()=' SUBMIT FOR VERIFICATION ']")
 	private WebElement Submitasverification;
 
-	@FindBy(xpath = "//span[text()=' Next Step ']")
+	@FindBy(xpath = "//span[contains(text(), 'Next Step')]")
 	private WebElement NextStep;
 
-	@FindBy(xpath = "//span[text()='Save']")
+	@FindBy(xpath = "//span[contains(text(), 'Save')]")
 	private WebElement CommSave;
 
 	@FindBy(xpath = "//h6[text()='ADMIN USER Details']")
@@ -88,29 +93,29 @@ public class BankLocators {
 
 	@FindBy(xpath = "//button[@class='logo ng-tns-c471-3']")
 	private WebElement ClickOnDownArrow;
-	
+
 	@FindBy(xpath = "//button[@class='logo ng-tns-c479-3']")
 	private WebElement ClickOnDownArrowSuperadmin;
 
 	@FindBy(xpath = "//span[text()='Onboarding']")
 	private WebElement ClickOnOnboarding;
 
-	@FindBy(xpath = "(//a[@color='accent'])[6]")
+	@FindBy(xpath = "//span[text()='Onboarding']")
 	private WebElement ClickOnVerifierOnboarding;
 
 	@FindBy(xpath = "//a[@href='/admin/onboard/banks']")
 	private WebElement ClickOnBank;
 
-	@FindBy(xpath = "//span[text()='Aggregators']")
+	@FindBy(xpath = "//a[@href='/admin/onboard/aggregators']")
 	private WebElement ClickOnPayfac;
 
-	@FindBy(xpath = "//span[text()='ISO']")
+	@FindBy(xpath = "//a[@href='/admin/onboard/isos']")
 	private WebElement ClickOnISO;
 
-	@FindBy(xpath = "//span[text()='Sub ISO']")
+	@FindBy(xpath = "//a[@href='/admin/onboard/sub-isos']")
 	private WebElement ClickOnSUBISO;
 
-	@FindBy(xpath = "//span[text()='Group Merchants']")
+	@FindBy(xpath = "//a[@href='/admin/onboard/group-merchants']")
 	private WebElement ClickOnGM;
 
 	@FindBy(xpath = "//a[@href='/admin/onboard/merchants']")
@@ -121,79 +126,138 @@ public class BankLocators {
 
 	@FindBy(xpath = "//span[text()='CREATE']")
 	private WebElement Createbutton;
-	
-//IntroPage
-	
-	@FindBy(xpath = "//h6[text()='Channel Configuration']")
-	private WebElement ChannelConfiguration;
-	
-	@FindBy(xpath = "//h6[text()='Global FRM Parameters']")
-	private WebElement GlobalFRMParameters;
-	
-	@FindBy(xpath = "//h6[text()='ROUTING ONUS']")
-	private WebElement ONUS;
-	
-	@FindBy(xpath = "//h6[text()='Interchange Plan']")
-	private WebElement InterchangePlan;
-	
-	@FindBy(xpath = "//h6[text()='Bank Details']")
-	private WebElement BankDetails;
-	
-	@FindBy(xpath = "//h6[text()='Bank Onboarding Configuration']")
-	private WebElement BankonboardingConfig;
-	
-	@FindBy(xpath = "//h6[text()='Payment Bridge']")
-	private WebElement PaymentBridge;
-	
-	@FindBy(xpath = "//h6[text()='KYC Config']")
-	private WebElement KycConfig;
-	
-	@FindBy(xpath = "//h6[text()='Status History']")
-	private WebElement statusHistory;
 
-	
+//IntroPage
+
+//	@FindBy(xpath = "//h6[text()='Channel Configuration']")
+//	private WebElement ChannelConfiguration;
+//
+//	@FindBy(xpath = "//h6[text()='Global FRM Parameters']")
+//	private WebElement GlobalFRMParameters;
+//
+//	@FindBy(xpath = "//h6[text()='ROUTING ONUS']")
+//	private WebElement ONUS;
+//
+//	@FindBy(xpath = "//h6[text()='Interchange Plan']")
+//	private WebElement InterchangePlan;
+//
+//	@FindBy(xpath = "//h6[text()='Bank Details']")
+//	private WebElement BankDetails;
+//
+//	@FindBy(xpath = "//h6[text()='Bank Onboarding Configuration']")
+//	private WebElement BankonboardingConfig;
+//
+//	@FindBy(xpath = "//h6[text()='Payment Bridge']")
+//	private WebElement PaymentBridge;
+//
+//	@FindBy(xpath = "//h6[text()='KYC Config']")
+//	private WebElement KycConfig;
+//
+//	@FindBy(xpath = "//h6[text()='Status History']")
+//	private WebElement statusHistory;
+
+	@FindBy(xpath = "//h6[contains(text(), 'Channel Configuration')]")
+	private WebElement ChannelConfiguration;
+
+	@FindBy(xpath = "//h6[contains(text(), 'Global FRM Parameters')]")
+	private WebElement GlobalFRMParameters;
+
+	@FindBy(xpath = "//h6[contains(text(), 'ROUTING ONUS')]")
+	private WebElement ONUS;
+
+	@FindBy(xpath = "//h6[contains(text(), 'Interchange Plan')]")
+	private WebElement InterchangePlan;
+
+	@FindBy(xpath = "//h6[contains(text(), 'Bank Details')]")
+	private WebElement BankDetails;
+
+	@FindBy(xpath = "//h6[contains(text(), 'Bank Onboarding Configuration')]")
+	private WebElement BankonboardingConfig;
+
+	@FindBy(xpath = "//h6[contains(text(), 'Payment Bridge')]")
+	private WebElement PaymentBridge;
+
+	@FindBy(xpath = "//h6[contains(text(), 'KYC Config') or contains(text(), 'Personal Documents')]")
+	private WebElement KycConfig;
+
+	@FindBy(xpath = "//h6[contains(text(), 'Status History')]")
+	private WebElement statusHistory;
 
 //BankSideMenu
 
-	@FindBy(xpath = "//span[text()='General Info']")
+//	@FindBy(xpath = "//span[text()='General Info']")
+//	private WebElement GeneralInfo;
+//
+//	@FindBy(xpath = "//span[text()='Communication Info']")
+//	private WebElement CommunicationInfo;
+//
+//	@FindBy(xpath = "//span[text()='Channel Config']")
+//	private WebElement ChannelConfig;
+//
+//	@FindBy(xpath = "//span[text()='ONUS Routing']")
+//	private WebElement ONUSRouting;
+//
+//	@FindBy(xpath = "//span[text()='Global FRM']")
+//	private WebElement GlobalFrm;
+//
+//	@FindBy(xpath = "//span[text()='Commercial']")
+//	private WebElement Commercial;
+//
+//	@FindBy(xpath = "//span[text()='Settlement Info']")
+//	private WebElement SettlementInfo;
+//
+//	@FindBy(xpath = "//span[text()='Whitelabel']")
+//	private WebElement whitelabel;
+//
+//	@FindBy(xpath = "//span[text()='Webhooks']")
+//	private WebElement webhooks;
+//
+//	@FindBy(xpath = "//span[text()='KYC']")
+//	private WebElement Kyc;
+//
+//	@FindBy(xpath = "//span[text()='Status History']")
+//	private WebElement StatusHistory;
+//
+//	@FindBy(xpath = "//span[text()='Change Log']")
+//	private WebElement Changelog;
+
+	@FindBy(xpath = "//span[contains(text(), 'General Info')]")
 	private WebElement GeneralInfo;
 
-	@FindBy(xpath = "//span[text()='Communication Info']")
+	@FindBy(xpath = "//span[contains(text(), 'Communication Info')]")
 	private WebElement CommunicationInfo;
 
-	@FindBy(xpath = "//span[text()='Channel Config']")
+	@FindBy(xpath = "//span[contains(text(), 'Channel Config')]")
 	private WebElement ChannelConfig;
-	
-	@FindBy(xpath = "//span[text()='ONUS Routing']")
+
+	@FindBy(xpath = "//span[contains(text(), 'ONUS Routing')]")
 	private WebElement ONUSRouting;
 
-	@FindBy(xpath = "//span[text()='Global FRM']")
+	@FindBy(xpath = "//span[contains(text(), 'Global FRM')]")
 	private WebElement GlobalFrm;
 
-	@FindBy(xpath = "//span[text()='Commercial']")
+	@FindBy(xpath = "//span[contains(text(), 'Commercial')]")
 	private WebElement Commercial;
 
-	@FindBy(xpath = "//span[text()='Settlement Info']")
+	@FindBy(xpath = "//span[contains(text(), 'Settlement Info')]")
 	private WebElement SettlementInfo;
 
-	@FindBy(xpath = "//span[text()='Whitelabel']")
+	@FindBy(xpath = "//span[contains(text(), 'Whitelabel')]")
 	private WebElement whitelabel;
 
-	@FindBy(xpath = "//span[text()='Webhooks']")
+	@FindBy(xpath = "//span[contains(text(), 'Webhooks')]")
 	private WebElement webhooks;
 
-	@FindBy(xpath = "//span[text()='KYC']")
+	@FindBy(xpath = "//span[contains(text(), 'KYC')]")
 	private WebElement Kyc;
 
-	@FindBy(xpath = "//span[text()='Status History']")
+	@FindBy(xpath = "//span[contains(text(), 'Status History')]")
 	private WebElement StatusHistory;
 
-	@FindBy(xpath = "//span[text()='Change Log']")
+	@FindBy(xpath = "//span[contains(text(), 'Change Log')]")
 	private WebElement Changelog;
-	
-	
+
 //Bank	
-	
 
 	@FindBy(xpath = "//mat-label[text()='Bank Name']")
 	private WebElement BankLabelName;
@@ -284,7 +348,7 @@ public class BankLocators {
 
 	@FindBy(xpath = "(//span[text()='Add'])[1]")
 	private WebElement ClickonCommADD;
-	
+
 	@FindBy(xpath = "(//span[text()='Add'])[2]")
 	private WebElement ClickonCommSettlementandReconADD;
 
@@ -367,17 +431,16 @@ public class BankLocators {
 
 	@FindBy(xpath = "//mat-option//span[text()='AEPS']")
 	private WebElement SelectAEPSChannel;
-	
+
 	@FindBy(xpath = "//mat-option//span[text()='MATM']")
 	private WebElement SelectMATMChannel;
-	
 
 	@FindBy(xpath = "//mat-select[@formcontrolname='network']")
 	private WebElement ClickOntNetwork;
 
 	@FindBy(xpath = "//span[text()=' VISA ']")
 	private WebElement SelectOnNetworkPOS;
-	
+
 	@FindBy(xpath = "//span[text()=' MasterCard ']")
 	private WebElement SelectOnNetworkMATM;
 
@@ -392,7 +455,7 @@ public class BankLocators {
 
 	@FindBy(xpath = "//span[text()=' Sales ']")
 	private WebElement SelectOnTransactionPOS;
-	
+
 	@FindBy(xpath = "//span[text()=' Withdrawal ']")
 	private WebElement SelectOnTransactionsetMATM;
 
@@ -409,11 +472,9 @@ public class BankLocators {
 
 	@FindBy(xpath = "//mat-icon[text()='edit']")
 	private WebElement AddBin;
-	
+
 	@FindBy(xpath = "(//button[@type='button'])[4]")
 	private WebElement ActionOnOnusbutton2;
-
-	
 
 	@FindBy(xpath = "//input[@formcontrolname='bin']")
 	private WebElement ClickOnAddBin;
@@ -502,7 +563,6 @@ public class BankLocators {
 	@FindBy(xpath = "(//input[@formcontrolname='maximumAmount'])[1]")
 	private WebElement POSMaximumAmount;
 
-
 	// UPI
 
 	@FindBy(xpath = "(//input[@formcontrolname='dailyLimit'])[2]")
@@ -519,28 +579,26 @@ public class BankLocators {
 
 	@FindBy(xpath = "(//input[@formcontrolname='maximumAmount'])[2]")
 	private WebElement UPIMaximumAmount;
-	
-	
-	//AEPS
 
-		@FindBy(xpath = "(//input[@formcontrolname='dailyLimit'])[3]")
-		private WebElement AEPSDaily;
+	// AEPS
 
-		@FindBy(xpath = "(//input[@formcontrolname='weeklyLimit'])[3]")
-		private WebElement AEPSWeekly;
+	@FindBy(xpath = "(//input[@formcontrolname='dailyLimit'])[3]")
+	private WebElement AEPSDaily;
 
-		@FindBy(xpath = "(//input[@formcontrolname='monthlyLimit'])[3]")
-		private WebElement AEPSMonthly;
+	@FindBy(xpath = "(//input[@formcontrolname='weeklyLimit'])[3]")
+	private WebElement AEPSWeekly;
 
-		@FindBy(xpath = "(//input[@formcontrolname='minimumAmount'])[3]")
-		private WebElement AEPSMinimumAmount;
+	@FindBy(xpath = "(//input[@formcontrolname='monthlyLimit'])[3]")
+	private WebElement AEPSMonthly;
 
-		@FindBy(xpath = "(//input[@formcontrolname='maximumAmount'])[3]")
-		private WebElement AEPSMaximumAmount;
+	@FindBy(xpath = "(//input[@formcontrolname='minimumAmount'])[3]")
+	private WebElement AEPSMinimumAmount;
 
-	
+	@FindBy(xpath = "(//input[@formcontrolname='maximumAmount'])[3]")
+	private WebElement AEPSMaximumAmount;
+
 //MATM
-	
+
 	@FindBy(xpath = "(//input[@formcontrolname='dailyLimit'])[4]")
 	private WebElement MATMDaily;
 
@@ -574,7 +632,7 @@ public class BankLocators {
 
 	@FindBy(xpath = "//span[text()='AEPS ']")
 	private WebElement CommericaialChannelAEPS;
-	
+
 	@FindBy(xpath = "//span[text()='UPI ']")
 	private WebElement CommericaialChannelUPI;
 
@@ -592,23 +650,21 @@ public class BankLocators {
 
 	@FindBy(xpath = "//span[text()=' POS Interchange Bank Plan Small Merchants Emerging(Grocery-5411)']")
 	private WebElement SelectOnPricingBankPOSTestPlan;
-	
+
 	@FindBy(xpath = "//span[text()=' Bank AEPS Interchange Plan']")
 	private WebElement SelectOnPricingBankAEPSTestPlan;
 
-	@FindBy(xpath = "//span[text()='Save']")
+	@FindBy(xpath = "//span[contains(text(), 'Save')]")
 	private WebElement CommercialSave;
 
 	@FindBy(xpath = "//span[text()=' Bank POS Discount Rate Plan ']")
 	private WebElement SelectOnBankOnboardingPricingBankPOSPlan;
-	
+
 	@FindBy(xpath = "//span[text()=' Bank AEPS Discount Rate Plan ']")
 	private WebElement SelectOnBankOnboardingPricingBankAEPSPlan;
-	
+
 	@FindBy(xpath = "//span[text()=' Bank UPI Discount Rate Plan ']")
 	private WebElement SelectOnBankOnboardingPricingBankUPIPlan;
-	
-	
 
 //Settleinfo
 
@@ -837,10 +893,10 @@ public class BankLocators {
 
 	@FindBy(xpath = "//mat-select[@formcontrolname='keyPersonotherDoc']")
 	private WebElement KYCIndividualOtherDocument;
-	
+
 	@FindBy(xpath = "//mat-select[@formcontrolname='keyPersonTaxDoc']")
 	private WebElement KYCIndividualTaxDocument;
-	
+
 	@FindBy(xpath = "//mat-select[@formcontrolname='keyPersonBankDoc']")
 	private WebElement KYCIndividualBankDocument;
 
@@ -877,9 +933,7 @@ public class BankLocators {
 
 	@FindBy(xpath = "(//button[@aria-label='Example icon-button with a menu'])[3]")
 	private WebElement ActionClick;
-	
-	
-	
+
 //	@FindBy(xpath = "//span[text()='View']")
 //	private WebElement ViewButton;
 //
@@ -897,9 +951,7 @@ public class BankLocators {
 //
 //	@FindBy(xpath = "//span[text()=' CANCEL ']")
 //	private WebElement ApproveCancel;
-	
-	
-	
+
 	@FindBy(xpath = "//span[contains(text(),'View')]")
 	private WebElement ViewButton;
 
@@ -915,69 +967,69 @@ public class BankLocators {
 	@FindBy(xpath = "//span[contains(text(),'APPROVE')]")
 	private WebElement Approve;
 
-	@FindBy(xpath = "//span[contains(text(),'CANCEL')]")
+//	@FindBy(xpath = "//span[contains(text(),'CANCEL')]")
+	@FindBy(xpath = "//span[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'cancel')]")
 	private WebElement ApproveCancel;
 
-	
-	//@FindBy(xpath = "//input[translate(@formcontrolname, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')='cpid']")
-	
+	// @FindBy(xpath = "//input[translate(@formcontrolname,
+	// 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')='cpid']")
+
 	@FindBy(xpath = "//input[@formcontrolname='cpid'] | //input[@formcontrolname='cpId']")
 	private WebElement CPID;
 
 	public BankLocators(WebDriver driver) {
 
-		this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+		this.waitTime = CustomWebDriverManager.getWaitTime(); // Get wait time from CustomWebDriverManager
 		this.driver = driver;
 		PageFactory.initElements(driver, this);
 
 	}
-	
-	
+
 //	public void selectDropdownOption(String optionText) {
 //	    String xpathExpression = "//span[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '" 
 //	                              + optionText.toLowerCase() + "')]";
 //	    driver.findElement(By.xpath(xpathExpression)).click();
 //	}
-	
+
 	public void selectDropdownOption(String optionText) {
-	    // Construct the XPath for the option text in a case-insensitive manner
-	    String xpathExpression = "//mat-option//span[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '" 
-	                              + optionText.toLowerCase() + "')]";
-	    
-	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		// Construct the XPath for the option text in a case-insensitive manner
+		String xpathExpression = "//mat-option//span[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '"
+				+ optionText.toLowerCase() + "')]";
 
-	    try {
-	        // Wait for the overlay to disappear (if it exists)
-	        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.className("cdk-overlay-backdrop")));
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 
-	        // Wait for the dropdown option to be visible and clickable
-	        WebElement optionElement = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpathExpression)));
+		try {
+			// Wait for the overlay to disappear (if it exists)
+			wait.until(ExpectedConditions.invisibilityOfElementLocated(By.className("cdk-overlay-backdrop")));
 
-	        // Scroll the element into view (if needed) and click
-	        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", optionElement);
-	        optionElement.click();
-	    } catch (TimeoutException e) {
-	        System.out.println("The dropdown option '" + optionText + "' is not found or not clickable within the timeout.");
-	    } catch (ElementClickInterceptedException e) {
-	        System.out.println("Element click intercepted for '" + optionText + "'. Trying to click via JavaScript.");
-	        
-	        // Try clicking via JavaScript as a fallback
-	        WebElement optionElement = driver.findElement(By.xpath(xpathExpression));
-	        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", optionElement);
-	    }
+			// Wait for the dropdown option to be visible and clickable
+			WebElement optionElement = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpathExpression)));
+
+			// Scroll the element into view (if needed) and click
+			((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", optionElement);
+			optionElement.click();
+		} catch (TimeoutException e) {
+			System.out.println(
+					"The dropdown option '" + optionText + "' is not found or not clickable within the timeout.");
+		} catch (ElementClickInterceptedException e) {
+			System.out.println("Element click intercepted for '" + optionText + "'. Trying to click via JavaScript.");
+
+			// Try clicking via JavaScript as a fallback
+			WebElement optionElement = driver.findElement(By.xpath(xpathExpression));
+			((JavascriptExecutor) driver).executeScript("arguments[0].click();", optionElement);
+		}
 	}
-	
-
-
-
-
-	
 
 	public void DisplayedOnVerified() {
+
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
 		try {
+			wait.until(ExpectedConditions.visibilityOf(Verified));
 			assertTrue("Verified Button should be displayed", Verified.isDisplayed());
 		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
+			fail("Verified Button Should be displayed But not found.");
+		} catch (TimeoutException e) {
 			fail("Verified Button Should be displayed But not found.");
 		}
 	}
@@ -989,7 +1041,7 @@ public class BankLocators {
 			// Wait for the loading spinner to disappear
 
 			// Wait for the NextStep element to be clickable
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(Approve));
 
 			// Perform the click action
@@ -999,7 +1051,7 @@ public class BankLocators {
 			System.err.println("Element click intercepted: " + e.getMessage());
 
 			// Optionally, wait again for the spinner to disappear and retry clicking
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(Approve));
 			Approve.click();
 		} catch (Exception e) {
@@ -1016,7 +1068,7 @@ public class BankLocators {
 			// Wait for the loading spinner to disappear
 
 			// Wait for the NextStep element to be clickable
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(Saveasdraft));
 
 			// Perform the click action
@@ -1026,7 +1078,7 @@ public class BankLocators {
 			System.err.println("Element click intercepted: " + e.getMessage());
 
 			// Optionally, wait again for the spinner to disappear and retry clicking
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(Saveasdraft));
 			Saveasdraft.click();
 		} catch (Exception e) {
@@ -1043,7 +1095,7 @@ public class BankLocators {
 			// Wait for the loading spinner to disappear
 
 			// Wait for the NextStep element to be clickable
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(Submitasverification));
 
 			// Perform the click action
@@ -1053,7 +1105,7 @@ public class BankLocators {
 			System.err.println("Element click intercepted: " + e.getMessage());
 
 			// Optionally, wait again for the spinner to disappear and retry clicking
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(Submitasverification));
 			Submitasverification.click();
 		} catch (Exception e) {
@@ -1073,22 +1125,60 @@ public class BankLocators {
 			// Wait for the loading spinner to disappear
 
 			// Wait for the NextStep element to be clickable
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(NextStep));
 
 			// Perform the click action
-			NextStep.click();
+			JavascriptExecutor js = (JavascriptExecutor) driver;
+			js.executeScript("arguments[0].click();", NextStep);
 		} catch (ElementClickInterceptedException e) {
 			// Handle the exception if the click is intercepted
 			System.err.println("Element click intercepted: " + e.getMessage());
 
 			// Optionally, wait again for the spinner to disappear and retry clicking
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(NextStep));
 			NextStep.click();
 		} catch (Exception e) {
 			// Handle other potential exceptions
-			System.err.println("An unexpected error occurred: " + e.getMessage());
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(NextStep));
+			NextStep.click();
+		}
+	}
+
+	public void ClickOnDoubleclickNextStep() {
+		try {
+			// Wait for the loading spinner to disappear
+
+			// Wait for the NextStep element to be clickable
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(NextStep));
+
+			// Perform a double-click action using Actions class
+			Actions actions = new Actions(driver);
+			actions.doubleClick(NextStep).perform();
+		} catch (ElementClickInterceptedException e) {
+			// Handle the exception if the click is intercepted
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			// Optionally, wait again for the spinner to disappear and retry double-clicking
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(NextStep));
+
+			// Retry double-click
+			Actions actions = new Actions(driver);
+			actions.doubleClick(NextStep).perform();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("Error occurred: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(NextStep));
+
+			// Retry double-click
+			Actions actions = new Actions(driver);
+			actions.doubleClick(NextStep).perform();
 		}
 	}
 
@@ -1099,7 +1189,7 @@ public class BankLocators {
 			// Wait for the loading spinner to disappear
 
 			// Wait for the NextStep element to be clickable
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ApproveCancel));
 
 			// Perform the click action
@@ -1109,7 +1199,7 @@ public class BankLocators {
 			System.err.println("Element click intercepted: " + e.getMessage());
 
 			// Optionally, wait again for the spinner to disappear and retry clicking
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ApproveCancel));
 			ApproveCancel.click();
 		} catch (Exception e) {
@@ -1118,113 +1208,157 @@ public class BankLocators {
 		}
 
 	}
-	
+
 //IntroPage	
 
 	public void DisplayedOnAdminuserdetails() {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
 		try {
+			wait.until(ExpectedConditions.visibilityOf(AdminUserDetails));
 			assertTrue("Communication Info Page should be displayed", AdminUserDetails.isDisplayed());
 		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Communication Info Page Should be displayed But not found.");
+			fail("Communication Info Page should be displayed but not found.");
+		} catch (TimeoutException e) {
+			fail("Communication Info Page was not visible within the wait time.");
 		}
 	}
-	
+
 	public void DisplayedOnChannelConfiguration() {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
 		try {
+			wait.until(ExpectedConditions.visibilityOf(ChannelConfiguration));
 			assertTrue("Channel Config Page should be displayed", ChannelConfiguration.isDisplayed());
 		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Channel Config Page Should be displayed But not found.");
+			fail("Channel Config Page should be displayed but not found.");
+		} catch (TimeoutException e) {
+			fail("Channel Config Page was not visible within the wait time.");
 		}
 	}
+
 	public void DisplayedOnGlobalFRMParameters() {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
 		try {
+			wait.until(ExpectedConditions.visibilityOf(GlobalFRMParameters));
 			assertTrue("Global FRM Page should be displayed", GlobalFRMParameters.isDisplayed());
 		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Global FRM Page Should be displayed But not found.");
+			fail("Global FRM Page should be displayed but not found.");
+		} catch (TimeoutException e) {
+			fail("Global FRM Page was not visible within the wait time.");
 		}
 	}
-	
+
 	public void DisplayedOnRoutingONUS() {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
 		try {
+			wait.until(ExpectedConditions.visibilityOf(ONUS));
 			assertTrue("Routing ONUS Page should be displayed", ONUS.isDisplayed());
 		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Routing ONUS Page Should be displayed But not found.");
+			fail("Routing ONUS Page should be displayed but not found.");
+		} catch (TimeoutException e) {
+			fail("Routing ONUS Page was not visible within the wait time.");
 		}
 	}
-	
-	
+
 	public void DisplayedOnInterchangePlan() {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
 		try {
+			wait.until(ExpectedConditions.visibilityOf(InterchangePlan));
 			assertTrue("Commercial Page should be displayed", InterchangePlan.isDisplayed());
 		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Commercial Page Should be displayed But not found.");
+			fail("Commercial Page should be displayed but not found.");
+		} catch (TimeoutException e) {
+			fail("Commercial Page was not visible within the wait time.");
 		}
 	}
-	
+
 	public void DisplayedOnBankDetails() {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
 		try {
+			wait.until(ExpectedConditions.visibilityOf(BankDetails));
 			assertTrue("Settlement Info Page should be displayed", BankDetails.isDisplayed());
 		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Settlement Info Page Should be displayed But not found.");
+			fail("Settlement Info Page should be displayed but not found.");
+		} catch (TimeoutException e) {
+			fail("Settlement Info Page was not visible within the wait time.");
 		}
 	}
-	
+
 	public void DisplayedOnBankonboardingConfig() {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
 		try {
+			wait.until(ExpectedConditions.visibilityOf(BankonboardingConfig));
 			assertTrue("Whitelabel Page should be displayed", BankonboardingConfig.isDisplayed());
 		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Whitelabel Page Should be displayed But not found.");
+			fail("Whitelabel Page should be displayed but not found.");
+		} catch (TimeoutException e) {
+			fail("Whitelabel Page was not visible within the wait time.");
 		}
 	}
-	
+
 	public void DisplayedOnPaymentBridge() {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
 		try {
+			wait.until(ExpectedConditions.visibilityOf(PaymentBridge));
 			assertTrue("Webhook Page should be displayed", PaymentBridge.isDisplayed());
 		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Webhook Page Should be displayed But not found.");
+			fail("Webhook Page should be displayed but not found.");
+		} catch (TimeoutException e) {
+			fail("Webhook Page was not visible within the wait time.");
 		}
 	}
-	
+
 	public void DisplayedOnKYCConfig() {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
 		try {
+			wait.until(ExpectedConditions.visibilityOf(KycConfig));
 			assertTrue("Webhook Page should be displayed", KycConfig.isDisplayed());
 		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Webhook Page Should be displayed But not found.");
+			fail("Webhook Page should be displayed but not found.");
+		} catch (TimeoutException e) {
+			fail("Webhook Page was not visible within the wait time.");
 		}
 	}
-	
-	
+
 	public void DisplayedOnstatusHistory() {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
 		try {
+			wait.until(ExpectedConditions.visibilityOf(statusHistory));
 			assertTrue("Status History Page should be displayed", statusHistory.isDisplayed());
 		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Status History Page Should be displayed But not found.");
+			fail("Status History Page should be displayed but not found.");
+		} catch (TimeoutException e) {
+			fail("Status History Page was not visible within the wait time.");
 		}
 	}
-	
-
 
 	public void DisplayedOnThisFieldisRequired() {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
 		try {
-			assertTrue("ThisFieldisrequired should be displayed", fieldisrequired.isDisplayed());
+			wait.until(ExpectedConditions.visibilityOf(fieldisrequired));
+			assertTrue("This Field is Required should be displayed", fieldisrequired.isDisplayed());
 		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("This Field is Required error message Should be displayed but not found.");
+			fail("This Field is Required error message should be displayed but not found.");
+		} catch (TimeoutException e) {
+			fail("This Field is Required error message was not visible within the wait time.");
 		}
 	}
 
 	public void DisplayedOnDailyLimitRequired() {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
 		try {
+			wait.until(ExpectedConditions.visibilityOf(DailyLimitrequired));
 			assertTrue("Daily Limit required should be displayed", DailyLimitrequired.isDisplayed());
 		} catch (NoSuchElementException e) {
 			// Fail the test if the button is not found
@@ -1233,7 +1367,10 @@ public class BankLocators {
 	}
 
 	public void DisplayedOnWeeklyLimitRequired() {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
 		try {
+			wait.until(ExpectedConditions.visibilityOf(WeeklyLimitrequired));
 			assertTrue("Weekly Limit required should be displayed", WeeklyLimitrequired.isDisplayed());
 		} catch (NoSuchElementException e) {
 			// Fail the test if the button is not found
@@ -1268,12 +1405,12 @@ public class BankLocators {
 		}
 	}
 
-	public void DisplayedOnShouldbe10digits() {
+	public void DisplayedOnShouldbe30digits() {
 		try {
-			assertTrue("MobileNumber should be 10 digits", lessthanMobilenumber.isDisplayed());
+			assertTrue("MobileNumber should be 30 digits", lessthanMobilenumber.isDisplayed());
 		} catch (NoSuchElementException e) {
 			// Fail the test if the button is not found
-			fail("MobileNumber should be 10 digits error message Should be displayed but not found.");
+			fail("MobileNumber should be 30 digits error message Should be displayed but not found.");
 		}
 	}
 
@@ -1385,11 +1522,16 @@ public class BankLocators {
 //BankSideMenu
 
 	public void DisplayedOnGenralInfo() {
+		
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
 		try {
-			assertTrue("General Info should be displayed in BankOnboarding", GeneralInfo.isDisplayed());
+			wait.until(ExpectedConditions.visibilityOf(GeneralInfo));
+			assertTrue("General Info should be displayed", GeneralInfo.isDisplayed());
 		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("General Info button Should be displayed in BankOnboarding But not found.");
+			fail("General Info Should be displayed But not found.");
+		} catch (TimeoutException e) {
+			fail("General Info Should be displayed But not found.");
 		}
 	}
 
@@ -1398,14 +1540,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(GeneralInfo));
 			GeneralInfo.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(GeneralInfo));
 			GeneralInfo.click();
 		} catch (Exception e) {
@@ -1416,11 +1558,16 @@ public class BankLocators {
 	}
 
 	public void DisplayedOnCommunicationInfo() {
+		
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
 		try {
-			assertTrue("Communication Info should be displayed in BankOnboarding", CommunicationInfo.isDisplayed());
+			wait.until(ExpectedConditions.visibilityOf(CommunicationInfo));
+			assertTrue("Communication Info should be displayed", CommunicationInfo.isDisplayed());
 		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Communication Info Should be displayed in BankOnboarding But not found.");
+			fail("Communication Info Should be displayed But not found.");
+		} catch (TimeoutException e) {
+			fail("Communication Info Should be displayed But not found.");
 		}
 	}
 
@@ -1429,14 +1576,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(CommunicationInfo));
 			CommunicationInfo.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(CommunicationInfo));
 			CommunicationInfo.click();
 		} catch (Exception e) {
@@ -1446,27 +1593,32 @@ public class BankLocators {
 	}
 
 	public void DisplayedOnChannelConfig() {
+
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
 		try {
-			assertTrue("Channel Config should be displayed in BankOnboarding", ChannelConfig.isDisplayed());
+			wait.until(ExpectedConditions.visibilityOf(ChannelConfig));
+			assertTrue("Channel Config should be displayed", ChannelConfig.isDisplayed());
 		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Channel Config Should be displayed in BankOnboarding But not found.");
+			fail("Channel Config Should be displayed But not found.");
+		} catch (TimeoutException e) {
+			fail("Channel Config Should be displayed But not found.");
 		}
 	}
-
+	
 	public void CLickOnChannelConfig() {
 		// ChannelConfig.click();
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ChannelConfig));
 			ChannelConfig.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ChannelConfig));
 			ChannelConfig.click();
 		} catch (Exception e) {
@@ -1475,20 +1627,20 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public void CLickOnONUSRouting() {
 //		GeneralInfo.click();
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ONUSRouting));
 			ONUSRouting.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ONUSRouting));
 			ONUSRouting.click();
 		} catch (Exception e) {
@@ -1499,11 +1651,16 @@ public class BankLocators {
 	}
 
 	public void DisplayedOnGlobalFrm() {
+		
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
 		try {
-			assertTrue("Global FRM should be displayed in BankOnboarding", GlobalFrm.isDisplayed());
+			wait.until(ExpectedConditions.visibilityOf(GlobalFrm));
+			assertTrue("Global Frm should be displayed", GlobalFrm.isDisplayed());
 		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Global FRM Should be displayed in BankOnboarding But not found.");
+			fail("Global Frm Should be displayed But not found.");
+		} catch (TimeoutException e) {
+			fail("Global Frm Should be displayed But not found.");
 		}
 	}
 
@@ -1512,14 +1669,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(GlobalFrm));
 			GlobalFrm.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(GlobalFrm));
 			GlobalFrm.click();
 		} catch (Exception e) {
@@ -1530,11 +1687,16 @@ public class BankLocators {
 	}
 
 	public void DisplayedOnCommericial() {
+		
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
 		try {
-			assertTrue("Commercial should be displayed in BankOnboarding", Commercial.isDisplayed());
+			wait.until(ExpectedConditions.visibilityOf(Commercial));
+			assertTrue("Commercial should be displayed", Commercial.isDisplayed());
 		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Commericial Should be displayed in BankOnboarding But not found.");
+			fail("Commercial Should be displayed But not found.");
+		} catch (TimeoutException e) {
+			fail("Commercial Should be displayed But not found.");
 		}
 	}
 
@@ -1543,14 +1705,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(Commercial));
 			Commercial.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(Commercial));
 			Commercial.click();
 		} catch (Exception e) {
@@ -1561,11 +1723,16 @@ public class BankLocators {
 	}
 
 	public void DisplayedOnSettlementInfo() {
+		
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
 		try {
-			assertTrue("Settltment Info should be displayed in BankOnboarding", SettlementInfo.isDisplayed());
+			wait.until(ExpectedConditions.visibilityOf(SettlementInfo));
+			assertTrue("SettlementInfo should be displayed", SettlementInfo.isDisplayed());
 		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Settlement Info Should be displayed in BankOnboarding But not found.");
+			fail("SettlementInfo Should be displayed But not found.");
+		} catch (TimeoutException e) {
+			fail("SettlementInfo Should be displayed But not found.");
 		}
 	}
 
@@ -1575,14 +1742,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementInfo));
 			SettlementInfo.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementInfo));
 			SettlementInfo.click();
 		} catch (Exception e) {
@@ -1593,13 +1760,18 @@ public class BankLocators {
 	}
 
 	public void DisplayedOnWhiteLabel() {
-		try {
-			assertTrue("WhiteLabel should be displayed in BankOnboarding", whitelabel.isDisplayed());
-		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("WhiteLabel Should be displayed in BankOnboarding But not found.");
-		}
+	
+	WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
+	try {
+		wait.until(ExpectedConditions.visibilityOf(ClickOnPayfac));
+		assertTrue("whitelabel should be displayed", whitelabel.isDisplayed());
+	} catch (NoSuchElementException e) {
+		fail("whitelabel Should be displayed But not found.");
+	} catch (TimeoutException e) {
+		fail("whitelabel Should be displayed But not found.");
 	}
+}
 
 	public void clickOnWhiteLabel() {
 
@@ -1607,14 +1779,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(whitelabel));
 			whitelabel.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(whitelabel));
 			whitelabel.click();
 		} catch (Exception e) {
@@ -1625,11 +1797,16 @@ public class BankLocators {
 	}
 
 	public void DisplayedOnWebhooks() {
+
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
 		try {
-			assertTrue("Webhooks should be displayed in BankOnboarding", webhooks.isDisplayed());
+			wait.until(ExpectedConditions.visibilityOf(webhooks));
+			assertTrue("Kyc should be displayed", webhooks.isDisplayed());
 		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("WhiteLabel Should be displayed in BankOnboarding But not found.");
+			fail("webhooks Should be displayed But not found.");
+		} catch (TimeoutException e) {
+			fail("webhooks Should be displayed But not found.");
 		}
 	}
 
@@ -1639,14 +1816,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(webhooks));
 			webhooks.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(webhooks));
 			webhooks.click();
 		} catch (Exception e) {
@@ -1657,35 +1834,49 @@ public class BankLocators {
 	}
 
 	public void DisplayedOnKYC() {
+
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
 		try {
-			assertTrue("KYC should be displayed in BankOnboarding", Kyc.isDisplayed());
+			wait.until(ExpectedConditions.visibilityOf(Kyc));
+			assertTrue("Kyc should be displayed", Kyc.isDisplayed());
 		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("KYC Should be displayed in BankOnboarding But not found.");
+			fail("Kyc Should be displayed But not found.");
+		} catch (TimeoutException e) {
+			fail("Kyc Should be displayed But not found.");
 		}
 	}
 
 	public void clickOnKYC() {
-
-//		Kyc.click();
-
 		try {
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			// Wait for the Kyc element to be clickable
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(Kyc));
-			Kyc.click();
-		} catch (ElementClickInterceptedException e) {
 
+			// Scroll the element into view using JavaScriptExecutor
+			((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", Kyc);
+
+			// Wait again to ensure the element is visible after scrolling
+			wait.until(ExpectedConditions.visibilityOf(Kyc));
+
+			// Perform the click action
+			Kyc.click();
+
+		} catch (ElementClickInterceptedException e) {
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			// Scroll the element into view again in case of interception
+			((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", Kyc);
+
+			// Wait and retry clicking the element
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(Kyc));
 			Kyc.click();
+
 		} catch (Exception e) {
 			// Handle other potential exceptions
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
-
 	}
 
 	public void DisplayedOnStatusHistory() {
@@ -1707,69 +1898,102 @@ public class BankLocators {
 	}
 
 	public void DisplayedOnbank() {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
 		try {
-			assertTrue("BankButton should be displayed", ClickOnBank.isDisplayed());
+			wait.until(ExpectedConditions.visibilityOf(ClickOnBank));
+			assertTrue("Bank button should be displayed", ClickOnBank.isDisplayed());
 		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Bank button Should be displayed For This Role But not found.");
+			fail("Bank button Should be displayed But not found.");
+		} catch (TimeoutException e) {
+			fail("Bank button Should be displayed But not found.");
 		}
 	}
 
 	public void DisplayedOnPayfac() {
+
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
 		try {
-			assertTrue("PayfacButton should be displayed", ClickOnPayfac.isDisplayed());
+			wait.until(ExpectedConditions.visibilityOf(ClickOnPayfac));
+			assertTrue("Aggregator button should be displayed", ClickOnPayfac.isDisplayed());
 		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Payfac button Should be displayed For This Role But not found.");
+			fail("Aggregator button Should be displayed But not found.");
+		} catch (TimeoutException e) {
+			fail("Aggregator button Should be displayed But not found.");
 		}
 	}
 
 	public void DisplayedOnISO() {
+
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
 		try {
-			assertTrue("ISOButton should be displayed", ClickOnISO.isDisplayed());
+			wait.until(ExpectedConditions.visibilityOf(ClickOnISO));
+			assertTrue("ISO button should be displayed", ClickOnISO.isDisplayed());
 		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("ISO button Should be displayed For This Role But not found.");
+			fail("ISO button Should be displayed But not found.");
+		} catch (TimeoutException e) {
+			fail("ISO button Should be displayed But not found.");
 		}
 	}
 
 	public void DisplayedOnSUBISO() {
+
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
 		try {
-			assertTrue("SUB ISOButton should be displayed", ClickOnSUBISO.isDisplayed());
+			wait.until(ExpectedConditions.visibilityOf(ClickOnSUBISO));
+			assertTrue("SUB ISO button should be displayed", ClickOnSUBISO.isDisplayed());
 		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("SUB ISO button Should be displayed For This Role But not found.");
+			fail("SUB ISO button Should be displayed But not found.");
+		} catch (TimeoutException e) {
+			fail("SUB ISO button Should be displayed But not found.");
 		}
 	}
 
 	public void DisplayedOnGM() {
 
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
 		try {
-			assertTrue("GroupMerchantButton should be displayed", ClickOnGM.isDisplayed());
+			wait.until(ExpectedConditions.visibilityOf(ClickOnGM));
+			assertTrue("Group Merchant button should be displayed", ClickOnGM.isDisplayed());
 		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Group Merchant button Should be displayed For This Role But not found.");
+			fail("Group Merchant button Should be displayed But not found.");
+		} catch (TimeoutException e) {
+			fail("Group Merchant button Should be displayed But not found.");
 		}
 	}
 
 	public void DisplayedOnMerchant() {
+		
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 
 		try {
-			assertTrue("MerchantButton should be displayed", ClickOnMerchant.isDisplayed());
+			wait.until(ExpectedConditions.visibilityOf(ClickOnMerchant));
+			assertTrue("Merchant button should be displayed", ClickOnMerchant.isDisplayed());
 		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Merchant button Should be displayed For This Role But not found.");
+			fail("Merchant button Should be displayed But not found.");
+		} catch (TimeoutException e) {
+			fail("Merchant button Should be displayed But not found.");
 		}
 	}
 
 	public void DisplayedOnTerminal() {
-		try {
-			assertTrue("TerminalButton should be displayed", ClickOnTerminal.isDisplayed());
-		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Terminal button Should be displayed For This Role But not found.");
-		}
+	
+	WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
+	try {
+		wait.until(ExpectedConditions.visibilityOf(ClickOnTerminal));
+		assertTrue("Terminal button should be displayed", ClickOnTerminal.isDisplayed());
+	} catch (NoSuchElementException e) {
+		fail("Terminal button Should be displayed But not found.");
+	} catch (TimeoutException e) {
+		fail("Terminal button Should be displayed But not found.");
 	}
+}
+
 
 	public void NotDisplayedOnBank() {
 
@@ -1819,14 +2043,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnDownArrow));
 			ClickOnDownArrow.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnDownArrow));
 			ClickOnDownArrow.click();
 		} catch (Exception e) {
@@ -1837,21 +2061,19 @@ public class BankLocators {
 		// wait.until(ExpectedConditions.elementToBeClickable(ClickOnDownArrow)).click();
 	}
 
-	
-	
 	public void ClickOnDownArrowSuperAdmin() {
 //		ClickOnDownArrow.click();
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnDownArrowSuperadmin));
 			ClickOnDownArrowSuperadmin.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnDownArrowSuperadmin));
 			ClickOnDownArrowSuperadmin.click();
 		} catch (Exception e) {
@@ -1867,14 +2089,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnOnboarding));
 			ClickOnOnboarding.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnOnboarding));
 			ClickOnOnboarding.click();
 		} catch (Exception e) {
@@ -1889,14 +2111,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnVerifierOnboarding));
 			ClickOnVerifierOnboarding.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnVerifierOnboarding));
 			ClickOnVerifierOnboarding.click();
 		} catch (Exception e) {
@@ -1911,14 +2133,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnBank));
 			ClickOnBank.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnBank));
 			ClickOnBank.click();
 		} catch (Exception e) {
@@ -1933,14 +2155,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnPayfac));
 			ClickOnPayfac.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnPayfac));
 			ClickOnPayfac.click();
 		} catch (Exception e) {
@@ -1955,14 +2177,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnISO));
 			ClickOnISO.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnISO));
 			ClickOnISO.click();
 		} catch (Exception e) {
@@ -1977,14 +2199,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnSUBISO));
 			ClickOnSUBISO.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnSUBISO));
 			ClickOnSUBISO.click();
 		} catch (Exception e) {
@@ -1998,14 +2220,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnGM));
 			ClickOnGM.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnGM));
 			ClickOnGM.click();
 		} catch (Exception e) {
@@ -2019,14 +2241,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnMerchant));
 			ClickOnMerchant.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnMerchant));
 			ClickOnMerchant.click();
 		} catch (Exception e) {
@@ -2041,14 +2263,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnTerminal));
 			ClickOnTerminal.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnTerminal));
 			ClickOnTerminal.click();
 		} catch (Exception e) {
@@ -2062,14 +2284,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(Createbutton));
 			Createbutton.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(Createbutton));
 			Createbutton.click();
 		} catch (Exception e) {
@@ -2086,7 +2308,7 @@ public class BankLocators {
 			// Fail the test if the button is not found
 			fail("Bank Label Name Should be displayed but not found.");
 		}
-	}	
+	}
 
 	public void AddressLabel() {
 		try {
@@ -2165,14 +2387,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(BankName));
 			BankName.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(BankName));
 			BankName.click();
 		} catch (Exception e) {
@@ -2198,14 +2420,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(Address));
 			Address.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(Address));
 			Address.click();
 		} catch (Exception e) {
@@ -2233,14 +2455,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(Pincode));
 			Pincode.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(Pincode));
 			Pincode.click();
 		} catch (Exception e) {
@@ -2253,17 +2475,17 @@ public class BankLocators {
 	public void SelectonPincode() {
 
 //		SelectPincode.click();
-		
+
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectPincode));
 			SelectPincode.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectPincode));
 			SelectPincode.click();
 		} catch (Exception e) {
@@ -2304,14 +2526,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			// WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
 			wait.until(ExpectedConditions.elementToBeClickable(GST));
 			GST.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			// WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
 			wait.until(ExpectedConditions.elementToBeClickable(GST));
 			GST.click();
 		} catch (Exception e) {
@@ -2319,6 +2541,10 @@ public class BankLocators {
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
 
+	}
+
+	public String getGst() {
+		return GST.getAttribute("value");
 	}
 
 	public void EnterOnGst(String gst) {
@@ -2337,14 +2563,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(PAN));
 			PAN.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(PAN));
 			PAN.click();
 		} catch (Exception e) {
@@ -2352,6 +2578,10 @@ public class BankLocators {
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
 
+	}
+
+	public String getPan() {
+		return PAN.getAttribute("value");
 	}
 
 	public void EnterOnPAN(String Pan) {
@@ -2370,14 +2600,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(Marsid));
 			Marsid.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(Marsid));
 			Marsid.click();
 		} catch (Exception e) {
@@ -2385,6 +2615,10 @@ public class BankLocators {
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
 
+	}
+
+	public String getMarsid() {
+		return Marsid.getAttribute("value");
 	}
 
 	public void EnteronMarsid(String marsid) {
@@ -2404,14 +2638,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(StatementFrequency));
 			StatementFrequency.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(StatementFrequency));
 			StatementFrequency.click();
 		} catch (Exception e) {
@@ -2427,14 +2661,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectStatementFrequency));
 			SelectStatementFrequency.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectStatementFrequency));
 			SelectStatementFrequency.click();
 		} catch (Exception e) {
@@ -2445,7 +2679,7 @@ public class BankLocators {
 	}
 
 	public String getStatementFrequency() {
-		return SelectStatementFrequencyCheck.getAttribute("value");
+		return StatementFrequency.getText();
 	}
 
 	public void StatementFrequencyClear() {
@@ -2459,14 +2693,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(StatementType));
 			StatementType.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(StatementType));
 			StatementType.click();
 		} catch (Exception e) {
@@ -2482,14 +2716,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectStatementType));
 			SelectStatementType.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectStatementType));
 			SelectStatementType.click();
 		} catch (Exception e) {
@@ -2500,7 +2734,7 @@ public class BankLocators {
 	}
 
 	public String getStatementType() {
-		return SelectStatementTypeCheck.getAttribute("value");
+		return StatementType.getText();
 	}
 
 	public void ClickOnDomain() {
@@ -2509,14 +2743,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(Domain));
 			Domain.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(Domain));
 			Domain.click();
 		} catch (Exception e) {
@@ -2524,6 +2758,10 @@ public class BankLocators {
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
 
+	}
+
+	public String getDomain() {
+		return Domain.getAttribute("value");
 	}
 
 	public void EnterOnDomain(String domain) {
@@ -2548,7 +2786,7 @@ public class BankLocators {
 			// Wait for the loading spinner to disappear
 
 			// Wait for the NextStep element to be clickable
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickonCommADD));
 
 			// Perform the click action
@@ -2558,7 +2796,7 @@ public class BankLocators {
 			System.err.println("Element click intercepted: " + e.getMessage());
 
 			// Optionally, wait again for the spinner to disappear and retry clicking
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickonCommADD));
 			ClickonCommADD.click();
 		} catch (Exception e) {
@@ -2568,7 +2806,6 @@ public class BankLocators {
 
 	}
 
-	
 	public void CommSettlementandReconADD() {
 
 //		ClickonCommADD.click();
@@ -2577,40 +2814,41 @@ public class BankLocators {
 			// Wait for the loading spinner to disappear
 
 			// Wait for the NextStep element to be clickable
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(40));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickonCommSettlementandReconADD));
 
-			// Perform the click action
-			ClickonCommSettlementandReconADD.click();
+			JavascriptExecutor js = (JavascriptExecutor) driver;
+			js.executeScript("arguments[0].click();", ClickonCommSettlementandReconADD);
 		} catch (ElementClickInterceptedException e) {
 			// Handle the exception if the click is intercepted
 			System.err.println("Element click intercepted: " + e.getMessage());
 
 			// Optionally, wait again for the spinner to disappear and retry clicking
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickonCommSettlementandReconADD));
-			ClickonCommSettlementandReconADD.click();
+			JavascriptExecutor js = (JavascriptExecutor) driver;
+			js.executeScript("arguments[0].click();", ClickonCommSettlementandReconADD);
 		} catch (Exception e) {
 			// Handle other potential exceptions
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
 
 	}
-	
+
 	public void ClickOnCommName() {
 
 //		ClickonCommuName.click();
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickonCommuName));
 			ClickonCommuName.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickonCommuName));
 			ClickonCommuName.click();
 		} catch (Exception e) {
@@ -2618,6 +2856,10 @@ public class BankLocators {
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
 
+	}
+
+	public String getCommName() {
+		return ClickonCommuName.getAttribute("value");
 	}
 
 	public void LabelCommName() {
@@ -2644,21 +2886,23 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickonCommuPosition));
 			ClickonCommuPosition.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickonCommuPosition));
 			ClickonCommuPosition.click();
-		} catch (Exception e) {
-			// Handle other potential exceptions
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
 
+	}
+
+	public String getCommPosition() {
+		return ClickonCommuPosition.getAttribute("value");
 	}
 
 	public void LabelCommPosition() {
@@ -2685,14 +2929,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickonCommuPhonenumber));
 			ClickonCommuPhonenumber.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickonCommuPhonenumber));
 			ClickonCommuPhonenumber.click();
 		} catch (Exception e) {
@@ -2726,20 +2970,24 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickonCommuMobileNumber));
 			ClickonCommuMobileNumber.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickonCommuMobileNumber));
 			ClickonCommuMobileNumber.click();
 		} catch (Exception e) {
 			// Handle other potential exceptions
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
+	}
+
+	public String getCommMobileNumber() {
+		return ClickonCommuMobileNumber.getAttribute("value");
 	}
 
 	public void EnteronCommMobileNumber(String Mobile) {
@@ -2770,20 +3018,24 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickonCommuEmailId));
 			ClickonCommuEmailId.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickonCommuEmailId));
 			ClickonCommuEmailId.click();
 		} catch (Exception e) {
 			// Handle other potential exceptions
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
+	}
+
+	public String getCommEmailid() {
+		return ClickonCommuMobileNumber.getAttribute("value");
 	}
 
 	public void EnteronCommEmailid(String email) {
@@ -2810,14 +3062,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickonCommuUserName));
 			ClickonCommuUserName.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickonCommuUserName));
 			ClickonCommuUserName.click();
 		} catch (Exception e) {
@@ -2858,14 +3110,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnAdUsers));
 			ClickOnAdUsers.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnAdUsers));
 			ClickOnAdUsers.click();
 		} catch (Exception e) {
@@ -2885,8 +3137,21 @@ public class BankLocators {
 		SelectOnAdUserNO.click();
 	}
 
+//	public String getADUSer() {
+//		return ClickOnAdUsers.getText();
+//	}
+
 	public String getADUSer() {
-		return ClickOnAdUsers.getText();
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+		try {
+			WebElement adUserElement = wait.until(ExpectedConditions.visibilityOf(ClickOnAdUsers)); // Wait for element
+																									// to be visible
+			return adUserElement.getText(); // Once visible, get the text
+		} catch (TimeoutException e) {
+			System.out.println("Element not found or not visible within the time limit.");
+			return null; // Handle as needed, like returning a default value or throwing a custom
+							// exception
+		}
 	}
 
 	public void YesAdUesrdisplayed() {
@@ -2907,14 +3172,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(CommSave));
 			CommSave.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(CommSave));
 			CommSave.click();
 		} catch (Exception e) {
@@ -2969,7 +3234,7 @@ public class BankLocators {
 			// Wait for the loading spinner to disappear
 
 			// Wait for the NextStep element to be clickable
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ChannelADD));
 
 			// Perform the click action
@@ -2979,12 +3244,15 @@ public class BankLocators {
 			System.err.println("Element click intercepted: " + e.getMessage());
 
 			// Optionally, wait again for the spinner to disappear and retry clicking
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ChannelADD));
 			ChannelADD.click();
 		} catch (Exception e) {
 			// Handle other potential exceptions
-			System.err.println("An unexpected error occurred: " + e.getMessage());
+			// Optionally, wait again for the spinner to disappear and retry clicking
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ChannelADD));
+			ChannelADD.click();
 		}
 
 	}
@@ -2993,44 +3261,28 @@ public class BankLocators {
 //		ClickOnChannel.click();
 
 		try {
+			FluentWait<WebDriver> wait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(30))
+					.pollingEvery(Duration.ofMillis(500)).ignoring(ElementClickInterceptedException.class);
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-			wait.until(ExpectedConditions.elementToBeClickable(ClickOnChannel));
-			ClickOnChannel.click();
-		} catch (ElementClickInterceptedException e) {
-
-			System.err.println("Element click intercepted: " + e.getMessage());
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnChannel));
 			ClickOnChannel.click();
 		} catch (Exception e) {
-			// Handle other potential exceptions
-			System.err.println("An unexpected error occurred: " + e.getMessage());
+			System.err.println("Exception occurred: " + e.getMessage());
 		}
-
 	}
 
 	public void clickonNetwork() {
 //		ClickOntNetwork.click();
 
 		try {
+			FluentWait<WebDriver> wait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(30))
+					.pollingEvery(Duration.ofMillis(500)).ignoring(ElementClickInterceptedException.class);
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-			wait.until(ExpectedConditions.elementToBeClickable(ClickOntNetwork));
-			ClickOntNetwork.click();
-		} catch (ElementClickInterceptedException e) {
-
-			System.err.println("Element click intercepted: " + e.getMessage());
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOntNetwork));
 			ClickOntNetwork.click();
 		} catch (Exception e) {
-			// Handle other potential exceptions
-			System.err.println("An unexpected error occurred: " + e.getMessage());
+			System.err.println("Exception occurred: " + e.getMessage());
 		}
-
 	}
 
 	public void clickonTransactionsetPoS() {
@@ -3041,7 +3293,7 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOntransaction));
 			Actions a = new Actions(driver);
 
@@ -3067,14 +3319,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOntransaction));
 			ClickOntransaction.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOntransaction));
 			ClickOntransaction.click();
 		} catch (Exception e) {
@@ -3092,18 +3344,21 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnRouting));
-			Actions a = new Actions(driver);
-
-			a.doubleClick(ClickOnRouting).perform();
+//			Actions a = new Actions(driver);
+//
+//			a.doubleClick(ClickOnRouting).perform();
+			ClickOnRouting.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			Actions a = new Actions(driver);
+//			Actions a = new Actions(driver);
+//
+//			a.doubleClick(ClickOnRouting).perform();
 
-			a.doubleClick(ClickOnRouting).perform();
+			ClickOnRouting.click();
 
 		} catch (Exception e) {
 			// Handle other potential exceptions
@@ -3117,41 +3372,40 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectPOSChannel));
 			SelectPOSChannel.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectPOSChannel));
 			SelectPOSChannel.click();
 		} catch (Exception e) {
 			// Handle other potential exceptions
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
-		
+
 	}
-	
+
 	public String getSelectonPOSChannel() {
 		return ClickOnChannel.getText();
 	}
-
 
 	public void SelectonUPIChannel() {
 //		SelectUPIChannel.click();
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectUPIChannel));
 			SelectUPIChannel.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectUPIChannel));
 			SelectUPIChannel.click();
 		} catch (Exception e) {
@@ -3160,25 +3414,24 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getSelectonUPIChannel() {
 		return ClickOnChannel.getText();
 	}
-
 
 	public void SelectonAEPSChannel() {
 //		SelectAEPSChannel.click();
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectAEPSChannel));
 			SelectAEPSChannel.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectAEPSChannel));
 			SelectAEPSChannel.click();
 		} catch (Exception e) {
@@ -3187,21 +3440,20 @@ public class BankLocators {
 		}
 
 	}
-	
-	
+
 	public void SelectonMATMChannel() {
 //		SelectAEPSChannel.click();
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectMATMChannel));
 			SelectMATMChannel.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectMATMChannel));
 			SelectMATMChannel.click();
 		} catch (Exception e) {
@@ -3210,25 +3462,24 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getSelectonAEPSChannel() {
 		return ClickOnChannel.getText();
 	}
-
 
 	public void SelectonNetworkPOS() {
 //		SelectOnTransactionsetPOS.click();
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectOnNetworkPOS));
 			SelectOnNetworkPOS.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectOnNetworkPOS));
 			SelectOnNetworkPOS.click();
 		} catch (Exception e) {
@@ -3236,25 +3487,24 @@ public class BankLocators {
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
 	}
-	
-	
+
 	public String getSelectonNetworkPOS() {
 		return ClickOntNetwork.getText();
 	}
-	
+
 	public void SelectonNetworkMATM() {
 //		SelectOnTransactionsetPOS.click();
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectOnNetworkMATM));
 			SelectOnNetworkMATM.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectOnNetworkMATM));
 			SelectOnNetworkMATM.click();
 		} catch (Exception e) {
@@ -3262,25 +3512,24 @@ public class BankLocators {
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
 	}
-	
-	
+
 	public String getSelectonNetworkMATM() {
 		return ClickOntNetwork.getText();
 	}
-	
+
 	public void SelectonTransactionsetMATM() {
 //		SelectOntransactionsetUPI.click();
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectOnTransactionsetMATM));
 			SelectOnTransactionsetMATM.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectOnTransactionsetMATM));
 			SelectOnTransactionsetMATM.click();
 		} catch (Exception e) {
@@ -3289,25 +3538,24 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getSelectonTransactionsetkMATM() {
 		return ClickOntransaction.getText();
 	}
-
 
 	public void SelectonTransactionsetkUPI() {
 //		SelectOntransactionsetUPI.click();
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectOntransactionsetUPI));
 			SelectOntransactionsetUPI.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectOntransactionsetUPI));
 			SelectOntransactionsetUPI.click();
 		} catch (Exception e) {
@@ -3316,7 +3564,7 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getSelectonTransactionsetkUPI() {
 		return ClickOntransaction.getText();
 	}
@@ -3326,14 +3574,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectOnTransactionsetAEPS));
 			SelectOnTransactionsetAEPS.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectOnTransactionsetAEPS));
 			SelectOnTransactionsetAEPS.click();
 		} catch (Exception e) {
@@ -3342,26 +3590,24 @@ public class BankLocators {
 		}
 
 	}
-	
-	
+
 	public String getSelectonTransactionsetAEPS() {
 		return ClickOntransaction.getText();
 	}
-
 
 	public void SelectonTransactionsetpos() {
 //		SelectOnTransaction.click();
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectOnTransactionPOS));
 			SelectOnTransactionPOS.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectOnTransactionPOS));
 			SelectOnTransactionPOS.click();
 		} catch (Exception e) {
@@ -3369,26 +3615,24 @@ public class BankLocators {
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
 	}
-	
-	
+
 	public String getSelectonTransactionsetpos() {
 		return ClickOntransaction.getText();
 	}
-
 
 	public void SelectonRouting() {
 //		SelectonRouting.click();
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectonRouting));
 			SelectonRouting.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectonRouting));
 			SelectonRouting.click();
 		} catch (Exception e) {
@@ -3397,25 +3641,24 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getSelectonRouting() {
 		return ClickOnRouting.getText();
 	}
-	
-	
+
 	public void SelectonRoutingMATM() {
 //		SelectonRouting.click();
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectonRouting));
 			SelectonRouting.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectonRouting));
 			SelectonRouting.click();
 		} catch (Exception e) {
@@ -3424,7 +3667,7 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getSelectonRoutingMATM() {
 		return ClickOnRouting.getText();
 	}
@@ -3439,7 +3682,7 @@ public class BankLocators {
 			// Wait for the loading spinner to disappear
 
 			// Wait for the NextStep element to be clickable
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ActionOnOnusbutton));
 
 			// Perform the click action
@@ -3449,7 +3692,7 @@ public class BankLocators {
 			System.err.println("Element click intercepted: " + e.getMessage());
 
 			// Optionally, wait again for the spinner to disappear and retry clicking
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ActionOnOnusbutton));
 			ActionOnOnusbutton.click();
 		} catch (Exception e) {
@@ -3457,7 +3700,6 @@ public class BankLocators {
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
 	}
-	
 
 	public void ActionOnONUSButton2() {
 
@@ -3467,7 +3709,7 @@ public class BankLocators {
 			// Wait for the loading spinner to disappear
 
 			// Wait for the NextStep element to be clickable
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ActionOnOnusbutton2));
 
 			// Perform the click action
@@ -3477,7 +3719,7 @@ public class BankLocators {
 			System.err.println("Element click intercepted: " + e.getMessage());
 
 			// Optionally, wait again for the spinner to disappear and retry clicking
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ActionOnOnusbutton2));
 			ActionOnOnusbutton2.click();
 		} catch (Exception e) {
@@ -3486,21 +3728,20 @@ public class BankLocators {
 		}
 	}
 
-
 	public void addbin() {
 
 //		AddBin.click();
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(AddBin));
 			AddBin.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(AddBin));
 			AddBin.click();
 		} catch (Exception e) {
@@ -3509,22 +3750,21 @@ public class BankLocators {
 		}
 
 	}
-	
-	
+
 	public void ClickonADDBIN() {
 
 //		ClickonCommuEmailId.click();
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnAddBin));
 			ClickOnAddBin.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ClickOnAddBin));
 			ClickOnAddBin.click();
 		} catch (Exception e) {
@@ -3538,21 +3778,20 @@ public class BankLocators {
 		ClickOnAddBin.sendKeys(BIN);
 	}
 
-
 	public void SelectonBin() {
 
 //		SelectAddBin.click();
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectAddBin));
 			SelectAddBin.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectAddBin));
 			SelectAddBin.click();
 		} catch (Exception e) {
@@ -3561,12 +3800,10 @@ public class BankLocators {
 		}
 
 	}
-	
-	
+
 	public String getSelectonBin() {
 		return ClickOnAddBin.getText();
 	}
-
 
 	public void SubmitOnONUS() {
 
@@ -3574,14 +3811,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SubmitOnOnus));
 			SubmitOnOnus.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SubmitOnOnus));
 			SubmitOnOnus.click();
 		} catch (Exception e) {
@@ -3601,7 +3838,9 @@ public class BankLocators {
 			// Wait for the loading spinner to disappear
 
 			// Wait for the NextStep element to be clickable
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+			Thread.sleep(1000);
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(GlobalFRMCheckbox));
 
 			// Perform the click action
@@ -3611,7 +3850,7 @@ public class BankLocators {
 			System.err.println("Element click intercepted: " + e.getMessage());
 
 			// Optionally, wait again for the spinner to disappear and retry clicking
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(GlobalFRMCheckbox));
 			GlobalFRMCheckbox.click();
 		} catch (Exception e) {
@@ -3712,7 +3951,7 @@ public class BankLocators {
 			// Wait for the loading spinner to disappear
 
 			// Wait for the NextStep element to be clickable
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(VelocityCheckMinute));
 
 			// Perform the click action
@@ -3722,7 +3961,7 @@ public class BankLocators {
 			System.err.println("Element click intercepted: " + e.getMessage());
 
 			// Optionally, wait again for the spinner to disappear and retry clicking
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(VelocityCheckMinute));
 			VelocityCheckMinute.click();
 		} catch (Exception e) {
@@ -3740,7 +3979,7 @@ public class BankLocators {
 			// Wait for the loading spinner to disappear
 
 			// Wait for the NextStep element to be clickable
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(VelocityCheckCount));
 
 			// Perform the click action
@@ -3750,7 +3989,7 @@ public class BankLocators {
 			System.err.println("Element click intercepted: " + e.getMessage());
 
 			// Optionally, wait again for the spinner to disappear and retry clicking
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(VelocityCheckCount));
 			VelocityCheckCount.click();
 		} catch (Exception e) {
@@ -3768,7 +4007,7 @@ public class BankLocators {
 			// Wait for the loading spinner to disappear
 
 			// Wait for the NextStep element to be clickable
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(CashPOSCount));
 
 			// Perform the click action
@@ -3778,7 +4017,7 @@ public class BankLocators {
 			System.err.println("Element click intercepted: " + e.getMessage());
 
 			// Optionally, wait again for the spinner to disappear and retry clicking
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(CashPOSCount));
 			CashPOSCount.click();
 		} catch (Exception e) {
@@ -3796,7 +4035,7 @@ public class BankLocators {
 			// Wait for the loading spinner to disappear
 
 			// Wait for the NextStep element to be clickable
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(MicroATMCount));
 
 			// Perform the click action
@@ -3806,7 +4045,7 @@ public class BankLocators {
 			System.err.println("Element click intercepted: " + e.getMessage());
 
 			// Optionally, wait again for the spinner to disappear and retry clicking
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(MicroATMCount));
 			MicroATMCount.click();
 		} catch (Exception e) {
@@ -3824,7 +4063,7 @@ public class BankLocators {
 			// Wait for the loading spinner to disappear
 
 			// Wait for the NextStep element to be clickable
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(InternationalCardCount));
 
 			// Perform the click action
@@ -3834,7 +4073,7 @@ public class BankLocators {
 			System.err.println("Element click intercepted: " + e.getMessage());
 
 			// Optionally, wait again for the spinner to disappear and retry clicking
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(InternationalCardCount));
 			InternationalCardCount.click();
 		} catch (Exception e) {
@@ -3876,7 +4115,7 @@ public class BankLocators {
 			// Wait for the loading spinner to disappear
 
 			// Wait for the NextStep element to be clickable
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(YesInternationalCardCount));
 
 			// Perform the click action
@@ -3886,7 +4125,7 @@ public class BankLocators {
 			System.err.println("Element click intercepted: " + e.getMessage());
 
 			// Optionally, wait again for the spinner to disappear and retry clicking
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(YesInternationalCardCount));
 			YesInternationalCardCount.click();
 		} catch (Exception e) {
@@ -3895,7 +4134,7 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getyesInternationalcardCount() {
 		return YesInternationalCardCount.getText();
 	}
@@ -3908,7 +4147,7 @@ public class BankLocators {
 			// Wait for the loading spinner to disappear
 
 			// Wait for the NextStep element to be clickable
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(NOInternationalCardCount));
 
 			// Perform the click action
@@ -3918,7 +4157,7 @@ public class BankLocators {
 			System.err.println("Element click intercepted: " + e.getMessage());
 
 			// Optionally, wait again for the spinner to disappear and retry clicking
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(NOInternationalCardCount));
 			NOInternationalCardCount.click();
 		} catch (Exception e) {
@@ -3927,7 +4166,7 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getNOInternationalcardCount() {
 		return NOInternationalCardCount.getText();
 	}
@@ -3940,7 +4179,7 @@ public class BankLocators {
 			// Wait for the loading spinner to disappear
 
 			// Wait for the NextStep element to be clickable
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ICADaily));
 
 			// Perform the click action
@@ -3950,7 +4189,7 @@ public class BankLocators {
 			System.err.println("Element click intercepted: " + e.getMessage());
 
 			// Optionally, wait again for the spinner to disappear and retry clicking
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ICADaily));
 			ICADaily.click();
 		} catch (Exception e) {
@@ -3970,14 +4209,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ICAWeekly));
 			ICAWeekly.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ICAWeekly));
 			ICAWeekly.click();
 		} catch (Exception e) {
@@ -3998,14 +4237,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ICAMonthly));
 			ICAMonthly.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ICAMonthly));
 			ICAMonthly.click();
 		} catch (Exception e) {
@@ -4044,14 +4283,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(POSDaily));
 			POSDaily.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(POSDaily));
 			POSDaily.click();
 		} catch (Exception e) {
@@ -4071,14 +4310,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(POSWeekly));
 			POSWeekly.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(POSWeekly));
 			POSWeekly.click();
 		} catch (Exception e) {
@@ -4099,14 +4338,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(POSMonthly));
 			POSMonthly.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(POSMonthly));
 			POSMonthly.click();
 		} catch (Exception e) {
@@ -4141,14 +4380,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(POSMinimumAmount));
 			POSMinimumAmount.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(POSMinimumAmount));
 			POSMinimumAmount.click();
 		} catch (Exception e) {
@@ -4168,14 +4407,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(POSMaximumAmount));
 			POSMaximumAmount.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(POSMaximumAmount));
 			POSMaximumAmount.click();
 		} catch (Exception e) {
@@ -4207,14 +4446,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(AEPSDaily));
 			AEPSDaily.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(AEPSDaily));
 			AEPSDaily.click();
 		} catch (Exception e) {
@@ -4234,14 +4473,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(AEPSWeekly));
 			AEPSWeekly.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(AEPSWeekly));
 			AEPSWeekly.click();
 		} catch (Exception e) {
@@ -4262,14 +4501,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(AEPSWeekly));
 			AEPSMonthly.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(AEPSWeekly));
 			AEPSMonthly.click();
 		} catch (Exception e) {
@@ -4304,14 +4543,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(AEPSMinimumAmount));
 			AEPSMinimumAmount.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(AEPSMinimumAmount));
 			AEPSMinimumAmount.click();
 		} catch (Exception e) {
@@ -4332,14 +4571,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(AEPSMaximumAmount));
 			AEPSMaximumAmount.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(AEPSMaximumAmount));
 			AEPSMaximumAmount.click();
 		} catch (Exception e) {
@@ -4371,14 +4610,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(UPIDaily));
 			UPIDaily.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(UPIDaily));
 			UPIDaily.click();
 		} catch (Exception e) {
@@ -4398,14 +4637,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(UPIWeekly));
 			UPIWeekly.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(UPIWeekly));
 			UPIWeekly.click();
 		} catch (Exception e) {
@@ -4426,14 +4665,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(UPIMonthly));
 			UPIMonthly.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(UPIMonthly));
 			UPIMonthly.click();
 		} catch (Exception e) {
@@ -4469,14 +4708,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(UPIMinimumAmount));
 			UPIMinimumAmount.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(UPIMinimumAmount));
 			UPIMinimumAmount.click();
 		} catch (Exception e) {
@@ -4497,14 +4736,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(UPIMaximumAmount));
 			UPIMaximumAmount.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(UPIMaximumAmount));
 			UPIMaximumAmount.click();
 		} catch (Exception e) {
@@ -4528,23 +4767,23 @@ public class BankLocators {
 
 		UPIMaximumAmount.sendKeys(max);
 	}
-	
+
 //MATM
-	
+
 	public void ClickonMATMdaily() {
 
 //		UPIDaily.click();
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(MATMDaily));
 			MATMDaily.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(MATMDaily));
 			MATMDaily.click();
 		} catch (Exception e) {
@@ -4564,14 +4803,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(MATMWeekly));
 			MATMWeekly.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(MATMWeekly));
 			MATMWeekly.click();
 		} catch (Exception e) {
@@ -4592,14 +4831,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(MATMMonthly));
 			MATMMonthly.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(MATMMonthly));
 			MATMMonthly.click();
 		} catch (Exception e) {
@@ -4635,14 +4874,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(MATMMinimumAmount));
 			MATMMinimumAmount.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(MATMMinimumAmount));
 			MATMMinimumAmount.click();
 		} catch (Exception e) {
@@ -4663,14 +4902,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(MATMMaximumAmount));
 			MATMMaximumAmount.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(MATMMaximumAmount));
 			MATMMaximumAmount.click();
 		} catch (Exception e) {
@@ -4694,7 +4933,6 @@ public class BankLocators {
 
 		MATMMaximumAmount.sendKeys(max);
 	}
-	
 
 //Commercial
 
@@ -4706,9 +4944,9 @@ public class BankLocators {
 			// Wait for the loading spinner to disappear
 
 			// Wait for the NextStep element to be clickable
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(CommercialADD1));
-
+			Thread.sleep(3000);
 			// Perform the click action
 			CommercialADD1.click();
 		} catch (ElementClickInterceptedException e) {
@@ -4716,7 +4954,7 @@ public class BankLocators {
 			System.err.println("Element click intercepted: " + e.getMessage());
 
 			// Optionally, wait again for the spinner to disappear and retry clicking
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(CommercialADD1));
 			CommercialADD1.click();
 		} catch (Exception e) {
@@ -4731,14 +4969,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(CommercialADD2));
 			CommercialADD2.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(CommercialADD2));
 			CommercialADD2.click();
 		} catch (Exception e) {
@@ -4754,14 +4992,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(CommercialChannel));
 			CommercialChannel.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(CommercialChannel));
 			CommercialChannel.click();
 		} catch (Exception e) {
@@ -4786,14 +5024,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(CommericaialChannelPOS));
 			CommericaialChannelPOS.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(CommericaialChannelPOS));
 			CommericaialChannelPOS.click();
 		} catch (Exception e) {
@@ -4802,11 +5040,10 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getSelectonCommercialChannelPOS() {
 		return CommercialChannel.getText();
 	}
-
 
 	public void SelectonCommercialChannelAEPS() {
 
@@ -4814,14 +5051,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(CommericaialChannelAEPS));
 			CommericaialChannelAEPS.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(CommericaialChannelAEPS));
 			CommericaialChannelAEPS.click();
 		} catch (Exception e) {
@@ -4830,11 +5067,10 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getSelectonCommercialChannelAEPS() {
 		return CommercialChannel.getText();
 	}
-
 
 	public void CommercialPricingPlanLabelinterchange() {
 		try {
@@ -4860,14 +5096,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(PricingplanInterchange));
 			PricingplanInterchange.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(PricingplanInterchange));
 			PricingplanInterchange.click();
 		} catch (Exception e) {
@@ -4883,14 +5119,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(PricingplanBankOnboarding));
 			PricingplanBankOnboarding.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(PricingplanBankOnboarding));
 			PricingplanBankOnboarding.click();
 		} catch (Exception e) {
@@ -4906,14 +5142,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectOnPricingBankPOSTestPlan));
 			SelectOnPricingBankPOSTestPlan.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectOnPricingBankPOSTestPlan));
 			SelectOnPricingBankPOSTestPlan.click();
 		} catch (Exception e) {
@@ -4921,26 +5157,25 @@ public class BankLocators {
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
 	}
-	
+
 	public String getSelectONPricingPlanBankTest() {
-			return PricingplanInterchange.getAttribute("value");
-		}
-	
-	
+		return PricingplanInterchange.getAttribute("value");
+	}
+
 	public void SelectONPricingPlanBankAEPSTest() {
 
 //		SelectOnPricingBankTestPlan.click();
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectOnPricingBankAEPSTestPlan));
 			SelectOnPricingBankAEPSTestPlan.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectOnPricingBankAEPSTestPlan));
 			SelectOnPricingBankAEPSTestPlan.click();
 		} catch (Exception e) {
@@ -4948,22 +5183,21 @@ public class BankLocators {
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
 	}
-	
-	
+
 	public void SelectonCommercialChannelUPI() {
 
 //		CommericaialChannelPOS.click();
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(CommericaialChannelUPI));
 			CommericaialChannelUPI.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(CommericaialChannelUPI));
 			CommericaialChannelUPI.click();
 		} catch (Exception e) {
@@ -4972,9 +5206,6 @@ public class BankLocators {
 		}
 
 	}
-
-	
-
 
 	public void ClickOnCommercialSave() {
 
@@ -4982,14 +5213,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(CommercialSave));
 			CommercialSave.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(CommercialSave));
 			CommercialSave.click();
 		} catch (Exception e) {
@@ -5005,14 +5236,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectOnBankOnboardingPricingBankPOSPlan));
 			SelectOnBankOnboardingPricingBankPOSPlan.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectOnBankOnboardingPricingBankPOSPlan));
 			SelectOnBankOnboardingPricingBankPOSPlan.click();
 		} catch (Exception e) {
@@ -5020,21 +5251,21 @@ public class BankLocators {
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
 	}
-	
+
 	public void SelectONBankOnboardingPricingBankAEPSPlan() {
 
 //		SelectOnPricingBankAEPSPlan.click();
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectOnBankOnboardingPricingBankAEPSPlan));
 			SelectOnBankOnboardingPricingBankAEPSPlan.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectOnBankOnboardingPricingBankAEPSPlan));
 			SelectOnBankOnboardingPricingBankAEPSPlan.click();
 		} catch (Exception e) {
@@ -5042,22 +5273,21 @@ public class BankLocators {
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
 	}
-	
-	
+
 	public void SelectONBankOnboardingPricingBankUPIPlan() {
 
 //		SelectOnPricingBankAEPSPlan.click();
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectOnBankOnboardingPricingBankUPIPlan));
 			SelectOnBankOnboardingPricingBankUPIPlan.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SelectOnBankOnboardingPricingBankUPIPlan));
 			SelectOnBankOnboardingPricingBankUPIPlan.click();
 		} catch (Exception e) {
@@ -5065,14 +5295,10 @@ public class BankLocators {
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
 	}
-	
-	
-	
-	
+
 	public String getSelectONBankOnboardingPricingBankPlan() {
-			return PricingplanBankOnboarding.getAttribute("value");
-		}
-	
+		return PricingplanBankOnboarding.getAttribute("value");
+	}
 
 //SettlementInfo
 
@@ -5084,7 +5310,7 @@ public class BankLocators {
 			// Wait for the loading spinner to disappear
 
 			// Wait for the NextStep element to be clickable
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementInfoADD));
 
 			// Perform the click action
@@ -5094,7 +5320,7 @@ public class BankLocators {
 			System.err.println("Element click intercepted: " + e.getMessage());
 
 			// Optionally, wait again for the spinner to disappear and retry clicking
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementInfoADD));
 			SettlementInfoADD.click();
 		} catch (Exception e) {
@@ -5175,14 +5401,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementChannel));
 			SettlementChannel.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementChannel));
 			SettlementChannel.click();
 		} catch (Exception e) {
@@ -5199,7 +5425,7 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementChannel));
 			Actions a = new Actions(driver);
 			a.doubleClick(SettlementChannel).perform();
@@ -5221,14 +5447,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementChannelPOS));
 			SettlementChannelPOS.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementChannelPOS));
 			SettlementChannelPOS.click();
 		} catch (Exception e) {
@@ -5237,11 +5463,10 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getSelectOnSettlementChannelPOS() {
 		return SettlementChannel.getText();
 	}
-
 
 	public void ClickOnSettlementAccountType() {
 
@@ -5249,14 +5474,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementAccountType));
 			SettlementAccountType.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementAccountType));
 			SettlementAccountType.click();
 		} catch (Exception e) {
@@ -5273,7 +5498,7 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementAccountType));
 			Actions a = new Actions(driver);
 			a.doubleClick(SettlementAccountType).perform();
@@ -5296,14 +5521,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementAccountTypeCurrent));
 			SettlementAccountTypeCurrent.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementAccountTypeCurrent));
 			SettlementAccountTypeCurrent.click();
 		} catch (Exception e) {
@@ -5312,11 +5537,10 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getSelectOnSettlementAccountTypeCurrent() {
 		return SettlementAccountType.getText();
 	}
-
 
 	public void ClickOnBankAccountNumber() {
 
@@ -5324,14 +5548,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementBankAccountNumber));
 			SettlementBankAccountNumber.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementBankAccountNumber));
 			SettlementBankAccountNumber.click();
 		} catch (Exception e) {
@@ -5359,14 +5583,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementIFSCCode));
 			SettlementIFSCCode.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementIFSCCode));
 			SettlementIFSCCode.click();
 		} catch (Exception e) {
@@ -5374,6 +5598,10 @@ public class BankLocators {
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
 
+	}
+	
+	public void enteronifsccode(String code) {
+		SettlementIFSCCode.sendKeys(code);
 	}
 
 	public void SelectOnIFSCCodeBHG() {
@@ -5382,14 +5610,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementIFSCCodeBHG));
 			SettlementIFSCCodeBHG.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementIFSCCodeBHG));
 			SettlementIFSCCodeBHG.click();
 		} catch (Exception e) {
@@ -5398,13 +5626,10 @@ public class BankLocators {
 		}
 
 	}
-	
-	public String getSelectOnIFSCCodeBHG() {
-		return  SettlementIFSCCode.getAttribute("value");
-	}
 
-	
-	
+	public String getSelectOnIFSCCodeBHG() {
+		return SettlementIFSCCode.getAttribute("value");
+	}
 
 	public String getSettlementBankName() {
 		return SettlementBankName.getAttribute("value");
@@ -5433,14 +5658,16 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementType));
-			SettlementType.click();
+			JavascriptExecutor js = (JavascriptExecutor) driver;
+			js.executeScript("arguments[0].click();", SettlementType);
+
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementType));
 			SettlementType.click();
 		} catch (Exception e) {
@@ -5456,14 +5683,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementTypeManual));
 			SettlementTypeManual.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementTypeManual));
 			SettlementTypeManual.click();
 		} catch (Exception e) {
@@ -5472,7 +5699,7 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getSelectOnSettlementTypeManual() {
 		return SettlementType.getText();
 	}
@@ -5483,14 +5710,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementTypeWallet));
 			SettlementTypeWallet.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementTypeWallet));
 			SettlementTypeWallet.click();
 		} catch (Exception e) {
@@ -5499,12 +5726,10 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getSelectOnSettlementTypeWallet() {
 		return SettlementType.getText();
 	}
-
-
 
 	// WhiteLabel
 
@@ -5566,7 +5791,7 @@ public class BankLocators {
 			// Wait for the loading spinner to disappear
 
 			// Wait for the NextStep element to be clickable
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(WhitelabelBankOwnDeployment));
 
 			// Perform the click action
@@ -5576,7 +5801,7 @@ public class BankLocators {
 			System.err.println("Element click intercepted: " + e.getMessage());
 
 			// Optionally, wait again for the spinner to disappear and retry clicking
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(WhitelabelBankOwnDeployment));
 			WhitelabelBankOwnDeployment.click();
 		} catch (Exception e) {
@@ -5585,7 +5810,7 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getClickOnWhitelabelBankOwnDeployment() {
 		return WhitelabelBankOwnDeployment.getText();
 	}
@@ -5596,14 +5821,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(WhitelabelPayfacOnboarding));
 			WhitelabelPayfacOnboarding.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(WhitelabelPayfacOnboarding));
 			WhitelabelPayfacOnboarding.click();
 		} catch (Exception e) {
@@ -5612,11 +5837,10 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getClickOnWhitelabelPayfacOnboarding() {
 		return WhitelabelPayfacOnboarding.getText();
 	}
-
 
 	public void ClickOnWhitelabelISOOnboarding() {
 
@@ -5624,14 +5848,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(WhitelabelISOOnboarding));
 			WhitelabelISOOnboarding.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(WhitelabelISOOnboarding));
 			WhitelabelISOOnboarding.click();
 		} catch (Exception e) {
@@ -5640,7 +5864,7 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getClickOnWhitelabelISOOnboarding() {
 		return WhitelabelISOOnboarding.getText();
 	}
@@ -5651,14 +5875,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(WhitelabelSalesTeamOnboarding));
 			WhitelabelSalesTeamOnboarding.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(WhitelabelSalesTeamOnboarding));
 			WhitelabelSalesTeamOnboarding.click();
 		} catch (Exception e) {
@@ -5667,11 +5891,10 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getClickOnWhitelabelSalesTeamOnboarding() {
 		return WhitelabelSalesTeamOnboarding.getText();
 	}
-
 
 	public void SelectOnWhiteLabelYes() {
 
@@ -5681,11 +5904,10 @@ public class BankLocators {
 		executor.executeScript("arguments[0].click();", WhitelabelYES);
 
 	}
-	
+
 	public String getSelectOnWhiteLabelYes() {
 		return WhitelabelYES.getText();
 	}
-
 
 	public void SelectOnWhiteLabelNO() {
 
@@ -5695,7 +5917,7 @@ public class BankLocators {
 		executor.executeScript("arguments[0].click();", WhitelabelNO);
 
 	}
-	
+
 	public String getSelectOnWhiteLabelNO() {
 		return WhitelabelNO.getText();
 	}
@@ -5706,14 +5928,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(WhitelabelMaxNumberOfPlatform));
 			WhitelabelMaxNumberOfPlatform.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(WhitelabelMaxNumberOfPlatform));
 			WhitelabelMaxNumberOfPlatform.click();
 		} catch (Exception e) {
@@ -5764,14 +5986,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(WebhookType));
 			WebhookType.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(WebhookType));
 			WebhookType.click();
 		} catch (Exception e) {
@@ -5780,8 +6002,6 @@ public class BankLocators {
 		}
 
 	}
-	
-	
 
 	public void DoubleClickOnWebhookType() {
 
@@ -5796,14 +6016,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(WebhookTypeSMS));
 			WebhookTypeSMS.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(WebhookTypeSMS));
 			WebhookTypeSMS.click();
 		} catch (Exception e) {
@@ -5812,7 +6032,7 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getSelectOnWebhooksType() {
 		return WebhookType.getText();
 	}
@@ -5823,14 +6043,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(WebhookTypeURL));
 			WebhookTypeURL.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(WebhookTypeURL));
 			WebhookTypeURL.click();
 		} catch (Exception e) {
@@ -5859,14 +6079,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(WebhookSave));
 			WebhookSave.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(WebhookSave));
 			WebhookSave.click();
 		} catch (Exception e) {
@@ -5884,14 +6104,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCBusinessType));
 			KYCBusinessType.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCBusinessType));
 			KYCBusinessType.click();
 		} catch (Exception e) {
@@ -5907,14 +6127,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCBusinessTypeTrust));
 			KYCBusinessTypeTrust.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCBusinessTypeTrust));
 			KYCBusinessTypeTrust.click();
 		} catch (Exception e) {
@@ -5923,7 +6143,7 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getSelectOnKYCBusinessTypeTrust() {
 		return KYCBusinessType.getText();
 	}
@@ -5934,14 +6154,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(proofofIdentityComapany));
 			proofofIdentityComapany.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(proofofIdentityComapany));
 			proofofIdentityComapany.click();
 		} catch (Exception e) {
@@ -5957,14 +6177,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCSelectproofofIdentityCompany));
 			KYCSelectproofofIdentityCompany.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCSelectproofofIdentityCompany));
 			KYCSelectproofofIdentityCompany.click();
 		} catch (Exception e) {
@@ -5973,7 +6193,7 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getSelectOnProofOfIdentityCompany() {
 		return proofofIdentityComapany.getText();
 	}
@@ -5984,14 +6204,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCNumberofDocinPoiCompany1));
 			KYCNumberofDocinPoiCompany1.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCNumberofDocinPoiCompany1));
 			KYCNumberofDocinPoiCompany1.click();
 		} catch (Exception e) {
@@ -6013,14 +6233,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(proofofaddress));
 			proofofaddress.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(proofofaddress));
 			proofofaddress.click();
 		} catch (Exception e) {
@@ -6036,14 +6256,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCSelectOnProofAddress));
 			KYCSelectOnProofAddress.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCSelectOnProofAddress));
 			KYCSelectOnProofAddress.click();
 		} catch (Exception e) {
@@ -6052,11 +6272,10 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getSelectOnProofOfAddressCompany() {
 		return proofofaddress.getText();
 	}
-
 
 	public void ClickOnNumberOfCompany2() {
 
@@ -6064,14 +6283,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCNumberofDocinPoaCompany2));
 			KYCNumberofDocinPoaCompany2.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCNumberofDocinPoaCompany2));
 			KYCNumberofDocinPoaCompany2.click();
 		} catch (Exception e) {
@@ -6093,14 +6312,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCBankDoc));
 			KYCBankDoc.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCBankDoc));
 			KYCBankDoc.click();
 		} catch (Exception e) {
@@ -6116,14 +6335,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCSelectBankDoc));
 			KYCSelectBankDoc.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCSelectBankDoc));
 			KYCSelectBankDoc.click();
 		} catch (Exception e) {
@@ -6132,11 +6351,10 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getSelectOnBankDocumentCompany() {
 		return KYCBankDoc.getText();
 	}
-
 
 	public void ClickOnNumberOfCompany3() {
 
@@ -6144,14 +6362,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCNumberofDocinBankCompany3));
 			KYCNumberofDocinBankCompany3.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCNumberofDocinBankCompany3));
 			KYCNumberofDocinBankCompany3.click();
 		} catch (Exception e) {
@@ -6173,14 +6391,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCTaxDoc));
 			KYCTaxDoc.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCTaxDoc));
 			KYCTaxDoc.click();
 		} catch (Exception e) {
@@ -6196,14 +6414,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCSelectTaxDoc));
 			KYCSelectTaxDoc.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCSelectTaxDoc));
 			KYCSelectTaxDoc.click();
 		} catch (Exception e) {
@@ -6212,11 +6430,10 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getSelectOnTaxDocumentCompany() {
 		return KYCTaxDoc.getText();
 	}
-
 
 	public void ClickOnNumberOfCompany4() {
 
@@ -6224,14 +6441,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCNumberofDocinTaxCompany4));
 			KYCNumberofDocinTaxCompany4.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCNumberofDocinTaxCompany4));
 			KYCNumberofDocinTaxCompany4.click();
 		} catch (Exception e) {
@@ -6254,14 +6471,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCIndividualProofOfIdentity));
 			KYCIndividualProofOfIdentity.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCIndividualProofOfIdentity));
 			KYCIndividualProofOfIdentity.click();
 		} catch (Exception e) {
@@ -6277,14 +6494,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCIndividualSelectONProofOfIdentity));
 			KYCIndividualSelectONProofOfIdentity.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCIndividualSelectONProofOfIdentity));
 			KYCIndividualSelectONProofOfIdentity.click();
 		} catch (Exception e) {
@@ -6293,7 +6510,7 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getSelectOnProofOfIdentityIndividual() {
 		return KYCIndividualProofOfIdentity.getText();
 	}
@@ -6304,14 +6521,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KycNumberOfDocinPOiIndividual1));
 			KycNumberOfDocinPOiIndividual1.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KycNumberOfDocinPOiIndividual1));
 			KycNumberOfDocinPOiIndividual1.click();
 		} catch (Exception e) {
@@ -6326,8 +6543,6 @@ public class BankLocators {
 		KycNumberOfDocinPOiIndividual1.sendKeys(in1);
 
 	}
-	
-	
 
 	public void ClickOnProofOfAddressIndividual() {
 
@@ -6335,14 +6550,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCIndividualProofOFAddress));
 			KYCIndividualProofOFAddress.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCIndividualProofOFAddress));
 			KYCIndividualProofOFAddress.click();
 		} catch (Exception e) {
@@ -6358,14 +6573,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCIndividualSelectONProofOFAddress));
 			KYCIndividualSelectONProofOFAddress.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCIndividualSelectONProofOFAddress));
 			KYCIndividualSelectONProofOFAddress.click();
 		} catch (Exception e) {
@@ -6374,7 +6589,7 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getSelectOnProofOfAddressIndividual() {
 		return KYCIndividualProofOFAddress.getText();
 	}
@@ -6385,14 +6600,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KycNumberOfDocinPoaIndividual2));
 			KycNumberOfDocinPoaIndividual2.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KycNumberOfDocinPoaIndividual2));
 			KycNumberOfDocinPoaIndividual2.click();
 		} catch (Exception e) {
@@ -6407,23 +6622,21 @@ public class BankLocators {
 		KycNumberOfDocinPoaIndividual2.sendKeys(in2);
 
 	}
-	
-	
-	
+
 	public void ClickOnBankDocumentIndividual() {
 
 //		KYCIndividualOtherDocument.click();
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCIndividualBankDocument));
 			KYCIndividualBankDocument.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCIndividualBankDocument));
 			KYCIndividualBankDocument.click();
 		} catch (Exception e) {
@@ -6432,7 +6645,6 @@ public class BankLocators {
 		}
 
 	}
-
 
 	public void ClickOnOtherDocumentIndividual() {
 
@@ -6440,14 +6652,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCIndividualOtherDocument));
 			KYCIndividualOtherDocument.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCIndividualOtherDocument));
 			KYCIndividualOtherDocument.click();
 		} catch (Exception e) {
@@ -6456,21 +6668,21 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public void ClickOnTaxDocumentIndividual() {
 
 //		KYCIndividualOtherDocument.click();
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCIndividualTaxDocument));
 			KYCIndividualTaxDocument.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCIndividualTaxDocument));
 			KYCIndividualTaxDocument.click();
 		} catch (Exception e) {
@@ -6486,14 +6698,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCIndividualSelectOnOtherDocument));
 			KYCIndividualSelectOnOtherDocument.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYCIndividualSelectOnOtherDocument));
 			KYCIndividualSelectOnOtherDocument.click();
 		} catch (Exception e) {
@@ -6502,11 +6714,10 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getSelectOnOtherDocumentIndividual() {
 		return KYCIndividualOtherDocument.getText();
 	}
-
 
 	public void ClickOnNumberOfIndividual3() {
 
@@ -6514,14 +6725,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(keyPersonNumberofOtherDocIndividual3));
 			keyPersonNumberofOtherDocIndividual3.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(keyPersonNumberofOtherDocIndividual3));
 			keyPersonNumberofOtherDocIndividual3.click();
 		} catch (Exception e) {
@@ -6543,14 +6754,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(YesForSubmit));
 			YesForSubmit.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(YesForSubmit));
 			YesForSubmit.click();
 		} catch (Exception e) {
@@ -6566,14 +6777,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(OKForSuccessfully));
 			OKForSuccessfully.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(OKForSuccessfully));
 			OKForSuccessfully.click();
 		} catch (Exception e) {
@@ -6589,14 +6800,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(Profile));
 			Profile.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(Profile));
 			Profile.click();
 		} catch (Exception e) {
@@ -6612,14 +6823,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(LogOut));
 			LogOut.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(LogOut));
 			LogOut.click();
 		} catch (Exception e) {
@@ -6635,14 +6846,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(LogOutYES));
 			LogOutYES.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(LogOutYES));
 			LogOutYES.click();
 		} catch (Exception e) {
@@ -6658,20 +6869,26 @@ public class BankLocators {
 
 	}
 
+	public void ClearbyBankName() {
+
+		SearchbyBankName.clear();
+
+	}
+
 	public void ClickSearchbyBankName() {
 
 		// SearchbyBankName.click();
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SearchbyBankName));
 			SearchbyBankName.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SearchbyBankName));
 			SearchbyBankName.click();
 		} catch (Exception e) {
@@ -6680,59 +6897,93 @@ public class BankLocators {
 		}
 
 	}
-	
+
 	public String getClickSearchbyBankName() {
-			return SearchbyBankName.getAttribute("value");
-		}
+		return SearchbyBankName.getAttribute("value");
+	}
 
-
-	
-	
-
-	public void ActionClick() {
+	public void ActionClick() throws InterruptedException {
 //		ActionClick.click();
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ActionClick));
-			ActionClick.click();
+			JavascriptExecutor js = (JavascriptExecutor) driver;
+			js.executeScript("arguments[0].click();", ActionClick);
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ActionClick));
-			ActionClick.click();
+			JavascriptExecutor js = (JavascriptExecutor) driver;
+			js.executeScript("arguments[0].click();", ActionClick);
 		} catch (Exception e) {
 			// Handle other potential exceptions
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
 
 	}
-	
-	
+
+//	public void ClickonViewButton() {
+//
+////		wait.until(ExpectedConditions.elementToBeClickable(VerifiedandNext)).click();
+//
+//		try {
+//
+//			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+//			wait.until(ExpectedConditions.elementToBeClickable(ViewButton));
+//			ViewButton.click();
+//		} catch (ElementClickInterceptedException e) {
+//
+//			System.err.println("Element click intercepted: " + e.getMessage());
+//
+//			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+//			wait.until(ExpectedConditions.elementToBeClickable(ViewButton));
+//			ViewButton.click();
+//		} catch (Exception e) {
+//
+//			System.err.println("Element click intercepted: " + e.getMessage());
+//
+//			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+//			wait.until(ExpectedConditions.elementToBeClickable(ViewButton));
+//			ViewButton.click();
+//	}
+//		
+//	}
+
 	public void ClickonViewButton() {
-
-//		wait.until(ExpectedConditions.elementToBeClickable(VerifiedandNext)).click();
-
 		try {
+			FluentWait<WebDriver> wait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(30))
+					.pollingEvery(Duration.ofMillis(500)).ignoring(ElementClickInterceptedException.class);
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-			wait.until(ExpectedConditions.elementToBeClickable(ViewButton));
-			ViewButton.click();
-		} catch (ElementClickInterceptedException e) {
-
-			System.err.println("Element click intercepted: " + e.getMessage());
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 			wait.until(ExpectedConditions.elementToBeClickable(ViewButton));
 			ViewButton.click();
 		} catch (Exception e) {
-			// Handle other potential exceptions
-			System.err.println("An unexpected error occurred: " + e.getMessage());
+			System.err.println("Exception occurred: " + e.getMessage());
 		}
+	}
 
+	public void DisplayedOnVerifiedandNext(WebDriver driver, int timeoutInSeconds) {
+
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
+		try {
+			// Wait for the "Verified and Next" button to be visible
+			WebElement verifiedAndNextButton = wait.until(ExpectedConditions.visibilityOf(VerifiedandNext));
+
+			// Assert that the button is displayed
+			assertTrue("Verified and Next Button should be displayed", verifiedAndNextButton.isDisplayed());
+
+		} catch (NoSuchElementException e) {
+			// Fail the test if the button is not found
+			fail("Verified and Next Button should be displayed but not found.");
+
+		} catch (Exception e) {
+			// Handle timeout and other exceptions
+			fail("An error occurred while waiting for Verified and Next Button: " + e.getMessage());
+		}
 	}
 
 	public void VerifiedandNext() {
@@ -6741,19 +6992,21 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(VerifiedandNext));
 			VerifiedandNext.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(VerifiedandNext));
 			VerifiedandNext.click();
 		} catch (Exception e) {
-			// Handle other potential exceptions
-			System.err.println("An unexpected error occurred: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(VerifiedandNext));
+			VerifiedandNext.click();
 		}
 
 	}
@@ -6763,14 +7016,14 @@ public class BankLocators {
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SubmitforApproval));
 			SubmitforApproval.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SubmitforApproval));
 			SubmitforApproval.click();
 		} catch (Exception e) {
@@ -6780,8 +7033,23 @@ public class BankLocators {
 
 	}
 
+//	public String getCPID() {
+//		return CPID.getAttribute("value");
+//	}
+
 	public String getCPID() {
-		return CPID.getAttribute("value");
+		// Define FluentWait for the CPID element
+		FluentWait<WebDriver> wait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(30)) // Maximum wait time
+																									// of 30 seconds
+				.pollingEvery(Duration.ofMillis(500)) // Check every 500 milliseconds
+				.ignoring(NoSuchElementException.class) // Ignore NoSuchElementException
+				.ignoring(ElementNotInteractableException.class); // Ignore ElementNotInteractableException
+
+		// Wait for the element to be present and interactable
+		WebElement cpidElement = wait.until(driver -> CPID.isDisplayed() ? CPID : null);
+
+		// Return the attribute "value" once the element is interactable
+		return cpidElement.getAttribute("value");
 	}
 
 }

@@ -20,12 +20,11 @@ Feature: System Users - Bank Onboarding Regression
 
  This feature aims to test the functionality of the 'BankOnboarding' within the application.
 
-
+@run @loadData
 Scenario: SystemMaker Login
  Given I visit the System Maker Login using sheetname "Credentials" and rownumber 1
  And I enter the credentials and click a login button
  
-
 Scenario: System Maker sees Onboarding in Sidemenu
    When System Maker - Onboarding should be displayed in the side menu
     
@@ -45,35 +44,38 @@ Scenario: SystemMaker clicks the Create Button
  Scenario: Visiting the General Info in Bank Onboarding
     When I Visit the General Info
 
+
 Scenario: the "Bank Name" field should prompt to enter valid inputs in Bank Onboarding
       Then the "Bank Name" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-      
+
+     
 Scenario: the "Address" field should prompt to enter valid inputs in Bank Onboarding     
       Then the "Address" field should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-      
+ 
+       
 Scenario: the "Pincode" field should prompt to select valid inputs in Bank Onboarding     
       Then the "Pincode" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
       
 Scenario: the "GST" field should prompt to enter valid inputs in Bank Onboarding     
       Then the "GST" field should prompt to enter valid inputs with GST format using sheetname "Bank Regression" and rownumber 0
-      
+       
 Scenario: the "PAN" field should prompt to enter valid inputs in Bank Onboarding      
       Then the "PAN" field should prompt to enter valid inputs with PAN format using sheetname "Bank Regression" and rownumber 0
-      
+       
 Scenario: the "MarsId" field should prompt to enter valid inputs in Bank Onboarding    
       Then the "MarsId" field	should prompt to enter valid inputs using sheetname "Bank Regression" and rownumber 0
-      
+       
  Scenario: the "Statement Frequency" field should prompt to select valid inputs in Bank Onboarding    
       Then the "Statement Frequency" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
-      
+        
  Scenario: the "Statement Type" field should prompt to select valid inputs in Bank Onboarding          
       Then the "Statement Type" dropdown should prompt to select valid inputs using sheetname "Bank Regression" and rownumber 0
-      
+        
 Scenario: the "Domain" field should prompt to enter valid inputs in Bank Onboarding      
       Then the "Domain" field should prompt to enter the valid domain name using sheetname "Bank Regression" and rownumber 0
       Then the "Domain" field should prompt to enter the valid domain name using sheetname "Bank Regression" and rownumber 1
       Then the "Domain" field should prompt to enter the valid domain name using sheetname "Bank Regression" and rownumber 2
-      
+       
 Scenario: the "NextStep" field should should be prompted to click on General Info       
       Then the "NextStep" button should be prompted to click on General Info
       

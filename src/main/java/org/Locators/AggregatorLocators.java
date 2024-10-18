@@ -5,10 +5,12 @@ import static org.junit.Assert.fail;
 
 import java.time.Duration;
 
+import org.Testcases.CustomWebDriverManager;
 import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -19,13 +21,13 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class AggregatorLocators {
 
 	WebDriver driver;
+     private int waitTime;
 
 	@FindBy(xpath = "//mat-error[text()=' Invalid bank name ']")
 	private WebElement InvalidBankName;
-	
+
 	@FindBy(xpath = "(//mat-error[text()=' Please Upload a document '])[1]")
 	private WebElement InvalidDocumenterror;
-
 
 //SideMenu
 
@@ -67,40 +69,38 @@ public class AggregatorLocators {
 
 	@FindBy(xpath = "//span[text()='Change Log']")
 	private WebElement ChangeLog;
-	
-	
+
 //IntroMenu
-	
-	@FindBy(xpath = "//h6[text()='Brand Info']")
+
+	@FindBy(xpath = "//h6[contains(text(), 'Brand Info')]")
 	private WebElement IntroCompanyInfo;
-	
-	@FindBy(xpath = "//h6[text()='Partner / Director / Owner / Trustee Details']")
+    
+	@FindBy(xpath = "//h6[contains(text(), 'Partner / Director / Owner / Trustee details') or contains(text(), 'Partner / Director / Owner / Trustee Details')]")
 	private WebElement IntroPersonalInfo;
-	
-	@FindBy(xpath = "//h6[text()='ADMIN USER Details']")
+
+	@FindBy(xpath = "//h6[text()='ADMIN USER Details' or text()='Admin User details' or text() = 'Admin User Details']")
 	private WebElement IntroCommunicationInfo;
-	
+
 	@FindBy(xpath = "//h6[text()='Channel Configuration']")
 	private WebElement IntroChannelConfig;
-	
+
 	@FindBy(xpath = "//h6[text()='Personal Documents']")
 	private WebElement IntroKYC;
-	
+
 	@FindBy(xpath = "//h6[text()='FRM Parameters']")
 	private WebElement IntroRiskInfo;
-	
+
 	@FindBy(xpath = "//h6[text()='Aggregator Discounts']")
 	private WebElement IntroDiscountRate;
-	
+
 	@FindBy(xpath = "//h6[text()='Bank Details']")
 	private WebElement IntroSettlementInfo;
-	
+
 	@FindBy(xpath = "//h6[text()='Aggregator Onboarding Configuration']")
 	private WebElement IntroWhitelabel;
-	
+
 	@FindBy(xpath = "//h6[text()='Payment Bridge']")
 	private WebElement IntroWebhooks;
-	
 
 //SalesInfo
 
@@ -449,20 +449,20 @@ public class AggregatorLocators {
 
 	@FindBy(xpath = "//span[text()='Save']")
 	private WebElement ChannelSave;
-	
+
 //KYC
-	
+
 	@FindBy(xpath = "(//input[@type='file'])[2]")
 	private WebElement CompanyProofofaddressUpload;
-	
-	@FindBy(xpath = "(//input[@type='file'])[8]")
+
+	@FindBy(xpath = "(//input[@type='file'])[9]")
 	private WebElement CompanyPANUpload;
-	
+
 	@FindBy(xpath = "(//input[@type='file'])[13]")
 	private WebElement GSTCertificateUpload;
-	
+
 	@FindBy(xpath = "(//input[@type='file'])[4]")
-	private WebElement AadhaarUpload;	
+	private WebElement AadhaarUpload;
 
 //RiskInfo
 
@@ -498,7 +498,7 @@ public class AggregatorLocators {
 
 	@FindBy(xpath = "//input[@formcontrolname='posPerDayCount']")
 	private WebElement CashPOSCount;
-	
+
 	@FindBy(xpath = "//input[@formcontrolname='matmCount']")
 	private WebElement microatmcount;
 
@@ -569,11 +569,11 @@ public class AggregatorLocators {
 
 	@FindBy(xpath = "(//input[@formcontrolname='maximumAmount'])[1]")
 	private WebElement UPIMaximumAmount;
-	
+
 //DiscountRate
 	@FindBy(xpath = "//input[@formcontrolname='pricingPlanDescription']")
 	private WebElement DiscountRatePricingPlan;
-	
+
 	@FindBy(xpath = "//span[text()=' TestPOSS ']")
 	private WebElement POSPricingPlan;
 
@@ -582,7 +582,6 @@ public class AggregatorLocators {
 
 	@FindBy(xpath = "//span[text()=' Test UPI ']")
 	private WebElement UPIPricingPlan;
-
 
 //Settlement
 
@@ -620,139 +619,255 @@ public class AggregatorLocators {
 
 	@FindBy(xpath = "//span[text()=' phone ']")
 	private WebElement SelectonUserNameAs;
-	
+
 //Manual Takeover
+
+//	@FindBy(xpath = "//span[text()=' Manual Takeover ']")
+//	private WebElement ManualTakeOver;
+
+//	@FindBy(xpath = "(//span[text()=' View Document '])[1]")
+//	private WebElement ViewDocument1;
+//
+//	@FindBy(xpath = "(//span[text()=' View Document '])[2]")
+//	private WebElement ViewDocument2;
+//
+//	@FindBy(xpath = "(//span[text()=' View Document '])[3]")
+//	private WebElement ViewDocument3;
+//
+//	@FindBy(xpath = "//mat-select[@formcontrolname='type']")
+//	private WebElement Actions;
+//
+//	@FindBy(xpath = "//span[text()=' Verified ']")
+//	private WebElement ViewDocumentVerified;
+//
+//	@FindBy(xpath = "//span[text()='Submit & Next']")
+//	private WebElement ViewDocumentSubmitandNext;
 	
-	@FindBy(xpath = "//span[text()=' Manual Takeover ']")
+	@FindBy(xpath = "//span[contains(text(), 'Manual Takeover')]")
 	private WebElement ManualTakeOver;
 	
-	@FindBy(xpath = "(//span[text()=' View Document '])[1]")
-    private WebElement ViewDocument1;
-	
-	@FindBy(xpath = "(//span[text()=' View Document '])[2]")
-    private WebElement ViewDocument2;
+	@FindBy(xpath = "(//span[contains(text(), 'View Document')])[1]")
+	private WebElement ViewDocument1;
 
-	
-	@FindBy(xpath = "(//span[text()=' View Document '])[3]")
-    private WebElement ViewDocument3;
+	@FindBy(xpath = "(//span[contains(text(), 'View Document')])[2]")
+	private WebElement ViewDocument2;
 
-	
+	@FindBy(xpath = "(//span[contains(text(), 'View Document')])[3]")
+	private WebElement ViewDocument3;
+
 	@FindBy(xpath = "//mat-select[@formcontrolname='type']")
-    private WebElement Actions;
-	
-	@FindBy(xpath = "//span[text()=' Verified ']")
-    private WebElement ViewDocumentVerified;
+	private WebElement Actions;
 
-	@FindBy(xpath = "//span[text()='Submit & Next']")
-    private WebElement ViewDocumentSubmitandNext;
-	
+	@FindBy(xpath = "//span[contains(text(), 'Verified')]")
+	private WebElement ViewDocumentVerified;
+
+	@FindBy(xpath = "//span[contains(text(), 'Submit & Next')]")
+	private WebElement ViewDocumentSubmitandNext;
+
 
 	public AggregatorLocators(WebDriver driver) {
+		this.waitTime = CustomWebDriverManager.getWaitTime();
 		this.driver = driver;
 		PageFactory.initElements(driver, this);
 
 	}
-	
+
 //IntroPage
-	
+
 	public void DisplayedOnIntroCompanyInfo() {
+//		try {
+//			assertTrue("Company Info Page should be displayed", IntroCompanyInfo.isDisplayed());
+//		} catch (NoSuchElementException e) {
+//			// Fail the test if the button is not found
+//			fail("Company Info Page Should be displayed But not found.");
+//		}
+		
+		
 		try {
-			assertTrue("Company Info Page should be displayed", IntroCompanyInfo.isDisplayed());
-		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Company Info Page Should be displayed But not found.");
-		}
+	       WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime)); // Wait for up to 10 seconds
+	        wait.until(ExpectedConditions.visibilityOf(IntroCompanyInfo)); // Wait until the element is visible
+	        
+	        assertTrue("Company Info Page should be displayed", IntroCompanyInfo.isDisplayed());
+	    } catch (NoSuchElementException e) {
+	        fail("Company Info Page should be displayed but not found.");
+	    } catch (TimeoutException e) {
+	        fail("Company Info Page was not displayed within the timeout.");
+	    }
 	}
-	
+
 	public void DisplayedOnIntroPersonalInfo() {
+//		try {
+//			assertTrue("Personal Info Page should be displayed", IntroPersonalInfo.isDisplayed());
+//		} catch (NoSuchElementException e) {
+//			// Fail the test if the button is not found
+//			fail("Personal Info Page Should be displayed But not found.");
+//		}
+		
 		try {
-			assertTrue("Personal Info Page should be displayed", IntroPersonalInfo.isDisplayed());
-		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Personal Info Page Should be displayed But not found.");
-		}
+	       WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime)); // Wait for up to 10 seconds
+	        wait.until(ExpectedConditions.visibilityOf(IntroPersonalInfo)); // Wait until the element is visible
+	        
+	        assertTrue("Personal Info Page should be displayed", IntroPersonalInfo.isDisplayed());
+	    } catch (NoSuchElementException e) {
+	        fail("Personal Info Page should be displayed but not found.");
+	    } catch (TimeoutException e) {
+	        fail("Personal Info Page was not displayed within the timeout.");
+	    }
 	}
-	
-	
+
 	public void DisplayedOnIntroCommunicationInfo() {
+//		try {
+//			assertTrue("Communication Info Page should be displayed", IntroCommunicationInfo.isDisplayed());
+//		} catch (NoSuchElementException e) {
+//			// Fail the test if the button is not found
+//			fail("Communication Info Page Should be displayed But not found.");
+//		}
+		
+		
 		try {
-			assertTrue("Communication Info Page should be displayed", IntroCommunicationInfo.isDisplayed());
-		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Communication Info Page Should be displayed But not found.");
-		}
+	       WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime)); // Wait for up to 10 seconds
+	        wait.until(ExpectedConditions.visibilityOf(IntroCommunicationInfo)); // Wait until the element is visible
+	        
+	        assertTrue("Communication Info Page should be displayed", IntroCommunicationInfo.isDisplayed());
+	    } catch (NoSuchElementException e) {
+	    	fail("Communication Info Page Should be displayed But not found.");
+	    } catch (TimeoutException e) {
+	    	fail("Communication Info Page Should be displayed But not found.");
+	    }
 	}
-	
-	
+
 	public void DisplayedOnIntroChannelConfig() {
+//		try {
+//			assertTrue("Channel Config Page should be displayed", IntroChannelConfig.isDisplayed());
+//		} catch (NoSuchElementException e) {
+//			// Fail the test if the button is not found
+//			fail("Channel Config Page Should be displayed But not found.");
+//		}
+		
+		
 		try {
-			assertTrue("Channel Config Page should be displayed", IntroChannelConfig.isDisplayed());
-		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Channel Config Page Should be displayed But not found.");
-		}
+	       WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime)); // Wait for up to 10 seconds
+	        wait.until(ExpectedConditions.visibilityOf(IntroChannelConfig)); // Wait until the element is visible
+	        
+	        assertTrue("Channel Config Page should be displayed", IntroChannelConfig.isDisplayed());
+	    } catch (NoSuchElementException e) {
+	    	fail("Channel Config Page Should be displayed But not found.");
+	    } catch (TimeoutException e) {
+	    	fail("Channel Config Page Should be displayed But not found.");
+	    }
 	}
-	
+
 	public void DisplayedOnIntroKYC() {
+		
 		try {
-			assertTrue("KYC Page should be displayed", IntroKYC.isDisplayed());
-		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("KYC Page Should be displayed But not found.");
-		}
+	       WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime)); // Wait for up to 10 seconds
+	        wait.until(ExpectedConditions.visibilityOf(IntroKYC)); // Wait until the element is visible
+	        
+	        assertTrue("KYC Page should be displayed", IntroKYC.isDisplayed());
+	    } catch (NoSuchElementException e) {
+	    	fail("KYC Page Should be displayed But not found.");
+	    } catch (TimeoutException e) {
+	    	fail("KYC Page Should be displayed But not found.");
+	    }
 	}
-	
+
 	public void DisplayedOnIntroRiskInfo() {
+		
 		try {
-			assertTrue("Risk Info Page should be displayed", IntroRiskInfo.isDisplayed());
-		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Risk Info Page Should be displayed But not found.");
-		}
+	       WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime)); 
+	        wait.until(ExpectedConditions.visibilityOf(IntroRiskInfo)); 
+	        
+	        assertTrue("Risk Info Page should be displayed", IntroRiskInfo.isDisplayed());
+	    } catch (NoSuchElementException e) {
+	    	fail("Risk Info Page Should be displayed But not found.");
+	    } catch (TimeoutException e) {
+	    	fail("Risk Info Page Should be displayed But not found.");
+	    }
 	}
-	
-	
+		
+
 	public void DisplayedOnIntroDiscountRate() {
+//		try {
+//			assertTrue("Discount Rate Page should be displayed", IntroDiscountRate.isDisplayed());
+//		} catch (NoSuchElementException e) {
+//			// Fail the test if the button is not found
+//			fail("Discount Rate Page Should be displayed But not found.");
+//		}
+		
 		try {
-			assertTrue("Discount Rate Page should be displayed", IntroDiscountRate.isDisplayed());
-		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Discount Rate Page Should be displayed But not found.");
-		}
+	       WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime)); // Wait for up to 10 seconds
+	        wait.until(ExpectedConditions.visibilityOf(IntroDiscountRate)); // Wait until the element is visible
+	        
+	        assertTrue("Discount Rate Page should be displayed", IntroDiscountRate.isDisplayed());
+	    } catch (NoSuchElementException e) {
+	    	fail("Discount Rate Page Should be displayed But not found.");
+	    } catch (TimeoutException e) {
+	    	fail("Discount Rate Page Should be displayed But not found.");
+	    }
 	}
-	
+
 	public void DisplayedOnIntroSettlement() {
+//		try {
+//			assertTrue("Settlement Info Page should be displayed", IntroSettlementInfo.isDisplayed());
+//		} catch (NoSuchElementException e) {
+//			// Fail the test if the button is not found
+//			fail("Settlement Info Page Should be displayed But not found.");
+//		}
+		
 		try {
-			assertTrue("Settlement Info Page should be displayed", IntroSettlementInfo.isDisplayed());
-		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Settlement Info Page Should be displayed But not found.");
-		}
+	       WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime)); // Wait for up to 10 seconds
+	        wait.until(ExpectedConditions.visibilityOf(IntroSettlementInfo)); // Wait until the element is visible
+	        
+	        assertTrue("Settlement Info Page should be displayed", IntroSettlementInfo.isDisplayed());
+	    } catch (NoSuchElementException e) {
+	    	fail("Settlement Info Page Should be displayed But not found.");
+	    } catch (TimeoutException e) {
+	    	fail("Settlement Info Page Should be displayed But not found.");
+	    }
 	}
-	
-	
+
 	public void DisplayedOnIntroWhiteLabel() {
+//		try {
+//			assertTrue("Whitelabel Page should be displayed", IntroWhitelabel.isDisplayed());
+//		} catch (NoSuchElementException e) {
+//			// Fail the test if the button is not found
+//			fail("Whitelabel Page Should be displayed But not found.");
+//		}
+//	}
+		
 		try {
-			assertTrue("Whitelabel Page should be displayed", IntroWhitelabel.isDisplayed());
-		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Whitelabel Page Should be displayed But not found.");
-		}
+	       WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime)); // Wait for up to 10 seconds
+	        wait.until(ExpectedConditions.visibilityOf(IntroWhitelabel)); // Wait until the element is visible
+	        
+	        assertTrue("Whitelabel Page should be displayed", IntroWhitelabel.isDisplayed());
+	    } catch (NoSuchElementException e) {
+	    	fail("Whitelabel Page Should be displayed But not found.");
+	    } catch (TimeoutException e) {
+	    	fail("Whitelabel Page Should be displayed But not found.");
+	    }
 	}
-	
-	
+
 	public void DisplayedOnIntroWebhook() {
+//		try {
+//			assertTrue("Webhook Page should be displayed", IntroWebhooks.isDisplayed());
+//		} catch (NoSuchElementException e) {
+//			// Fail the test if the button is not found
+//			fail("Webhook Page Should be displayed But not found.");
+//		}
+//	}
+		
 		try {
-			assertTrue("Webhook Page should be displayed", IntroWebhooks.isDisplayed());
-		} catch (NoSuchElementException e) {
-			// Fail the test if the button is not found
-			fail("Webhook Page Should be displayed But not found.");
-		}
+	       WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime)); // Wait for up to 10 seconds
+	        wait.until(ExpectedConditions.visibilityOf(IntroWebhooks)); // Wait until the element is visible
+	        
+	        assertTrue("Webhook Page should be displayed", IntroWebhooks.isDisplayed());
+	    } catch (NoSuchElementException e) {
+	    	fail("Webhook Page Should be displayed But not found.");
+	    } catch (TimeoutException e) {
+	    	fail("Webhook Page Should be displayed But not found.");
+	    }
 	}
-	
-	
-	
-	
+
 	public void DisplayedOnInvalidBankName() {
 
 		try {
@@ -762,7 +877,7 @@ public class AggregatorLocators {
 			fail("Invalid Bank Name Should be displayed But not found.");
 		}
 	}
-	
+
 	public void DisplayedOnInvalidDocumenterror() {
 
 		try {
@@ -774,44 +889,72 @@ public class AggregatorLocators {
 	}
 
 //SideMenu
+	
+	public void DisplayedonSalesInfo() {
+		
+		try {
+		       WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime)); 
+		        wait.until(ExpectedConditions.visibilityOf(SalesInfo)); 
+		        
+		        assertTrue("Sales Info Page should be displayed", SalesInfo.isDisplayed());
+		    } catch (NoSuchElementException e) {
+		    	fail("Sales Info Should be displayed But not found.");
+		    } catch (TimeoutException e) {
+		    	fail("Sales Info Page Should be displayed But not found.");
+		    }
+		}
+	
 
 	public void ClickOnSalesInfo() {
 
 //		SalesInfo.click();
-		
+
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SalesInfo));
 			SalesInfo.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SalesInfo));
 			SalesInfo.click();
 		} catch (Exception e) {
 			// Handle other potential exceptions
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
-		
+
+	}
+	
+	public void DisplayedOnCompanyInfo() {
+		try {
+		       WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime)); 
+		        wait.until(ExpectedConditions.visibilityOf(ComapnyInfo)); 
+		        
+		        assertTrue("Company Info Page should be displayed", ComapnyInfo.isDisplayed());
+		    } catch (NoSuchElementException e) {
+		    	fail("Company Info Should be displayed But not found.");
+		    } catch (TimeoutException e) {
+		    	fail("Company Info Page Should be displayed But not found.");
+		    }
 	}
 
 	public void ClickOnCompanyInfo() {
 
 //		ComapnyInfo.click();
-		
+
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ComapnyInfo));
 			ComapnyInfo.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ComapnyInfo));
 			ComapnyInfo.click();
 		} catch (Exception e) {
@@ -821,46 +964,73 @@ public class AggregatorLocators {
 
 	}
 	
+	public void DisplayedOnPersonalInfo() {
+		
+		try {
+		 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime)); 
+	        wait.until(ExpectedConditions.visibilityOf(PersonalInfo)); 
+	        
+	        assertTrue("Personal Info Page should be displayed", PersonalInfo.isDisplayed());
+	    } catch (NoSuchElementException e) {
+	    	fail("Personal Info Should be displayed But not found.");
+	    } catch (TimeoutException e) {
+	    	fail("Personal Info Page Should be displayed But not found.");
+	    }
+}
 	
+
 	public void ClickOnPersonalInfo() {
 
 //		WhitelabelMaxNumberOfPlatform.click();
 
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(PersonalInfo));
 			PersonalInfo.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(PersonalInfo));
 			PersonalInfo.click();
 		} catch (Exception e) {
 			// Handle other potential exceptions
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
-		
-	}
 
+	}
+	
+	public void DisplayedOnCommunicationInfo() {
+		
+		try {
+			 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime)); 
+		        wait.until(ExpectedConditions.visibilityOf(CommunicationInfo)); 
+		        
+		        assertTrue("Communication Info Page should be displayed", CommunicationInfo.isDisplayed());
+		    } catch (NoSuchElementException e) {
+		    	fail("Communication Info Should be displayed But not found.");
+		    } catch (TimeoutException e) {
+		    	fail("Communication Info Page Should be displayed But not found.");
+		    }
+	}
+	
 
 	public void ClickOnCommunicationInfo() {
 
 //		CommunicationInfo.click();
-		
-		
+
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(CommunicationInfo));
 			CommunicationInfo.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(CommunicationInfo));
 			CommunicationInfo.click();
 		} catch (Exception e) {
@@ -868,23 +1038,36 @@ public class AggregatorLocators {
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
 
-
 	}
+	
+	public void DisplayedonChannelConfig() {
+		try {
+			 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime)); 
+		        wait.until(ExpectedConditions.visibilityOf(ChannelConfig)); 
+		        
+		        assertTrue("Channel Config Page should be displayed", ChannelConfig.isDisplayed());
+		    } catch (NoSuchElementException e) {
+		    	fail("Channel Config Should be displayed But not found.");
+		    } catch (TimeoutException e) {
+		    	fail("Channel Config Page Should be displayed But not found.");
+		    }
+	}
+	
 
 	public void ClickOnChannelConfig() {
 
 //		ChannelConfig.click();
-		
+
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ChannelConfig));
 			ChannelConfig.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ChannelConfig));
 			ChannelConfig.click();
 		} catch (Exception e) {
@@ -892,23 +1075,37 @@ public class AggregatorLocators {
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
 
-
 	}
+	
+	public void DisplayedOnKYC() {
+		
+		try {
+			 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime)); 
+		        wait.until(ExpectedConditions.visibilityOf(KYC)); 
+		        
+		        assertTrue("KYC Page should be displayed", KYC.isDisplayed());
+		    } catch (NoSuchElementException e) {
+		    	fail("KYC Should be displayed But not found.");
+		    } catch (TimeoutException e) {
+		    	fail("KYC Page Should be displayed But not found.");
+		    }
+	}
+	
 
 	public void ClickOnKYC() {
 
 //		KYC.click();
-		
+
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYC));
 			KYC.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(KYC));
 			KYC.click();
 		} catch (Exception e) {
@@ -916,23 +1113,37 @@ public class AggregatorLocators {
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
 
-
+	}
+	
+	
+public void DisplayedOnRiskInfo() {
+		
+		try {
+			 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime)); 
+		        wait.until(ExpectedConditions.visibilityOf(RiskINfo)); 
+		        
+		        assertTrue("Risk INfo Page should be displayed", RiskINfo.isDisplayed());
+		    } catch (NoSuchElementException e) {
+		    	fail("Risk INfo Should be displayed But not found.");
+		    } catch (TimeoutException e) {
+		    	fail("Risk INfo Page Should be displayed But not found.");
+		    }
 	}
 
 	public void ClickOnRiskInfo() {
 
 //		RiskINfo.click();
-		
+
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(RiskINfo));
 			RiskINfo.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(RiskINfo));
 			RiskINfo.click();
 		} catch (Exception e) {
@@ -940,22 +1151,36 @@ public class AggregatorLocators {
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
 
+	}
+	
+public void DisplayedOnDiscountRate() {
+		
+		try {
+			 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime)); 
+		        wait.until(ExpectedConditions.visibilityOf(DiscountRate)); 
+		        
+		        assertTrue("Discount Rate Page should be displayed", DiscountRate.isDisplayed());
+		    } catch (NoSuchElementException e) {
+		    	fail("Discount Rate Should be displayed But not found.");
+		    } catch (TimeoutException e) {
+		    	fail("Discount Rate Page Should be displayed But not found.");
+		    }
 	}
 
 	public void ClickOnDiscountRate() {
 
 //		DiscountRate.click();
-		
+
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(DiscountRate));
 			DiscountRate.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(DiscountRate));
 			DiscountRate.click();
 		} catch (Exception e) {
@@ -963,23 +1188,37 @@ public class AggregatorLocators {
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
 
-
 	}
+	
+public void DisplayedOnSettlementInfo() {
+		
+		try {
+			 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime)); 
+		        wait.until(ExpectedConditions.visibilityOf(SettlementInfo)); 
+		        
+		        assertTrue("Settlement Info Page should be displayed", SettlementInfo.isDisplayed());
+		    } catch (NoSuchElementException e) {
+		    	fail("Settlement Info Should be displayed But not found.");
+		    } catch (TimeoutException e) {
+		    	fail("Settlement Info Page Should be displayed But not found.");
+		    }
+	}
+
 
 	public void ClickOnSettlementInfo() {
 
 //		SettlementInfo.click();
-		
+
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementInfo));
 			SettlementInfo.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(SettlementInfo));
 			SettlementInfo.click();
 		} catch (Exception e) {
@@ -988,21 +1227,35 @@ public class AggregatorLocators {
 		}
 
 	}
+	
+	public void DisplayedonWhitelabel() {
+	
+	try {
+		 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime)); 
+	        wait.until(ExpectedConditions.visibilityOf(Whitelabel)); 
+	        
+	        assertTrue("Whitelabel Page should be displayed", Whitelabel.isDisplayed());
+	    } catch (NoSuchElementException e) {
+	    	fail("Whitelabel Should be displayed But not found.");
+	    } catch (TimeoutException e) {
+	    	fail("Whitelabel Page Should be displayed But not found.");
+	    }
+}
 
 	public void ClickOnWhitelabel() {
 
 //		Whitelabel.click();
-		
+
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(Whitelabel));
 			Whitelabel.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(Whitelabel));
 			Whitelabel.click();
 		} catch (Exception e) {
@@ -1010,23 +1263,36 @@ public class AggregatorLocators {
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
 
-
+	}
+	
+	public void DisplayedonWebhooks() {
+		
+		try {
+			 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime)); 
+		        wait.until(ExpectedConditions.visibilityOf(Webhooks)); 
+		        
+		        assertTrue("Webhooks should be displayed", Webhooks.isDisplayed());
+		    } catch (NoSuchElementException e) {
+		    	fail("Webhooks Should be displayed But not found.");
+		    } catch (TimeoutException e) {
+		    	fail("Webhooks Should be displayed But not found.");
+		    }
 	}
 
 	public void ClickOnWebhooks() {
 
 //		Webhooks.click();
-		
+
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(Webhooks));
 			Webhooks.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(Webhooks));
 			Webhooks.click();
 		} catch (Exception e) {
@@ -1039,17 +1305,17 @@ public class AggregatorLocators {
 	public void ClickOnStatusHistory() {
 
 //		StatusHistory.click();
-		
+
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(StatusHistory));
 			StatusHistory.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(StatusHistory));
 			StatusHistory.click();
 		} catch (Exception e) {
@@ -1062,18 +1328,17 @@ public class AggregatorLocators {
 	public void ClickOnChangeLog() {
 
 //		ChangeLog.click();
-		
-		
+
 		try {
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ChangeLog));
 			ChangeLog.click();
 		} catch (ElementClickInterceptedException e) {
 
 			System.err.println("Element click intercepted: " + e.getMessage());
 
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 			wait.until(ExpectedConditions.elementToBeClickable(ChangeLog));
 			ChangeLog.click();
 		} catch (Exception e) {
@@ -1180,168 +1445,160 @@ public class AggregatorLocators {
 	public void ClickOnVASCommisiionOne() {
 
 //		VASCommissionOne.click();
-		
-		  try {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(VASCommissionOne));
-	   			VASCommissionOne.click();
-	   		} catch (ElementClickInterceptedException e) {
+		try {
 
-	   			System.err.println("Element click intercepted: " + e.getMessage());
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(VASCommissionOne));
+			VASCommissionOne.click();
+		} catch (ElementClickInterceptedException e) {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(VASCommissionOne));
-	   			VASCommissionOne.click();
-	   		} catch (Exception e) {
-	   			// Handle other potential exceptions
-	   			System.err.println("An unexpected error occurred: " + e.getMessage());
-	   		}
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(VASCommissionOne));
+			VASCommissionOne.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
 	public void SalesInfoYes() {
 
 //		SalesInfoYes.click();
-		
-		  try {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(SalesInfoYes));
-	   			SalesInfoYes.click();
-	   		} catch (ElementClickInterceptedException e) {
+		try {
 
-	   			System.err.println("Element click intercepted: " + e.getMessage());
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(SalesInfoYes));
+			SalesInfoYes.click();
+		} catch (ElementClickInterceptedException e) {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(SalesInfoYes));
-	   			SalesInfoYes.click();
-	   		} catch (Exception e) {
-	   			// Handle other potential exceptions
-	   			System.err.println("An unexpected error occurred: " + e.getMessage());
-	   		}
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(SalesInfoYes));
+			SalesInfoYes.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
 
 	public void SalesInfoNO() {
 
 //		SalesInfoNO.click();
-		
-		 try {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(SalesInfoNO));
-	   			SalesInfoNO.click();
-	   		} catch (ElementClickInterceptedException e) {
+		try {
 
-	   			System.err.println("Element click intercepted: " + e.getMessage());
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(SalesInfoNO));
+			SalesInfoNO.click();
+		} catch (ElementClickInterceptedException e) {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(SalesInfoNO));
-	   			SalesInfoNO.click();
-	   		} catch (Exception e) {
-	   			// Handle other potential exceptions
-	   			System.err.println("An unexpected error occurred: " + e.getMessage());
-	   		}
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(SalesInfoNO));
+			SalesInfoNO.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
 	public void ClickOnAggreratorApplictionDate() {
 
 //		AggregatorApplicationDateCalenderOne.click();
-		
-		 try {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(AggregatorApplicationDateCalenderOne));
-	   			AggregatorApplicationDateCalenderOne.click();
-	   		} catch (ElementClickInterceptedException e) {
+		try {
 
-	   			System.err.println("Element click intercepted: " + e.getMessage());
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(AggregatorApplicationDateCalenderOne));
+			AggregatorApplicationDateCalenderOne.click();
+		} catch (ElementClickInterceptedException e) {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(AggregatorApplicationDateCalenderOne));
-	   			AggregatorApplicationDateCalenderOne.click();
-	   		} catch (Exception e) {
-	   			// Handle other potential exceptions
-	   			System.err.println("An unexpected error occurred: " + e.getMessage());
-	   		}
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-		
-		
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(AggregatorApplicationDateCalenderOne));
+			AggregatorApplicationDateCalenderOne.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
 	public void ClickOnApply() {
 
 //		Apply.click();
-		
-		
-		 try {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(Apply));
-	   			Apply.click();
-	   		} catch (ElementClickInterceptedException e) {
+		try {
 
-	   			System.err.println("Element click intercepted: " + e.getMessage());
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(Apply));
+			Apply.click();
+		} catch (ElementClickInterceptedException e) {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(Apply));
-	   			Apply.click();
-	   		} catch (Exception e) {
-	   			// Handle other potential exceptions
-	   			System.err.println("An unexpected error occurred: " + e.getMessage());
-	   		}
+			System.err.println("Element click intercepted: " + e.getMessage());
 
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(Apply));
+			Apply.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
 	public void ClickOnAggrementnDate() {
 
 //		AggregatorApplicationDateCalenderTwo.click();
-		
-		
-		 try {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(AggregatorApplicationDateCalenderTwo));
-	   			AggregatorApplicationDateCalenderTwo.click();
-	   		} catch (ElementClickInterceptedException e) {
+		try {
 
-	   			System.err.println("Element click intercepted: " + e.getMessage());
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(AggregatorApplicationDateCalenderTwo));
+			AggregatorApplicationDateCalenderTwo.click();
+		} catch (ElementClickInterceptedException e) {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(AggregatorApplicationDateCalenderTwo));
-	   			AggregatorApplicationDateCalenderTwo.click();
-	   		} catch (Exception e) {
-	   			// Handle other potential exceptions
-	   			System.err.println("An unexpected error occurred: " + e.getMessage());
-	   		}
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(AggregatorApplicationDateCalenderTwo));
+			AggregatorApplicationDateCalenderTwo.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
 	public void ClickOnAggregatorCOde() {
 
 //		AggregatorCode.click();
-		
-		
-		 try {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(AggregatorCode));
-	   			AggregatorCode.click();
-	   		} catch (ElementClickInterceptedException e) {
+		try {
 
-	   			System.err.println("Element click intercepted: " + e.getMessage());
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(AggregatorCode));
+			AggregatorCode.click();
+		} catch (ElementClickInterceptedException e) {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(AggregatorCode));
-	   			AggregatorCode.click();
-	   		} catch (Exception e) {
-	   			// Handle other potential exceptions
-	   			System.err.println("An unexpected error occurred: " + e.getMessage());
-	   		}
+			System.err.println("Element click intercepted: " + e.getMessage());
 
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(AggregatorCode));
+			AggregatorCode.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
@@ -1354,47 +1611,46 @@ public class AggregatorLocators {
 	public void ClickOnAllowSelfMerchantOnboard() {
 
 //		AllowSelfMerchantOnboard.click();
-		
-		 try {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(AllowSelfMerchantOnboard));
-	   			AllowSelfMerchantOnboard.click();
-	   		} catch (ElementClickInterceptedException e) {
+		try {
 
-	   			System.err.println("Element click intercepted: " + e.getMessage());
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(AllowSelfMerchantOnboard));
+			AllowSelfMerchantOnboard.click();
+		} catch (ElementClickInterceptedException e) {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(AllowSelfMerchantOnboard));
-	   			AllowSelfMerchantOnboard.click();
-	   		} catch (Exception e) {
-	   			// Handle other potential exceptions
-	   			System.err.println("An unexpected error occurred: " + e.getMessage());
-	   		}
+			System.err.println("Element click intercepted: " + e.getMessage());
 
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(AllowSelfMerchantOnboard));
+			AllowSelfMerchantOnboard.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
 	public void ClickOnMarsid() {
 
 //		MarsId.click();
-		
-		 try {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(MarsId));
-	   			MarsId.click();
-	   		} catch (ElementClickInterceptedException e) {
+		try {
 
-	   			System.err.println("Element click intercepted: " + e.getMessage());
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(MarsId));
+			MarsId.click();
+		} catch (ElementClickInterceptedException e) {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(MarsId));
-	   			MarsId.click();
-	   		} catch (Exception e) {
-	   			// Handle other potential exceptions
-	   			System.err.println("An unexpected error occurred: " + e.getMessage());
-	   		}
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(MarsId));
+			MarsId.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
@@ -1407,23 +1663,23 @@ public class AggregatorLocators {
 	public void ClickOnAutoDeactivationdays() {
 
 //		AutoDeactivationdays.click();
-		
+
 		try {
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(AutoDeactivationdays));
-   			AutoDeactivationdays.click();
-   		} catch (ElementClickInterceptedException e) {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(AutoDeactivationdays));
+			AutoDeactivationdays.click();
+		} catch (ElementClickInterceptedException e) {
 
-   			System.err.println("Element click intercepted: " + e.getMessage());
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(AutoDeactivationdays));
-   			AutoDeactivationdays.click();
-   		} catch (Exception e) {
-   			// Handle other potential exceptions
-   			System.err.println("An unexpected error occurred: " + e.getMessage());
-   		}
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(AutoDeactivationdays));
+			AutoDeactivationdays.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
@@ -1441,71 +1697,69 @@ public class AggregatorLocators {
 	public void ClickOnVASCommisiionTWO() {
 
 //		VASCommissionTWO.click();
-		
+
 		try {
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(VASCommissionTWO));
-   			VASCommissionTWO.click();
-   		} catch (ElementClickInterceptedException e) {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(VASCommissionTWO));
+			VASCommissionTWO.click();
+		} catch (ElementClickInterceptedException e) {
 
-   			System.err.println("Element click intercepted: " + e.getMessage());
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(VASCommissionTWO));
-   			VASCommissionTWO.click();
-   		} catch (Exception e) {
-   			// Handle other potential exceptions
-   			System.err.println("An unexpected error occurred: " + e.getMessage());
-   		}
-
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(VASCommissionTWO));
+			VASCommissionTWO.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
 	public void ClickOnISTMSAggregator() {
 
 //		IsTMSAggregator.click();
-		
-		 try {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(MarsId));
-	   			MarsId.click();
-	   		} catch (ElementClickInterceptedException e) {
+		try {
 
-	   			System.err.println("Element click intercepted: " + e.getMessage());
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(MarsId));
+			MarsId.click();
+		} catch (ElementClickInterceptedException e) {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(MarsId));
-	   			MarsId.click();
-	   		} catch (Exception e) {
-	   			// Handle other potential exceptions
-	   			System.err.println("An unexpected error occurred: " + e.getMessage());
-	   		}
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(MarsId));
+			MarsId.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
 	public void ClickOnEKYCRequired() {
 
 //		EKycRequired.click();
-		
-		 try {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(EKycRequired));
-	   			EKycRequired.click();
-	   		} catch (ElementClickInterceptedException e) {
+		try {
 
-	   			System.err.println("Element click intercepted: " + e.getMessage());
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(EKycRequired));
+			EKycRequired.click();
+		} catch (ElementClickInterceptedException e) {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(EKycRequired));
-	   			EKycRequired.click();
-	   		} catch (Exception e) {
-	   			// Handle other potential exceptions
-	   			System.err.println("An unexpected error occurred: " + e.getMessage());
-	   		}
+			System.err.println("Element click intercepted: " + e.getMessage());
 
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(EKycRequired));
+			EKycRequired.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
@@ -1523,24 +1777,23 @@ public class AggregatorLocators {
 	public void ClickOnLegalName() {
 
 //		LegalName.click();
-		
-		
-		 try {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(LegalName));
-	   			LegalName.click();
-	   		} catch (ElementClickInterceptedException e) {
+		try {
 
-	   			System.err.println("Element click intercepted: " + e.getMessage());
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(LegalName));
+			LegalName.click();
+		} catch (ElementClickInterceptedException e) {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(LegalName));
-	   			LegalName.click();
-	   		} catch (Exception e) {
-	   			// Handle other potential exceptions
-	   			System.err.println("An unexpected error occurred: " + e.getMessage());
-	   		}
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(LegalName));
+			LegalName.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
@@ -1568,24 +1821,23 @@ public class AggregatorLocators {
 	public void ClickOnBrandName() {
 
 //		BrandName.click();
-		
-		 try {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(BrandName));
-	   			BrandName.click();
-	   		} catch (ElementClickInterceptedException e) {
+		try {
 
-	   			System.err.println("Element click intercepted: " + e.getMessage());
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(BrandName));
+			BrandName.click();
+		} catch (ElementClickInterceptedException e) {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(BrandName));
-	   			BrandName.click();
-	   		} catch (Exception e) {
-	   			// Handle other potential exceptions
-	   			System.err.println("An unexpected error occurred: " + e.getMessage());
-	   		}
+			System.err.println("Element click intercepted: " + e.getMessage());
 
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(BrandName));
+			BrandName.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
@@ -1613,24 +1865,23 @@ public class AggregatorLocators {
 	public void ClickOnRegisteredAddress() {
 
 //		RegisteredAddress.click();
-		
-		 try {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(RegisteredAddress));
-	   			RegisteredAddress.click();
-	   		} catch (ElementClickInterceptedException e) {
+		try {
 
-	   			System.err.println("Element click intercepted: " + e.getMessage());
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(RegisteredAddress));
+			RegisteredAddress.click();
+		} catch (ElementClickInterceptedException e) {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(RegisteredAddress));
-	   			RegisteredAddress.click();
-	   		} catch (Exception e) {
-	   			// Handle other potential exceptions
-	   			System.err.println("An unexpected error occurred: " + e.getMessage());
-	   		}
+			System.err.println("Element click intercepted: " + e.getMessage());
 
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(RegisteredAddress));
+			RegisteredAddress.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
@@ -1652,35 +1903,30 @@ public class AggregatorLocators {
 	public void ClickOnRegisteredPincode() {
 
 //		RegisteredPincode.click();
-		
-		 try {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(RegisteredPincode));
-	   			RegisteredPincode.click();
-	   		} catch (ElementClickInterceptedException e) {
+		try {
 
-	   			System.err.println("Element click intercepted: " + e.getMessage());
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(RegisteredPincode));
+			RegisteredPincode.click();
+		} catch (ElementClickInterceptedException e) {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(RegisteredPincode));
-	   			RegisteredPincode.click();
-	   		} catch (Exception e) {
-	   			// Handle other potential exceptions
-	   			System.err.println("An unexpected error occurred: " + e.getMessage());
-	   		}
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(RegisteredPincode));
+			RegisteredPincode.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
-	
+
 	public void EnterOnRegisteredPincode(String pin) {
 		RegisteredPincode.sendKeys(pin);
-		
+
 	}
-	
-	
-	
 
 	public String getRegisteredPincode() {
 		return RegisteredPincode.getAttribute("value");
@@ -1689,25 +1935,23 @@ public class AggregatorLocators {
 	public void SelectOnRegisteredPincode() {
 
 //		SelectOnRegisteredPincode.click();
-		
-		
-		 try {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(SelectOnRegisteredPincode));
-	   			SelectOnRegisteredPincode.click();
-	   		} catch (ElementClickInterceptedException e) {
+		try {
 
-	   			System.err.println("Element click intercepted: " + e.getMessage());
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(SelectOnRegisteredPincode));
+			SelectOnRegisteredPincode.click();
+		} catch (ElementClickInterceptedException e) {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(SelectOnRegisteredPincode));
-	   			SelectOnRegisteredPincode.click();
-	   		} catch (Exception e) {
-	   			// Handle other potential exceptions
-	   			System.err.println("An unexpected error occurred: " + e.getMessage());
-	   		}
+			System.err.println("Element click intercepted: " + e.getMessage());
 
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(SelectOnRegisteredPincode));
+			SelectOnRegisteredPincode.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
@@ -1749,49 +1993,46 @@ public class AggregatorLocators {
 	public void ClickOnBusinessType() {
 
 //		BusinessType.click();
-		
-		
-		 try {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(BusinessType));
-	   			BusinessType.click();
-	   		} catch (ElementClickInterceptedException e) {
+		try {
 
-	   			System.err.println("Element click intercepted: " + e.getMessage());
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(BusinessType));
+			BusinessType.click();
+		} catch (ElementClickInterceptedException e) {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(BusinessType));
-	   			BusinessType.click();
-	   		} catch (Exception e) {
-	   			// Handle other potential exceptions
-	   			System.err.println("An unexpected error occurred: " + e.getMessage());
-	   		}
+			System.err.println("Element click intercepted: " + e.getMessage());
 
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(BusinessType));
+			BusinessType.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
 	public void SelectOnBusinessType() {
 
 //		SelectOnBusinessType.click();
-		
-		 try {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(SelectOnBusinessType));
-	   			SelectOnBusinessType.click();
-	   		} catch (ElementClickInterceptedException e) {
+		try {
 
-	   			System.err.println("Element click intercepted: " + e.getMessage());
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(SelectOnBusinessType));
+			SelectOnBusinessType.click();
+		} catch (ElementClickInterceptedException e) {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(SelectOnBusinessType));
-	   			SelectOnBusinessType.click();
-	   		} catch (Exception e) {
-	   			// Handle other potential exceptions
-	   			System.err.println("An unexpected error occurred: " + e.getMessage());
-	   		}
+			System.err.println("Element click intercepted: " + e.getMessage());
 
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(SelectOnBusinessType));
+			SelectOnBusinessType.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
@@ -1807,24 +2048,23 @@ public class AggregatorLocators {
 	public void ClickOnEstablishedYearDatepicker() {
 
 //		EstablishedYearDatepicker.click();
-		
-		 try {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(EstablishedYearDatepicker));
-	   			EstablishedYearDatepicker.click();
-	   		} catch (ElementClickInterceptedException e) {
+		try {
 
-	   			System.err.println("Element click intercepted: " + e.getMessage());
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(EstablishedYearDatepicker));
+			EstablishedYearDatepicker.click();
+		} catch (ElementClickInterceptedException e) {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(EstablishedYearDatepicker));
-	   			EstablishedYearDatepicker.click();
-	   		} catch (Exception e) {
-	   			// Handle other potential exceptions
-	   			System.err.println("An unexpected error occurred: " + e.getMessage());
-	   		}
+			System.err.println("Element click intercepted: " + e.getMessage());
 
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(EstablishedYearDatepicker));
+			EstablishedYearDatepicker.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
@@ -1840,24 +2080,23 @@ public class AggregatorLocators {
 	public void CLickOnRegisterNumber() {
 
 //		RegisterNumber.click();
-		
-		
-		 try {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(RegisterNumber));
-	   			RegisterNumber.click();
-	   		} catch (ElementClickInterceptedException e) {
+		try {
 
-	   			System.err.println("Element click intercepted: " + e.getMessage());
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(RegisterNumber));
+			RegisterNumber.click();
+		} catch (ElementClickInterceptedException e) {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(RegisterNumber));
-	   			RegisterNumber.click();
-	   		} catch (Exception e) {
-	   			// Handle other potential exceptions
-	   			System.err.println("An unexpected error occurred: " + e.getMessage());
-	   		}
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(RegisterNumber));
+			RegisterNumber.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
@@ -1876,10 +2115,10 @@ public class AggregatorLocators {
 //	public void EnterOnRegisterNumber(Integer num) {
 //		RegisterNumber.sendKeys(num.toString());
 //	}
-	
+
 	public void EnterOnRegisterNumber(String num) {
-	RegisterNumber.sendKeys(num);
-}
+		RegisterNumber.sendKeys(num);
+	}
 
 	public void CompanyPANLabel() {
 		try {
@@ -1893,24 +2132,23 @@ public class AggregatorLocators {
 	public void CLickOnCompanyPAN() {
 
 //		ComapnyPAN.click();
-		
-		
-		 try {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(ComapnyPAN));
-	   			ComapnyPAN.click();
-	   		} catch (ElementClickInterceptedException e) {
+		try {
 
-	   			System.err.println("Element click intercepted: " + e.getMessage());
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ComapnyPAN));
+			ComapnyPAN.click();
+		} catch (ElementClickInterceptedException e) {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(ComapnyPAN));
-	   			ComapnyPAN.click();
-	   		} catch (Exception e) {
-	   			// Handle other potential exceptions
-	   			System.err.println("An unexpected error occurred: " + e.getMessage());
-	   		}
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ComapnyPAN));
+			ComapnyPAN.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
@@ -1938,27 +2176,23 @@ public class AggregatorLocators {
 	public void CLickOnGSTIN() {
 
 //		GSTIN.click();
-		
-		
-		 try {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(GSTIN));
-	   			GSTIN.click();
-	   		} catch (ElementClickInterceptedException e) {
+		try {
 
-	   			System.err.println("Element click intercepted: " + e.getMessage());
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(GSTIN));
+			GSTIN.click();
+		} catch (ElementClickInterceptedException e) {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(GSTIN));
-	   			GSTIN.click();
-	   		} catch (Exception e) {
-	   			// Handle other potential exceptions
-	   			System.err.println("An unexpected error occurred: " + e.getMessage());
-	   		}
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-		
-		
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(GSTIN));
+			GSTIN.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
@@ -1990,48 +2224,46 @@ public class AggregatorLocators {
 	public void CLickOnStatementFrequency() {
 
 //		StatementFrequency.click();
-		
-		
-		 try {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(StatementFrequency));
-	   			StatementFrequency.click();
-	   		} catch (ElementClickInterceptedException e) {
+		try {
 
-	   			System.err.println("Element click intercepted: " + e.getMessage());
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(StatementFrequency));
+			StatementFrequency.click();
+		} catch (ElementClickInterceptedException e) {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(StatementFrequency));
-	   			StatementFrequency.click();
-	   		} catch (Exception e) {
-	   			// Handle other potential exceptions
-	   			System.err.println("An unexpected error occurred: " + e.getMessage());
-	   		}
+			System.err.println("Element click intercepted: " + e.getMessage());
 
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(StatementFrequency));
+			StatementFrequency.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
 	public void SelectOnStatementFrequencyQuarterly() {
 
 //		SelectStatementFrequencyQuarterly.click();
-		
-		 try {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(SelectStatementFrequencyQuarterly));
-	   			SelectStatementFrequencyQuarterly.click();
-	   		} catch (ElementClickInterceptedException e) {
+		try {
 
-	   			System.err.println("Element click intercepted: " + e.getMessage());
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(SelectStatementFrequencyQuarterly));
+			SelectStatementFrequencyQuarterly.click();
+		} catch (ElementClickInterceptedException e) {
 
-	   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	   			wait.until(ExpectedConditions.elementToBeClickable(SelectStatementFrequencyQuarterly));
-	   			SelectStatementFrequencyQuarterly.click();
-	   		} catch (Exception e) {
-	   			// Handle other potential exceptions
-	   			System.err.println("An unexpected error occurred: " + e.getMessage());
-	   		}
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(SelectStatementFrequencyQuarterly));
+			SelectStatementFrequencyQuarterly.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
@@ -2047,48 +2279,46 @@ public class AggregatorLocators {
 	public void CLickOnStatementType() {
 
 //		StatementType.click();
-		
+
 		try {
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(StatementType));
-   			StatementType.click();
-   		} catch (ElementClickInterceptedException e) {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(StatementType));
+			StatementType.click();
+		} catch (ElementClickInterceptedException e) {
 
-   			System.err.println("Element click intercepted: " + e.getMessage());
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(StatementType));
-   			StatementType.click();
-   		} catch (Exception e) {
-   			// Handle other potential exceptions
-   			System.err.println("An unexpected error occurred: " + e.getMessage());
-   		}
-
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(StatementType));
+			StatementType.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
 	public void SelectOnStatementTypePDF() {
 
 //		SelectStatementTypePDF.click();
-		
+
 		try {
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(SelectStatementTypePDF));
-   			SelectStatementTypePDF.click();
-   		} catch (ElementClickInterceptedException e) {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(SelectStatementTypePDF));
+			SelectStatementTypePDF.click();
+		} catch (ElementClickInterceptedException e) {
 
-   			System.err.println("Element click intercepted: " + e.getMessage());
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(SelectStatementTypePDF));
-   			SelectStatementTypePDF.click();
-   		} catch (Exception e) {
-   			// Handle other potential exceptions
-   			System.err.println("An unexpected error occurred: " + e.getMessage());
-   		}
-
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(SelectStatementTypePDF));
+			SelectStatementTypePDF.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
@@ -2104,26 +2334,23 @@ public class AggregatorLocators {
 	public void CLickOnEmailDomain() {
 
 //		EmailDomain.click();
-		
-		
+
 		try {
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(EmailDomain));
-   			EmailDomain.click();
-   		} catch (ElementClickInterceptedException e) {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(EmailDomain));
+			EmailDomain.click();
+		} catch (ElementClickInterceptedException e) {
 
-   			System.err.println("Element click intercepted: " + e.getMessage());
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(EmailDomain));
-   			EmailDomain.click();
-   		} catch (Exception e) {
-   			// Handle other potential exceptions
-   			System.err.println("An unexpected error occurred: " + e.getMessage());
-   		}
-
-
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(EmailDomain));
+			EmailDomain.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
@@ -2295,74 +2522,69 @@ public class AggregatorLocators {
 	public void ClickOntitlepersonal() {
 
 //		titlepersonal.click();
-		
+
 		try {
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(titlepersonal));
-   			titlepersonal.click();
-   		} catch (ElementClickInterceptedException e) {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(titlepersonal));
+			titlepersonal.click();
+		} catch (ElementClickInterceptedException e) {
 
-   			System.err.println("Element click intercepted: " + e.getMessage());
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(titlepersonal));
-   			titlepersonal.click();
-   		} catch (Exception e) {
-   			// Handle other potential exceptions
-   			System.err.println("An unexpected error occurred: " + e.getMessage());
-   		}
-
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(titlepersonal));
+			titlepersonal.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
 	public void Selectbytitlepersonal() {
 
 //		SelectbytitlePersonal.click();
-		
-		
+
 		try {
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(SelectbytitlePersonal));
-   			SelectbytitlePersonal.click();
-   		} catch (ElementClickInterceptedException e) {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(SelectbytitlePersonal));
+			SelectbytitlePersonal.click();
+		} catch (ElementClickInterceptedException e) {
 
-   			System.err.println("Element click intercepted: " + e.getMessage());
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(SelectbytitlePersonal));
-   			SelectbytitlePersonal.click();
-   		} catch (Exception e) {
-   			// Handle other potential exceptions
-   			System.err.println("An unexpected error occurred: " + e.getMessage());
-   		}
-
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(SelectbytitlePersonal));
+			SelectbytitlePersonal.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
 	public void ClickOnFirstNamePersonal() {
 
 //		FirstNamePersonal.click();
-		
-		
+
 		try {
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(FirstNamePersonal));
-   			FirstNamePersonal.click();
-   		} catch (ElementClickInterceptedException e) {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(FirstNamePersonal));
+			FirstNamePersonal.click();
+		} catch (ElementClickInterceptedException e) {
 
-   			System.err.println("Element click intercepted: " + e.getMessage());
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(FirstNamePersonal));
-   			FirstNamePersonal.click();
-   		} catch (Exception e) {
-   			// Handle other potential exceptions
-   			System.err.println("An unexpected error occurred: " + e.getMessage());
-   		}
-
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(FirstNamePersonal));
+			FirstNamePersonal.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
@@ -2381,23 +2603,23 @@ public class AggregatorLocators {
 	public void ClickOnLastNamePersonal() {
 
 //		LastNamePersonal.click();
-		
+
 		try {
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(LastNamePersonal));
-   			LastNamePersonal.click();
-   		} catch (ElementClickInterceptedException e) {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(LastNamePersonal));
+			LastNamePersonal.click();
+		} catch (ElementClickInterceptedException e) {
 
-   			System.err.println("Element click intercepted: " + e.getMessage());
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(LastNamePersonal));
-   			LastNamePersonal.click();
-   		} catch (Exception e) {
-   			// Handle other potential exceptions
-   			System.err.println("An unexpected error occurred: " + e.getMessage());
-   		}
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(LastNamePersonal));
+			LastNamePersonal.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
@@ -2416,192 +2638,184 @@ public class AggregatorLocators {
 	public void ClickOnDOBPersonal() {
 
 //		DOBPersonl.click();
-		
+
 		try {
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(DOBPersonl));
-   			DOBPersonl.click();
-   		} catch (ElementClickInterceptedException e) {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(DOBPersonl));
+			DOBPersonl.click();
+		} catch (ElementClickInterceptedException e) {
 
-   			System.err.println("Element click intercepted: " + e.getMessage());
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(DOBPersonl));
-   			DOBPersonl.click();
-   		} catch (Exception e) {
-   			// Handle other potential exceptions
-   			System.err.println("An unexpected error occurred: " + e.getMessage());
-   		}
-
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(DOBPersonl));
+			DOBPersonl.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
 	public void ClickOnOpenCalenderPersonal() {
 
 //		OpenCalenderPersonal.click();
-		
+
 		try {
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(OpenCalenderPersonal));
-   			OpenCalenderPersonal.click();
-   		} catch (ElementClickInterceptedException e) {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(OpenCalenderPersonal));
+			OpenCalenderPersonal.click();
+		} catch (ElementClickInterceptedException e) {
 
-   			System.err.println("Element click intercepted: " + e.getMessage());
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(OpenCalenderPersonal));
-   			OpenCalenderPersonal.click();
-   		} catch (Exception e) {
-   			// Handle other potential exceptions
-   			System.err.println("An unexpected error occurred: " + e.getMessage());
-   		}
-
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(OpenCalenderPersonal));
+			OpenCalenderPersonal.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
 	public void ClickOnChooseMonthandYearPersonal() {
 
 //		ChooseMonthandYear.click();
-		
+
 		try {
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(ChooseMonthandYear));
-   			ChooseMonthandYear.click();
-   		} catch (ElementClickInterceptedException e) {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ChooseMonthandYear));
+			ChooseMonthandYear.click();
+		} catch (ElementClickInterceptedException e) {
 
-   			System.err.println("Element click intercepted: " + e.getMessage());
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(ChooseMonthandYear));
-   			ChooseMonthandYear.click();
-   		} catch (Exception e) {
-   			// Handle other potential exceptions
-   			System.err.println("An unexpected error occurred: " + e.getMessage());
-   		}
-
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ChooseMonthandYear));
+			ChooseMonthandYear.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
 	public void ClickOnYearPersonal() {
 
 //		Year.click();
-		
+
 		try {
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(Year));
-   			Year.click();
-   		} catch (ElementClickInterceptedException e) {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(Year));
+			Year.click();
+		} catch (ElementClickInterceptedException e) {
 
-   			System.err.println("Element click intercepted: " + e.getMessage());
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(Year));
-   			Year.click();
-   		} catch (Exception e) {
-   			// Handle other potential exceptions
-   			System.err.println("An unexpected error occurred: " + e.getMessage());
-   		}
-
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(Year));
+			Year.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
 	public void ClickOnMonthPersonal() {
 
 //		Month.click();
-		
+
 		try {
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(Month));
-   			Month.click();
-   		} catch (ElementClickInterceptedException e) {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(Month));
+			Month.click();
+		} catch (ElementClickInterceptedException e) {
 
-   			System.err.println("Element click intercepted: " + e.getMessage());
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(Month));
-   			Month.click();
-   		} catch (Exception e) {
-   			// Handle other potential exceptions
-   			System.err.println("An unexpected error occurred: " + e.getMessage());
-   		}
-
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(Month));
+			Month.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
 	public void ClickOnDatePersonal() {
 
 //		Date.click();
-		
+
 		try {
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(Date));
-   			Date.click();
-   		} catch (ElementClickInterceptedException e) {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(Date));
+			Date.click();
+		} catch (ElementClickInterceptedException e) {
 
-   			System.err.println("Element click intercepted: " + e.getMessage());
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(Date));
-   			Date.click();
-   		} catch (Exception e) {
-   			// Handle other potential exceptions
-   			System.err.println("An unexpected error occurred: " + e.getMessage());
-   		}
-
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(Date));
+			Date.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
 	public void ClickOnApplyPersonal() {
 
 //		ApplyPersonalDatePicker.click();
-		
+
 		try {
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(ApplyPersonalDatePicker));
-   			ApplyPersonalDatePicker.click();
-   		} catch (ElementClickInterceptedException e) {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ApplyPersonalDatePicker));
+			ApplyPersonalDatePicker.click();
+		} catch (ElementClickInterceptedException e) {
 
-   			System.err.println("Element click intercepted: " + e.getMessage());
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(ApplyPersonalDatePicker));
-   			ApplyPersonalDatePicker.click();
-   		} catch (Exception e) {
-   			// Handle other potential exceptions
-   			System.err.println("An unexpected error occurred: " + e.getMessage());
-   		}
-
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ApplyPersonalDatePicker));
+			ApplyPersonalDatePicker.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
 	public void ClickOnPANPersonal() {
 
 //		PanPersonal.click();
-		
+
 		try {
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(PanPersonal));
-   			PanPersonal.click();
-   		} catch (ElementClickInterceptedException e) {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(PanPersonal));
+			PanPersonal.click();
+		} catch (ElementClickInterceptedException e) {
 
-   			System.err.println("Element click intercepted: " + e.getMessage());
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(PanPersonal));
-   			PanPersonal.click();
-   		} catch (Exception e) {
-   			// Handle other potential exceptions
-   			System.err.println("An unexpected error occurred: " + e.getMessage());
-   		}
-
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(PanPersonal));
+			PanPersonal.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
@@ -2620,23 +2834,23 @@ public class AggregatorLocators {
 	public void ClickOnAddressPersonal() {
 
 //		AddressPersonal.click();
-		
+
 		try {
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(AddressPersonal));
-   			AddressPersonal.click();
-   		} catch (ElementClickInterceptedException e) {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(AddressPersonal));
+			AddressPersonal.click();
+		} catch (ElementClickInterceptedException e) {
 
-   			System.err.println("Element click intercepted: " + e.getMessage());
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(AddressPersonal));
-   			AddressPersonal.click();
-   		} catch (Exception e) {
-   			// Handle other potential exceptions
-   			System.err.println("An unexpected error occurred: " + e.getMessage());
-   		}
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(AddressPersonal));
+			AddressPersonal.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
@@ -2654,8 +2868,27 @@ public class AggregatorLocators {
 
 	public void ClickOnPincodePersonal() {
 
-		PincodePersonal.click();
+//		PincodePersonal.click();
 		
+		
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(PincodePersonal));
+			PincodePersonal.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(PincodePersonal));
+			PincodePersonal.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+
+
 	}
 
 	public String getPincodePersonal() {
@@ -2665,24 +2898,23 @@ public class AggregatorLocators {
 	public void ClickOnMobileNumberPersonal() {
 
 //		MobilePersonal.click();
-		
+
 		try {
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(MobilePersonal));
-   			MobilePersonal.click();
-   		} catch (ElementClickInterceptedException e) {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(MobilePersonal));
+			MobilePersonal.click();
+		} catch (ElementClickInterceptedException e) {
 
-   			System.err.println("Element click intercepted: " + e.getMessage());
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(MobilePersonal));
-   			MobilePersonal.click();
-   		} catch (Exception e) {
-   			// Handle other potential exceptions
-   			System.err.println("An unexpected error occurred: " + e.getMessage());
-   		}
-
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(MobilePersonal));
+			MobilePersonal.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
@@ -2701,24 +2933,23 @@ public class AggregatorLocators {
 	public void ClickOnTelephonePersonal() {
 
 //		telephonepersonal.click();
-		
+
 		try {
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(telephonepersonal));
-   			telephonepersonal.click();
-   		} catch (ElementClickInterceptedException e) {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(telephonepersonal));
+			telephonepersonal.click();
+		} catch (ElementClickInterceptedException e) {
 
-   			System.err.println("Element click intercepted: " + e.getMessage());
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(telephonepersonal));
-   			telephonepersonal.click();
-   		} catch (Exception e) {
-   			// Handle other potential exceptions
-   			System.err.println("An unexpected error occurred: " + e.getMessage());
-   		}
-
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(telephonepersonal));
+			telephonepersonal.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
@@ -2737,24 +2968,23 @@ public class AggregatorLocators {
 	public void ClickOnEmailPersonal() {
 
 //		emailPersonal.click();
-		
+
 		try {
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(emailPersonal));
-   			emailPersonal.click();
-   		} catch (ElementClickInterceptedException e) {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(emailPersonal));
+			emailPersonal.click();
+		} catch (ElementClickInterceptedException e) {
 
-   			System.err.println("Element click intercepted: " + e.getMessage());
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(emailPersonal));
-   			emailPersonal.click();
-   		} catch (Exception e) {
-   			// Handle other potential exceptions
-   			System.err.println("An unexpected error occurred: " + e.getMessage());
-   		}
-
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(emailPersonal));
+			emailPersonal.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
@@ -2773,24 +3003,23 @@ public class AggregatorLocators {
 	public void ClickOnNationalityPersonal() {
 
 //		Nationalitypersonal.click();
-		
+
 		try {
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(Nationalitypersonal));
-   			Nationalitypersonal.click();
-   		} catch (ElementClickInterceptedException e) {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(Nationalitypersonal));
+			Nationalitypersonal.click();
+		} catch (ElementClickInterceptedException e) {
 
-   			System.err.println("Element click intercepted: " + e.getMessage());
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(Nationalitypersonal));
-   			Nationalitypersonal.click();
-   		} catch (Exception e) {
-   			// Handle other potential exceptions
-   			System.err.println("An unexpected error occurred: " + e.getMessage());
-   		}
-
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(Nationalitypersonal));
+			Nationalitypersonal.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
@@ -2809,23 +3038,23 @@ public class AggregatorLocators {
 	public void ClickOnAadhaarNumberPersonal() {
 
 //		AadhaarNumberPersonal.click();
-		
+
 		try {
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(AadhaarNumberPersonal));
-   			AadhaarNumberPersonal.click();
-   		} catch (ElementClickInterceptedException e) {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(AadhaarNumberPersonal));
+			AadhaarNumberPersonal.click();
+		} catch (ElementClickInterceptedException e) {
 
-   			System.err.println("Element click intercepted: " + e.getMessage());
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(AadhaarNumberPersonal));
-   			AadhaarNumberPersonal.click();
-   		} catch (Exception e) {
-   			// Handle other potential exceptions
-   			System.err.println("An unexpected error occurred: " + e.getMessage());
-   		}
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(AadhaarNumberPersonal));
+			AadhaarNumberPersonal.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
@@ -2848,24 +3077,23 @@ public class AggregatorLocators {
 	public void ClickOnPassportNumberPersonal() {
 
 //		PassportNumberPersonal.click();
-		
+
 		try {
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(PassportNumberPersonal));
-   			PassportNumberPersonal.click();
-   		} catch (ElementClickInterceptedException e) {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(PassportNumberPersonal));
+			PassportNumberPersonal.click();
+		} catch (ElementClickInterceptedException e) {
 
-   			System.err.println("Element click intercepted: " + e.getMessage());
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(PassportNumberPersonal));
-   			PassportNumberPersonal.click();
-   		} catch (Exception e) {
-   			// Handle other potential exceptions
-   			System.err.println("An unexpected error occurred: " + e.getMessage());
-   		}
-
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(PassportNumberPersonal));
+			PassportNumberPersonal.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
@@ -2884,46 +3112,46 @@ public class AggregatorLocators {
 	public void ClickOnOpenCalenderPasswordExpiry() {
 
 //		OpenCalenderPasswordExpiryDate.click();
-		
+
 		try {
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(OpenCalenderPasswordExpiryDate));
-   			OpenCalenderPasswordExpiryDate.click();
-   		} catch (ElementClickInterceptedException e) {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(OpenCalenderPasswordExpiryDate));
+			OpenCalenderPasswordExpiryDate.click();
+		} catch (ElementClickInterceptedException e) {
 
-   			System.err.println("Element click intercepted: " + e.getMessage());
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(OpenCalenderPasswordExpiryDate));
-   			OpenCalenderPasswordExpiryDate.click();
-   		} catch (Exception e) {
-   			// Handle other potential exceptions
-   			System.err.println("An unexpected error occurred: " + e.getMessage());
-   		}
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(OpenCalenderPasswordExpiryDate));
+			OpenCalenderPasswordExpiryDate.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
 	public void ClickOnSAVEPersonal() {
 
 //		SAVEPersonal.click();
-		
+
 		try {
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(SAVEPersonal));
-   			SAVEPersonal.click();
-   		} catch (ElementClickInterceptedException e) {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(SAVEPersonal));
+			SAVEPersonal.click();
+		} catch (ElementClickInterceptedException e) {
 
-   			System.err.println("Element click intercepted: " + e.getMessage());
+			System.err.println("Element click intercepted: " + e.getMessage());
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(SAVEPersonal));
-   			SAVEPersonal.click();
-   		} catch (Exception e) {
-   			// Handle other potential exceptions
-   			System.err.println("An unexpected error occurred: " + e.getMessage());
-   		}
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(SAVEPersonal));
+			SAVEPersonal.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
 
@@ -2983,137 +3211,293 @@ public class AggregatorLocators {
 	}
 
 	public void ClickOnChannelBankName() {
+
+//		ChannelBankName.click();
 		
-		ChannelBankName.click();
+		
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ChannelBankName));
+			ChannelBankName.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ChannelBankName));
+			ChannelBankName.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+
+		
+		
+		
 
 	}
-	
+
 	public void ClearOnChannelBankName() {
-		
+
 		ChannelBankName.clear();
 
 	}
 
-
 	public void EnterOnChannelBankName(String bankname) {
-		
+
 		ChannelBankName.sendKeys(bankname);
 
 	}
-	
+
 	public void ClickOnChannel() {
+
+//		Channel.click();
 		
-		Channel.click();
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(Channel));
+			Channel.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(Channel));
+			Channel.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
-	
+
 	public void SelectOnPOSChannel() {
-	    
+
 		ChannelPOS.click();
 
 	}
-	
-	
-       public void SelectonUPIChannel() {
-		
- //   	   ChannelUPI.click();
-    	   
-    	   try {
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(ChannelUPI));
-   			ChannelUPI.click();
-   		} catch (ElementClickInterceptedException e) {
+	public void SelectonUPIChannel() {
 
-   			System.err.println("Element click intercepted: " + e.getMessage());
+		// ChannelUPI.click();
 
-   			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-   			wait.until(ExpectedConditions.elementToBeClickable(ChannelUPI));
-   			ChannelUPI.click();
-   		} catch (Exception e) {
-   			// Handle other potential exceptions
-   			System.err.println("An unexpected error occurred: " + e.getMessage());
-   		}
-		
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ChannelUPI));
+			ChannelUPI.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ChannelUPI));
+			ChannelUPI.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
 		}
 
-	
+	}
+
 	public void SelectOnAEPSChannel() {
 		JavascriptExecutor executor = (JavascriptExecutor) driver;
-		executor.executeScript("arguments[0].click();", ChannelAEPS);	    
-	   
+		executor.executeScript("arguments[0].click();", ChannelAEPS);
+
+	}
+
+	public void ClickOnChannelNetwork() {
+
+//		ChannelNetwork.click();
+		
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ChannelNetwork));
+			ChannelNetwork.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ChannelNetwork));
+			ChannelNetwork.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+
+	}
+
+	public void ClickOnChannelTransactionsets() {
+
+//		ChannelTransaction.click();
+		
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ChannelTransaction));
+			ChannelTransaction.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ChannelTransaction));
+			ChannelTransaction.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+
+	}
+
 	
+
+	public void ClickOnChannelStartDate() {
+
+//		ChannelOpencalender1.click();
+		
+		
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ChannelOpencalender1));
+			ChannelOpencalender1.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ChannelOpencalender1));
+			ChannelOpencalender1.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+
 	}
 
 	
-   public void ClickOnChannelNetwork() {
-		
-        ChannelNetwork.click();
+
+	public void ClickOnChannelENDDate() {
+
+//		ChannelOpencalender2.click();
+
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ChannelOpencalender2));
+			ChannelOpencalender2.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ChannelOpencalender2));
+			ChannelOpencalender2.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 
 	}
-   
-   public void ClickOnChannelTransactionsets() {
+
+
+	public void ClickOnChannelApply() {
+
+//		ChannelApply.click();
 		
-       ChannelTransaction.click();
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ChannelApply));
+			ChannelApply.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ChannelApply));
+			ChannelApply.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+
 
 	}
-   
-   public void ClickOnChannelStartDate() {
+
+	public void ClickOnChannelSave() {
+
+	//	ChannelSave.click();
 		
-       ChannelOpencalender1.click();
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ChannelSave));
+			ChannelSave.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ChannelSave));
+			ChannelSave.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+
 
 	}
-   
-   public void ClickOnChannelENDDate() {
-		
-       ChannelOpencalender2.click();
+	
 
-	}
-   
-   
-   public void ClickOnChannelApply() {
-		
-       ChannelApply.click();
+	
 
-	}
-   
-   public void ClickOnChannelSave() {
-		
-       ChannelSave.click();
-
-	}
-   
 //KYC   
-   
-   public void UploadCompanyProofofaddress(String proofofaddress) {
-		
-	   //    CompanyPANUpload.click();
-		   CompanyProofofaddressUpload.sendKeys(proofofaddress);
 
+	public void UploadCompanyProofofaddress(String proofofaddress) throws InterruptedException {
+
+		// CompanyPANUpload.click();
+		Thread.sleep(3000);
+		CompanyProofofaddressUpload.sendKeys(proofofaddress);
+		
+//		    // Assuming CompanyProofofaddressUpload is your WebElement for the upload field
+//		    WebElement uploadField = CompanyProofofaddressUpload;
+//
+//		    // Wait for the element to be clickable and visible before proceeding
+//		    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+//		    wait.until(ExpectedConditions.elementToBeClickable(uploadField));
+//
+//		    // Perform the upload action
+//		    uploadField.sendKeys(proofofaddress);
 		}
-   
-   
-   public void UploadCompanyPAN(String pan) {
-		
-   //    CompanyPANUpload.click();
-	   CompanyPANUpload.sendKeys(pan);
 
-	}
-   
-   public void UploadGSTCertificate(String gst) {
-		
-      // GSTCertificateUpload.click();
-
-       GSTCertificateUpload.sendKeys(gst);
-	}
-   
-   public void Aadhaar(String aadhaar) {
-		
-	      // GSTCertificateUpload.click();
-
-	       AadhaarUpload.sendKeys(aadhaar);
-		}
 	
+
+	public void UploadCompanyPAN(String pan) {
+
+		// CompanyPANUpload.click();
+		CompanyPANUpload.sendKeys(pan);
+
+	}
+
+	public void UploadGSTCertificate(String gst) {
+
+		// GSTCertificateUpload.click();
+
+		GSTCertificateUpload.sendKeys(gst);
+	}
+
+	public void Aadhaar(String aadhaar) {
+
+		// GSTCertificateUpload.click();
+
+		AadhaarUpload.sendKeys(aadhaar);
+	}
 
 //RiskInfo
 
@@ -3183,34 +3567,119 @@ public class AggregatorLocators {
 
 	public void ClickOnVelocityCheckMinute() {
 
-		VelocityCheckMinute.click();
+	//	VelocityCheckMinute.click();
+		
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(VelocityCheckMinute));
+			VelocityCheckMinute.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(VelocityCheckMinute));
+			VelocityCheckMinute.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+
 
 	}
-
+	
 	public void ClickOnVelocityCheckCount() {
 
-		VelocityCheckCount.click();
+//		VelocityCheckCount.click();
+
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(VelocityCheckCount));
+			VelocityCheckCount.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(VelocityCheckCount));
+			VelocityCheckCount.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+
 
 	}
 
 	public void ClickOnCashpOScount() {
 
-		CashPOSCount.click();
+//		CashPOSCount.click();
+		
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(CashPOSCount));
+			CashPOSCount.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(CashPOSCount));
+			CashPOSCount.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+
 
 	}
-	
+
+
 	public void ClickOnMicroAtmcount() {
 
-		microatmcount.click();
+//		microatmcount.click();
+		
+		try {
 
-	}
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(microatmcount));
+			microatmcount.click();
+		} catch (ElementClickInterceptedException e) {
 
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(microatmcount));
+			microatmcount.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+}
 
 	public void ClickOnInternationalcardCount() {
 
-		InternationalCardCount.click();
+//		InternationalCardCount.click();
+		try {
 
-	}
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(InternationalCardCount));
+			InternationalCardCount.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(InternationalCardCount));
+			InternationalCardCount.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+}
 
 	public void EnterOnVelocityCheckMinute(String checkMinute) {
 
@@ -3229,33 +3698,82 @@ public class AggregatorLocators {
 		CashPOSCount.sendKeys(cashposcount);
 
 	}
-	
-	
+
 	public void EnterOnMicroAtmcount(String icroatmcount) {
-   
+
 		microatmcount.sendKeys(icroatmcount);
 
 	}
-	
-	
 
 	public void yesInternationalcardCount() {
 
-		YesInternationalCardCount.click();
+//		YesInternationalCardCount.click();
+		
+		try {
 
-	}
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(YesInternationalCardCount));
+			YesInternationalCardCount.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(YesInternationalCardCount));
+			YesInternationalCardCount.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+}
+
+	
 
 	public void NoInternationalcardCount() {
 
-		NOInternationalCardCount.click();
+//		NOInternationalCardCount.click();
 
-	}
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(NOInternationalCardCount));
+			NOInternationalCardCount.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(NOInternationalCardCount));
+			NOInternationalCardCount.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+}
 
 	public void ClickonICAdaily() {
 
-		ICADaily.click();
-	}
+//		ICADaily.click();
+	
+try {
+            
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ICADaily));
+			ICADaily.click();
+		} catch (ElementClickInterceptedException e) {
 
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ICADaily));
+			ICADaily.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+	}
+	
+	
 	public void ClearonICAdaily() {
 
 		ICADaily.clear();
@@ -3263,7 +3781,23 @@ public class AggregatorLocators {
 
 	public void ClickonICAWeekly() {
 
-		ICAWeekly.click();
+//		ICAWeekly.click();
+try {
+            
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ICAWeekly));
+			ICAWeekly.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ICAWeekly));
+			ICAWeekly.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
 
 	public void ClearonICAWeekly() {
@@ -3273,8 +3807,26 @@ public class AggregatorLocators {
 
 	public void ClickonICAMonthly() {
 
-		ICAMonthly.click();
+//		ICAMonthly.click();
+		
+try {
+            
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ICAMonthly));
+			ICAMonthly.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ICAMonthly));
+			ICAMonthly.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
+	
 
 	public void ClearonICAMonthly() {
 
@@ -3295,36 +3847,53 @@ public class AggregatorLocators {
 
 		ICAMonthly.sendKeys(Monthly);
 	}
-	
+
 //DiscountRate
-	
+
 	public void ClickOnDiscountRatePricingPlan() {
 
-		DiscountRatePricingPlan.click();
+//		DiscountRatePricingPlan.click();
+//		
+//	}
+try {
+            
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(DiscountRatePricingPlan));
+			
+			Thread.sleep(1000);
+			JavascriptExecutor js = (JavascriptExecutor) driver;
+		    js.executeScript("arguments[0].click();", DiscountRatePricingPlan);
+		} catch (ElementClickInterceptedException e) {
 
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(DiscountRatePricingPlan));
+			JavascriptExecutor js = (JavascriptExecutor) driver;
+		    js.executeScript("arguments[0].click();", DiscountRatePricingPlan);
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
-	
 
 	public void SelectOnPOSPricingPlan() {
 
 		POSPricingPlan.click();
 
 	}
-	
+
 	public void SelectOnAEPSPricingPlan() {
 
 		AEPSPricingPlan.click();
 
 	}
-	
+
 	public void SelectOnUPIPricingPlan() {
 
 		UPIPricingPlan.click();
 
 	}
-	
-	
-	
 
 //SettlementInfo
 
@@ -3347,17 +3916,53 @@ public class AggregatorLocators {
 	}
 
 	public void ClickOnSettlementMode() {
-	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	    wait.until(ExpectedConditions.elementToBeClickable(SettlementMode));
-	    
-	    SettlementMode.click();
+//	   WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+//	    wait.until(ExpectedConditions.elementToBeClickable(SettlementMode));
+//	    
+//	    SettlementMode.click();
+//	}
+		
+		try {
+            
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(SettlementMode));
+			SettlementMode.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(SettlementMode));
+			SettlementMode.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
 
-	
+
+
 	public void ClickOnPaymentFlag() {
 
-		PaymentFlag.click();
+//		PaymentFlag.click();
 
+
+		try {
+                
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(PaymentFlag));
+			PaymentFlag.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(PaymentFlag));
+			PaymentFlag.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
 
 	public void SelectOnSettlementMode() {
@@ -3395,78 +4000,231 @@ public class AggregatorLocators {
 
 	public void ClickOnAllowCreateMerchantOnboard() {
 
-		CreateMerchantUser.click();
+//		CreateMerchantUser.click();
 
+try {
+            
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(CreateMerchantUser));
+			CreateMerchantUser.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(CreateMerchantUser));
+			CreateMerchantUser.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
 
 	public void ClickOnUserNameAs() {
 
-		UserNameAs.click();
+//		UserNameAs.click();
+		
+try {
+            
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(UserNameAs));
+			UserNameAs.click();
+		} catch (ElementClickInterceptedException e) {
 
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(UserNameAs));
+			UserNameAs.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
+
+	
 
 	public void SelectOnUserNameAs() {
 
-		SelectonUserNameAs.click();
+//		SelectonUserNameAs.click();
+try {
+            
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(SelectonUserNameAs));
+			SelectonUserNameAs.click();
+		} catch (ElementClickInterceptedException e) {
 
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(SelectonUserNameAs));
+			SelectonUserNameAs.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
-	
-	
-	
+
+
 //MakeTakeOver
-	
+
 	public void ClickOnManualTakeOver() {
+
+//		ManualTakeOver.click();
 		
-		ManualTakeOver.click();
-		
-		
+try {
+            
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ManualTakeOver));
+			ManualTakeOver.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ManualTakeOver));
+			ManualTakeOver.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
-	
-       public void ClickOnViewDocument1() {
-		
-	   ViewDocument1.click();
-	   
-       }
-	   
-	   public void ClickOnViewDocument2() {
-			
-		   ViewDocument2.click();
 
-		
-		
+	
+
+	public void ClickOnViewDocument1() {
+
+//		ViewDocument1.click();
+
+try {
+            
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ViewDocument1));
+			ViewDocument1.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ViewDocument1));
+			ViewDocument1.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
-	   
-	   public void ClickOnViewDocument3() {
-			
-		   ViewDocument3.click();
 
 
-	   }
-	   
-	   public void ClickonActionDiscountRate() {
-			
-		   Actions.click();
+	public void ClickOnViewDocument2() {
+
+//		ViewDocument2.click();
+try {
+            
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ViewDocument2));
+			ViewDocument2.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ViewDocument2));
+			ViewDocument2.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+	}
 
 
-	   }
-	   
-	   public void ViewDocumentVerified() {
-			
-		   ViewDocumentVerified.click();
+	public void ClickOnViewDocument3() {
+
+//		ViewDocument3.click();
+try {
+            
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ViewDocument3));
+			ViewDocument3.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ViewDocument3));
+			ViewDocument3.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+	}
 
 
-	   }
-	   
-	   public void ViewDocumentSubmitandNext() {
-			
-		   ViewDocumentSubmitandNext.click();
+	public void ClickonActionDiscountRate() {
+
+//		Actions.click();
+
+try {
+            
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(Actions));
+			Actions.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(Actions));
+			Actions.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+	}
 
 
-	   }
+	public void ViewDocumentVerified() {
 
-	   
-	   
-	
-	
+//		ViewDocumentVerified.click();
+
+try {
+            
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ViewDocumentVerified));
+			ViewDocumentVerified.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ViewDocumentVerified));
+			ViewDocumentVerified.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+	}
+
+
+	public void ViewDocumentSubmitandNext() {
+
+//		ViewDocumentSubmitandNext.click();
+
+		try {
+            
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ViewDocumentSubmitandNext));
+			ViewDocumentSubmitandNext.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ViewDocumentSubmitandNext));
+			ViewDocumentSubmitandNext.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+	}
 
 }

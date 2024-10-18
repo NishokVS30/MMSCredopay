@@ -28,6 +28,8 @@ public class SystemUserTestCases {
 	private WebDriver driver;
 
 	private ExtentTest test;
+	
+	ExcelDataCache cache = ExcelDataCache.getInstance();
 
 	public SystemUserTestCases() throws InterruptedException {
 
@@ -6823,10 +6825,9 @@ public class SystemUserTestCases {
 		public void i_visit_the_System_Verifier_login(String sheetName, int rowNumber)
 				throws InvalidFormatException, IOException, InterruptedException {
 
-			ExcelReader reader = new ExcelReader();
+			 
 
-			List<Map<String, String>> testdata = reader
-					.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
+			 List<Map<String, String>> testdata = cache.getCachedData(sheetName);
 
 			System.out.println("sheet name: " + testdata);
 
@@ -6864,11 +6865,9 @@ public class SystemUserTestCases {
 		public void i_visit_the_System_approver_login(String sheetName, int rowNumber)
 				throws InvalidFormatException, IOException, InterruptedException {
 
-			ExcelReader reader = new ExcelReader();
 
-			List<Map<String, String>> testdata = reader
-					.getData("C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Excel\\MMSCredopay.xlsx", sheetName);
-
+			 List<Map<String, String>> testdata = cache.getCachedData(sheetName);
+			 
 			System.out.println("sheet name: " + testdata);
 
 			String userName = testdata.get(rowNumber).get("UserName");

@@ -5,8 +5,10 @@ import static org.junit.Assert.fail;
 
 import java.time.Duration;
 
+import org.Testcases.CustomWebDriverManager;
 import org.junit.Assert;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
@@ -19,8 +21,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SystemUserLocatores {
 
-     WebDriver driver;
-     private WebDriverWait wait;
+	WebDriver driver;
+	private WebDriverWait wait;
+	private int waitTime;
 
 //	@FindBy(xpath = "//button[@class='logo ng-tns-c471-4']")
 	@FindBy(xpath = "//button[contains(@class, 'logo') and not(contains(@class, 'logo-alone'))]")
@@ -46,13 +49,13 @@ public class SystemUserLocatores {
 	@FindBy(xpath = "//input[@formcontrolname='payfacName']")
 	private WebElement EnterOnPayfacName;
 
-	@FindBy(xpath = "//span[text()='ISO']")
+	@FindBy(xpath = "//a[@href='/admin/onboard/isos']")
 	private WebElement ClickOnISO;
-	
-	@FindBy(xpath = "//span[text()='Sub ISO']")
+
+	@FindBy(xpath = "//a[@href='/admin/onboard/sub-isos']")
 	private WebElement ClickOnSUBISO;
 
-	@FindBy(xpath = "//span[text()='Group Merchants']")
+	@FindBy(xpath = "//a[@href='/admin/onboard/group-merchants']")
 	private WebElement ClickOnGM;
 
 	@FindBy(xpath = "//a[@href='/admin/onboard/merchants']")
@@ -82,7 +85,7 @@ public class SystemUserLocatores {
 
 	@FindBy(xpath = "//span[text()=' MORE FILTERS ']")
 	private WebElement MoreFilter;
-	
+
 	@FindBy(xpath = "//span[text()='Status']")
 	private WebElement ClickonStatus;
 
@@ -106,7 +109,7 @@ public class SystemUserLocatores {
 
 	@FindBy(xpath = "//span[text()=' ReferBack ']")
 	private WebElement StatusReferback;
-	
+
 	@FindBy(xpath = "//span[text()=' AutoReferBack ']")
 	private WebElement StatusAutoReferback;
 
@@ -171,18 +174,12 @@ public class SystemUserLocatores {
 
 	@FindBy(xpath = "//span[text()=' APPROVE ']")
 	private WebElement Approve;
-	
 
-	
-	
-
-      public SystemUserLocatores(WebDriver driver) {
+	public SystemUserLocatores(WebDriver driver) {
 		// initialize elements
-	
-	  this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-	  this.driver = driver;
-		 
-		
+		this.waitTime = CustomWebDriverManager.getWaitTime();
+		this.driver = driver;
+
 		PageFactory.initElements(driver, this);
 	}
 
@@ -191,137 +188,494 @@ public class SystemUserLocatores {
 //	}
 
 	public void ClickOnDownArrow() {
+
+//		wait.until(ExpectedConditions.elementToBeClickable(ClickOnDownArrow)).click();
 		
-		 wait.until(ExpectedConditions.elementToBeClickable(ClickOnDownArrow)).click();
-		
-		
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnDownArrow));
+			ClickOnDownArrow.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnDownArrow));
+			ClickOnDownArrow
+			.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+
 	}
 
 //	public void ClickOnOnboarding(WebDriver driver) {
 //		Actions actions = new Actions(driver);
 //		actions.doubleClick(ClickOnOnboarding).click().perform();
 //	}	
-		
-	   public void ClickOnOnboarding() {
-		//	ClickOnOnboarding.click();
-			
-			 wait.until(ExpectedConditions.elementToBeClickable(ClickOnOnboarding)).click();
-		}
 
+	public void ClickOnOnboarding() {
+		// ClickOnOnboarding.click();
+
+//		wait.until(ExpectedConditions.elementToBeClickable(ClickOnOnboarding)).click();
+		
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnOnboarding));
+			ClickOnOnboarding.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnOnboarding));
+			ClickOnOnboarding
+			.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+		
+		
+	}
 
 	public void enterOnPayfac(String payfac) {
+
 		EnterOnPayfacName.sendKeys(payfac);
-		
-		WebElement until = wait.until(ExpectedConditions.elementToBeClickable(EnterOnPayfacName));
-		
-		until.sendKeys(payfac);
-		
-		
+
+
 	}
 
 	public void ClickOnMoreFilter() {
 
-		
-		 wait.until(ExpectedConditions.elementToBeClickable(MoreFilter)).click();
+//		wait.until(ExpectedConditions.elementToBeClickable(MoreFilter)).click();
 	}
 
 	public void ClickOnStatus() {
+
+//		wait.until(ExpectedConditions.elementToBeClickable(ClickonStatus)).click();
 		
-		wait.until(ExpectedConditions.elementToBeClickable(ClickonStatus)).click();
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickonStatus));
+			ClickonStatus.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickonStatus));
+			ClickonStatus
+			.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+		
+		
 	}
+	
 
 	public void ClickOnFilterByStatus() {
+
+//		wait.until(ExpectedConditions.elementToBeClickable(ClickonFilterByStatus)).click();
 		
-		wait.until(ExpectedConditions.elementToBeClickable(ClickonFilterByStatus)).click();
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickonFilterByStatus));
+			ClickonFilterByStatus.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickonFilterByStatus));
+			ClickonFilterByStatus
+			.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
 
 	public void SelectOnStatusNew() {
-		
+
 		wait.until(ExpectedConditions.elementToBeClickable(StatusNew)).click();
 	}
 
 	public void SelectOnStatusInprogress() {
-		
+
 		wait.until(ExpectedConditions.elementToBeClickable(StatusInprogress)).click();
 	}
 
 	public void SelectOnStatusVerified() {
+
+//		wait.until(ExpectedConditions.elementToBeClickable(StatusVerified)).click();
 		
-		wait.until(ExpectedConditions.elementToBeClickable(StatusVerified)).click();
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(StatusVerified));
+			ClickonStatus.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(StatusVerified));
+			ClickonStatus
+			.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
+		
+		
 	}
 
 	public void SelectOnStatusDraft() {
+
+//		wait.until(ExpectedConditions.elementToBeClickable(StatusDraft)).click();
 		
-		wait.until(ExpectedConditions.elementToBeClickable(StatusDraft)).click();
+		
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(StatusDraft));
+			StatusDraft.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(StatusDraft));
+			StatusDraft
+			.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
 
 	public void SelectOnStatusReferback() {
+
+	//	wait.until(ExpectedConditions.elementToBeClickable(StatusReferback)).click();
 		
-		wait.until(ExpectedConditions.elementToBeClickable(StatusReferback)).click();
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(StatusReferback));
+			StatusReferback.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(StatusReferback));
+			StatusReferback
+			.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
-	
-    public void SelectOnStatusAutoReferback() {
-		
-		wait.until(ExpectedConditions.elementToBeClickable(StatusAutoReferback)).click();
+
+	public void SelectOnStatusAutoReferback() {
+
+	//	wait.until(ExpectedConditions.elementToBeClickable(StatusAutoReferback)).click();
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(StatusAutoReferback));
+			StatusAutoReferback.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(StatusAutoReferback));
+			StatusAutoReferback
+			.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
 
 	public void SelectOnStatusApproved() {
-		wait.until(ExpectedConditions.elementToBeClickable(StatusApproved)).click();
+//		wait.until(ExpectedConditions.elementToBeClickable(StatusApproved)).click();
+		
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(StatusApproved));
+			StatusApproved.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(StatusApproved));
+			StatusApproved
+			.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
 
 	public void SelectOnStatusAutoApproved() {
+
+//		wait.until(ExpectedConditions.elementToBeClickable(StatusAutoApproved)).click();
 		
-		wait.until(ExpectedConditions.elementToBeClickable(StatusAutoApproved)).click();
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(StatusAutoApproved));
+			StatusAutoApproved.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(StatusAutoApproved));
+			StatusAutoApproved
+			.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
 
+	
+
 	public void SelectOnStatusRejected() {
+
+//		wait.until(ExpectedConditions.elementToBeClickable(StatusRejected)).click();
 		
-		wait.until(ExpectedConditions.elementToBeClickable(StatusRejected)).click();
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(StatusRejected));
+			StatusRejected.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(StatusRejected));
+			StatusRejected
+			.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
 
 	public void SelectOnStatusclosed() {
-		
-		wait.until(ExpectedConditions.elementToBeClickable(StatusClosed)).click();
+
+//		wait.until(ExpectedConditions.elementToBeClickable(StatusClosed)).click();
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(StatusClosed));
+			StatusClosed.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(StatusClosed));
+			StatusClosed
+			.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
+
 
 	public void Clickonapply() {
-		
-		wait.until(ExpectedConditions.elementToBeClickable(ClickOnApply)).click();
+
+//		wait.until(ExpectedConditions.elementToBeClickable(ClickOnApply)).click();
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnApply));
+			ClickOnApply.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnApply));
+			ClickOnApply
+			.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
 
+
 	public void ClickOnBank() {
-		
-		wait.until(ExpectedConditions.elementToBeClickable(ClickOnBank)).click();
+
+//		wait.until(ExpectedConditions.elementToBeClickable(ClickOnBank)).click();
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnBank));
+			ClickOnBank.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnBank));
+			ClickOnBank
+			.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
 
 	public void ClickOnPayfac() {
-		
-		wait.until(ExpectedConditions.elementToBeClickable(ClickOnPayfac)).click();
+
+//		wait.until(ExpectedConditions.elementToBeClickable(ClickOnPayfac)).click();
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnPayfac));
+			ClickOnPayfac.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnPayfac));
+			ClickOnPayfac
+			.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
 
 	public void ClickOnISO() {
-		
-		wait.until(ExpectedConditions.elementToBeClickable(ClickOnISO)).click();
+
+		// wait.until(ExpectedConditions.elementToBeClickable(ClickOnISO)).click();
+
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnISO));
+			ClickOnISO.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnISO));
+			ClickOnISO.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
-	
+
 	public void ClickOnSUBISO() {
-		
-		wait.until(ExpectedConditions.elementToBeClickable(ClickOnSUBISO)).click();
+
+//		wait.until(ExpectedConditions.elementToBeClickable(ClickOnSUBISO)).click();
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnSUBISO));
+			ClickOnSUBISO.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnSUBISO));
+			ClickOnSUBISO
+			.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
 
 	public void ClickOnGM() {
-		
-		wait.until(ExpectedConditions.elementToBeClickable(ClickOnGM)).click();
+
+//		wait.until(ExpectedConditions.elementToBeClickable(ClickOnGM)).click();
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnGM));
+			ClickOnGM.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnGM));
+			ClickOnGM
+			.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
 
 	public void ClickOnMerchant() {
+
+//		wait.until(ExpectedConditions.elementToBeClickable(ClickOnMerchant)).click();
 		
-		wait.until(ExpectedConditions.elementToBeClickable(ClickOnMerchant)).click();
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnMerchant));
+			ClickOnMerchant.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnMerchant));
+			ClickOnMerchant
+			.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
 
 	public void ClickOnTerminal() {
-		
-		wait.until(ExpectedConditions.elementToBeClickable(ClickOnTerminal)).click();
+
+	//	wait.until(ExpectedConditions.elementToBeClickable(ClickOnTerminal)).click();
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnTerminal));
+			ClickOnTerminal.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnTerminal));
+			ClickOnTerminal
+			.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
 
 	public void NotDisplayedOnBank() {
@@ -366,8 +720,6 @@ public class SystemUserLocatores {
 			Assert.assertFalse("ISO button is displayed For This Role. ", ISOButtonDisplayed);
 		}
 	}
-	
-	
 
 	public void DisplayedOnbank() {
 		try {
@@ -395,7 +747,7 @@ public class SystemUserLocatores {
 			fail("ISO button Should be displayed For This Role But not found.");
 		}
 	}
-	
+
 	public void DisplayedOnSUBISO() {
 		try {
 			assertTrue("SUB ISO Button should be displayed", ClickOnSUBISO.isDisplayed());
@@ -435,43 +787,163 @@ public class SystemUserLocatores {
 	}
 
 	public void ClickOnEdit() {
+
+//		wait.until(ExpectedConditions.elementToBeClickable(Editbutton)).click();
 		
-		wait.until(ExpectedConditions.elementToBeClickable(Editbutton)).click();
-		
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(Editbutton));
+			Editbutton.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(Editbutton));
+			Editbutton
+			.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
 
 	public void ClickOnCancel() {
-		
-		wait.until(ExpectedConditions.elementToBeClickable(cancelbutton)).click();
+
+//		wait.until(ExpectedConditions.elementToBeClickable(cancelbutton)).click();
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(cancelbutton));
+			cancelbutton.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(cancelbutton));
+			cancelbutton
+			.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
 
 	public void clickonView() {
-		
-		wait.until(ExpectedConditions.elementToBeClickable(Viewbutton)).click();
+
+//		wait.until(ExpectedConditions.elementToBeClickable(Viewbutton)).click();
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(Viewbutton));
+			Viewbutton.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(Viewbutton));
+			Viewbutton
+			.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
 
 	public void ClickOnCreate() {
+
+//		wait.until(ExpectedConditions.elementToBeClickable(ClickOnCreate)).click();
 		
-		wait.until(ExpectedConditions.elementToBeClickable(ClickOnCreate)).click();
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnCreate));
+			ClickOnCreate.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnCreate));
+			ClickOnCreate
+			.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
 
 	public void ClickOnBankName() {
-		ClickOnBankName.click();
+//		ClickOnBankName.click();
 		
-		wait.until(ExpectedConditions.elementToBeClickable(Editbutton)).click();
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnBankName));
+			ClickOnBankName.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(ClickOnBankName));
+			ClickOnBankName
+			.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
 
 //UserLocators
 
 	public void ActionClick() {
-		
-		wait.until(ExpectedConditions.elementToBeClickable(Actionbutton)).click();
+
+//		wait.until(ExpectedConditions.elementToBeClickable(Actionbutton)).click();
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(Actionbutton));
+			Actionbutton.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(Actionbutton));
+			Actionbutton
+			.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
 
 	public void ActionViewClick() {
-		
-		wait.until(ExpectedConditions.elementToBeClickable(Actionviewbutton)).click();
+
+//		wait.until(ExpectedConditions.elementToBeClickable(Actionviewbutton)).click();
+		try {
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(Actionviewbutton));
+			Actionviewbutton.click();
+		} catch (ElementClickInterceptedException e) {
+
+			System.err.println("Element click intercepted: " + e.getMessage());
+
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.elementToBeClickable(Actionviewbutton));
+			Actionviewbutton
+			.click();
+		} catch (Exception e) {
+			// Handle other potential exceptions
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+		}
 	}
+
 
 //New Code
 

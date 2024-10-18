@@ -21,7 +21,7 @@ Feature: System Users - ISO Onboarding Regression
  This feature aims to test the functionality of the 'ISO Onboarding' within the application.
  
  
-
+@run @loadData
 Scenario: SystemMaker Login
  Given I visit the System Maker Login using sheetname "Credentials" and rownumber 1
  And I enter the credentials and click a login button
@@ -233,7 +233,7 @@ Scenario: the KYC "Company Proof of address" field should prompt a selection bas
     Then the KYC "Company Proof of address" field should prompt a selection based on the uploaded image using sheetname "ISO Regression" and rownumber 0
     
  Scenario: The "NextStep" button should prompted to click on KYC in ISO Onboarding
-    Then The "NextStep" button should prompted to click on KYC in ISO
+    Then The "NextStep" button should prompted to click on KYC
    
 
           
@@ -248,7 +248,7 @@ Scenario: the KYC "Company Proof of address" field should prompt a selection bas
      Then The "NextStep" button should prompted to click on Discount Rate
 
 
-        
+     
 
 
  Scenario: Visiting the Settlement Info in ISO Onboarding 
@@ -273,7 +273,7 @@ Scenario: the SettlementInfo "Save" button should be prompted to click in ISO On
      Then the SettlementInfo "Save" button should be prompted to click
      
 Scenario: the "NextStep" button should prompted to click on Settlement Info in ISO Onboarding     
-     Then the "NextStep" button should prompted to click on Settlement Info in ISO
+     Then the "NextStep" button should prompted to click on Settlement Info
      
        
           

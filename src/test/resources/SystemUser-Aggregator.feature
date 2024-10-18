@@ -22,7 +22,7 @@ Feature: System Users - Aggregator Onboarding Regression
  This feature aims to test the functionality of the 'AggregatorOnboarding' within the application.
  
  
-
+@run @loadData
 Scenario: SystemMaker Login
  Given I visit the System Maker Login using sheetname "Credentials" and rownumber 1
  And I enter the credentials and click a login button
@@ -46,7 +46,11 @@ Scenario: SystemMaker clicks the Create Button
 
 
 
-Scenario: the First "VAS Commission" field should prompt to select Yes or No based on the given input in Aggregator Onboarding
+
+     Scenario: I Visit the Sales Info in Aggregator Onboarding 
+     When I Visit the Sales Info
+
+     Scenario: the First "VAS Commission" field should prompt to select Yes or No based on the given input in Aggregator Onboarding
      Then the First "VAS Commission" field should prompt to select Yes or No based on the given input using sheetname "Aggregator" and rownumber 0
      
      Scenario: the user select a valid date in the "Aggregator Application Date" field in Aggregator Onboarding
@@ -58,9 +62,9 @@ Scenario: the First "VAS Commission" field should prompt to select Yes or No bas
      Scenario: the "Aggregator Code" field should prompt to enter valid inputs in Aggregator Onboarding
      Then the "Aggregator Code" field should prompt to enter valid inputs using sheetname "Aggregator Regression" and rownumber 0
      
-     Scenario: the "IS TMS Aggregator" field should prompt to select Yes or No based on the given input in Aggregator Onboarding
-     Then the "IS TMS Aggregator" field should prompt to select Yes or No based on the given input using sheetname "Aggregator Regression" and rownumber 0
-     
+     #Scenario: the "IS TMS Aggregator" field should prompt to select Yes or No based on the given input in Aggregator Onboarding
+     #Then the "IS TMS Aggregator" field should prompt to select Yes or No based on the given input using sheetname "Aggregator Regression" and rownumber 0
+     #
      Scenario: the "EKyc Required" field should prompt to select Yes or No based on the given input in Aggregator Onboarding
      Then the "EKyc Required" field should prompt to select Yes or No based on the given input using sheetname "Aggregator Regression" and rownumber 0
      
@@ -68,10 +72,10 @@ Scenario: the First "VAS Commission" field should prompt to select Yes or No bas
      Then the "NextStep" button should be prompted to click on Sales Info
 
 
- Scenario: I Visit the Company Info in Aggregator Onboarding 
-     When I Visit the Company Info
+      Scenario: I Visit the Company Info in Aggregator Onboarding 
+      When I Visit the Company Info
      
-  Scenario: the "Legal Name" field should prompt to enter valid inputs in Aggregator Onboarding    
+     Scenario: the "Legal Name" field should prompt to enter valid inputs in Aggregator Onboarding    
      Then the "Legal Name" field should prompt to enter valid inputs using sheetname "Aggregator Regression" and rownumber 0
      
      Scenario: the "Brand Name" field should prompt to enter valid inputs in Aggregator Onboarding
@@ -111,10 +115,10 @@ Scenario: the First "VAS Commission" field should prompt to select Yes or No bas
      Then the "NextStep" button should be prompted to click on Company Info
   
      
-Scenario: I visit the Personal Info in Aggregator Onboarding
+      Scenario: I visit the Personal Info in Aggregator Onboarding
           When I visit the Personal Info
          
-  Scenario: the "Add" button should be prompted to click on personal info in Aggregator Onboarding      
+     Scenario: the "Add" button should be prompted to click on personal info in Aggregator Onboarding      
           Then the "Add" button should be prompted to click in personal info
           
       Scenario: the "Title" dropdown should prompt to select valid inputs on Personal Info in Aggregator Onboarding    

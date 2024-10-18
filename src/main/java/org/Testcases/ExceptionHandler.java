@@ -65,22 +65,22 @@ public class ExceptionHandler {
 
     // Method to capture and log screenshots
     private void logAndCaptureScreenshot(Exception e, String sheetName, String errorMessage) {
-        try {
-            // Take a screenshot
-            File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-            String screenshotPath = "C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Screenshots\\" + sheetName + ".png";
-
-            // Save the screenshot to the specified path
-            FileUtils.copyFile(screenshot, new File(screenshotPath));
-
-            // Attach the screenshot to the Allure report
-            Allure.addAttachment("Screenshot for " + sheetName, new ByteArrayInputStream(FileUtils.readFileToByteArray(screenshot)));
-
-            // Attach the screenshot to the Extent report
-            ExtentCucumberAdapter.addTestStepScreenCaptureFromPath(screenshotPath, "Screenshot for " + sheetName);
-
-            // Log the error message in Extent report
-            test.log(Status.FAIL, errorMessage + ": " + e.getMessage());
+	        try {
+	            // Take a screenshot
+	            File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+	            String screenshotPath = "C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Screenshots\\" + sheetName + ".png";
+	
+	            // Save the screenshot to the specified path
+	            FileUtils.copyFile(screenshot, new File(screenshotPath));
+	
+	            // Attach the screenshot to the Allure report
+	            Allure.addAttachment("Screenshot for " + sheetName, new ByteArrayInputStream(FileUtils.readFileToByteArray(screenshot)));
+	
+	            // Attach the screenshot to the Extent report
+	            ExtentCucumberAdapter.addTestStepScreenCaptureFromPath(screenshotPath, "Screenshot for " + sheetName);
+	
+	            // Log the error message in Extent report
+	            test.log(Status.FAIL, errorMessage + ": " + e.getMessage());
 
             // Optionally print the screenshot path for debugging
             System.out.println("Screenshot captured for " + sheetName + ": " + screenshotPath);

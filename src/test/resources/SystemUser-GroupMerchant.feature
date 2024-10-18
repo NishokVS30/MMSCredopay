@@ -23,7 +23,7 @@ Feature: System Users - Group Merchant Onboarding Regression
  This feature aims to test the functionality of the 'Group Merchant Onboarding' within the application.
  
  
-
+@run @loadData
 Scenario: SystemMaker Login
  Given I visit the System Maker Login using sheetname "Credentials" and rownumber 1
  And I enter the credentials and click a login button
@@ -231,7 +231,7 @@ Scenario: the Channel ISO Onboarding should prompt users to enter valid inputs i
      Then the Channel ISO Onboarding should prompt users to enter valid inputs using the sheet name "Channel Aggregator"
      
  Scenario: The "NextStep" button should prompted to click on Channel Config in "Group Merchant Onboarding"
-     Then The "NextStep" button should prompted to click on Channel Config in ISO
+     Then The "NextStep" button should prompted to click on Channel Config in GM
      
      
      
@@ -276,7 +276,7 @@ Scenario: the SettlementInfo "Save" button should be prompted to click in "Group
      Then the SettlementInfo "Save" button should be prompted to click
      
 Scenario: the "NextStep" button should prompted to click on Settlement Info in "Group Merchant Onboarding"
-     Then the "NextStep" button should prompted to click on Settlement Info in ISO
+     Then the "NextStep" button should prompted to click on Settlement Info
      
        
           
@@ -324,7 +324,7 @@ Scenario: the "NextStep" button should prompted to click on Settlement Info in "
        Then the KYC "Company Proof of address" field should prompt a selection based on the uploaded image using sheetname "Group Merchant Regression" and rownumber 0
     
        Scenario: The "NextStep" button should prompted to click on KYC in "Group Merchant Onboarding"
-       Then The "NextStep" button should prompted to click on KYC in ISO
+       Then The "NextStep" button should prompted to click on KYC in GM
        
        
      Scenario: System Maker submits the application for verification in "Group Merchant Onboarding"
@@ -408,7 +408,8 @@ Scenario: System Verifier checks "Discount Rate" and clicks "Verified and Next" 
   When the System Verifier checks "Webhooks" to ensure mandatory details are added and clicks the "Verified and Next" buttons
   
   Scenario: System Verifier checks "KYC" and clicks "Verified and Next" in Group Merchant Onboarding
-  When the System Verifier checks "KYC" to ensure mandatory details are added and clicks the "Verify Document" buttons
+  When the System Verifier checks "KYC" to ensure mandatory details are added and clicks the "Verified and Next" buttons in ISO
+  #When the System Verifier checks "KYC" to ensure mandatory details are added and clicks the "Verify Document" button
     
   
   Scenario: System verifier submits the application for Approval

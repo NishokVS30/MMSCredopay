@@ -40,7 +40,7 @@ Scenario: SystemMaker Login
   
   
    Scenario: System Maker Successfully Completes Mandatory Fields in ISO Onboarding
-    When the SystemMaker clicks the ISO module
+    When the System Maker clicks the ISO module
     Then the System Maker ISO Onboarding should prompt users to enter valid inputs using the sheet name "ISO Regression"
     
     

@@ -26,29 +26,72 @@ import com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter;
 import com.github.javafaker.Faker;
 
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import io.qameta.allure.Allure;
 
-public class SyatemUserMultipleGroupMerchantRegression {
+public class SystemUserMultipleGroupMerchantRegression {
 
 	private WebDriver driver;
 
+	org.Locators.BaseClassLocator BL;
+	org.Locators.SystemUserLocatores S;
 	org.Locators.LoginLocators L;
 	org.Locators.BankLocators B;
 	org.Locators.AggregatorLocators A;
-	org.Locators.SystemUserLocatores S;
 	org.Locators.ISOLocators ISO;
 	org.Locators.SUBISOLocators SUBISO;
 	org.Locators.GroupMerchantLocator GM;
 	org.Locators.MerchantLocators M;
+	org.Locators.TerminalLocators T;
 
 	ExtentTest test;
 	ExcelUtilsDataCache cache = ExcelUtilsDataCache.getInstance();
 
-	public SyatemUserMultipleGroupMerchantRegression() throws InterruptedException {
+	public SystemUserMultipleGroupMerchantRegression() throws InterruptedException {
 		this.driver = CustomWebDriverManager.getDriver();
 //			 this.driver = driver;
 		System.setProperty("webdriver.chrome.logfile", "chromedriver.log");
 		System.setProperty("webdriver.chrome.verboseLogging", "true");
+
+		BL = new org.Locators.BaseClassLocator(driver);
+
+		L = new org.Locators.LoginLocators(driver);
+
+		S = new org.Locators.SystemUserLocatores(driver);
+
+		B = new org.Locators.BankLocators(driver);
+
+		A = new org.Locators.AggregatorLocators(driver);
+
+		ISO = new org.Locators.ISOLocators(driver);
+
+		SUBISO = new org.Locators.SUBISOLocators(driver);
+
+		GM = new org.Locators.GroupMerchantLocator(driver);
+
+		M = new org.Locators.MerchantLocators(driver);
+
+		T = new org.Locators.TerminalLocators(driver);
+
+	}
+	
+	@When("the System Maker clicks the Group Merchant module")
+
+	public void SystemMakerClicktheSUBISOModule() {
+
+		try {
+
+			BL.clickElement(B.ClickOnGM);
+
+		} catch (Exception e) {
+
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+
+			exceptionHandler.handleException(e, "Onboarding");
+
+			throw e;
+
+		}
 
 	}
 
@@ -121,7 +164,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 		System.out.println("Data for row " + rowNumber + ": " + testData);
 
 		// Initialize the locators (e.g., BankLocators)
-		B = new org.Locators.BankLocators(driver);
+		
 
 		int testCaseCount = 0;
 
@@ -158,7 +201,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			throws Exception {
 
 		// Initialize the locators
-		B = new org.Locators.BankLocators(driver);
+	
 
 		// Initialize a counter to track the number of validated fields/sections
 		int validatedFieldsCount = 0;
@@ -314,13 +357,6 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 	private void fillSalesInfo(Map<String, String> testData, int TestcaseNo) throws Exception {
 
-		A = new org.Locators.AggregatorLocators(driver);
-		B = new org.Locators.BankLocators(driver);
-		ISO = new org.Locators.ISOLocators(driver);
-		S = new org.Locators.SystemUserLocatores(driver);
-		SUBISO = new org.Locators.SUBISOLocators(driver);
-		GM = new org.Locators.GroupMerchantLocator(driver);
-
 		Faker faker = new Faker();
 
 		int testcaseCount = 0;
@@ -332,24 +368,23 @@ public class SyatemUserMultipleGroupMerchantRegression {
 		String subisoname = testData.get("SUB ISO Name");
 		String uniqueReferenceNumber = generateValidUniqueReferenceNumber(faker, testData);
 
-		 // Assume success initially
+		// Assume success initially
 		try {
 
-			B.ClickOnCreatebutton();
-
-			A.ClickOnSalesInfo();
+			BL.clickElement(B.Createbutton);
+			BL.clickElement(A.SalesInfo);
 
 			if (uniqueReferenceNumber != null && !uniqueReferenceNumber.trim().isEmpty()) {
 
-				GM.ClickOnUniqueReferenceNumber();
-				GM.EnteronUniqueReferenceNumber(uniqueReferenceNumber);
+				BL.clickElement(GM.UniqueReferenceNumber);
+				BL.enterElement(GM.UniqueReferenceNumber, uniqueReferenceNumber);
 
 				++testcaseCount;
 
 				boolean nameStatus = true; // Assume success initially
 				try {
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
-					B.NOTDisplayedOnInvalidFormat();
 				} catch (AssertionError e) {
 					nameStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -361,16 +396,14 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			if (name != null && !name.trim().isEmpty()) {
 
-				ISO.ClickOnAggregatorName();
-
-				B.selectDropdownOption(name);
+				BL.clickElement(ISO.AggregatorName);
+				BL.selectDropdownOption(name);
 
 				++testcaseCount;
 
 				boolean nameStatus = true; // Assume success initially
 				try {
-
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					nameStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -382,16 +415,15 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			if (isoname != null && !isoname.trim().isEmpty()) {
 
-				SUBISO.ClickOnISOName();
-
-				B.selectDropdownOption(isoname);
+				BL.clickElement(SUBISO.ISOName);
+				BL.selectDropdownOption(isoname);
 
 				++testcaseCount;
 
 				boolean nameStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					nameStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -403,16 +435,16 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			if (subisoname != null && !subisoname.trim().isEmpty()) {
 
-				GM.ClickOnSUBISOName();
+				BL.clickElement(GM.SUBISO);
 
-				B.selectDropdownOption(subisoname);
+				BL.selectDropdownOption(subisoname);
 
 				++testcaseCount;
 
 				boolean nameStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					nameStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -423,16 +455,17 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			}
 
 			if (Marsid != null && !Marsid.trim().isEmpty()) {
-				A.ClickOnMarsid();
-				A.EnterOnMarsid(Marsid);
-//					logInputData("Marsid", Marsid);
+				
+				BL.clickElement(A.MarsId);
+				BL.enterElement(A.MarsId, Marsid);
+				
 				++testcaseCount;
 
 				boolean MarsidStatus = true;
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					MarsidStatus = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -443,9 +476,11 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			boolean NextstepStatus = true;
 			try {
-				B.ClickOnNextStep();
-
-				A.DisplayedOnIntroCompanyInfo();
+				
+				BL.clickElement(B.NextStep);
+				BL.isElementDisplayed(A.IntroCompanyInfo, "Company Info");
+				
+				
 			} catch (AssertionError e) {
 				NextstepStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
@@ -467,10 +502,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 	private String fillCompanyInfo(Map<String, String> testData, int TestcaseNo) throws Exception {
 		try {
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
-			GM = new org.Locators.GroupMerchantLocator(driver);
-
+			
 			Faker faker = new Faker();
 
 			String LegalName = testData.get("LegalName");
@@ -496,18 +528,21 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			}
 
 			if (LegalName != null && !LegalName.trim().isEmpty()) {
+				
+				BL.clickElement(A.ComapnyInfo);
 
-				A.ClickOnCompanyInfo();
-				A.ClickOnLegalName();
-				A.EnterOnLegalName(LegalName);
+				BL.clickElement(A.LegalName);
 
+				BL.enterElement(A.LegalName, LegalName);
+
+				
 				++testcaseCount;
 
 				boolean legalNameStatus = true; // Assume success initially
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					legalNameStatus = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -519,9 +554,9 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			if (brand != null && !brand.trim().isEmpty()) {
 
-				A.ClickOnBrandName();
+				BL.clickElement(A.BrandName);
 
-				A.EnterOnBrandName(brand);
+				BL.enterElement(A.BrandName, brand);
 
 				++testcaseCount;
 
@@ -529,8 +564,8 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
-				} catch (AssertionError e) {
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
@@ -541,17 +576,16 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			if (Address != null && !Address.trim().isEmpty()) {
 
-				A.ClickOnRegisteredAddress();
+				BL.clickElement(A.RegisteredAddress);
 
-				A.EnterOnRegisteredAddress(Address);
-
+				BL.enterElement(A.RegisteredAddress, Address);
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -563,9 +597,11 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			if (pincode != null && !pincode.trim().isEmpty()) {
 
-				A.ClickOnRegisteredPincode();
+				BL.clickElement(A.RegisteredPincode);
+				
+				BL.enterElement(A.RegisteredPincode, pincode);
 
-				B.selectDropdownOption(pincode);
+				BL.selectDropdownOption(pincode);
 
 				++testcaseCount;
 
@@ -573,7 +609,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -585,9 +621,9 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			if (type != null && !type.trim().isEmpty()) {
 
-				A.ClickOnBusinessType();
+				BL.clickElement(A.BusinessType);
 
-				B.selectDropdownOption(type);
+				BL.selectDropdownOption(type);
 
 				++testcaseCount;
 
@@ -595,7 +631,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -607,7 +643,8 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			boolean DateStatus = true;
 			try {
-				A.ClickOnEstablishedYearDatepicker();
+				
+				BL.clickElement(A.EstablishedYearDatepicker);
 
 				Robot r = new Robot();
 
@@ -615,9 +652,9 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 				r.keyRelease(KeyEvent.VK_ENTER);
 
-				A.ClickOnApply();
-
-				B.NOTDisplayedOnInvalidFormat();
+				BL.clickElement(A.ApplyButton);
+				
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 			} catch (AssertionError e) {
 				DateStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
@@ -632,8 +669,10 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			if (registeredNumber != null && !registeredNumber.trim().isEmpty()) {
 
-				A.CLickOnRegisterNumber();
-				A.EnterOnRegisterNumber(registeredNumber);
+				BL.clickElement(A.RegisterNumber);
+
+				BL.enterElement(A.RegisterNumber, registeredNumber);
+
 
 				++testcaseCount;
 
@@ -641,7 +680,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -653,9 +692,9 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			if (pan != null && !pan.trim().isEmpty()) {
 
-				A.CLickOnCompanyPAN();
+				BL.clickElement(A.ComapnyPAN);
 
-				A.EnterOnCompanyPAN(pan);
+				BL.enterElement(A.ComapnyPAN, pan);
 
 				++testcaseCount;
 
@@ -663,7 +702,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -675,9 +714,9 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			if (GstIN != null && !GstIN.trim().isEmpty()) {
 
-				A.CLickOnGSTIN();
+				BL.clickElement(A.GSTIN);
 
-				A.EnterOnGSTIN(GstIN);
+				BL.enterElement(A.GSTIN, GstIN);
 
 				++testcaseCount;
 
@@ -685,7 +724,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -696,10 +735,10 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			}
 
 			if (nb != null && !nb.trim().isEmpty()) {
-
-				GM.ClickOnnatureofbusiness();
-
-				B.selectDropdownOption(nb);
+				
+				BL.clickElement(GM.natureofbusiness);
+				
+				BL.selectDropdownOption(nb);
 
 				++testcaseCount;
 
@@ -707,7 +746,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -719,13 +758,11 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			if (mcc != null && !mcc.trim().isEmpty()) {
 
-				GM.ClickOnMCC();
-
-				GM.ClearOnMCC();
-
-				GM.EnterOnMCC(mcc);
-
-				B.selectDropdownOption(mcc);
+				BL.clickElement(GM.mcc);				
+				BL.CLearElement(GM.mcc);
+				BL.enterElement(GM.mcc, mcc);
+				Thread.sleep(1000);
+				BL.selectDropdownOption(mcc);
 
 				++testcaseCount;
 
@@ -733,7 +770,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -744,10 +781,11 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			}
 
 			if (frequency != null && !frequency.trim().isEmpty()) {
+				
+				
+				BL.clickElement(A.StatementFrequency);
 
-				A.CLickOnStatementFrequency();
-
-				B.selectDropdownOption(frequency);
+				BL.selectDropdownOption(frequency);
 
 				++testcaseCount;
 
@@ -755,7 +793,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -767,11 +805,11 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			if (Type != null && !Type.trim().isEmpty()) {
 
-				A.CLickOnStatementType();
+				BL.clickElement(A.StatementType);
 
-				B.selectDropdownOption(Type);
-
-				B.ClickOnNextStep();
+				BL.selectDropdownOption(Type);
+				
+				
 
 				++testcaseCount;
 
@@ -779,7 +817,10 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					
+					BL.clickElement(B.NextStep);
+
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -791,8 +832,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			boolean NextstepStatus = true;
 			try {
-
-				A.DisplayedOnIntroPersonalInfo();
+				BL.isElementDisplayed(A.IntroPersonalInfo, "Personal info");
 			} catch (AssertionError e) {
 				NextstepStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
@@ -813,9 +853,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 	private void fillPersonalInfo(Map<String, String> testData, int TestcaseNo) throws Exception {
 		try {
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
-			GM = new org.Locators.GroupMerchantLocator(driver);
+			
 
 			int testcaseCount = 0;
 			String errorMessage = "The data does not match or is empty.";
@@ -837,13 +875,13 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			if (title != null && !title.trim().isEmpty()) {
 
-				A.ClickOnPersonalInfo();
+				BL.clickElement(A.PersonalInfo);
 
-				A.PersonalINfoADD();
+				BL.clickElement(B.AddButton);
 
-				A.ClickOntitlepersonal();
+				BL.clickElement(A.titlepersonal);
 
-				B.selectDropdownOption(title);
+				BL.selectDropdownOption(title);
 
 				++testcaseCount;
 
@@ -851,7 +889,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -863,9 +901,9 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			if (FirstName != null && !FirstName.trim().isEmpty()) {
 
-				A.ClickOnFirstNamePersonal();
+				BL.clickElement(A.FirstNamePersonal);
 
-				A.EnterOnFirstNamePersonal(FirstName);
+				BL.enterElement(A.FirstNamePersonal, FirstName);
 
 				++testcaseCount;
 
@@ -873,7 +911,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -885,9 +923,9 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			if (LastName != null && !LastName.trim().isEmpty()) {
 
-				A.ClickOnLastNamePersonal();
+				BL.clickElement(A.LastNamePersonal);
 
-				A.EnterOnLastNamePersonal(LastName);
+				BL.enterElement(A.LastNamePersonal, LastName);
 
 				++testcaseCount;
 
@@ -895,7 +933,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -908,19 +946,14 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			boolean DateStatus = true; // Assume success initially
 
 			try {
-				A.ClickOnOpenCalenderPersonal();
+				BL.clickElement(A.OpenCalenderPersonal);
+				BL.clickElement(A.ChooseMonthandYear);
+				BL.clickElement(A.Year);
+				BL.clickElement(A.Month);
+				BL.clickElement(A.Date);
+				BL.clickElement(A.ApplyButton);
 
-				A.ClickOnChooseMonthandYearPersonal();
-
-				A.ClickOnYearPersonal();
-
-				A.ClickOnMonthPersonal();
-
-				A.ClickOnDatePersonal();
-
-				A.ClickOnApplyPersonal();
-
-				B.NOTDisplayedOnInvalidFormat();
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 			} catch (AssertionError e) {
 				DateStatus = false; // Set status to false if assertion fails
 				errorMessage = e.getMessage(); // Capture error message
@@ -930,9 +963,9 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			if (pan != null && !pan.trim().isEmpty()) {
 
-				A.ClickOnPANPersonal();
+				BL.clickElement(A.PanPersonal);
 
-				A.EnterOnPanPersonal(pan);
+				BL.enterElement(A.PanPersonal, pan);
 
 				++testcaseCount;
 
@@ -940,7 +973,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -952,9 +985,9 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			if (Address != null && !Address.trim().isEmpty()) {
 
-				A.ClickOnAddressPersonal();
+				BL.clickElement(A.AddressPersonal);
 
-				A.EnterOnAddressPersonal(Address);
+				BL.enterElement(A.AddressPersonal, Address);
 
 				++testcaseCount;
 
@@ -962,7 +995,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -974,9 +1007,9 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			if (pincode != null && !pincode.trim().isEmpty()) {
 
-				A.ClickOnPincodePersonal();
+				BL.clickElement(A.PincodePersonal);
 
-				B.selectDropdownOption(pincode);
+				BL.selectDropdownOption(pincode);
 
 				++testcaseCount;
 
@@ -984,7 +1017,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -1001,9 +1034,9 @@ public class SyatemUserMultipleGroupMerchantRegression {
 				String remainingDigits = faker.number().digits(9); // Generate 9 random digits
 				String Mobilenumber = firstDigit + remainingDigits;
 
-				A.ClickOnMobileNumberPersonal();
+				BL.clickElement(A.MobilePersonal);
 
-				A.EnterOnMobileNumberPersonal(Mobilenumber);
+				BL.enterElement(A.MobilePersonal, Mobilenumber);
 
 				++testcaseCount;
 
@@ -1011,7 +1044,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -1023,8 +1056,9 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			if (telephone != null && !telephone.trim().isEmpty()) {
 
-				A.ClickOnTelephonePersonal();
-				A.EnterOnTelephonePersonal(telephone);
+				BL.clickElement(A.telephonepersonal);
+
+				BL.enterElement(A.telephonepersonal, telephone);
 
 				++testcaseCount;
 
@@ -1032,7 +1066,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -1044,9 +1078,9 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			if (emailid != null && !emailid.trim().isEmpty()) {
 
-				A.ClickOnEmailPersonal();
+				BL.clickElement(A.emailPersonal);
 
-				A.EnterOnemailPersonal(emailid);
+				BL.enterElement(A.emailPersonal, emailid);
 
 				++testcaseCount;
 
@@ -1054,7 +1088,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -1066,9 +1100,9 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			if (Nationality != null && !Nationality.trim().isEmpty()) {
 
-				A.ClickOnNationalityPersonal();
+				BL.clickElement(A.Nationalitypersonal);
 
-				A.EnterOnNationalitypersonal(Nationality);
+				BL.enterElement(A.Nationalitypersonal, Nationality);
 
 				++testcaseCount;
 
@@ -1076,7 +1110,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -1088,9 +1122,9 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			if (aadhaar != null && !aadhaar.trim().isEmpty()) {
 
-				A.ClickOnAadhaarNumberPersonal();
+				BL.clickElement(A.AadhaarNumberPersonal);
 
-				A.EnterOnAadhaarNumberPersonal(aadhaar);
+				BL.enterElement(A.AadhaarNumberPersonal, aadhaar);
 
 				++testcaseCount;
 
@@ -1098,7 +1132,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -1110,9 +1144,9 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			if (Passport != null && !Passport.trim().isEmpty()) {
 
-				A.ClickOnPassportNumberPersonal();
+				BL.clickElement(A.PassportNumberPersonal);
 
-				A.EnterOnPassportNumberPersonal(Passport);
+				BL.enterElement(A.PassportNumberPersonal, Passport);
 
 				++testcaseCount;
 
@@ -1120,7 +1154,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -1132,19 +1166,18 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			try {
 
-				A.ClickOnOpenCalenderPasswordExpiry();
-
+				BL.clickElement(A.OpenCalenderPasswordExpiryDate);
 				Robot r = new Robot();
 
 				r.keyPress(KeyEvent.VK_ENTER);
 
 				r.keyRelease(KeyEvent.VK_ENTER);
 
-				A.ClickOnApplyPersonal();
-
+				BL.clickElement(A.ApplyButton);
+				
 				performTabKeyPress();
 
-				B.NOTDisplayedOnInvalidFormat();
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 			} catch (AssertionError e) {
 				DateStatus = false; // Set status to false if assertion fails
 				errorMessage = e.getMessage(); // Capture error message
@@ -1155,9 +1188,9 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			boolean SaveStatus = true;
 			try {
 
-				A.ClickOnSAVEPersonal();
+				BL.clickElement(B.SaveButton);
 
-				B.OkforSuccessfully();
+				BL.clickElement(B.OKButton);
 
 			} catch (AssertionError e) {
 				SaveStatus = false;
@@ -1168,9 +1201,9 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			boolean NextstepStatus = true;
 			try {
-				B.ClickOnNextStep();
+				BL.clickElement(B.NextStep);
 
-				A.DisplayedOnIntroCommunicationInfo();
+				BL.isElementDisplayed(A.CommunicationInfo, "Communication Info Page");
 			} catch (AssertionError e) {
 				NextstepStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
@@ -1192,8 +1225,6 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 		try {
 
-			B = new org.Locators.BankLocators(driver);
-			GM = new org.Locators.GroupMerchantLocator(driver);
 
 			int testcaseCount = 0;
 			String errorMessage = "The data does not match or is empty.";
@@ -1204,22 +1235,24 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			String CommEmailid = testData.get("Communication EmailId");
 			String ADUSer = testData.get("AD User");
 
-			B.CLickOnCommunicationInfo();
+			BL.clickElement(B.CommunicationInfo);
 
-			B.CommADD();
+			BL.clickElement(B.ClickonCommADD);
+
 
 			if (CommName != null && !CommName.trim().isEmpty()) {
 
-				B.ClickOnCommName();
-				B.EnterOnCommName(CommName);
+				BL.clickElement(B.ClickonCommuName);
+
+				BL.enterElement(B.ClickonCommuName, CommName);
 
 				++testcaseCount;
 
 				boolean CommunicationNameStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
-				} catch (AssertionError e) {
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					} catch (AssertionError e) {
 					CommunicationNameStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
@@ -1229,15 +1262,16 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			}
 
 			if (CommPosition != null && !CommPosition.trim().isEmpty()) {
-				B.ClickOnCommPosition();
-				B.EnterOnCommunicationPosition(CommPosition);
+				BL.clickElement(B.ClickonCommuPosition);
+
+				BL.enterElement(B.ClickonCommuPosition, CommPosition);
 
 				++testcaseCount;
 
 				boolean CommunicationPositionStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					CommunicationPositionStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1255,15 +1289,16 @@ public class SyatemUserMultipleGroupMerchantRegression {
 				String remainingDigits = faker.number().digits(9); // Generate 9 random digits
 				String communicationMobileNumber = firstDigit + remainingDigits;
 
-				B.ClickonCommMobileNumber();
-				B.EnteronCommMobileNumber(communicationMobileNumber);
+				BL.clickElement(B.ClickonCommuMobileNumber);
+
+				BL.enterElement(B.ClickonCommuMobileNumber, communicationMobileNumber);
 
 				++testcaseCount;
 
 				boolean CommunicationMobileNumberStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					CommunicationMobileNumberStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1280,15 +1315,16 @@ public class SyatemUserMultipleGroupMerchantRegression {
 				// Generate a random email address with @gmail.com
 				String randomEmailPrefix = faker.internet().slug(); // Generate a random string for the prefix
 				String Communicationemailid = randomEmailPrefix + "@gmail.com";
-				B.ClickonCommEmailid();
-				B.EnteronCommEmailid(Communicationemailid);
+				BL.clickElement(B.ClickonCommuEmailId);
+
+				BL.enterElement(B.ClickonCommuEmailId, Communicationemailid);
 
 				++testcaseCount;
 
 				boolean CommunicationEmailIDStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 				} catch (AssertionError e) {
 					CommunicationEmailIDStatus = false;
@@ -1300,15 +1336,15 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			}
 
 			if (ADUSer != null && !ADUSer.trim().isEmpty()) {
-				B.ClickOnAdUser();
-				B.selectDropdownOption(ADUSer);
+				BL.clickElement(B.ClickOnAdUsers);
+				BL.selectDropdownOption(ADUSer);
 
 				++testcaseCount;
 
 				boolean CommunicationADUSERStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 				} catch (AssertionError e) {
 					CommunicationADUSERStatus = false;
@@ -1320,9 +1356,10 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			boolean SaveStatus = true;
 			try {
-				B.CommuSavebutton();
+				
+				BL.clickElement(B.SaveButton);
 
-				B.NOTDisplayedOnInvalidFormat();
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 			} catch (AssertionError e) {
 				SaveStatus = false;
@@ -1344,7 +1381,6 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 		try {
 
-			B = new org.Locators.BankLocators(driver);
 
 			int testcaseCount = 0;
 			String errorMessage = "The data does not match or is empty.";
@@ -1354,21 +1390,22 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			String CommMobileNumber = testData.get("Communication MobileNumber");
 			String CommEmailid = testData.get("Communication EmailId");
 
-			B.CLickOnCommunicationInfo();
+			BL.clickElement(B.CommunicationInfo);
 
-			B.CommSettlementandReconADD();
+			BL.clickElement(B.ClickonCommSettlementandReconADD);
 
 			if (CommName != null && !CommName.trim().isEmpty()) {
 
-				B.ClickOnCommName();
-				B.EnterOnCommName(CommName);
+				BL.clickElement(B.ClickonCommuName);
+
+				BL.enterElement(B.ClickonCommuName, CommName);
 
 				++testcaseCount;
 
 				boolean CommunicationNameStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					CommunicationNameStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1379,15 +1416,16 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			}
 
 			if (CommPosition != null && !CommPosition.trim().isEmpty()) {
-				B.ClickOnCommPosition();
-				B.EnterOnCommunicationPosition(CommPosition);
+				BL.clickElement(B.ClickonCommuPosition);
+
+				BL.enterElement(B.ClickonCommuPosition, CommPosition);
 
 				++testcaseCount;
 
 				boolean CommunicationPositionStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					CommunicationPositionStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1405,15 +1443,16 @@ public class SyatemUserMultipleGroupMerchantRegression {
 				String remainingDigits = faker.number().digits(9); // Generate 9 random digits
 				String communicationMobileNumber = firstDigit + remainingDigits;
 
-				B.ClickonCommMobileNumber();
-				B.EnteronCommMobileNumber(communicationMobileNumber);
+				BL.clickElement(B.ClickonCommuMobileNumber);
+
+				BL.enterElement(B.ClickonCommuMobileNumber, communicationMobileNumber);
 
 				++testcaseCount;
 
 				boolean CommunicationMobileNumberStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					CommunicationMobileNumberStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1430,15 +1469,17 @@ public class SyatemUserMultipleGroupMerchantRegression {
 				// Generate a random email address with @gmail.com
 				String randomEmailPrefix = faker.internet().slug(); // Generate a random string for the prefix
 				String Communicationemailid = randomEmailPrefix + "@gmail.com";
-				B.ClickonCommEmailid();
-				B.EnteronCommEmailid(Communicationemailid);
+				
+				BL.clickElement(B.ClickonCommuEmailId);
+
+				BL.enterElement(B.ClickonCommuEmailId, Communicationemailid);
 
 				++testcaseCount;
 
 				boolean CommunicationEmailIDStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 				} catch (AssertionError e) {
 					CommunicationEmailIDStatus = false;
@@ -1451,9 +1492,9 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			boolean SaveStatus = true;
 			try {
-				B.CommuSavebutton();
+				BL.clickElement(B.SaveButton);
 
-				B.NOTDisplayedOnInvalidFormat();
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 			} catch (AssertionError e) {
 				SaveStatus = false;
@@ -1465,9 +1506,10 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			boolean NextstepStatus = true;
 			try {
-				B.ClickOnNextStep();
-
-				B.DisplayedOnChannelConfig();
+				Thread.sleep(1000);
+				
+				BL.clickElement(B.NextStep);
+				BL.isElementDisplayed(A.IntroChannelConfig, "Channel Config Page");
 
 			} catch (AssertionError e) {
 				NextstepStatus = false;
@@ -1493,14 +1535,11 @@ public class SyatemUserMultipleGroupMerchantRegression {
 		try {
 			// Initialize BankLocators and AggregatorLocators only once
 			if (B == null) {
-				B = new org.Locators.BankLocators(driver);
 			}
 			if (A == null) {
-				A = new org.Locators.AggregatorLocators(driver);
 			}
 
 			if (GM == null) {
-             	GM = new org.Locators.GroupMerchantLocator(driver);
 			}
 
 			// Load cached data for "Channel Bank" sheet
@@ -1518,7 +1557,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 				Map<String, String> rowData = cachedData.get(currentRow - 1);
 
 				// Retrieve data for each field, handling null or empty values
-				String channelbank = rowData.getOrDefault("Channel Bank Name", "").trim();
+			//	String channelbank = rowData.getOrDefault("Channel Bank Name", "").trim();
 				String channel = rowData.getOrDefault("Channel", "").trim();
 				String network = rowData.getOrDefault("Network", "").trim();
 				String transactionSet = rowData.getOrDefault("Transaction Sets", "").trim();
@@ -1529,11 +1568,12 @@ public class SyatemUserMultipleGroupMerchantRegression {
 				value.clear();
 
 				if (!channel.isEmpty()) {
-					A.ClickOnChannelConfig();
+					BL.clickElement(A.ChannelConfig);
 //						driver.navigate().refresh();
-					B.ChannelADD();
-					B.ClickonCommercialChannel();
-					B.selectDropdownOption(channel);
+					BL.clickElement(B.AddButton);
+					Thread.sleep(1000);
+					BL.clickElement(B.CommercialChannel);
+					BL.selectDropdownOption(channel);
 
 					key.add("Channel-" + currentRow);
 					value.add(channel);
@@ -1541,7 +1581,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 					performTabKeyPress();
 
 					boolean channelStatus = true;
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 					testcaseCount++;
 					logTestStep(TestcaseNo, "Channel", channel, channelStatus, errorMessage);
@@ -1552,8 +1592,8 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 				// Process Network
 				if (!network.isEmpty()) {
-					B.clickonNetwork();
-					B.selectDropdownOption(network);
+					BL.clickElement(B.ClickOntNetwork);
+					BL.selectDropdownOption(network);
 
 					key.add("Network-" + currentRow);
 					value.add(network);
@@ -1561,7 +1601,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 					performTabKeyPress();
 
 					boolean networkStatus = true;
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 					testcaseCount++;
 					logTestStep(TestcaseNo, "Network", network, networkStatus, errorMessage);
@@ -1572,8 +1612,8 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 				// Process Transaction Set
 				if (!transactionSet.isEmpty()) {
-					B.clickonTransactionset();
-					B.selectDropdownOption(transactionSet);
+					BL.clickElement(B.ClickOntransaction);
+					BL.selectDropdownOption(transactionSet);
 
 					key.add("Transaction Set-" + currentRow);
 					value.add(transactionSet);
@@ -1581,7 +1621,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 					performTabKeyPress();
 
 					boolean transactionSetStatus = true;
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 					testcaseCount++;
 					logTestStep(TestcaseNo, "TransactionSet", transactionSet, transactionSetStatus, errorMessage);
@@ -1592,11 +1632,13 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 				boolean DateStatus = true;
 				try {
-					A.ClickOnChannelStartDate();
-					A.ClickOnChannelApply();
+					
+					BL.clickElement(A.ChannelOpencalender1);
+					BL.clickElement(A.ApplyButton);
+					
 					performTabKeyPress();
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 					testcaseCount++;
 
@@ -1607,11 +1649,12 @@ public class SyatemUserMultipleGroupMerchantRegression {
 				logTestStep(TestcaseNo, "Start Date", "Valid Date", DateStatus, errorMessage);
 
 				try {
-					A.ClickOnChannelENDDate();
-					A.ClickOnChannelApply();
+					BL.clickElement(A.ChannelOpencalender2);
+					BL.clickElement(A.ApplyButton);
+					
 					performTabKeyPress();
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 					testcaseCount++;
 
@@ -1624,8 +1667,8 @@ public class SyatemUserMultipleGroupMerchantRegression {
 				// Process Save Button
 				boolean saveStatus = true;
 				try {
-					B.CommuSavebutton();
-					B.NOTDisplayedOnInvalidFormat();
+					BL.clickElement(B.SaveButton);
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 				} catch (AssertionError e) {
 					saveStatus = false;
@@ -1638,8 +1681,9 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			// Process Next Step
 			boolean nextStepStatus = true;
 			try {
-				B.ClickOnNextStep();
-				GM.DisplayedOnIntroDiscountRate();
+				BL.clickElement(B.NextStep);
+				BL.isElementDisplayed(GM.IntrodiscountRate, "Disc Rate");
+				
 
 			} catch (AssertionError e) {
 				nextStepStatus = false;
@@ -1661,11 +1705,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 		try {
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
-			ISO = new org.Locators.ISOLocators(driver);
-			GM = new org.Locators.GroupMerchantLocator(driver);
-
+			
 			int testcaseCount = 0;
 			String errorMessage = "The data does not match or is empty.";
 
@@ -1673,18 +1713,20 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			if (poAImage != null && !poAImage.trim().isEmpty()) {
 
-				A.ClickOnKYC();
-				A.UploadCompanyProofofaddress(poAImage);
-				++testcaseCount;
+				BL.clickElement(B.Kyc);
+				Thread.sleep(3000);
+				BL.UploadImage(A.CompanyProofofaddressUpload, poAImage);
 				
+				++testcaseCount;
+
 //				B.ClickOnDoubleclickNextStep();
 				Thread.sleep(1000);
-				B.ClickOnNextStep();
+				BL.clickElement(B.NextStep);
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1693,12 +1735,10 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			}
 
-			
-
 			boolean nextStepStatus = true;
 			try {
-			
-				B.DisplayedOnstatusHistory();
+				BL.isElementDisplayed(B.StatusHistory, "History");
+				
 
 			} catch (AssertionError e) {
 				nextStepStatus = false;
@@ -1724,13 +1764,10 @@ public class SyatemUserMultipleGroupMerchantRegression {
 		try {
 			// Initialize BankLocators and AggregatorLocators only once
 			if (B == null) {
-				B = new org.Locators.BankLocators(driver);
 			}
 			if (A == null) {
-				A = new org.Locators.AggregatorLocators(driver);
 			}
 			if (GM == null) {
-			GM = new org.Locators.GroupMerchantLocator(driver);
 			}
 
 			// Load cached data for "Channel Bank" sheet
@@ -1759,13 +1796,15 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 				// Process Channel
 				if (!channel.isEmpty()) {
-					A.ClickOnDiscountRate();
+					BL.clickElement(A.DiscountRate);
 					Thread.sleep(1000);
-					B.ChannelADD();
+
+					BL.clickElement(B.ChannelADD);
 
 					Thread.sleep(1000);
-					B.clickonChannel();
-					B.selectDropdownOption(channel);
+					BL.clickElement(B.ClickOnChannel);
+
+					BL.selectDropdownOption(channel);
 
 					key.add("Channel-" + currentRow);
 					value.add(channel);
@@ -1773,7 +1812,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 					performTabKeyPress();
 
 					boolean channelStatus = true;
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 					testcaseCount++;
 					logTestStep(TestcaseNo, "DiscountRate : Channel", channel, channelStatus, errorMessage);
@@ -1785,13 +1824,13 @@ public class SyatemUserMultipleGroupMerchantRegression {
 				// Process Network
 				if (!pricingPlan.isEmpty()) {
 					Thread.sleep(1000);
-					A.ClickOnDiscountRatePricingPlan();
-					B.selectDropdownOption(pricingPlan);
+					BL.clickElement(A.DiscountRatePricingPlan);
+					BL.selectDropdownOption(pricingPlan);
 
 					performTabKeyPress();
 
 					boolean networkStatus = true;
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 					testcaseCount++;
 					logTestStep(TestcaseNo, "Pricing Plan", pricingPlan, networkStatus, errorMessage);
@@ -1803,8 +1842,8 @@ public class SyatemUserMultipleGroupMerchantRegression {
 				// Process Save Button
 				boolean saveStatus = true;
 				try {
-					A.ClickOnSAVEPersonal();
-					B.NOTDisplayedOnInvalidFormat();
+					BL.clickElement(B.SaveButton);
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 				} catch (AssertionError e) {
 					saveStatus = false;
@@ -1817,9 +1856,9 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			// Process Next Step
 			boolean nextStepStatus = true;
 			try {
-				B.ClickOnNextStep();
+				BL.clickElement(B.NextStep);
 
-				A.DisplayedOnIntroSettlement();
+				BL.isElementDisplayed(A.IntroSettlementInfo, "Settlement Info Page");
 
 			} catch (AssertionError e) {
 				nextStepStatus = false;
@@ -1842,10 +1881,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 		int testcaseCount = 0;
 		String errorMessage = "The data does not match or is empty.";
 
-		B = new org.Locators.BankLocators(driver);
-		A = new org.Locators.AggregatorLocators(driver);
-		ISO = new org.Locators.ISOLocators(driver);
-		GM = new org.Locators.GroupMerchantLocator(driver);
+		
 
 		String channel = testData.get("Settlement Channel");
 		String Account = testData.get("Account Type");
@@ -1857,22 +1893,25 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 		try {
 
-			B.clickOnSettlementInfo();
+			BL.clickElement(B.SettlementInfo);
 
-			B.ClickOnSettlementInfoADD();
+			Thread.sleep(1000);
+
+			BL.clickElement(B.AddButton);
 
 			if (channel != null && !channel.trim().isEmpty()) {
+				
+				BL.clickElement(B.SettlementInfo);
+				BL.clickElement(B.SettlementChannel);
 
-				B.ClickOnSettlementChannel();
-
-				B.selectDropdownOption(channel);
+				BL.selectDropdownOption(channel);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1882,16 +1921,16 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			}
 
 			if (Account != null && !Account.trim().isEmpty()) {
-				B.ClickOnSettlementAccountType();
+				BL.clickElement(B.SettlementAccountType);
 
-				B.selectDropdownOption(Account);
+				BL.selectDropdownOption(Account);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1901,15 +1940,15 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			}
 
 			if (BanKAccountNumber != null && !BanKAccountNumber.trim().isEmpty()) {
-				B.ClickOnBankAccountNumber();
-				B.EnterOnBankAccountNumber(BanKAccountNumber);
+				BL.clickElement(B.SettlementBankAccountNumber);
+				BL.enterElement(B.SettlementBankAccountNumber, BanKAccountNumber);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1920,9 +1959,9 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			if (IFSCCode != null && !IFSCCode.trim().isEmpty()) {
 
-				B.ClickOnIFSCCode();
+				BL.clickElement(B.SettlementIFSCCode);
 
-				B.selectDropdownOption(IFSCCode);
+				BL.selectDropdownOption(IFSCCode);
 
 				performTabKeyPress();
 
@@ -1931,7 +1970,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1942,9 +1981,10 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			boolean SaveStatus = true;
 			try {
-				B.ClickOnCommercialSave();
+				BL.clickElement(B.SaveButton);
 
-				B.NOTDisplayedOnInvalidFormat();
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+
 
 			} catch (AssertionError e) {
 				SaveStatus = false;
@@ -1955,11 +1995,11 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			boolean NextstepStatus = true;
 			try {
-
-				B.ClickOnNextStep();
-
-				GM.DisplayedOnIntroWhiteLabel();
-			} catch (AssertionError e) {
+				
+				BL.clickElement(B.NextStep);
+				BL.isElementDisplayed(GM.IntroWhitelabel, "white label");
+				} 
+			catch (AssertionError e) {
 				NextstepStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
 			}
@@ -1981,19 +2021,17 @@ public class SyatemUserMultipleGroupMerchantRegression {
 		int testcaseCount = 0;
 		String errorMessage = "The data does not match or is empty.";
 
-		B = new org.Locators.BankLocators(driver);
-		GM = new org.Locators.GroupMerchantLocator(driver);
 
 		String MaximumNoOfPlatform = testData.get("Maximum No of Platform");
-		
 
 		try {
 
-			B.clickOnWhiteLabel();
+				BL.clickElement(B.whitelabel);
 
 			if (MaximumNoOfPlatform != null && !MaximumNoOfPlatform.trim().isEmpty()) {
-				B.ClickOnMaximumNoofPlatform();
-				B.EnterOnMaximumNoofPlatform(MaximumNoOfPlatform);
+				
+				BL.clickElement(B.WhitelabelMaxNumberOfPlatform);
+				BL.enterElement(B.WhitelabelMaxNumberOfPlatform, MaximumNoOfPlatform);
 				performTabKeyPress();
 
 				++testcaseCount;
@@ -2001,7 +2039,7 @@ public class SyatemUserMultipleGroupMerchantRegression {
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2011,9 +2049,9 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			boolean SaveStatus = true;
 			try {
-				B.ClickOnCommercialSave();
+				BL.clickElement(B.SaveButton);
 
-				B.NOTDisplayedOnInvalidFormat();
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 			} catch (AssertionError e) {
 				SaveStatus = false;
@@ -2024,9 +2062,10 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			boolean NextstepStatus = true;
 			try {
-				B.ClickOnNextStep();
+				BL.clickElement(B.NextStep);
 
-				A.DisplayedOnIntroWebhook();
+				BL.isElementDisplayed(A.IntroWebhooks, "Webhook Page");
+
 
 			} catch (AssertionError e) {
 				NextstepStatus = false;
@@ -2048,30 +2087,28 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 		int testcaseCount = 0;
 		String errorMessage = "The data does not match or is empty.";
-
-		B = new org.Locators.BankLocators(driver);
-		GM = new org.Locators.GroupMerchantLocator(driver);
-
+		
 		String type = testData.get("Webhook Type");
 		String webhookURL = testData.get("Webhook url");
 
 		try {
+			BL.clickElement(B.webhooks);
 
-			B.clickOnWebhooks();
+			Thread.sleep(1000);
 
-			B.ClickOnWebhookADD();
+			BL.clickElement(B.AddButton);
 
 			if (type != null && !type.trim().isEmpty()) {
-				B.ClickOnWebhooksType();
+				BL.clickElement(B.WebhookType);
 
-				B.selectDropdownOption(type);
+				BL.selectDropdownOption(type);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2080,15 +2117,15 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			}
 
 			if (webhookURL != null && !webhookURL.trim().isEmpty()) {
-				B.ClickOnWebhooksURL();
-				B.EnterOnWebhooksURL(webhookURL);
+				BL.clickElement(B.WebhookTypeURL);
+				BL.enterElement(B.WebhookTypeURL, webhookURL);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2098,9 +2135,9 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			boolean SaveStatus = true;
 			try {
-				B.ClickOnCommercialSave();
+				BL.clickElement(B.SaveButton);
 
-				B.NOTDisplayedOnInvalidFormat();
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 			} catch (AssertionError e) {
 				SaveStatus = false;
@@ -2111,9 +2148,9 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			boolean NextstepStatus = true;
 			try {
-				B.ClickOnNextStep();
-
-				B.DisplayedOnKYCConfig();
+				BL.clickElement(B.NextStep);
+				BL.isElementDisplayed(B.IntroKycConfig, "KYC Config");
+				
 
 			} catch (AssertionError e) {
 				NextstepStatus = false;
@@ -2132,14 +2169,33 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 	private void submitForVerification() throws InterruptedException {
 
-		B.ClickOnsubmitforverification();
+		BL.clickElement(B.SubmitforVerification);
 
-		B.Yesforsubmit();
+		BL.clickElement(B.YesButton);
 
-		B.OkforSuccessfully();
+		BL.clickElement(B.OKButton);
 	}
 	
-	
+	@When("the System Verifier clicks the Group Merchant module")
+
+	public void SystemverifierClicktheSUBISOModule() {
+
+		try {
+
+			BL.clickElement(B.ClickOnGM);
+
+		} catch (Exception e) {
+
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+
+			exceptionHandler.handleException(e, "Onboarding");
+
+			throw e;
+
+		}
+
+	}
+
 	@Then("the System Verifier completes Group Merchant Onboarding, the system should prompt to verify all steps using the sheet name {string}")
 	public void processAllData1(String sheetName)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
@@ -2192,7 +2248,6 @@ public class SyatemUserMultipleGroupMerchantRegression {
 		logDashboardCount1();
 	}
 
-	
 	private void logDashboardCount1() {
 		String message = "Total Dashboard Count: " + totalTestCaseCount;
 
@@ -2208,7 +2263,6 @@ public class SyatemUserMultipleGroupMerchantRegression {
 		System.out.println("Data for row " + rowNumber + ": " + testData);
 
 		// Initialize the locators (e.g., BankLocators)
-		B = new org.Locators.BankLocators(driver);
 
 		int testCaseCount = 0;
 
@@ -2224,7 +2278,6 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			throws Exception {
 
 		// Initialize the locators
-		B = new org.Locators.BankLocators(driver);
 
 		// Initialize a counter to track the number of validated fields/sections
 		int validatedFieldsCount = 0;
@@ -2254,16 +2307,10 @@ public class SyatemUserMultipleGroupMerchantRegression {
 		}
 	}
 
-	private void Searchbyname(Map<String, String> testData, int TestcaseNo)
-			throws InterruptedException, AWTException {
-		
+	private void Searchbyname(Map<String, String> testData, int TestcaseNo) throws InterruptedException, AWTException {
+
 		String LegalName = testData.get("LegalName");
 
-		B = new org.Locators.BankLocators(driver);
-
-		A = new org.Locators.AggregatorLocators(driver);
-		
-		GM = new org.Locators.GroupMerchantLocator(driver);
 
 		key.clear();
 		value.clear();
@@ -2276,11 +2323,11 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			try {
 				Thread.sleep(3000);
 
-				B.ClickSearchbyBankName();
+				BL.clickElement(B.SearchbyBankName);
+				
+				Thread.sleep(1000);
 
-				Thread.sleep(3000);
-
-				B.SearchbyBankName(LegalName);
+				BL.UploadImage(B.SearchbyBankName, LegalName);
 
 			} catch (AssertionError e) {
 				Status = false;
@@ -2291,24 +2338,24 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			Thread.sleep(3000);
 
-			B.ActionClick();
+			BL.clickElement(B.ActionClick);
 
 			Thread.sleep(2000);
 
-			B.ClickonViewButton();
+			BL.ActionclickElement(B.ViewButton);
 
 			int testcaseCount = 0;
 
 			boolean verifiedStatus = true;
 			try {
-				
+
 				Thread.sleep(1000);
 
-				A.DisplayedonSalesInfo();
+				BL.isElementDisplayed(A.SalesInfo, "Sales Info");
 
-				A.ClickOnSalesInfo();
-				
-				B.VerifiedandNext();
+				BL.clickElement(A.SalesInfo);
+
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -2320,11 +2367,11 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			try {
 				Thread.sleep(1000);
 
-				A.DisplayedOnCompanyInfo();
+				BL.isElementDisplayed(A.ComapnyInfo, "Company Info");
 
-				A.ClickOnCompanyInfo();
+				BL.clickElement(A.ComapnyInfo);
 
-				B.VerifiedandNext();
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -2334,14 +2381,14 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			logTestStep(TestcaseNo, "Verified", "Company Info", verifiedStatus, errorMessage);
 
 			try {
-				
+
 				Thread.sleep(1000);
 
-				A.DisplayedOnPersonalInfo();
+				BL.isElementDisplayed(A.PersonalInfo, "Personal Info");
 
-				A.ClickOnPersonalInfo();
+				BL.clickElement(A.PersonalInfo);
 
-				B.VerifiedandNext();
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -2353,11 +2400,11 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			try {
 				Thread.sleep(1000);
 
-				A.DisplayedOnCommunicationInfo();
+				BL.isElementDisplayed(A.CommunicationInfo, "Communication Info");
 
-				A.ClickOnCommunicationInfo();
+				BL.clickElement(A.CommunicationInfo);
 
-				B.VerifiedandNext();
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -2367,14 +2414,14 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			logTestStep(TestcaseNo, "Verified", "Communication Info", verifiedStatus, errorMessage);
 
 			try {
-				
+
 				Thread.sleep(1000);
 
-				A.DisplayedonChannelConfig();
+				BL.isElementDisplayed(A.ChannelConfig, "Channel Config");
 
-				A.ClickOnChannelConfig();
+				BL.clickElement(A.ChannelConfig);
 
-				B.VerifiedandNext();
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -2383,17 +2430,14 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			logTestStep(TestcaseNo, "Verified", "Channel Config", verifiedStatus, errorMessage);
 
-			
-
 			try {
-				
+
 				Thread.sleep(1000);
-
-				A.DisplayedOnDiscountRate();
-
-				A.ClickOnDiscountRate();
-
-				B.VerifiedandNext();
+				BL.isElementDisplayed(A.DiscountRate, "DISC Rate");
+								
+				BL.clickElement(A.DiscountRate);
+	
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -2403,14 +2447,14 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			logTestStep(TestcaseNo, "Verified", "Discount Rate", verifiedStatus, errorMessage);
 
 			try {
-				
+
 				Thread.sleep(1000);
 
-				A.DisplayedOnSettlementInfo();
+				BL.isElementDisplayed(A.SettlementInfo, "Settlement Info");
 
-				A.ClickOnSettlementInfo();
+				BL.clickElement(A.SettlementInfo);
 
-				B.VerifiedandNext();
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -2420,14 +2464,14 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			logTestStep(TestcaseNo, "Verified", "Settlement Info", verifiedStatus, errorMessage);
 
 			try {
-				
+
 				Thread.sleep(1000);
 
-				A.DisplayedonWhitelabel();
+				BL.isElementDisplayed(A.Whitelabel, "WhiteLabel");
 
-				A.ClickOnWhitelabel();
+				BL.clickElement(A.Whitelabel);
 
-				B.VerifiedandNext();
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -2437,13 +2481,14 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			logTestStep(TestcaseNo, "Verified", "Whitelabel", verifiedStatus, errorMessage);
 
 			try {
-				
+
 				Thread.sleep(1000);
 
-				A.DisplayedonWebhooks();
-				A.ClickOnWebhooks();
+				BL.isElementDisplayed(A.Webhooks, "Webhooks");
 
-				B.VerifiedandNext();
+				BL.clickElement(A.Webhooks);
+
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -2451,24 +2496,24 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			}
 
 			logTestStep(TestcaseNo, "Verified", "Webhooks", verifiedStatus, errorMessage);
-			
+
 			try {
-				
+
 				Thread.sleep(1000);
 
-				A.DisplayedOnKYC();
-				
-				A.ClickOnKYC();
+				BL.isElementDisplayed(B.Kyc, "KYC");
 
-				A.ClickOnKYC();
+				BL.clickElement(B.Kyc);
 
-				GM.verifyDocument();
+				BL.clickElement(B.Kyc);
 
-				A.ClickonActionDiscountRate();
+				BL.clickElement(GM.VerifyDocument1);
 
-				A.ViewDocumentVerified();
+				BL.clickElement(A.Actions);
 
-				A.ViewDocumentSubmitandNext();
+				BL.clickElement(A.ViewDocumentVerified);
+
+				BL.clickElement(A.ViewDocumentSubmitandNext);
 
 				Robot r = new Robot();
 
@@ -2483,19 +2528,40 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 			logTestStep(TestcaseNo, "Verified", "KYC-Group Merchant", verifiedStatus, errorMessage);
 
+			BL.clickElement(B.SubmitforApproval);
 
-			B.SubmitforApproval();
+			BL.clickElement(B.YesButton);
 
-			B.Yesforsubmit();
+			BL.clickElement(B.OKButton);
 
-			B.OkforSuccessfully();
+			Thread.sleep(1000);
 
-			B.CancelApprove();
+			BL.clickElement(B.ApproveCancel);
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
 			exceptionHandler.handleException(e, "Verified");
 			throw e;
+		}
+
+	}
+	
+	@When("the System Approver clicks the Group Merchant module")
+
+	public void SystemapproverClicktheSUBISOModule() {
+
+		try {
+
+			BL.clickElement(B.ClickOnGM);
+
+		} catch (Exception e) {
+
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+
+			exceptionHandler.handleException(e, "Onboarding");
+
+			throw e;
+
 		}
 
 	}
@@ -2567,7 +2633,6 @@ public class SyatemUserMultipleGroupMerchantRegression {
 		System.out.println("Data for row " + rowNumber + ": " + testData);
 
 		// Initialize the locators (e.g., BankLocators)
-		B = new org.Locators.BankLocators(driver);
 
 		int testCaseCount = 0;
 
@@ -2583,7 +2648,6 @@ public class SyatemUserMultipleGroupMerchantRegression {
 			throws Exception {
 
 		// Initialize the locators
-		B = new org.Locators.BankLocators(driver);
 
 		// Initialize a counter to track the number of validated fields/sections
 		int validatedFieldsCount = 0;
@@ -2617,9 +2681,8 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 		String LegalName = testData.get("LegalName");
 
-		B = new org.Locators.BankLocators(driver);
 
-		A = new org.Locators.AggregatorLocators(driver);
+		
 
 		key.clear();
 		value.clear();
@@ -2630,11 +2693,11 @@ public class SyatemUserMultipleGroupMerchantRegression {
 		try {
 			Thread.sleep(3000);
 
-			B.ClickSearchbyBankName();
+			BL.clickElement(B.SearchbyBankName);
 
-			Thread.sleep(3000);
+			Thread.sleep(2000);
 
-			B.SearchbyBankName(LegalName);
+			BL.enterElement(B.SearchbyBankName, LegalName);
 
 		} catch (AssertionError e) {
 			Status = false;
@@ -2644,11 +2707,10 @@ public class SyatemUserMultipleGroupMerchantRegression {
 		logTestStep(TestcaseNo, "Search by name", LegalName, Status, errorMessag);
 		Thread.sleep(2000);
 
-		B.ActionClick();
-
+		BL.ActionclickElement(B.ActionClick);
 		Thread.sleep(1000);
 
-		B.ClickonViewButton();
+		BL.clickElement(B.ViewButton);
 
 		int testcaseCount = 0;
 		String errorMessage = "Approve Button is not visible.";
@@ -2657,11 +2719,11 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 		try {
 
-			B.ClickOnApprove();
+			BL.clickElement(B.Approve);
 
-			B.Yesforsubmit();
+			BL.clickElement(B.YesButton);
 
-			B.OkforSuccessfully();
+			BL.clickElement(B.OKButton);
 
 		} catch (AssertionError e) {
 			ApprovedStatus = false;
@@ -2676,39 +2738,38 @@ public class SyatemUserMultipleGroupMerchantRegression {
 //
 //		B.OkforSuccessfully();
 
-		B.CancelApprove();
+		BL.clickElement(B.ApproveCancel);
 
 		Thread.sleep(3000);
 
-		B.ClickSearchbyBankName();
+		BL.clickElement(B.SearchbyBankName);
+
+		Thread.sleep(2000);
+
+		BL.UploadImage(B.SearchbyBankName, LegalName);
 
 		Thread.sleep(3000);
 
-		B.SearchbyBankName(LegalName);
-
-		Thread.sleep(3000);
-
-		B.ActionClick();
+		BL.ActionclickElement(B.ActionClick);
 
 		try {
 
-			B.ClickonViewButton();
+			BL.clickElement(B.ViewButton);
 
 		} catch (AssertionError e) {
 			ApprovedStatus = false;
 			errorMessage = e.getMessage(); // Capture error message
 		}
 
-		logTestStep(TestcaseNo, "Group Merchant CPID", B.getCPID(), ApprovedStatus, errorMessage);
+		logTestStep(TestcaseNo, "Group Merchant CPID", BL.getElementValue(B.CPID), ApprovedStatus, errorMessage);
 
 //		B.ClickonViewButton();
 //
 //		logInputData("Bank CPID", B.getCPID());
 
-		B.CancelApprove();
+		BL.clickElement(B.ApproveCancel);
 
 	}
-
 
 	// Set to track previously generated Aadhaar numbers to ensure uniqueness
 	private Set<String> existingAadhaarNumbers = new HashSet<>();
@@ -2868,11 +2929,11 @@ public class SyatemUserMultipleGroupMerchantRegression {
 
 	private void performLogout() throws InterruptedException {
 
-		B.LogoutProfile();
+		BL.clickElement(B.Profile);
 
-		B.Logoutbutton();
+		BL.clickElement(B.LogOut);
 
-		B.LogoutYESbutton();
+		BL.clickElement(B.YesButton);
 
 	}
 

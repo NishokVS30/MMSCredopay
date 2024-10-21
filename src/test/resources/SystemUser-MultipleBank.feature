@@ -39,47 +39,47 @@ Scenario: Load Data from Excel
   
   
    Scenario: System Maker Successfully Completes Mandatory Fields in Bank Onboarding
-    When the SystemMaker clicks the bank module
+    When the System Maker clicks the bank module
     Then the System Maker Bank Onboarding should prompt users to enter valid inputs using the sheet name "Bank Regression"
     
   
-    #Scenario: System verifier Login
- #Given I visit the System Verifier Login in Regression using sheetname "Credentials" and rownumber 2
- #And I enter the credentials and click a login button in Regression using sheetname "Credentials" and rownumber 2
-  #
-   #	 
-#Scenario: System Verifier sees Onboarding in Sidemenu
-   #When System Verifier - Onboarding should be displayed in the side menu
-    #
-#
-#Scenario: System Verifier sees side menu items in Onboarding
-  #Then the System Verifier should see Bank, Aggregators, ISO,SUB ISO, Groupmerchant, Merchant, and Terminal in the side menu of Onboarding
- #
+    Scenario: System verifier Login
+ Given I visit the System Verifier Login in Regression using sheetname "Credentials" and rownumber 2
+ And I enter the credentials and click a login button in Regression using sheetname "Credentials" and rownumber 2
+  
+   	 
+Scenario: System Verifier sees Onboarding in Sidemenu
+   When System Verifier - Onboarding should be displayed in the side menu
+    
 
- #Scenario: System Verifier clicks the bank module
-    #When the System Verifier clicks the bank module
-    #
-   #
- #Scenario: System Verifier Successfully Verifies All Steps in Bank Onboarding
-#When the System Verifier completes Bank Onboarding, the system should prompt to verify all steps using the sheet name "Bank Regression"
-#
-#
- #
- #Scenario: System Approver Login
-   #Given I visit the System Approver Login in Regression using sheetname "Credentials" and rownumber 3
-   #And I enter the credentials and click a login button in Regression using sheetname "Credentials" and rownumber 3
-   #
-  #
-  #Scenario: System Approver sees Onboarding in Sidemenu
-   #When System Approver - Onboarding should be displayed in the side menu
-  #
-#
-#Scenario: System Approver sees side menu items in Onboarding
-  #Then the System Approver should see Bank, Aggregators, ISO,SUB ISO, Groupmerchant, Merchant, and Terminal in the side menu of Onboarding
- #
-#
- #Scenario: System Approver clicks the bank module
-    #When the System Approver clicks the bank module
-   #
-#Scenario: System Approver Successfully Approve in Bank Onboarding
-    #When the System Approver completes Bank Onboarding, the system should prompt to Approve using the sheet name "Bank Regression"
+Scenario: System Verifier sees side menu items in Onboarding
+  Then the System Verifier should see Bank, Aggregators, ISO,SUB ISO, Groupmerchant, Merchant, and Terminal in the side menu of Onboarding
+ 
+
+ Scenario: System Verifier clicks the bank module
+    When the System Verifier clicks the bank module
+    
+   
+ Scenario: System Verifier Successfully Verifies All Steps in Bank Onboarding
+When the System Verifier completes Bank Onboarding, the system should prompt to verify all steps using the sheet name "Bank Regression"
+
+
+ 
+ Scenario: System Approver Login
+   Given I visit the System Approver Login in Regression using sheetname "Credentials" and rownumber 3
+   And I enter the credentials and click a login button in Regression using sheetname "Credentials" and rownumber 3
+   
+  
+  Scenario: System Approver sees Onboarding in Sidemenu
+   When System Approver - Onboarding should be displayed in the side menu
+  
+
+Scenario: System Approver sees side menu items in Onboarding
+  Then the System Approver should see Bank, Aggregators, ISO,SUB ISO, Groupmerchant, Merchant, and Terminal in the side menu of Onboarding
+ 
+
+ Scenario: System Approver clicks the bank module
+    When the System Approver clicks the bank module
+   
+Scenario: System Approver Successfully Approve in Bank Onboarding
+    When the System Approver completes Bank Onboarding, the system should prompt to Approve using the sheet name "Bank Regression"

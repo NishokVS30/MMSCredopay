@@ -39,7 +39,7 @@ Scenario: SystemMaker Login
   
   
    Scenario: System Maker Successfully Completes Mandatory Fields in Group Merchant Onboarding
-    When the SystemMaker clicks the Group Merchant module
+    When the System Maker clicks the Group Merchant module
     Then the System Maker Group Merchant Onboarding should prompt users to enter valid inputs using the sheet name "Group Merchant Regression"
     
     

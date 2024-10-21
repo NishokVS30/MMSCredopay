@@ -29,16 +29,23 @@ import com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter;
 import com.github.javafaker.Faker;
 
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import io.qameta.allure.Allure;
 
 public class SystemUserMutipleAggregatorRegression {
 
 	private WebDriver driver;
 
+	org.Locators.BaseClassLocator BL;
+	org.Locators.SystemUserLocatores S;
 	org.Locators.LoginLocators L;
 	org.Locators.BankLocators B;
 	org.Locators.AggregatorLocators A;
-	org.Locators.SystemUserLocatores S;
+	org.Locators.ISOLocators ISO;
+	org.Locators.SUBISOLocators SUBISO;
+	org.Locators.GroupMerchantLocator GM;
+	org.Locators.MerchantLocators M;
+	org.Locators.TerminalLocators T;
 
 	ExtentTest test;
 	ExcelUtilsDataCache cache = ExcelUtilsDataCache.getInstance();
@@ -48,6 +55,46 @@ public class SystemUserMutipleAggregatorRegression {
 //		 this.driver = driver;
 		System.setProperty("webdriver.chrome.logfile", "chromedriver.log");
 		System.setProperty("webdriver.chrome.verboseLogging", "true");
+
+		BL = new org.Locators.BaseClassLocator(driver);
+
+		L = new org.Locators.LoginLocators(driver);
+
+		S = new org.Locators.SystemUserLocatores(driver);
+
+		B = new org.Locators.BankLocators(driver);
+
+		A = new org.Locators.AggregatorLocators(driver);
+
+		ISO = new org.Locators.ISOLocators(driver);
+
+		SUBISO = new org.Locators.SUBISOLocators(driver);
+
+		GM = new org.Locators.GroupMerchantLocator(driver);
+
+		M = new org.Locators.MerchantLocators(driver);
+
+		T = new org.Locators.TerminalLocators(driver);
+
+	}
+
+	@When("the System Maker clicks the Aggregator module")
+
+	public void SystemMakerClicktheBankModule() {
+
+		try {
+
+			BL.clickElement(B.ClickOnPayfac);
+
+		} catch (Exception e) {
+
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+
+			exceptionHandler.handleException(e, "Onboarding");
+
+			throw e;
+
+		}
 
 	}
 
@@ -119,8 +166,7 @@ public class SystemUserMutipleAggregatorRegression {
 		// Log the test data for the current row
 		System.out.println("Data for row " + rowNumber + ": " + testData);
 
-		// Initialize the locators (e.g., BankLocators)
-		B = new org.Locators.BankLocators(driver);
+		// Initialize the locators (e.g., BankLocators
 
 		int testCaseCount = 0;
 
@@ -155,9 +201,6 @@ public class SystemUserMutipleAggregatorRegression {
 	@SuppressWarnings("unused")
 	private int validateFieldsForRow(String sheetName, Map<String, String> testData, int TestcaseNo, int rowNumber)
 			throws Exception {
-
-		// Initialize the locators
-		B = new org.Locators.BankLocators(driver);
 
 		// Initialize a counter to track the number of validated fields/sections
 		int validatedFieldsCount = 0;
@@ -323,8 +366,6 @@ public class SystemUserMutipleAggregatorRegression {
 
 	private void fillSalesInfo(Map<String, String> testData, int TestcaseNo) throws Exception {
 		try {
-			A = new org.Locators.AggregatorLocators(driver);
-			B = new org.Locators.BankLocators(driver);
 
 			Faker faker = new Faker();
 
@@ -337,17 +378,18 @@ public class SystemUserMutipleAggregatorRegression {
 			String VAS2 = testData.get("EKYC Required");
 
 			if (VAS1 != null && !VAS1.trim().isEmpty()) {
-				B.ClickOnCreatebutton();
-				A.ClickOnSalesInfo();
-				A.ClickOnVASCommisiionOne();
-				B.selectDropdownOption(VAS1);
+
+				BL.clickElement(B.Createbutton);
+				BL.clickElement(A.SalesInfo);
+				BL.clickElement(A.VASCommissionOne);
+				BL.selectDropdownOption(VAS1);
 
 				++testcaseCount;
 
 				boolean VASStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					VASStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -359,10 +401,11 @@ public class SystemUserMutipleAggregatorRegression {
 
 			boolean DateStatus = true; // Assume success initially
 			try {
-				A.ClickOnAggreratorApplictionDate();
-				A.ClickOnApply();
 
-				B.NOTDisplayedOnInvalidFormat();
+				BL.clickElement(A.AggregatorApplicationDateCalenderOne);
+				BL.clickElement(A.ApplyButton);
+
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 			} catch (AssertionError e) {
 				DateStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
@@ -371,10 +414,10 @@ public class SystemUserMutipleAggregatorRegression {
 			logTestStep(TestcaseNo, "Aggrerator Appliction Date", "Current Date", DateStatus, errorMessage);
 
 			try {
-				A.ClickOnAggrementnDate();
-				A.ClickOnApply();
+				BL.clickElement(A.AggregatorApplicationDateCalenderTwo);
+				BL.clickElement(A.ApplyButton);
 
-				B.NOTDisplayedOnInvalidFormat();
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 			} catch (AssertionError e) {
 				DateStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
@@ -388,8 +431,8 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (aggregatorCode != null && !aggregatorCode.trim().isEmpty()) {
-				A.ClickOnAggregatorCOde();
-				A.EnterOnAggregatorCOde(aggregatorCode);
+				BL.clickElement(A.AggregatorCode);
+				BL.enterElement(A.AggregatorCode, aggregatorCode);
 //				logInputData("Aggregator Code", aggregatorCode);
 				++testcaseCount;
 
@@ -397,7 +440,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					AggregatorStatus = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -412,16 +455,16 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (Marsid != null && !Marsid.trim().isEmpty()) {
-				A.ClickOnMarsid();
-				A.EnterOnMarsid(Marsid);
-//				logInputData("Marsid", Marsid);
+
+				BL.clickElement(B.Marsid);
+				BL.enterElement(B.Marsid, Marsid);
 				++testcaseCount;
 
 				boolean MarsidStatus = true;
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					MarsidStatus = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -432,16 +475,16 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (VAS2 != null && !VAS2.trim().isEmpty()) {
 
-				A.ClickOnEKYCRequired();
+				BL.clickElement(A.EKycRequired);
 
-				B.selectDropdownOption(VAS2);
+				BL.selectDropdownOption(VAS2);
 
 				++testcaseCount;
 
 				boolean VASStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					VASStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -453,9 +496,10 @@ public class SystemUserMutipleAggregatorRegression {
 
 			boolean NextstepStatus = true;
 			try {
-				B.ClickOnNextStep();
+				BL.clickElement(B.NextStep);
 
-				A.DisplayedOnIntroCompanyInfo();
+				BL.isElementDisplayed(A.IntroCompanyInfo, "Company Info Page");
+
 			} catch (AssertionError e) {
 				NextstepStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
@@ -464,19 +508,15 @@ public class SystemUserMutipleAggregatorRegression {
 			logTestStep(TestcaseNo, "NextStep", "Sales Info", NextstepStatus, errorMessage);
 
 		} catch (Exception e) {
-			// Use the exception handler to log and handle exceptions gracefully
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
 			exceptionHandler.handleException(e, "Sales Info");
-			throw e; // Re-throw the exception after handling
+			throw e;
 		}
 
 	}
 
 	private String fillCompanyInfo(Map<String, String> testData, int TestcaseNo) throws Exception {
 		try {
-
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
 
 			Faker faker = new Faker();
 
@@ -504,9 +544,11 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (LegalName != null && !LegalName.trim().isEmpty()) {
 
-				A.ClickOnCompanyInfo();
-				A.ClickOnLegalName();
-				A.EnterOnLegalName(LegalName);
+				BL.clickElement(A.ComapnyInfo);
+
+				BL.clickElement(A.LegalName);
+
+				BL.enterElement(A.LegalName, LegalName);
 
 				++testcaseCount;
 
@@ -514,7 +556,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					legalNameStatus = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -526,9 +568,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (brand != null && !brand.trim().isEmpty()) {
 
-				A.ClickOnBrandName();
+				BL.clickElement(A.BrandName);
 
-				A.EnterOnBrandName(brand);
+				BL.enterElement(A.BrandName, brand);
 
 				++testcaseCount;
 
@@ -536,7 +578,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -548,9 +590,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (Address != null && !Address.trim().isEmpty()) {
 
-				A.ClickOnRegisteredAddress();
+				BL.clickElement(A.RegisteredAddress);
 
-				A.EnterOnRegisteredAddress(Address);
+				BL.enterElement(A.RegisteredAddress, Address);
 
 				++testcaseCount;
 
@@ -558,7 +600,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -570,9 +612,11 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (pincode != null && !pincode.trim().isEmpty()) {
 
-				A.ClickOnRegisteredPincode();
+				BL.clickElement(A.RegisteredPincode);
 
-				B.selectDropdownOption(pincode);
+				BL.enterElement(A.RegisteredPincode, pincode);
+
+				BL.selectDropdownOption(pincode);
 
 				++testcaseCount;
 
@@ -580,7 +624,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -592,9 +636,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (type != null && !type.trim().isEmpty()) {
 
-				A.ClickOnBusinessType();
+				BL.clickElement(A.BusinessType);
 
-				B.selectDropdownOption(type);
+				BL.selectDropdownOption(type);
 
 				++testcaseCount;
 
@@ -602,7 +646,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -614,7 +658,8 @@ public class SystemUserMutipleAggregatorRegression {
 
 			boolean DateStatus = true;
 			try {
-				A.ClickOnEstablishedYearDatepicker();
+
+				BL.clickElement(A.EstablishedYearDatepicker);
 
 				Robot r = new Robot();
 
@@ -622,9 +667,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 				r.keyRelease(KeyEvent.VK_ENTER);
 
-				A.ClickOnApply();
+				BL.clickElement(A.ApplyButton);
 
-				B.NOTDisplayedOnInvalidFormat();
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 			} catch (AssertionError e) {
 				DateStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
@@ -639,8 +684,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (registeredNumber != null && !registeredNumber.trim().isEmpty()) {
 
-				A.CLickOnRegisterNumber();
-				A.EnterOnRegisterNumber(registeredNumber);
+				BL.clickElement(A.RegisterNumber);
+
+				BL.enterElement(A.RegisterNumber, registeredNumber);
 
 				++testcaseCount;
 
@@ -648,7 +694,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -660,9 +706,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (pan != null && !pan.trim().isEmpty()) {
 
-				A.CLickOnCompanyPAN();
+				BL.clickElement(A.ComapnyPAN);
 
-				A.EnterOnCompanyPAN(pan);
+				BL.enterElement(A.ComapnyPAN, pan);
 
 				++testcaseCount;
 
@@ -670,7 +716,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -682,9 +728,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (GstIN != null && !GstIN.trim().isEmpty()) {
 
-				A.CLickOnGSTIN();
+				BL.clickElement(A.GSTIN);
 
-				A.EnterOnGSTIN(GstIN);
+				BL.enterElement(A.GSTIN, GstIN);
 
 				++testcaseCount;
 
@@ -692,7 +738,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -704,9 +750,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (frequency != null && !frequency.trim().isEmpty()) {
 
-				A.CLickOnStatementFrequency();
+				BL.clickElement(A.StatementFrequency);
 
-				B.selectDropdownOption(frequency);
+				BL.selectDropdownOption(frequency);
 
 				++testcaseCount;
 
@@ -714,7 +760,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -726,9 +772,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (Type != null && !Type.trim().isEmpty()) {
 
-				A.CLickOnStatementType();
+				BL.clickElement(A.StatementType);
 
-				B.selectDropdownOption(Type);
+				BL.selectDropdownOption(Type);
 
 				++testcaseCount;
 
@@ -736,7 +782,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -748,9 +794,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (domain != null && !domain.trim().isEmpty()) {
 
-				A.CLickOnEmailDomain();
+				BL.clickElement(A.EmailDomain);
 
-				A.EnterOnEmailDomain(domain);
+				BL.enterElement(A.EmailDomain, domain);
 
 				performTabKeyPress();
 
@@ -760,7 +806,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -772,9 +818,10 @@ public class SystemUserMutipleAggregatorRegression {
 
 			boolean NextstepStatus = true;
 			try {
-				B.ClickOnNextStep();
+				BL.clickElement(B.NextStep);
 
-				A.DisplayedOnIntroPersonalInfo();
+				BL.isElementDisplayed(A.IntroPersonalInfo, "Personal Info Page");
+
 			} catch (AssertionError e) {
 				NextstepStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
@@ -795,8 +842,6 @@ public class SystemUserMutipleAggregatorRegression {
 
 	private void fillPersonalInfo(Map<String, String> testData, int TestcaseNo) throws Exception {
 		try {
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
 
 			int testcaseCount = 0;
 			String errorMessage = "The data does not match or is empty.";
@@ -818,13 +863,13 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (title != null && !title.trim().isEmpty()) {
 
-				A.ClickOnPersonalInfo();
+				BL.clickElement(A.PersonalInfo);
 
-				A.PersonalINfoADD();
+				BL.clickElement(B.AddButton);
 
-				A.ClickOntitlepersonal();
+				BL.clickElement(A.titlepersonal);
 
-				B.selectDropdownOption(title);
+				BL.selectDropdownOption(title);
 
 				++testcaseCount;
 
@@ -832,7 +877,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -844,9 +889,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (FirstName != null && !FirstName.trim().isEmpty()) {
 
-				A.ClickOnFirstNamePersonal();
+				BL.clickElement(A.FirstNamePersonal);
 
-				A.EnterOnFirstNamePersonal(FirstName);
+				BL.enterElement(A.FirstNamePersonal, FirstName);
 
 				++testcaseCount;
 
@@ -854,7 +899,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -866,9 +911,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (LastName != null && !LastName.trim().isEmpty()) {
 
-				A.ClickOnLastNamePersonal();
+				BL.clickElement(A.LastNamePersonal);
 
-				A.EnterOnLastNamePersonal(LastName);
+				BL.enterElement(A.LastNamePersonal, LastName);
 
 				++testcaseCount;
 
@@ -876,7 +921,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -889,19 +934,15 @@ public class SystemUserMutipleAggregatorRegression {
 			boolean DateStatus = true; // Assume success initially
 
 			try {
-				A.ClickOnOpenCalenderPersonal();
 
-				A.ClickOnChooseMonthandYearPersonal();
+				BL.clickElement(A.OpenCalenderPersonal);
+				BL.clickElement(A.ChooseMonthandYear);
+				BL.clickElement(A.Year);
+				BL.clickElement(A.Month);
+				BL.clickElement(A.Date);
+				BL.clickElement(A.ApplyButton);
 
-				A.ClickOnYearPersonal();
-
-				A.ClickOnMonthPersonal();
-
-				A.ClickOnDatePersonal();
-
-				A.ClickOnApplyPersonal();
-
-				B.NOTDisplayedOnInvalidFormat();
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 			} catch (AssertionError e) {
 				DateStatus = false; // Set status to false if assertion fails
 				errorMessage = e.getMessage(); // Capture error message
@@ -911,9 +952,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (pan != null && !pan.trim().isEmpty()) {
 
-				A.ClickOnPANPersonal();
+				BL.clickElement(A.PanPersonal);
 
-				A.EnterOnPanPersonal(pan);
+				BL.enterElement(A.PanPersonal, pan);
 
 				++testcaseCount;
 
@@ -921,7 +962,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -933,9 +974,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (Address != null && !Address.trim().isEmpty()) {
 
-				A.ClickOnAddressPersonal();
+				BL.clickElement(A.AddressPersonal);
 
-				A.EnterOnAddressPersonal(Address);
+				BL.enterElement(A.AddressPersonal, Address);
 
 				++testcaseCount;
 
@@ -943,7 +984,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -955,9 +996,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (pincode != null && !pincode.trim().isEmpty()) {
 
-				A.ClickOnPincodePersonal();
+				BL.clickElement(A.PincodePersonal);
 
-				B.selectDropdownOption(pincode);
+				BL.selectDropdownOption(pincode);
 
 				++testcaseCount;
 
@@ -965,7 +1006,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -982,9 +1023,9 @@ public class SystemUserMutipleAggregatorRegression {
 				String remainingDigits = faker.number().digits(9); // Generate 9 random digits
 				String Mobilenumber = firstDigit + remainingDigits;
 
-				A.ClickOnMobileNumberPersonal();
+				BL.clickElement(A.MobilePersonal);
 
-				A.EnterOnMobileNumberPersonal(Mobilenumber);
+				BL.enterElement(A.MobilePersonal, Mobilenumber);
 
 				++testcaseCount;
 
@@ -992,7 +1033,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -1004,8 +1045,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (telephone != null && !telephone.trim().isEmpty()) {
 
-				A.ClickOnTelephonePersonal();
-				A.EnterOnTelephonePersonal(telephone);
+				BL.clickElement(A.telephonepersonal);
+
+				BL.enterElement(A.telephonepersonal, telephone);
 
 				++testcaseCount;
 
@@ -1013,7 +1055,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -1025,9 +1067,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (emailid != null && !emailid.trim().isEmpty()) {
 
-				A.ClickOnEmailPersonal();
+				BL.clickElement(A.emailPersonal);
 
-				A.EnterOnemailPersonal(emailid);
+				BL.enterElement(A.emailPersonal, emailid);
 
 				++testcaseCount;
 
@@ -1035,7 +1077,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -1047,9 +1089,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (Nationality != null && !Nationality.trim().isEmpty()) {
 
-				A.ClickOnNationalityPersonal();
+				BL.clickElement(A.Nationalitypersonal);
 
-				A.EnterOnNationalitypersonal(Nationality);
+				BL.enterElement(A.Nationalitypersonal, Nationality);
 
 				++testcaseCount;
 
@@ -1057,7 +1099,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -1069,9 +1111,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (aadhaar != null && !aadhaar.trim().isEmpty()) {
 
-				A.ClickOnAadhaarNumberPersonal();
+				BL.clickElement(A.AadhaarNumberPersonal);
 
-				A.EnterOnAadhaarNumberPersonal(aadhaar);
+				BL.enterElement(A.AadhaarNumberPersonal, aadhaar);
 
 				++testcaseCount;
 
@@ -1079,7 +1121,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -1091,9 +1133,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (Passport != null && !Passport.trim().isEmpty()) {
 
-				A.ClickOnPassportNumberPersonal();
+				BL.clickElement(A.PassportNumberPersonal);
 
-				A.EnterOnPassportNumberPersonal(Passport);
+				BL.enterElement(A.PassportNumberPersonal, Passport);
 
 				++testcaseCount;
 
@@ -1101,7 +1143,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -1113,7 +1155,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 			try {
 
-				A.ClickOnOpenCalenderPasswordExpiry();
+				BL.clickElement(A.OpenCalenderPasswordExpiryDate);
 
 				Robot r = new Robot();
 
@@ -1121,11 +1163,11 @@ public class SystemUserMutipleAggregatorRegression {
 
 				r.keyRelease(KeyEvent.VK_ENTER);
 
-				A.ClickOnApplyPersonal();
+				BL.clickElement(A.ApplyButton);
 
 				performTabKeyPress();
 
-				B.NOTDisplayedOnInvalidFormat();
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 			} catch (AssertionError e) {
 				DateStatus = false; // Set status to false if assertion fails
 				errorMessage = e.getMessage(); // Capture error message
@@ -1136,9 +1178,9 @@ public class SystemUserMutipleAggregatorRegression {
 			boolean SaveStatus = true;
 			try {
 
-				A.ClickOnSAVEPersonal();
+				BL.clickElement(B.SaveButton);
 
-				B.OkforSuccessfully();
+				BL.clickElement(B.OKButton);
 
 			} catch (AssertionError e) {
 				SaveStatus = false;
@@ -1149,9 +1191,10 @@ public class SystemUserMutipleAggregatorRegression {
 
 			boolean NextstepStatus = true;
 			try {
-				B.ClickOnNextStep();
+				BL.clickElement(B.NextStep);
 
-				A.DisplayedOnIntroCommunicationInfo();
+				BL.isElementDisplayed(A.CommunicationInfo, "Communication Info Page");
+
 			} catch (AssertionError e) {
 				NextstepStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
@@ -1173,8 +1216,6 @@ public class SystemUserMutipleAggregatorRegression {
 
 		try {
 
-			B = new org.Locators.BankLocators(driver);
-
 			int testcaseCount = 0;
 			String errorMessage = "The data does not match or is empty.";
 
@@ -1184,21 +1225,22 @@ public class SystemUserMutipleAggregatorRegression {
 			String CommEmailid = testData.get("Communication EmailId");
 			String ADUSer = testData.get("AD User");
 
-			B.CLickOnCommunicationInfo();
+			BL.clickElement(B.CommunicationInfo);
 
-			B.CommADD();
+			BL.clickElement(B.ClickonCommADD);
 
 			if (CommName != null && !CommName.trim().isEmpty()) {
 
-				B.ClickOnCommName();
-				B.EnterOnCommName(CommName);
+				BL.clickElement(B.ClickonCommuName);
+
+				BL.enterElement(B.ClickonCommuName, CommName);
 
 				++testcaseCount;
 
 				boolean CommunicationNameStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					CommunicationNameStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1209,15 +1251,17 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (CommPosition != null && !CommPosition.trim().isEmpty()) {
-				B.ClickOnCommPosition();
-				B.EnterOnCommunicationPosition(CommPosition);
+
+				BL.clickElement(B.ClickonCommuPosition);
+
+				BL.enterElement(B.ClickonCommuPosition, CommPosition);
 
 				++testcaseCount;
 
 				boolean CommunicationPositionStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					CommunicationPositionStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1235,15 +1279,16 @@ public class SystemUserMutipleAggregatorRegression {
 				String remainingDigits = faker.number().digits(9); // Generate 9 random digits
 				String communicationMobileNumber = firstDigit + remainingDigits;
 
-				B.ClickonCommMobileNumber();
-				B.EnteronCommMobileNumber(communicationMobileNumber);
+				BL.clickElement(B.ClickonCommuMobileNumber);
+
+				BL.enterElement(B.ClickonCommuMobileNumber, communicationMobileNumber);
 
 				++testcaseCount;
 
 				boolean CommunicationMobileNumberStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					CommunicationMobileNumberStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1260,15 +1305,17 @@ public class SystemUserMutipleAggregatorRegression {
 				// Generate a random email address with @gmail.com
 				String randomEmailPrefix = faker.internet().slug(); // Generate a random string for the prefix
 				String Communicationemailid = randomEmailPrefix + "@gmail.com";
-				B.ClickonCommEmailid();
-				B.EnteronCommEmailid(Communicationemailid);
+
+				BL.clickElement(B.ClickonCommuEmailId);
+
+				BL.enterElement(B.ClickonCommuEmailId, Communicationemailid);
 
 				++testcaseCount;
 
 				boolean CommunicationEmailIDStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 				} catch (AssertionError e) {
 					CommunicationEmailIDStatus = false;
@@ -1280,30 +1327,29 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (ADUSer != null && !ADUSer.trim().isEmpty()) {
-				B.ClickOnAdUser();
-				B.selectDropdownOption(ADUSer);
+				BL.clickElement(B.ClickOnAdUsers);
+				BL.selectDropdownOption(ADUSer);
 
 				++testcaseCount;
 
 				boolean CommunicationADUSERStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 				} catch (AssertionError e) {
 					CommunicationADUSERStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Admin user details AD User", ADUSer, CommunicationADUSERStatus,
-						errorMessage);
+				logTestStep(TestcaseNo, "Admin user details AD User", ADUSer, CommunicationADUSERStatus, errorMessage);
 
 			}
 
 			boolean SaveStatus = true;
 			try {
-				B.CommuSavebutton();
+				BL.clickElement(B.SaveButton);
 
-				B.NOTDisplayedOnInvalidFormat();
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 			} catch (AssertionError e) {
 				SaveStatus = false;
@@ -1325,8 +1371,6 @@ public class SystemUserMutipleAggregatorRegression {
 
 		try {
 
-			B = new org.Locators.BankLocators(driver);
-
 			int testcaseCount = 0;
 			String errorMessage = "The data does not match or is empty.";
 
@@ -1335,21 +1379,22 @@ public class SystemUserMutipleAggregatorRegression {
 			String CommMobileNumber = testData.get("Communication MobileNumber");
 			String CommEmailid = testData.get("Communication EmailId");
 
-			B.CLickOnCommunicationInfo();
+			BL.clickElement(B.CommunicationInfo);
 
-			B.CommSettlementandReconADD();
+			BL.clickElement(B.ClickonCommSettlementandReconADD);
 
 			if (CommName != null && !CommName.trim().isEmpty()) {
 
-				B.ClickOnCommName();
-				B.EnterOnCommName(CommName);
+				BL.clickElement(B.ClickonCommuName);
+
+				BL.enterElement(B.ClickonCommuName, CommName);
 
 				++testcaseCount;
 
 				boolean CommunicationNameStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					CommunicationNameStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1360,15 +1405,17 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (CommPosition != null && !CommPosition.trim().isEmpty()) {
-				B.ClickOnCommPosition();
-				B.EnterOnCommunicationPosition(CommPosition);
+
+				BL.clickElement(B.ClickonCommuPosition);
+
+				BL.enterElement(B.ClickonCommuPosition, CommPosition);
 
 				++testcaseCount;
 
 				boolean CommunicationPositionStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					CommunicationPositionStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1386,15 +1433,16 @@ public class SystemUserMutipleAggregatorRegression {
 				String remainingDigits = faker.number().digits(9); // Generate 9 random digits
 				String communicationMobileNumber = firstDigit + remainingDigits;
 
-				B.ClickonCommMobileNumber();
-				B.EnteronCommMobileNumber(communicationMobileNumber);
+				BL.clickElement(B.ClickonCommuMobileNumber);
+
+				BL.enterElement(B.ClickonCommuMobileNumber, communicationMobileNumber);
 
 				++testcaseCount;
 
 				boolean CommunicationMobileNumberStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					CommunicationMobileNumberStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1411,15 +1459,17 @@ public class SystemUserMutipleAggregatorRegression {
 				// Generate a random email address with @gmail.com
 				String randomEmailPrefix = faker.internet().slug(); // Generate a random string for the prefix
 				String Communicationemailid = randomEmailPrefix + "@gmail.com";
-				B.ClickonCommEmailid();
-				B.EnteronCommEmailid(Communicationemailid);
+
+				BL.clickElement(B.ClickonCommuEmailId);
+
+				BL.enterElement(B.ClickonCommuEmailId, Communicationemailid);
 
 				++testcaseCount;
 
 				boolean CommunicationEmailIDStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 				} catch (AssertionError e) {
 					CommunicationEmailIDStatus = false;
@@ -1432,9 +1482,10 @@ public class SystemUserMutipleAggregatorRegression {
 
 			boolean SaveStatus = true;
 			try {
-				B.CommuSavebutton();
 
-				B.NOTDisplayedOnInvalidFormat();
+				BL.clickElement(B.SaveButton);
+
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 			} catch (AssertionError e) {
 				SaveStatus = false;
@@ -1446,9 +1497,10 @@ public class SystemUserMutipleAggregatorRegression {
 
 			boolean NextstepStatus = true;
 			try {
-				B.ClickOnNextStep();
+				Thread.sleep(1000);
+				BL.clickElement(B.NextStep);
 
-				A.DisplayedOnIntroChannelConfig();
+				BL.isElementDisplayed(A.IntroChannelConfig, "Channel Config Page");
 
 			} catch (AssertionError e) {
 				NextstepStatus = false;
@@ -1474,10 +1526,10 @@ public class SystemUserMutipleAggregatorRegression {
 		try {
 			// Initialize BankLocators and AggregatorLocators only once
 			if (B == null) {
-				B = new org.Locators.BankLocators(driver);
+
 			}
 			if (A == null) {
-				A = new org.Locators.AggregatorLocators(driver);
+
 			}
 
 			// Load cached data for "Channel Bank" sheet
@@ -1507,18 +1559,19 @@ public class SystemUserMutipleAggregatorRegression {
 
 				// Process Channel Bank Name
 				if (!channelbank.isEmpty()) {
-					A.ClickOnChannelConfig();
+
+					BL.clickElement(A.ChannelConfig);
 					driver.navigate().refresh();
-					B.ChannelADD();
-					A.ClickOnChannelBankName();
-					A.EnterOnChannelBankName(channelbank);
-					B.selectDropdownOption(channelbank);
+					BL.clickElement(B.AddButton);
+					BL.clickElement(A.ChannelBankName);
+					BL.enterElement(A.ChannelBankName, channelbank);
+					BL.selectDropdownOption(channelbank);
 
 					key.add("Channel Bank Name-" + currentRow);
 					value.add(channelbank);
 
 					boolean channelBankStatus = true;
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 					testcaseCount++;
 					logTestStep(TestcaseNo, "Channel BANK", channelbank, channelBankStatus, errorMessage);
@@ -1529,8 +1582,8 @@ public class SystemUserMutipleAggregatorRegression {
 
 				// Process Channel
 				if (!channel.isEmpty()) {
-					B.ClickonCommercialChannel();
-					B.selectDropdownOption(channel);
+					BL.clickElement(B.CommercialChannel);
+					BL.selectDropdownOption(channel);
 
 					key.add("Channel-" + currentRow);
 					value.add(channel);
@@ -1538,7 +1591,7 @@ public class SystemUserMutipleAggregatorRegression {
 					performTabKeyPress();
 
 					boolean channelStatus = true;
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 					testcaseCount++;
 					logTestStep(TestcaseNo, "Channel", channel, channelStatus, errorMessage);
@@ -1549,8 +1602,8 @@ public class SystemUserMutipleAggregatorRegression {
 
 				// Process Network
 				if (!network.isEmpty()) {
-					B.clickonNetwork();
-					B.selectDropdownOption(network);
+					BL.clickElement(B.ClickOntNetwork);
+					BL.selectDropdownOption(network);
 
 					key.add("Network-" + currentRow);
 					value.add(network);
@@ -1558,7 +1611,7 @@ public class SystemUserMutipleAggregatorRegression {
 					performTabKeyPress();
 
 					boolean networkStatus = true;
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 					testcaseCount++;
 					logTestStep(TestcaseNo, "Network", network, networkStatus, errorMessage);
@@ -1569,8 +1622,8 @@ public class SystemUserMutipleAggregatorRegression {
 
 				// Process Transaction Set
 				if (!transactionSet.isEmpty()) {
-					B.clickonTransactionset();
-					B.selectDropdownOption(transactionSet);
+					BL.clickElement(B.ClickOntransaction);
+					BL.selectDropdownOption(transactionSet);
 
 					key.add("Transaction Set-" + currentRow);
 					value.add(transactionSet);
@@ -1578,7 +1631,7 @@ public class SystemUserMutipleAggregatorRegression {
 					performTabKeyPress();
 
 					boolean transactionSetStatus = true;
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 					testcaseCount++;
 					logTestStep(TestcaseNo, "TransactionSet", transactionSet, transactionSetStatus, errorMessage);
@@ -1590,8 +1643,8 @@ public class SystemUserMutipleAggregatorRegression {
 				// Process Save Button
 				boolean saveStatus = true;
 				try {
-					B.CommuSavebutton();
-					B.NOTDisplayedOnInvalidFormat();
+					BL.clickElement(B.SaveButton);
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 				} catch (AssertionError e) {
 					saveStatus = false;
@@ -1604,8 +1657,8 @@ public class SystemUserMutipleAggregatorRegression {
 			// Process Next Step
 			boolean nextStepStatus = true;
 			try {
-				B.ClickOnNextStep();
-				A.DisplayedOnIntroKYC();
+				BL.clickElement(B.NextStep);
+				BL.isElementDisplayed(A.IntroKYC, "KYC Page");
 
 			} catch (AssertionError e) {
 				nextStepStatus = false;
@@ -1627,9 +1680,6 @@ public class SystemUserMutipleAggregatorRegression {
 
 		try {
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
-
 			int testcaseCount = 0;
 			String errorMessage = "The data does not match or is empty.";
 
@@ -1637,14 +1687,17 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (poAImage != null && !poAImage.trim().isEmpty()) {
 
-				A.ClickOnKYC();
-				A.UploadCompanyProofofaddress(poAImage);
+				BL.clickElement(B.Kyc);
+
+				Thread.sleep(3000);
+
+				BL.UploadImage(A.CompanyProofofaddressUpload, poAImage);
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1653,16 +1706,14 @@ public class SystemUserMutipleAggregatorRegression {
 
 			}
 
-			B.ClickOnNextStep();
-
 			boolean nextStepStatus = true;
 			try {
 
 				Thread.sleep(1000);
 
-				B.ClickOnNextStep();
+				BL.clickElement(B.NextStep);
 
-				A.DisplayedOnIntroRiskInfo();
+				BL.isElementDisplayed(A.IntroRiskInfo, "Risk Info Page");
 
 			} catch (AssertionError e) {
 				nextStepStatus = false;
@@ -1680,9 +1731,6 @@ public class SystemUserMutipleAggregatorRegression {
 	}
 
 	private void fillRiskInfo(Map<String, String> testData, int TestcaseNo) throws InterruptedException {
-
-		B = new org.Locators.BankLocators(driver);
-		A = new org.Locators.AggregatorLocators(driver);
 
 		String VelocityCheckMinutes = testData.get("Velocity Check Minutes");
 
@@ -1740,29 +1788,29 @@ public class SystemUserMutipleAggregatorRegression {
 
 		String MATMMaximum = testData.get("MATM Maximum");
 
-		Thread.sleep(10000);
-
 		int testcaseCount = 0;
 
 		String errorMessage = "Invalid Format";
 
 		try {
 
-			A.ClickOnRiskInfo();
+			BL.clickElement(A.RiskINfo);
 
-			B.checkboxGlobalfrm();
+			Thread.sleep(1000);
+
+			BL.clickElement(B.GlobalFRMCheckbox);
 
 			if (VelocityCheckMinutes != null && !VelocityCheckMinutes.trim().isEmpty()) {
 
 				// Perform the actions for the Velocity Check Minutes
-				A.ClickOnVelocityCheckMinute();
-				A.EnterOnVelocityCheckMinute(VelocityCheckMinutes);
+				BL.clickElement(A.VelocityCheckMinute);
+				BL.enterElement(A.VelocityCheckMinute, VelocityCheckMinutes);
 				++testcaseCount;
 
 				boolean Status1 = true; // Assume success initially
 				try {
 					// Check if there is an invalid format
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					// If an AssertionError occurs, set the status to false and capture the error
 					// message
@@ -1778,16 +1826,16 @@ public class SystemUserMutipleAggregatorRegression {
 			if (VelocityCheckCount != null && !VelocityCheckCount.trim().isEmpty()) {
 //		if (VelocityCheckCount != null && VelocityCheckCount.matches("\\d+\\.0")) {
 //			VelocityCheckCount = VelocityCheckCount.substring(0, VelocityCheckCount.indexOf(".0"));
-				A.ClickOnVelocityCheckCount();
 
-				A.EnterOnVelocityCheckCount(VelocityCheckCount);
+				BL.clickElement(A.VelocityCheckCount);
 
+				BL.enterElement(A.VelocityCheckCount, VelocityCheckCount);
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1797,16 +1845,15 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (CashPOSCount != null && !CashPOSCount.trim().isEmpty()) {
-				A.ClickOnCashpOScount();
-
-				A.EnterOnCashpOScount(CashPOSCount);
+				BL.clickElement(A.CashPOSCount);
+				BL.enterElement(A.CashPOSCount, CashPOSCount);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1816,16 +1863,16 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (MicroATMCount != null && !MicroATMCount.trim().isEmpty()) {
-				A.ClickOnMicroAtmcount();
+				BL.clickElement(A.microatmcount);
 
-				A.EnterOnMicroAtmcount(MicroATMCount);
+				BL.enterElement(A.microatmcount, MicroATMCount);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1835,16 +1882,17 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (card != null && !card.trim().isEmpty()) {
-				A.ClickOnInternationalcardCount();
 
-				B.selectDropdownOption(card);
+				BL.clickElement(A.InternationalCardCount);
+
+				BL.selectDropdownOption(card);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1856,16 +1904,15 @@ public class SystemUserMutipleAggregatorRegression {
 //ICA		
 
 			if (ICADAILY != null && !ICADAILY.trim().isEmpty()) {
-				A.ClickonICAdaily();
-
-				A.EnteronICAdaily(ICADAILY);
+				BL.clickElement(A.ICADaily);
+				BL.enterElement(A.ICADaily, ICADAILY);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1875,16 +1922,16 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (ICAWEEKLY != null && !ICAWEEKLY.trim().isEmpty()) {
-				A.ClickonICAWeekly();
 
-				A.EnteronICAWeekly(ICAWEEKLY);
+				BL.clickElement(A.ICAWeekly);
+				BL.enterElement(A.ICAWeekly, ICAWEEKLY);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1894,16 +1941,15 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (ICAMonthly != null && !ICAMonthly.trim().isEmpty()) {
-				A.ClickonICAMonthly();
-
-				A.EnteronICAMonthly(ICAMonthly);
+				BL.clickElement(A.ICAMonthly);
+				BL.enterElement(A.ICAMonthly, ICAMonthly);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1915,18 +1961,18 @@ public class SystemUserMutipleAggregatorRegression {
 //POS	
 
 			if (POSDAILY != null && !POSDAILY.trim().isEmpty()) {
-				B.ClickonPosdaily();
+				BL.clickElement(B.POSDaily);
 
-				B.ClearonPosdaily();
+				BL.CLearElement(B.POSDaily);
 
-				B.EnteronPosdaily(POSDAILY);
+				BL.enterElement(B.POSDaily, POSDAILY);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1936,18 +1982,19 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (POSWEEKLY != null && !POSWEEKLY.trim().isEmpty()) {
-				B.ClickonPosWeekly();
 
-				B.ClearonPosWeekly();
+				BL.clickElement(B.POSWeekly);
 
-				B.EnteronPosWeekly(POSWEEKLY);
+				BL.CLearElement(B.POSWeekly);
+
+				BL.enterElement(B.POSWeekly, POSWEEKLY);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1957,18 +2004,17 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (POSMonthly != null && !POSMonthly.trim().isEmpty()) {
-				B.ClickonPosMonthly();
+				BL.clickElement(B.POSMonthly);
 
-				B.ClearonPosMonthly();
+				BL.CLearElement(B.POSMonthly);
 
-				B.EnteronPosMonthly(POSMonthly);
-
+				BL.enterElement(B.POSMonthly, POSMonthly);
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1978,18 +2024,17 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (POSMinimum != null && !POSMinimum.trim().isEmpty()) {
-				B.ClickonPOSMinimum();
+				BL.clickElement(B.POSMinimumAmount);
 
-				B.ClearonPOSMinimum();
+				BL.CLearElement(B.POSMinimumAmount);
 
-				B.EnteronPOSMinimum(POSMinimum);
-
+				BL.enterElement(B.POSMinimumAmount, POSMinimum);
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1999,18 +2044,17 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (POSMaximum != null && !POSMaximum.trim().isEmpty()) {
-				B.ClickonPOSMaximum();
+				BL.clickElement(B.POSMaximumAmount);
 
-				B.ClearonPOSMaximum();
+				BL.CLearElement(B.POSMaximumAmount);
 
-				B.EnteronPOSMaximum(POSMaximum);
-
+				BL.enterElement(B.POSMaximumAmount, POSMaximum);
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2022,18 +2066,17 @@ public class SystemUserMutipleAggregatorRegression {
 //UPI
 
 			if (UPIDAILY != null && !UPIDAILY.trim().isEmpty()) {
-				B.ClickonUPIdaily();
+				BL.clickElement(B.UPIDaily);
 
-				B.ClearonUPIdaily();
+				BL.CLearElement(B.UPIDaily);
 
-				B.EnteronUPIdaily(UPIDAILY);
-
+				BL.enterElement(B.UPIDaily, UPIDAILY);
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2043,18 +2086,17 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (UPIWEEKLY != null && !UPIWEEKLY.trim().isEmpty()) {
-				B.ClickonUPIWeekly();
+				BL.clickElement(B.UPIWeekly);
 
-				B.ClearonUPIWeekly();
+				BL.CLearElement(B.UPIWeekly);
 
-				B.EnteronUPIWeekly(UPIWEEKLY);
-
+				BL.enterElement(B.UPIWeekly, UPIWEEKLY);
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2064,18 +2106,17 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (UPIMonthly != null && !UPIMonthly.trim().isEmpty()) {
-				B.ClickonUPIMonthly();
+				BL.clickElement(B.UPIMonthly);
 
-				B.ClearonUPIMonthly();
+				BL.CLearElement(B.UPIMonthly);
 
-				B.EnteronUPIMonthly(UPIMonthly);
-
+				BL.enterElement(B.UPIMonthly, UPIMonthly);
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2085,18 +2126,18 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (UPIMinimum != null && !UPIMinimum.trim().isEmpty()) {
-				B.ClickonUPIMinimum();
+				BL.clickElement(B.UPIMinimumAmount);
 
-				B.ClearonUPIMinimum();
+				BL.CLearElement(B.UPIMinimumAmount);
 
-				B.EnteronUPIMinimum(UPIMinimum);
+				BL.enterElement(B.UPIMinimumAmount, UPIMinimum);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2107,18 +2148,18 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (UPIMaximum != null && !UPIMaximum.trim().isEmpty()) {
 
-				B.ClickonUPIMaximum();
+				BL.clickElement(B.UPIMaximumAmount);
 
-				B.ClearonUPIMaximum();
+				BL.CLearElement(B.UPIMaximumAmount);
 
-				B.EnteronUPIMaximum(UPIMaximum);
+				BL.enterElement(B.UPIMaximumAmount, UPIMaximum);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2130,18 +2171,18 @@ public class SystemUserMutipleAggregatorRegression {
 //AEPS		
 
 			if (AEPSDAILY != null && !AEPSDAILY.trim().isEmpty()) {
-				B.ClickonAEPSdaily();
+				BL.clickElement(B.AEPSDaily);
 
-				B.ClearonAEPSdaily();
+				BL.CLearElement(B.AEPSDaily);
 
-				B.EnteronAEPSdaily(AEPSDAILY);
+				BL.enterElement(B.AEPSDaily, AEPSDAILY);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2151,18 +2192,18 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (AEPSWEEKLY != null && !AEPSWEEKLY.trim().isEmpty()) {
-				B.ClickonAEPSWeekly();
+				BL.clickElement(B.AEPSWeekly);
 
-				B.ClearonAEPSWeekly();
+				BL.CLearElement(B.AEPSWeekly);
 
-				B.EnteronAEPSWeekly(AEPSWEEKLY);
+				BL.enterElement(B.AEPSWeekly, AEPSWEEKLY);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2172,18 +2213,18 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (AEPSMonthly != null && !AEPSMonthly.trim().isEmpty()) {
-				B.ClickonAEPSMonthly();
+				BL.clickElement(B.AEPSMonthly);
 
-				B.ClearonAEPSMonthly();
+				BL.CLearElement(B.AEPSMonthly);
 
-				B.EnteronAEPSMonthly(AEPSMonthly);
+				BL.enterElement(B.AEPSMonthly, AEPSMonthly);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2193,18 +2234,18 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (AEPSMinimum != null && !AEPSMinimum.trim().isEmpty()) {
-				B.ClickonAEPSMinimum();
+				BL.clickElement(B.AEPSMinimumAmount);
 
-				B.ClearonAEPSMinimum();
+				BL.CLearElement(B.AEPSMinimumAmount);
 
-				B.EnteronAEPSMinimum(AEPSMinimum);
+				BL.enterElement(B.AEPSMinimumAmount, AEPSMinimum);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2215,18 +2256,18 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (AEPSMaximum != null && !AEPSMaximum.trim().isEmpty()) {
 
-				B.ClickonAEPSMaximum();
+				BL.clickElement(B.AEPSMaximumAmount);
 
-				B.ClearonAEPSMaximum();
+				BL.CLearElement(B.AEPSMaximumAmount);
 
-				B.EnteronAEPSMaximum(AEPSMaximum);
+				BL.enterElement(B.AEPSMaximumAmount, AEPSMaximum);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2238,18 +2279,18 @@ public class SystemUserMutipleAggregatorRegression {
 //MATM
 
 			if (MATMDAILY != null && !MATMDAILY.trim().isEmpty()) {
-				B.ClickonMATMdaily();
+				BL.clickElement(B.MATMDaily);
 
-				B.ClearonMATMdaily();
+				BL.CLearElement(B.MATMDaily);
 
-				B.EnteronMATMdaily(MATMDAILY);
+				BL.enterElement(B.MATMDaily, MATMDAILY);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2259,18 +2300,18 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (MATMWEEKLY != null && !MATMWEEKLY.trim().isEmpty()) {
-				B.ClickonMATMWeekly();
+				BL.clickElement(B.MATMWeekly);
 
-				B.ClearonMATMWeekly();
+				BL.CLearElement(B.MATMWeekly);
 
-				B.EnteronMATMWeekly(MATMWEEKLY);
+				BL.enterElement(B.MATMWeekly, MATMWEEKLY);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2280,18 +2321,17 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (MATMMonthly != null && !MATMMonthly.trim().isEmpty()) {
-				B.ClickonMATMMonthly();
+				BL.clickElement(B.MATMMonthly);
 
-				B.ClearonMATMMonthly();
+				BL.CLearElement(B.MATMMonthly);
 
-				B.EnteronMATMMonthly(MATMMonthly);
-
+				BL.enterElement(B.MATMMonthly, MATMMonthly);
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2301,18 +2341,18 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (MATMMinimum != null && !MATMMinimum.trim().isEmpty()) {
-				B.ClickonMATMMinimum();
+				BL.clickElement(B.MATMMinimumAmount);
 
-				B.ClearonMATMMinimum();
+				BL.CLearElement(B.MATMMinimumAmount);
 
-				B.EnteronMATMMinimum(MATMMinimum);
+				BL.enterElement(B.MATMMinimumAmount, MATMMinimum);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2323,18 +2363,18 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (MATMMaximum != null && !MATMMaximum.trim().isEmpty()) {
 
-				B.ClickonMATMMaximum();
+				BL.clickElement(B.MATMMaximumAmount);
 
-				B.ClearonMATMMaximum();
+				BL.CLearElement(B.MATMMaximumAmount);
 
-				B.EnteronMATMMaximum(MATMMaximum);
+				BL.enterElement(B.MATMMaximumAmount, MATMMaximum);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2345,9 +2385,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 			boolean NextstepStatus = true;
 			try {
-				B.ClickOnNextStep();
+				BL.clickElement(B.NextStep);
 
-				A.DisplayedOnIntroDiscountRate();
+				BL.isElementDisplayed(A.IntroDiscountRate, "Discount Rate Page");
 
 			} catch (AssertionError e) {
 				NextstepStatus = false;
@@ -2372,10 +2412,10 @@ public class SystemUserMutipleAggregatorRegression {
 		try {
 			// Initialize BankLocators and AggregatorLocators only once
 			if (B == null) {
-				B = new org.Locators.BankLocators(driver);
+
 			}
 			if (A == null) {
-				A = new org.Locators.AggregatorLocators(driver);
+
 			}
 
 			// Load cached data for "Channel Bank" sheet
@@ -2404,13 +2444,16 @@ public class SystemUserMutipleAggregatorRegression {
 
 				// Process Channel
 				if (!channel.isEmpty()) {
-					A.ClickOnDiscountRate();
+
+					BL.clickElement(A.DiscountRate);
 					Thread.sleep(1000);
-					B.ChannelADD();
+
+					BL.clickElement(B.ChannelADD);
 
 					Thread.sleep(1000);
-					B.clickonChannel();
-					B.selectDropdownOption(channel);
+					BL.clickElement(B.ClickOnChannel);
+
+					BL.selectDropdownOption(channel);
 
 					key.add("Channel-" + currentRow);
 					value.add(channel);
@@ -2418,7 +2461,7 @@ public class SystemUserMutipleAggregatorRegression {
 					performTabKeyPress();
 
 					boolean channelStatus = true;
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 					testcaseCount++;
 					logTestStep(TestcaseNo, "DiscountRate : Channel", channel, channelStatus, errorMessage);
@@ -2430,13 +2473,13 @@ public class SystemUserMutipleAggregatorRegression {
 				// Process Network
 				if (!pricingPlan.isEmpty()) {
 					Thread.sleep(1000);
-					A.ClickOnDiscountRatePricingPlan();
-					B.selectDropdownOption(pricingPlan);
+					BL.clickElement(A.DiscountRatePricingPlan);
+					BL.selectDropdownOption(pricingPlan);
 
 					performTabKeyPress();
 
 					boolean networkStatus = true;
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 					testcaseCount++;
 					logTestStep(TestcaseNo, "Pricing Plan", pricingPlan, networkStatus, errorMessage);
@@ -2448,8 +2491,9 @@ public class SystemUserMutipleAggregatorRegression {
 				// Process Save Button
 				boolean saveStatus = true;
 				try {
-					A.ClickOnSAVEPersonal();
-					B.NOTDisplayedOnInvalidFormat();
+
+					BL.clickElement(B.SaveButton);
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 				} catch (AssertionError e) {
 					saveStatus = false;
@@ -2458,13 +2502,12 @@ public class SystemUserMutipleAggregatorRegression {
 
 				logTestStep(TestcaseNo, "Save Button", "Aggregator Discount Rate", saveStatus, errorMessage);
 			}
-
-			// Process Next Step
+// Process Next Step
 			boolean nextStepStatus = true;
 			try {
-				B.ClickOnNextStep();
+				BL.clickElement(B.NextStep);
 
-				A.DisplayedOnIntroSettlement();
+				BL.isElementDisplayed(A.IntroSettlementInfo, "Settlement Info Page");
 
 			} catch (AssertionError e) {
 				nextStepStatus = false;
@@ -2487,9 +2530,6 @@ public class SystemUserMutipleAggregatorRegression {
 		int testcaseCount = 0;
 		String errorMessage = "The data does not match or is empty.";
 
-		B = new org.Locators.BankLocators(driver);
-		A = new org.Locators.AggregatorLocators(driver);
-
 		String channel = testData.get("Settlement Channel");
 		String Account = testData.get("Account Type");
 		String IFSCCode = testData.get("IFSC Code");
@@ -2500,22 +2540,26 @@ public class SystemUserMutipleAggregatorRegression {
 
 		try {
 
-			B.clickOnSettlementInfo();
+			BL.clickElement(B.SettlementInfo);
 
-			B.ClickOnSettlementInfoADD();
+			Thread.sleep(1000);
+
+			BL.clickElement(B.AddButton);
 
 			if (channel != null && !channel.trim().isEmpty()) {
 
-				B.ClickOnSettlementChannel();
+				BL.clickElement(B.SettlementInfo);
 
-				B.selectDropdownOption(channel);
+				BL.clickElement(B.SettlementChannel);
+
+				BL.selectDropdownOption(channel);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2525,16 +2569,16 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (Account != null && !Account.trim().isEmpty()) {
-				B.ClickOnSettlementAccountType();
+				BL.clickElement(B.SettlementAccountType);
 
-				B.selectDropdownOption(Account);
+				BL.selectDropdownOption(Account);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2544,15 +2588,14 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (BanKAccountNumber != null && !BanKAccountNumber.trim().isEmpty()) {
-				B.ClickOnBankAccountNumber();
-				B.EnterOnBankAccountNumber(BanKAccountNumber);
-
+				BL.clickElement(B.SettlementBankAccountNumber);
+				BL.enterElement(B.SettlementBankAccountNumber, BanKAccountNumber);
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2563,9 +2606,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (IFSCCode != null && !IFSCCode.trim().isEmpty()) {
 
-				B.ClickOnIFSCCode();
+				BL.clickElement(B.SettlementIFSCCode);
 
-				B.selectDropdownOption(IFSCCode);
+				BL.selectDropdownOption(IFSCCode);
 
 				performTabKeyPress();
 
@@ -2574,7 +2617,7 @@ public class SystemUserMutipleAggregatorRegression {
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2585,9 +2628,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 			boolean SaveStatus = true;
 			try {
-				B.ClickOnCommercialSave();
+				BL.clickElement(B.SaveButton);
 
-				B.NOTDisplayedOnInvalidFormat();
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 			} catch (AssertionError e) {
 				SaveStatus = false;
@@ -2598,16 +2641,18 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (Mode != null && !Mode.trim().isEmpty()) {
 
-				A.ClickOnSettlementMode();
+				Thread.sleep(1000);
 
-				B.selectDropdownOption(Mode);
+				BL.clickElement(A.SettlementMode);
+
+				BL.selectDropdownOption(Mode);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2618,16 +2663,16 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (payment != null && !payment.trim().isEmpty()) {
 
-				A.ClickOnPaymentFlag();
+				BL.clickElement(A.PaymentFlag);
 
-				B.selectDropdownOption(payment);
+				BL.selectDropdownOption(payment);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2638,9 +2683,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 			boolean NextstepStatus = true;
 			try {
-				B.ClickOnNextStep();
+				BL.clickElement(B.NextStep);
 
-				A.DisplayedOnIntroWhiteLabel();
+				BL.isElementDisplayed(A.IntroWhitelabel, "WhiteLabel Page");
 
 			} catch (AssertionError e) {
 				NextstepStatus = false;
@@ -2664,8 +2709,6 @@ public class SystemUserMutipleAggregatorRegression {
 		int testcaseCount = 0;
 		String errorMessage = "The data does not match or is empty.";
 
-		B = new org.Locators.BankLocators(driver);
-
 		String ISO = testData.get("ISO Onboarding");
 		String Sales = testData.get("Sales Team Onboarding");
 		String merchant = testData.get("Allow to create merchant onboard");
@@ -2674,19 +2717,20 @@ public class SystemUserMutipleAggregatorRegression {
 
 		try {
 
-			B.clickOnWhiteLabel();
+			BL.clickElement(B.whitelabel);
 
 			if (ISO != null && !ISO.trim().isEmpty()) {
-				B.ClickOnWhitelabelISOOnboarding();
 
-				B.selectDropdownOption(ISO);
+				BL.clickElement(B.WhitelabelISOOnboarding);
+
+				BL.selectDropdownOption(ISO);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2695,16 +2739,17 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (Sales != null && !Sales.trim().isEmpty()) {
-				B.ClickOnWhitelabelSalesTeamOnboarding();
 
-				B.selectDropdownOption(Sales);
+				BL.clickElement(B.WhitelabelSalesTeamOnboarding);
+
+				BL.selectDropdownOption(Sales);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2713,16 +2758,16 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (merchant != null && !merchant.trim().isEmpty()) {
-				A.ClickOnAllowCreateMerchantOnboard();
+				BL.clickElement(A.CreateMerchantUser);
 
-				B.selectDropdownOption(merchant);
+				BL.selectDropdownOption(merchant);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2731,8 +2776,8 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (MaximumNoOfPlatform != null && !MaximumNoOfPlatform.trim().isEmpty()) {
-				B.ClickOnMaximumNoofPlatform();
-				B.EnterOnMaximumNoofPlatform(MaximumNoOfPlatform);
+				BL.clickElement(B.WhitelabelMaxNumberOfPlatform);
+				BL.enterElement(B.WhitelabelMaxNumberOfPlatform, MaximumNoOfPlatform);
 				performTabKeyPress();
 
 				++testcaseCount;
@@ -2740,7 +2785,7 @@ public class SystemUserMutipleAggregatorRegression {
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2749,16 +2794,17 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (usernameAs != null && !usernameAs.trim().isEmpty()) {
-				A.ClickOnUserNameAs();
 
-				B.selectDropdownOption(usernameAs);
+				BL.clickElement(A.UserNameAs);
+
+				BL.selectDropdownOption(usernameAs);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2768,9 +2814,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 			boolean NextstepStatus = true;
 			try {
-				B.ClickOnNextStep();
+				BL.clickElement(B.NextStep);
 
-				A.DisplayedOnIntroWebhook();
+				BL.isElementDisplayed(A.IntroWebhooks, "Webhook Page");
 
 			} catch (AssertionError e) {
 				NextstepStatus = false;
@@ -2793,28 +2839,29 @@ public class SystemUserMutipleAggregatorRegression {
 		int testcaseCount = 0;
 		String errorMessage = "The data does not match or is empty.";
 
-		B = new org.Locators.BankLocators(driver);
-
 		String type = testData.get("Webhook Type");
 		String webhookURL = testData.get("Webhook url");
 
 		try {
 
-			B.clickOnWebhooks();
+			BL.clickElement(B.webhooks);
 
-			B.ClickOnWebhookADD();
+			Thread.sleep(1000);
+
+			BL.clickElement(B.AddButton);
 
 			if (type != null && !type.trim().isEmpty()) {
-				B.ClickOnWebhooksType();
 
-				B.selectDropdownOption(type);
+				BL.clickElement(B.WebhookType);
+
+				BL.selectDropdownOption(type);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2823,15 +2870,16 @@ public class SystemUserMutipleAggregatorRegression {
 			}
 
 			if (webhookURL != null && !webhookURL.trim().isEmpty()) {
-				B.ClickOnWebhooksURL();
-				B.EnterOnWebhooksURL(webhookURL);
+
+				BL.clickElement(B.WebhookTypeURL);
+				BL.enterElement(B.WebhookTypeURL, webhookURL);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2841,9 +2889,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 			boolean SaveStatus = true;
 			try {
-				B.ClickOnCommercialSave();
+				BL.clickElement(B.SaveButton);
 
-				B.NOTDisplayedOnInvalidFormat();
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 			} catch (AssertionError e) {
 				SaveStatus = false;
@@ -2854,9 +2902,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 			boolean NextstepStatus = true;
 			try {
-				B.ClickOnNextStep();
+				BL.clickElement(B.NextStep);
 
-				B.DisplayedOnstatusHistory();
+				BL.isElementDisplayed(B.StatusHistory, "Status History Page");
 
 			} catch (AssertionError e) {
 				NextstepStatus = false;
@@ -2875,11 +2923,32 @@ public class SystemUserMutipleAggregatorRegression {
 
 	private void submitForVerification() throws InterruptedException {
 
-		B.ClickOnsubmitforverification();
+		BL.clickElement(B.SubmitforVerification);
 
-		B.Yesforsubmit();
+		BL.clickElement(B.YesButton);
 
-		B.OkforSuccessfully();
+		BL.clickElement(B.OKButton);
+
+	}
+
+	@When("the System Verifier clicks the Aggregator module")
+
+	public void SystemVerifierClicktheBankModule() {
+
+		try {
+
+			BL.clickElement(B.ClickOnPayfac);
+
+		} catch (Exception e) {
+
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+
+			exceptionHandler.handleException(e, "Onboarding");
+
+			throw e;
+
+		}
+
 	}
 
 	@Then("the System Verifier completes Aggregator Onboarding, the system should prompt to verify all steps using the sheet name {string}")
@@ -2964,9 +3033,6 @@ public class SystemUserMutipleAggregatorRegression {
 	private int validateFieldsForRow1(String sheetName, Map<String, String> testData, int TestcaseNo, int rowNumber)
 			throws Exception {
 
-		// Initialize the locators
-		B = new org.Locators.BankLocators(driver);
-
 		// Initialize a counter to track the number of validated fields/sections
 		int validatedFieldsCount = 0;
 		// Bank Details Section
@@ -2995,14 +3061,10 @@ public class SystemUserMutipleAggregatorRegression {
 		}
 	}
 
-	private void Searchbyname(Map<String, String> testData, int TestcaseNo)
-			throws InterruptedException, AWTException {
+	private void Searchbyname(Map<String, String> testData, int TestcaseNo) throws InterruptedException, AWTException {
 
-		String LegalName = testData.get("LegalName");
-
-		B = new org.Locators.BankLocators(driver);
-
-		A = new org.Locators.AggregatorLocators(driver);
+		// String LegalName = testData.get("LegalName");
+		String LegalName = "T7n13ck";
 
 		key.clear();
 		value.clear();
@@ -3015,11 +3077,19 @@ public class SystemUserMutipleAggregatorRegression {
 			try {
 				Thread.sleep(3000);
 
-				B.ClickSearchbyBankName();
+				BL.clickElement(B.SearchbyBankName);
+
+				Thread.sleep(1000);
+
+				BL.UploadImage(B.SearchbyBankName, LegalName);
 
 				Thread.sleep(3000);
 
-				B.SearchbyBankName(LegalName);
+				BL.clickElement(B.ActionClick);
+
+				Thread.sleep(2000);
+
+				BL.ActionclickElement(B.ViewButton);
 
 			} catch (AssertionError e) {
 				Status = false;
@@ -3028,30 +3098,22 @@ public class SystemUserMutipleAggregatorRegression {
 
 			logTestStep(TestcaseNo, "Search by name", LegalName, Status, errorMessage);
 
-			Thread.sleep(3000);
-
-			B.ActionClick();
-
-			Thread.sleep(2000);
-
-			B.ClickonViewButton();
-
 			int testcaseCount = 0;
 
 			boolean verifiedStatus = true;
 			try {
-				
+
 				Thread.sleep(1000);
 
-				A.DisplayedonSalesInfo();
+				BL.isElementDisplayed(A.SalesInfo, "Sales Info");
 
-				A.ClickOnSalesInfo();
+				BL.clickElement(A.SalesInfo);
 
-				A.ClickOnManualTakeOver();
+				BL.clickElement(A.ManualTakeOver);
 
-				B.Yesforsubmit();
+				BL.clickElement(B.YesButton);
 
-				B.VerifiedandNext();
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -3061,14 +3123,14 @@ public class SystemUserMutipleAggregatorRegression {
 			logTestStep(TestcaseNo, "Verified", "Sales Info", verifiedStatus, errorMessage);
 
 			try {
-				
+
 				Thread.sleep(1000);
 
-				A.DisplayedOnCompanyInfo();
+				BL.isElementDisplayed(A.ComapnyInfo, "Company Info");
 
-				A.ClickOnCompanyInfo();
+				BL.clickElement(A.ComapnyInfo);
 
-				B.VerifiedandNext();
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -3078,14 +3140,14 @@ public class SystemUserMutipleAggregatorRegression {
 			logTestStep(TestcaseNo, "Verified", "Company Info", verifiedStatus, errorMessage);
 
 			try {
-				
+
 				Thread.sleep(1000);
 
-				A.DisplayedOnPersonalInfo();
+				BL.isElementDisplayed(A.PersonalInfo, "Personal Info");
 
-				A.ClickOnPersonalInfo();
+				BL.clickElement(A.PersonalInfo);
 
-				B.VerifiedandNext();
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -3095,14 +3157,13 @@ public class SystemUserMutipleAggregatorRegression {
 			logTestStep(TestcaseNo, "Verified", "Personal Info", verifiedStatus, errorMessage);
 
 			try {
-				
+
 				Thread.sleep(1000);
+				BL.isElementDisplayed(A.CommunicationInfo, "Communication Info");
 
-				A.DisplayedOnCommunicationInfo();
+				BL.clickElement(A.CommunicationInfo);
 
-				A.ClickOnCommunicationInfo();
-
-				B.VerifiedandNext();
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -3112,14 +3173,14 @@ public class SystemUserMutipleAggregatorRegression {
 			logTestStep(TestcaseNo, "Verified", "Communication Info", verifiedStatus, errorMessage);
 
 			try {
-				
+
 				Thread.sleep(1000);
 
-				A.DisplayedonChannelConfig();
+				BL.isElementDisplayed(A.ChannelConfig, "Channel Config");
 
-				A.ClickOnChannelConfig();
+				BL.clickElement(A.ChannelConfig);
 
-				B.VerifiedandNext();
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -3129,22 +3190,22 @@ public class SystemUserMutipleAggregatorRegression {
 			logTestStep(TestcaseNo, "Verified", "Channel Config", verifiedStatus, errorMessage);
 
 			try {
-				
+
 				Thread.sleep(1000);
 
-				A.DisplayedOnKYC();
-				
-				A.ClickOnKYC();
+				BL.isElementDisplayed(B.Kyc, "KYC");
 
-				A.ClickOnKYC();
+				BL.clickElement(B.Kyc);
 
-				A.ClickOnViewDocument1();
+				BL.clickElement(B.Kyc);
 
-				A.ClickonActionDiscountRate();
+				BL.clickElement(A.ViewDocument1);
 
-				A.ViewDocumentVerified();
+				BL.clickElement(A.Actions);
 
-				A.ViewDocumentSubmitandNext();
+				BL.clickElement(A.ViewDocumentVerified);
+
+				BL.clickElement(A.ViewDocumentSubmitandNext);
 
 				Robot r = new Robot();
 
@@ -3160,14 +3221,14 @@ public class SystemUserMutipleAggregatorRegression {
 			logTestStep(TestcaseNo, "Verified", "KYC-Aggregator", verifiedStatus, errorMessage);
 
 			try {
-				
+
 				Thread.sleep(1000);
 
-				A.DisplayedOnRiskInfo();
+				BL.isElementDisplayed(A.RiskINfo, "Risk Info");
 
-				A.ClickOnRiskInfo();
+				BL.clickElement(A.RiskINfo);
 
-				B.VerifiedandNext();
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -3177,14 +3238,14 @@ public class SystemUserMutipleAggregatorRegression {
 			logTestStep(TestcaseNo, "Verified", "Risk Info", verifiedStatus, errorMessage);
 
 			try {
-				
+
 				Thread.sleep(1000);
 
-				A.DisplayedOnDiscountRate();
+				BL.isElementDisplayed(A.DiscountRate, "Discount Rate");
 
-				A.ClickOnDiscountRate();
+				BL.clickElement(A.DiscountRate);
 
-				B.VerifiedandNext();
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -3194,14 +3255,14 @@ public class SystemUserMutipleAggregatorRegression {
 			logTestStep(TestcaseNo, "Verified", "Discount Rate", verifiedStatus, errorMessage);
 
 			try {
-				
+
 				Thread.sleep(1000);
 
-				A.DisplayedOnSettlementInfo();
+				BL.isElementDisplayed(A.SettlementInfo, "Settlement Info");
 
-				A.ClickOnSettlementInfo();
+				BL.clickElement(A.SettlementInfo);
 
-				B.VerifiedandNext();
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -3211,14 +3272,14 @@ public class SystemUserMutipleAggregatorRegression {
 			logTestStep(TestcaseNo, "Verified", "Settlement Info", verifiedStatus, errorMessage);
 
 			try {
-				
+
 				Thread.sleep(1000);
 
-				A.DisplayedonWhitelabel();
+				BL.isElementDisplayed(A.Whitelabel, "WhiteLabel");
 
-				A.ClickOnWhitelabel();
+				BL.clickElement(A.Whitelabel);
 
-				B.VerifiedandNext();
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -3228,13 +3289,14 @@ public class SystemUserMutipleAggregatorRegression {
 			logTestStep(TestcaseNo, "Verified", "Whitelabel", verifiedStatus, errorMessage);
 
 			try {
-				
+
 				Thread.sleep(1000);
 
-				A.DisplayedonWebhooks();
-				A.ClickOnWebhooks();
+				BL.isElementDisplayed(A.Webhooks, "Webhooks");
 
-				B.VerifiedandNext();
+				BL.clickElement(A.Webhooks);
+
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -3243,18 +3305,40 @@ public class SystemUserMutipleAggregatorRegression {
 
 			logTestStep(TestcaseNo, "Verified", "Webhooks", verifiedStatus, errorMessage);
 
-			B.SubmitforApproval();
+			BL.clickElement(B.SubmitforApproval);
 
-			B.Yesforsubmit();
+			BL.clickElement(B.YesButton);
 
-			B.OkforSuccessfully();
+			BL.clickElement(B.OKButton);
 
-			B.CancelApprove();
+			Thread.sleep(1000);
+
+			BL.clickElement(B.ApproveCancel);
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
 			exceptionHandler.handleException(e, "Verified");
 			throw e;
+		}
+
+	}
+
+	@When("the System Approver clicks the Aggregator module")
+
+	public void SystemApproverClicktheAggregatorModule() {
+
+		try {
+
+			BL.clickElement(B.ClickOnPayfac);
+
+		} catch (Exception e) {
+
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+
+			exceptionHandler.handleException(e, "Onboarding");
+
+			throw e;
+
 		}
 
 	}
@@ -3325,9 +3409,6 @@ public class SystemUserMutipleAggregatorRegression {
 		// Log the test data for the current row
 		System.out.println("Data for row " + rowNumber + ": " + testData);
 
-		// Initialize the locators (e.g., BankLocators)
-		B = new org.Locators.BankLocators(driver);
-
 		int testCaseCount = 0;
 
 		// Validate fields for the current row using testData
@@ -3341,16 +3422,13 @@ public class SystemUserMutipleAggregatorRegression {
 	private int validateFieldsForRow2(String sheetName, Map<String, String> testData, int TestcaseNo, int rowNumber)
 			throws Exception {
 
-		// Initialize the locators
-		B = new org.Locators.BankLocators(driver);
-
 		// Initialize a counter to track the number of validated fields/sections
 		int validatedFieldsCount = 0;
 		// Bank Details Section
 		validatedFieldsCount += executeStep2(() -> {
 			try {
 				approveOnboarding(testData, TestcaseNo);
-			} catch (InterruptedException e) {
+			} catch (AWTException | InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -3372,13 +3450,10 @@ public class SystemUserMutipleAggregatorRegression {
 		}
 	}
 
-	private void approveOnboarding(Map<String, String> testData, int TestcaseNo) throws InterruptedException {
+	private void approveOnboarding(Map<String, String> testData, int TestcaseNo)
+			throws InterruptedException, AWTException {
 
 		String LegalName = testData.get("LegalName");
-
-		B = new org.Locators.BankLocators(driver);
-
-		A = new org.Locators.AggregatorLocators(driver);
 
 		key.clear();
 		value.clear();
@@ -3389,11 +3464,18 @@ public class SystemUserMutipleAggregatorRegression {
 		try {
 			Thread.sleep(3000);
 
-			B.ClickSearchbyBankName();
+			BL.clickElement(B.SearchbyBankName);
 
-			Thread.sleep(3000);
+			Thread.sleep(2000);
 
-			B.SearchbyBankName(LegalName);
+			BL.enterElement(B.SearchbyBankName, LegalName);
+
+			Thread.sleep(2000);
+
+			BL.ActionclickElement(B.ActionClick);
+			Thread.sleep(1000);
+
+			BL.clickElement(B.ViewButton);
 
 		} catch (AssertionError e) {
 			Status = false;
@@ -3401,13 +3483,6 @@ public class SystemUserMutipleAggregatorRegression {
 		}
 
 		logTestStep(TestcaseNo, "Search by name", LegalName, Status, errorMessag);
-		Thread.sleep(2000);
-
-		B.ActionClick();
-
-		Thread.sleep(1000);
-
-		B.ClickonViewButton();
 
 		int testcaseCount = 0;
 		String errorMessage = "Approve Button is not visible.";
@@ -3416,11 +3491,11 @@ public class SystemUserMutipleAggregatorRegression {
 
 		try {
 
-			B.ClickOnApprove();
+			BL.clickElement(B.Approve);
 
-			B.Yesforsubmit();
+			BL.clickElement(B.YesButton);
 
-			B.OkforSuccessfully();
+			BL.clickElement(B.OKButton);
 
 		} catch (AssertionError e) {
 			ApprovedStatus = false;
@@ -3435,36 +3510,36 @@ public class SystemUserMutipleAggregatorRegression {
 //
 //		B.OkforSuccessfully();
 
-		B.CancelApprove();
+		BL.clickElement(B.ApproveCancel);
 
 		Thread.sleep(3000);
 
-		B.ClickSearchbyBankName();
+		BL.clickElement(B.SearchbyBankName);
 
-		Thread.sleep(3000);
+		Thread.sleep(2000);
 
-		B.SearchbyBankName(LegalName);
-
-		Thread.sleep(3000);
-
-		B.ActionClick();
-
+		BL.UploadImage(B.SearchbyBankName, LegalName);
 		try {
 
-			B.ClickonViewButton();
+			Thread.sleep(2000);
+
+			BL.ActionclickElement(B.ActionClick);
+			Thread.sleep(1000);
+
+			BL.clickElement(B.ViewButton);
 
 		} catch (AssertionError e) {
 			ApprovedStatus = false;
 			errorMessage = e.getMessage(); // Capture error message
 		}
 
-		logTestStep(TestcaseNo, "Aggregator CPID", B.getCPID(), ApprovedStatus, errorMessage);
+		logTestStep(TestcaseNo, "Aggregator CPID", BL.getElementValue(B.CPID), ApprovedStatus, errorMessage);
 
 //		B.ClickonViewButton();
 //
 //		logInputData("Bank CPID", B.getCPID());
 
-		B.CancelApprove();
+		BL.clickElement(B.ApproveCancel);
 
 	}
 
@@ -3624,12 +3699,11 @@ public class SystemUserMutipleAggregatorRegression {
 
 	private void performLogout() throws InterruptedException {
 
-		B.LogoutProfile();
+		BL.clickElement(B.Profile);
 
-		B.Logoutbutton();
+		BL.clickElement(B.LogOut);
 
-		B.LogoutYESbutton();
-
+		BL.clickElement(B.YesButton);
 	}
 
 }

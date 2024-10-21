@@ -20,226 +20,258 @@ public class MerchantLocators {
 
 	WebDriver driver;
 	
-	private int waitTime;
+	 int waitTime;
 	
-// IntroPage
+	//Merchant Locators
 	
-	@FindBy(xpath = "//h6[contains(text(),'FRM Parameters')]")
-	private WebElement DisplayedonRiskInfo;
-	
-	@FindBy(xpath = "//h6[contains(text(),'Discount Rate')]")
-	private WebElement DisplayedonMerchantDiscount;
-	
-	@FindBy(xpath = "//h6[contains(text(),'Installation Info')]")
-	private WebElement DisplayedonTerminals;
-	
-	@FindBy(xpath = "//h6[contains(text(),'Payment Bridge')]")
-	private WebElement DisplayedonPaymentBridge;
-	
-	@FindBy(xpath = "//h6[contains(text(),'Allow Card Type')]")
-	private WebElement DisplayedonCardBin;
-	
+			//IntroPage
+			
+			@FindBy(xpath = "//h6[contains(text(),'FRM Parameters')]")
 
-	@FindBy(xpath = "//span[text()='Sales Info']")
-	private WebElement ClickonSalesInfo;
+			public WebElement DisplayedonRiskInfo;
+			
+			@FindBy(xpath = "//h6[contains(text(),'Discount Rate')]")
 
-	@FindBy(xpath = "//span[text()='Company Info']")
-	private WebElement ClickOnComapanyInfo;
+			public WebElement DisplayedonMerchantDiscount;
+			
+			@FindBy(xpath = "//h6[contains(text(),'Installation Info')]")
 
-	@FindBy(xpath = "//span[text()='Personal Info']")
-	private WebElement ClickOnPersonalInfo;
+			public WebElement DisplayedonTerminals;
+			
+			@FindBy(xpath = "//h6[contains(text(),'Payment Bridge')]")
 
-	@FindBy(xpath = "//span[text()='Communication Info']")
-	private WebElement ClickOnCommunicationInfo;
+			public WebElement DisplayedonPaymentBridge;
+			
+			@FindBy(xpath = "//h6[contains(text(),'Allow Card Type')]")
 
-	@FindBy(xpath = "//span[text()='Risk Info']")
-	private WebElement ClickOnRiskInfo;
+			public WebElement DisplayedonCardBin;
+			
 
-	@FindBy(xpath = "//span[text()='Card/Bin Profile']")
-	private WebElement ClickOnCardBinProfile;
+			@FindBy(xpath = "//span[contains(text(),'Sales Info')]")
 
-	@FindBy(xpath = "//span[text()='Settlement Info']")
-	private WebElement ClickOnSettlementInfo;
+			public WebElement ClickonSalesInfo;
 
-	@FindBy(xpath = "(//span[text()='Terminals'])[3]")
-	private WebElement CLickOnTerminal;
+			@FindBy(xpath = "//span[contains(text(),'Company Info')]")
 
-	@FindBy(xpath = "//span[text()='KYC']")
-	private WebElement ClickOnKYC;
+			public WebElement ClickOnComapanyInfo;
 
-//Sales Info	
+			@FindBy(xpath = "//span[contains(text(),'Personal Info')]")
 
-	@FindBy(xpath = "//mat-label[text()='Credopay Application Date ']")
-	private WebElement CredopayApplicableDateLabel;
+			public WebElement ClickOnPersonalInfo;
 
-	@FindBy(xpath = "//mat-label[text()='Merchant Reference Number ']")
-	private WebElement MerchantReferenceNumberLabel;
+			@FindBy(xpath = "//span[contains(text(),'Communication Info')]")
 
-	@FindBy(xpath = "//input[@formcontrolname='aggAppNumber']")
-	private WebElement MerchantReferenceNumber;
+			public WebElement ClickOnCommunicationInfo;
 
-	@FindBy(xpath = "//mat-label[text()='Aggregator Application Date ']")
-	private WebElement AggregatorApplicationDate;
+			@FindBy(xpath = "//span[contains(text(),'Risk Info')]")
 
-	@FindBy(xpath = "//mat-label[text()='Aggregator']")
-	private WebElement AggregatorLabel;
+			public WebElement ClickOnRiskInfo;
 
-	@FindBy(xpath = "//input[@formcontrolname='aggregator']")
-	private WebElement CLickonAggregator;
+			@FindBy(xpath = "//span[contains(text(),'Card/Bin Profile')]")
 
-	@FindBy(xpath = "//span[text()=' Transtrac Tech ']")
-	private WebElement SelectOnAggregator;
+			public WebElement ClickOnCardBinProfile;
 
-	@FindBy(xpath = "//mat-label[text()='ISO ']")
-	private WebElement ISOLabel;
+			@FindBy(xpath = "//span[contains(text(),'Settlement Info')]")
 
-	@FindBy(xpath = "//input[@formcontrolname='distributors']")
-	private WebElement ClickOnISO;
+			public WebElement ClickOnSettlementInfo;
 
-	@FindBy(xpath = "//input[@formcontrolname='groupMerchant']")
-	private WebElement ClickOnGroupMerchant;
+			@FindBy(xpath = "(//span[contains(text(),'Terminals')])[3]")
 
-	@FindBy(xpath = "//span[text()=' CredopayISO ']")
-	private WebElement SelectOnISO;
+			public WebElement CLickOnTerminal;
 
-	@FindBy(xpath = "//mat-label[text()='Sales Person']")
-	private WebElement salespersonLabel;
+			@FindBy(xpath = "//span[contains(text(),'KYC')]")
 
-	@FindBy(xpath = "//input[@formcontrolname='salesPerson']")
-	private WebElement ClickOnSalesPerson;
+			public WebElement ClickOnKYC;
 
-	@FindBy(xpath = "//input[@formcontrolname='branchCode']")
-	private WebElement ClickonbranchCode;
+		//Sales Info	
 
-	@FindBy(xpath = "//mat-label[text()='Branch Code ']")
-	private WebElement branchcodeLabel;
+			@FindBy(xpath = "//mat-label[contains(text(), 'Credopay Application Date')]")
 
-	@FindBy(xpath = "//span[text()=' 5461 ']")
-	private WebElement SelectOnBranchCode;
+			public WebElement CredopayApplicableDateLabel;
 
-//Company Info	
+			@FindBy(xpath = "//mat-label[contains(text(), 'Merchant Reference Number')]")
 
-	@FindBy(xpath = "//mat-label[text()='Legal Name  ']")
-	private WebElement legalnameLabel;
+			public WebElement MerchantReferenceNumberLabel;
 
-	@FindBy(xpath = "//mat-label[text()='Brand Name  ']")
-	private WebElement BrandNameLabel;
+			@FindBy(xpath = "//input[@formcontrolname='aggAppNumber']")
+			public WebElement MerchantReferenceNumber;
 
-	@FindBy(xpath = "//mat-label[text()='Registered Address ']")
-	private WebElement RegisteredAddressLabel;
+			@FindBy(xpath = "//mat-label[contains(text(), 'Aggregator Application Date')]")
 
-	@FindBy(xpath = "//span[text()='Location']")
-	private WebElement LocationLabel;
+			public WebElement AggregatorApplicationDate;
 
-	@FindBy(xpath = "//mat-label[text()='Registered Pincode']")
-	private WebElement RegisteredPincodeLabel;
+			@FindBy(xpath = "//mat-label[contains(text(), 'Aggregator')]")
 
-	@FindBy(xpath = "//mat-label[text()='State ']")
-	private WebElement StateLabel;
+			public WebElement AggregatorLabel;
 
-	@FindBy(xpath = "//mat-label[text()='City  ']")
-	private WebElement CityLabel;
+			@FindBy(xpath = "//input[@formcontrolname='aggregator']")
+			public WebElement CLickonAggregator;
 
-	@FindBy(xpath = "//img[@alt='map']")
-	private WebElement Location;
+			@FindBy(xpath = "//span[contains(text(), 'Transtrac Tech')]")
 
-	@FindBy(xpath = "//input[@placeholder='Search for Location']")
-	private WebElement SearchtheLocation;
+			public WebElement SelectOnAggregator;
 
-	@FindBy(xpath = "//input[@formcontrolname='location']")
-	private WebElement getLocation;
+			@FindBy(xpath = "//mat-label[contains(text(), 'ISO')]")
 
-	@FindBy(xpath = "//span[contains(text(), 'Enter Complete Address')]")
-	private WebElement CompleteAddress;
+			public WebElement ISOLabel;
 
-	@FindBy(xpath = "//mat-label[text()='Latitude ']")
-	private WebElement Latitudelabel;
+			@FindBy(xpath = "//input[@formcontrolname='distributors']")
+			public WebElement ClickOnISO;
 
-	@FindBy(xpath = "//mat-label[text()='Longitude ']")
-	private WebElement Longtitudelabel;
+			@FindBy(xpath = "//input[@formcontrolname='groupMerchant']")
+			public WebElement ClickOnGroupMerchant;
 
-	@FindBy(xpath = "//mat-label[text()='Location Type ']")
-	private WebElement Locationtypelabel;
+			
+			@FindBy(xpath = "//mat-label[contains(text(), 'Sales Person')]")
 
-	@FindBy(xpath = "//input[@formcontrolname='merchantType']")
-	private WebElement MerchantType;
+			public WebElement salespersonLabel;
 
-	@FindBy(xpath = "//mat-select[@formcontrolname='merchantClassification']")
-	private WebElement Merchantclarification;
+			@FindBy(xpath = "//input[@formcontrolname='salesPerson']")
+			public WebElement ClickOnSalesPerson;
 
-//RiskInfo
+			@FindBy(xpath = "//input[@formcontrolname='branchCode']")
+			public WebElement ClickonbranchCode;
 
-	@FindBy(xpath = "//input[@formcontrolname='weekDaysFrom']")
-	private WebElement WeekDaysFrom;
+			@FindBy(xpath = "//mat-label[contains(text(), 'Branch Code')]")
 
-	@FindBy(xpath = "//input[@formcontrolname='weekDaysTo']")
-	private WebElement WeekDaysTo;
+			public WebElement branchcodeLabel;
 
-	@FindBy(xpath = "//input[@formcontrolname='weekEndFrom']")
-	private WebElement WeekEndFrom;
+			
 
-	@FindBy(xpath = "//input[@formcontrolname='weekEndTo']")
-	private WebElement WeekEndTo;
+		//Company Info	
 
-//	Card/Bin Profile
+			@FindBy(xpath = "//mat-label[contains(text(), 'Legal Name')]")
 
-	@FindBy(xpath = "//span[contains(text(),'Credit')]")
-	private WebElement Credit;
+			public WebElement legalnameLabel;
 
-	@FindBy(xpath = "//span[contains(text(),'Debit')]")
-	private WebElement Debit;
+			@FindBy(xpath = "//mat-label[contains(text(), 'Brand Name')]")
 
-	@FindBy(xpath = "//input[@formcontrolname='binNumber']")
-	private WebElement ClickOnBinNumber;
+			public WebElement BrandNameLabel;
 
-//SettlementInfo
+			@FindBy(xpath = "//mat-label[contains(text(), 'Registered Address')]")
 
-	@FindBy(xpath = "//mat-select[@formcontrolname='payment']")
-	private WebElement PaymentMode;
+			public WebElement RegisteredAddressLabel;
 
-	@FindBy(xpath = "//mat-select[@formcontrolname='settlementFlag']")
-	private WebElement SettlementFlag;
+			@FindBy(xpath = "//span[contains(text(), 'Location')]")
 
-//Terminals	
+			public WebElement LocationLabel;
 
-	@FindBy(xpath = "//input[@formcontrolname='terminalName']")
-	private WebElement Terminal;
+			@FindBy(xpath = "//mat-label[contains(text(), 'Registered Pincode')]")
 
-	@FindBy(xpath = "//mat-select[@formcontrolname='terminalType']")
-	private WebElement terminalType;
+			public WebElement RegisteredPincodeLabel;
 
-	@FindBy(xpath = "//mat-select[@formcontrolname='upiTerminalType']")
-	private WebElement UPITerminalType;
+			@FindBy(xpath = "//mat-label[contains(text(), 'State')]")
 
-	@FindBy(xpath = "//mat-select[@formcontrolname='upiOfflineType']")
-	private WebElement UPIofflineType;
+			public WebElement StateLabel;
 
-	@FindBy(xpath = "//input[@formcontrolname='upiVPA']")
-	private WebElement UPIVPA;
+			@FindBy(xpath = "//mat-label[contains(text(), 'City')]")
 
-	@FindBy(xpath = "//input[@formcontrolname='deviceModel']")
-	private WebElement deviceModel;
+			public WebElement CityLabel;
 
-	@FindBy(xpath = "//input[@formcontrolname='deviceNumber']")
-	private WebElement deviceNumber;
+			@FindBy(xpath = "//img[@alt='map']")
+			public WebElement Location;
 
-	@FindBy(xpath = "//input[@formcontrolname='imeiNumber']")
-	private WebElement IMEINumber;
+			@FindBy(xpath = "//input[@placeholder='Search for Location']")
+			public WebElement SearchtheLocation;
 
-	@FindBy(xpath = "//mat-select[@formcontrolname='deviceType']")
-	private WebElement DeviceType;
+			@FindBy(xpath = "//input[@formcontrolname='location']")
+			public WebElement getLocation;
 
-	@FindBy(xpath = "//mat-select[@formcontrolname='deviceComercialMode']")
-	private WebElement DeviceCommercial;
+			@FindBy(xpath = "//span[contains(text(), 'Enter Complete Address')]")
+			public WebElement CompleteAddress;
 
-	@FindBy(xpath = "//mat-select[@formcontrolname='tidFeeApplicable']")
-	private WebElement TIDFeeApplicable;
+			@FindBy(xpath = "//mat-label[contains(text(), 'Latitude')]")
 
-	@FindBy(xpath = "//input[@formcontrolname='devicePrice']")
-	private WebElement DevicePrice;
+			public WebElement Latitudelabel;
 
-	@FindBy(xpath = "//input[@formcontrolname='installationFee']")
-	private WebElement InstallationFee;
+			@FindBy(xpath = "//mat-label[contains(text(), 'Longitude')]")
+
+			public WebElement Longtitudelabel;
+
+			@FindBy(xpath = "//mat-label[contains(text(), 'Location Type')]")
+
+			public WebElement Locationtypelabel;
+
+			@FindBy(xpath = "//input[@formcontrolname='merchantType']")
+			public WebElement MerchantType;
+
+			@FindBy(xpath = "//mat-select[@formcontrolname='merchantClassification']")
+			public WebElement Merchantclarification;
+
+		//RiskInfo
+
+			@FindBy(xpath = "//input[@formcontrolname='weekDaysFrom']")
+			public WebElement WeekDaysFrom;
+
+			@FindBy(xpath = "//input[@formcontrolname='weekDaysTo']")
+			public WebElement WeekDaysTo;
+
+			@FindBy(xpath = "//input[@formcontrolname='weekEndFrom']")
+			public WebElement WeekEndFrom;
+
+			@FindBy(xpath = "//input[@formcontrolname='weekEndTo']")
+			public WebElement WeekEndTo;
+
+//			Card/Bin Profile
+
+			@FindBy(xpath = "//span[contains(text(),'Credit')]")
+			public WebElement Credit;
+
+			@FindBy(xpath = "//span[contains(text(),'Debit')]")
+			public WebElement Debit;
+
+			@FindBy(xpath = "//input[@formcontrolname='binNumber']")
+			public WebElement ClickOnBinNumber;
+
+		//SettlementInfo
+
+			@FindBy(xpath = "//mat-select[@formcontrolname='payment']")
+			public WebElement PaymentMode;
+
+			@FindBy(xpath = "//mat-select[@formcontrolname='settlementFlag']")
+			public WebElement SettlementFlag;
+
+		//Terminals	
+
+			@FindBy(xpath = "//input[@formcontrolname='terminalName']")
+			public WebElement Terminal;
+
+			@FindBy(xpath = "//mat-select[@formcontrolname='terminalType']")
+			public WebElement terminalType;
+
+			@FindBy(xpath = "//mat-select[@formcontrolname='upiTerminalType']")
+			public WebElement UPITerminalType;
+
+			@FindBy(xpath = "//mat-select[@formcontrolname='upiOfflineType']")
+			public WebElement UPIofflineType;
+
+			@FindBy(xpath = "//input[@formcontrolname='upiVPA']")
+			public WebElement UPIVPA;
+
+			@FindBy(xpath = "//input[@formcontrolname='deviceModel']")
+			public WebElement deviceModel;
+
+			@FindBy(xpath = "//input[@formcontrolname='deviceNumber']")
+			public WebElement deviceNumber;
+
+			@FindBy(xpath = "//input[@formcontrolname='imeiNumber']")
+			public WebElement IMEINumber;
+
+			@FindBy(xpath = "//mat-select[@formcontrolname='deviceType']")
+			public WebElement DeviceType;
+
+			@FindBy(xpath = "//mat-select[@formcontrolname='deviceComercialMode']")
+			public WebElement DeviceCommercial;
+
+			@FindBy(xpath = "//mat-select[@formcontrolname='tidFeeApplicable']")
+			public WebElement TIDFeeApplicable;
+
+			@FindBy(xpath = "//input[@formcontrolname='devicePrice']")
+			public WebElement DevicePrice;
+
+			@FindBy(xpath = "//input[@formcontrolname='installationFee']")
+			public WebElement InstallationFee;
+
 
 	public MerchantLocators(WebDriver driver) {
 		this.waitTime = CustomWebDriverManager.getWaitTime();
@@ -247,565 +279,4 @@ public class MerchantLocators {
 		PageFactory.initElements(driver, this);
 
 	}
-	
-	
-//IntroPage
-	
-	public void DisplayedonMerchantDiscountRate() {
-		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-
-		try {
-			wait.until(ExpectedConditions.visibilityOf(DisplayedonMerchantDiscount));
-			assertTrue("Discount Rate Page should be displayed", DisplayedonMerchantDiscount.isDisplayed());
-		} catch (NoSuchElementException e) {
-			fail("Discount Rate Page should be displayed but not found.");
-		} catch (TimeoutException e) {
-			fail("Discount Rate Page was not visible within the wait time.");
-		}
-	}
-	
-	
-	public void DisplayedonMerchantTerminals() {
-		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-
-		try {
-			wait.until(ExpectedConditions.visibilityOf(DisplayedonTerminals));
-			assertTrue("Terminals Page should be displayed", DisplayedonTerminals.isDisplayed());
-		} catch (NoSuchElementException e) {
-			fail("Terminals Page should be displayed but not found.");
-		} catch (TimeoutException e) {
-			fail("Terminals Page was not visible within the wait time.");
-		}
-	}
-	
-	
-	
-	public void DisplayedonMerchantRiskInfo() {
-		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-
-		try {
-			wait.until(ExpectedConditions.visibilityOf(DisplayedonRiskInfo));
-			assertTrue("Risk Info Page should be displayed", DisplayedonRiskInfo.isDisplayed());
-		} catch (NoSuchElementException e) {
-			fail("Risk Info Page should be displayed but not found.");
-		} catch (TimeoutException e) {
-			fail("Risk Info Page was not visible within the wait time.");
-		}
-	}
-	
-	
-	public void DisplayedonPaymentBridge() {
-		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-
-		try {
-			wait.until(ExpectedConditions.visibilityOf(DisplayedonPaymentBridge));
-			assertTrue("PaymentBridge Page should be displayed", DisplayedonPaymentBridge.isDisplayed());
-		} catch (NoSuchElementException e) {
-			fail("Payment Bridge Page should be displayed but not found.");
-		} catch (TimeoutException e) {
-			fail("Payment Bridge Page was not visible within the wait time.");
-		}
-	}
-	
-	
-	public void DisplayedonCardBin() {
-		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-
-		try {
-			wait.until(ExpectedConditions.visibilityOf(DisplayedonCardBin));
-			assertTrue("CardBin Page should be displayed", DisplayedonCardBin.isDisplayed());
-		} catch (NoSuchElementException e) {
-			fail("CardBin Page should be displayed but not found.");
-		} catch (TimeoutException e) {
-			fail("CardBin Page was not visible within the wait time.");
-		}
-	}
-
-	public void ClickonCardNinProfile() {
-
-//		ComapnyInfo.click();
-
-		try {
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(ClickOnCardBinProfile));
-			ClickOnCardBinProfile.click();
-		} catch (ElementClickInterceptedException e) {
-
-			System.err.println("Element click intercepted: " + e.getMessage());
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(ClickOnCardBinProfile));
-			ClickOnCardBinProfile.click();
-		} catch (Exception e) {
-			// Handle other potential exceptions
-			System.err.println("An unexpected error occurred: " + e.getMessage());
-		}
-
-	}
-
-	public void ClickonMerchantReferenceNumber() {
-
-//		ComapnyInfo.click();
-
-		try {
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(MerchantReferenceNumber));
-			MerchantReferenceNumber.click();
-		} catch (ElementClickInterceptedException e) {
-
-			System.err.println("Element click intercepted: " + e.getMessage());
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(MerchantReferenceNumber));
-			MerchantReferenceNumber.click();
-		} catch (Exception e) {
-			// Handle other potential exceptions
-			System.err.println("An unexpected error occurred: " + e.getMessage());
-		}
-
-	}
-
-	public void EnteronMerchantReferenceNumber(String num) {
-
-		MerchantReferenceNumber.sendKeys(num);
-
-	}
-
-	public void ClickonGroupMerchant() {
-
-//		ComapnyInfo.click();
-
-		try {
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(ClickOnGroupMerchant));
-			ClickOnGroupMerchant.click();
-		} catch (ElementClickInterceptedException e) {
-
-			System.err.println("Element click intercepted: " + e.getMessage());
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(ClickOnGroupMerchant));
-			ClickOnGroupMerchant.click();
-		} catch (Exception e) {
-			// Handle other potential exceptions
-			System.err.println("An unexpected error occurred: " + e.getMessage());
-		}
-
-	}
-
-	public void ClickonLocation() {
-
-//		ComapnyInfo.click();
-
-		try {
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(Location));
-			Location.click();
-		} catch (ElementClickInterceptedException e) {
-
-			System.err.println("Element click intercepted: " + e.getMessage());
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(Location));
-			Location.click();
-		} catch (Exception e) {
-			// Handle other potential exceptions
-			System.err.println("An unexpected error occurred: " + e.getMessage());
-		}
-
-	}
-
-	public String getLocation() {
-		return getLocation.getAttribute("value");
-	}
-
-	public void ClickonSearchtheLocation() {
-
-//		ComapnyInfo.click();
-
-		try {
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(SearchtheLocation));
-			SearchtheLocation.click();
-		} catch (ElementClickInterceptedException e) {
-
-			System.err.println("Element click intercepted: " + e.getMessage());
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(SearchtheLocation));
-			SearchtheLocation.click();
-		} catch (Exception e) {
-			// Handle other potential exceptions
-			System.err.println("An unexpected error occurred: " + e.getMessage());
-		}
-
-	}
-
-	public void EnteronSearchtheLocation(String loc) {
-
-		SearchtheLocation.sendKeys(loc);
-		
-	}
-
-	public void ClickonCompleteAddress() {
-
-//		ComapnyInfo.click();
-
-		try {
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(CompleteAddress));
-			CompleteAddress.click();
-		} catch (ElementClickInterceptedException e) {
-
-			System.err.println("Element click intercepted: " + e.getMessage());
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(CompleteAddress));
-			CompleteAddress.click();
-		} catch (Exception e) {
-			// Handle other potential exceptions
-			System.err.println("An unexpected error occurred: " + e.getMessage());
-		}
-
-	}
-
-	public void ClickonMerchantType() {
-
-//		ComapnyInfo.click();
-
-		try {
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(MerchantType));
-			MerchantType.click();
-		} catch (ElementClickInterceptedException e) {
-
-			System.err.println("Element click intercepted: " + e.getMessage());
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(MerchantType));
-			MerchantType.click();
-		} catch (Exception e) {
-			// Handle other potential exceptions
-			System.err.println("An unexpected error occurred: " + e.getMessage());
-		}
-
-	}
-
-	public void ClickonMerchantClassification() {
-
-//		ComapnyInfo.click();
-
-		try {
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(Merchantclarification));
-			Merchantclarification.click();
-		} catch (ElementClickInterceptedException e) {
-
-			System.err.println("Element click intercepted: " + e.getMessage());
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(Merchantclarification));
-			Merchantclarification.click();
-		} catch (Exception e) {
-			// Handle other potential exceptions
-			System.err.println("An unexpected error occurred: " + e.getMessage());
-		}
-
-	}
-
-	public void ClickonWeekDaysFrom() {
-
-//		ComapnyInfo.click();
-
-		try {
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(WeekDaysFrom));
-			WeekDaysFrom.click();
-		} catch (ElementClickInterceptedException e) {
-
-			System.err.println("Element click intercepted: " + e.getMessage());
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(WeekDaysFrom));
-			WeekDaysFrom.click();
-		} catch (Exception e) {
-			// Handle other potential exceptions
-			System.err.println("An unexpected error occurred: " + e.getMessage());
-		}
-
-	}
-
-	public void EnteronWeekDaysFrom(String num) {
-
-		WeekDaysFrom.sendKeys(num);
-
-	}
-
-	public void ClickonWeekDaysTo() {
-
-//		ComapnyInfo.click();
-
-		try {
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(WeekDaysTo));
-			WeekDaysTo.click();
-		} catch (ElementClickInterceptedException e) {
-
-			System.err.println("Element click intercepted: " + e.getMessage());
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(WeekDaysTo));
-			WeekDaysTo.click();
-		} catch (Exception e) {
-			// Handle other potential exceptions
-			System.err.println("An unexpected error occurred: " + e.getMessage());
-		}
-
-	}
-
-	public void EnteronWeekDaysTo(String num) {
-
-		WeekDaysTo.sendKeys(num);
-
-	}
-
-	public void ClickonWeekENDFrom() {
-
-//		ComapnyInfo.click();
-
-		try {
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(WeekEndFrom));
-			WeekEndFrom.click();
-		} catch (ElementClickInterceptedException e) {
-
-			System.err.println("Element click intercepted: " + e.getMessage());
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(WeekEndFrom));
-			WeekEndFrom.click();
-		} catch (Exception e) {
-			// Handle other potential exceptions
-			System.err.println("An unexpected error occurred: " + e.getMessage());
-		}
-
-	}
-
-	public void EnteronWeekEndFrom(String num) {
-
-		WeekEndFrom.sendKeys(num);
-
-	}
-
-	public void ClickonWeekENDTo() {
-
-//		ComapnyInfo.click();
-
-		try {
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(WeekEndTo));
-			WeekEndTo.click();
-		} catch (ElementClickInterceptedException e) {
-
-			System.err.println("Element click intercepted: " + e.getMessage());
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(WeekEndTo));
-			WeekEndTo.click();
-		} catch (Exception e) {
-			// Handle other potential exceptions
-			System.err.println("An unexpected error occurred: " + e.getMessage());
-		}
-
-	}
-
-	public void EnteronWeekEndTo(String num) {
-
-		WeekEndTo.sendKeys(num);
-
-	}
-
-	public void SelectonCredit() {
-
-//		ComapnyInfo.click();
-
-		try {
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(Credit));
-			Credit.click();
-		} catch (ElementClickInterceptedException e) {
-
-			System.err.println("Element click intercepted: " + e.getMessage());
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(Credit));
-			Credit.click();
-		} catch (Exception e) {
-			// Handle other potential exceptions
-			System.err.println("An unexpected error occurred: " + e.getMessage());
-		}
-
-	}
-
-	public void SelectonDebit() {
-
-//		ComapnyInfo.click();
-
-		try {
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(Debit));
-			Debit.click();
-		} catch (ElementClickInterceptedException e) {
-
-			System.err.println("Element click intercepted: " + e.getMessage());
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(Debit));
-			Debit.click();
-		} catch (Exception e) {
-			// Handle other potential exceptions
-			System.err.println("An unexpected error occurred: " + e.getMessage());
-		}
-
-	}
-
-	public void ClickOnBinNumber() {
-
-//		ComapnyInfo.click();
-
-		try {
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(ClickOnBinNumber));
-			ClickOnBinNumber.click();
-		} catch (ElementClickInterceptedException e) {
-
-			System.err.println("Element click intercepted: " + e.getMessage());
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(ClickOnBinNumber));
-			ClickOnBinNumber.click();
-		} catch (Exception e) {
-			// Handle other potential exceptions
-			System.err.println("An unexpected error occurred: " + e.getMessage());
-		}
-
-	}
-
-//SettlementInfo
-
-	public void ClickonPaymentMode() {
-
-//		ComapnyInfo.click();
-
-		try {
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(PaymentMode));
-			PaymentMode.click();
-		} catch (ElementClickInterceptedException e) {
-
-			System.err.println("Element click intercepted: " + e.getMessage());
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(PaymentMode));
-			PaymentMode.click();
-		} catch (Exception e) {
-			// Handle other potential exceptions
-			System.err.println("An unexpected error occurred: " + e.getMessage());
-		}
-
-	}
-
-	public void ClickonSettlementFlag() {
-
-//		ComapnyInfo.click();
-
-		try {
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(SettlementFlag));
-			SettlementFlag.click();
-		} catch (ElementClickInterceptedException e) {
-
-			System.err.println("Element click intercepted: " + e.getMessage());
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(SettlementFlag));
-			SettlementFlag.click();
-		} catch (Exception e) {
-			// Handle other potential exceptions
-			System.err.println("An unexpected error occurred: " + e.getMessage());
-		}
-
-	}
-
-//Terminals	
-
-	public void ClickonTerminalName() {
-
-//		ComapnyInfo.click();
-
-		try {
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(Terminal));
-			Terminal.click();
-		} catch (ElementClickInterceptedException e) {
-
-			System.err.println("Element click intercepted: " + e.getMessage());
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(Terminal));
-			Terminal.click();
-		} catch (Exception e) {
-			// Handle other potential exceptions
-			System.err.println("An unexpected error occurred: " + e.getMessage());
-		}
-
-	}
-
-	public void EnteronTerminalName(String num) {
-
-		Terminal.sendKeys(num);
-
-	}
-
-	public void ClickonTerminalType() {
-
-//		ComapnyInfo.click();
-
-		try {
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(terminalType));
-			terminalType.click();
-		} catch (ElementClickInterceptedException e) {
-
-			System.err.println("Element click intercepted: " + e.getMessage());
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(terminalType));
-			terminalType.click();
-		} catch (Exception e) {
-			// Handle other potential exceptions
-			System.err.println("An unexpected error occurred: " + e.getMessage());
-		}
-
-	}
-
 }

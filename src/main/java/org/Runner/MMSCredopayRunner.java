@@ -16,14 +16,15 @@ import io.cucumber.junit.CucumberOptions;
 		// features = "src/test/resources/SystemUser-GroupMerchant.feature",
 		// features = "src/test/resources/SystemUser-Merchant.feature",
 		// features = "src/test/resources/SystemUser-Terminal.feature",				
-
-		    features = "src/test/resources/SystemUser-MultipleBank.feature",
-//          features = "src/test/resources/SystemUser-MultipleAggregator.feature",
-//           features = "src/test/resources/SystemUser-MultipleISO.feature",
-//           features = "src/test/resources/SystemUser-MultipleSUBISO.feature",
+	
+//  		features = "src/test/resources/SystemUser-MultipleBank.feature",
+//            features = "src/test/resources/SystemUser-MultipleAggregator.feature",
+//              features = "src/test/resources/SystemUser-MultipleISO.feature",
+//          features = "src/test/resources/SystemUser-MultipleSUBISO.feature",
+   
 //            features = "src/test/resources/SystemUser-MultipleGroupMerchant.feature",
-//           features = "src/test/resources/SystemUser-MultipleMerchant.feature",
-//        		  features = "src/test/resources/SystemUser-MultipleTerminal.feature",
+               features = "src/test/resources/SystemUser-MultipleMerchant.feature",
+//       		  features = "src/test/resources/SystemUser-MultipleTerminal.feature",
 
 		plugin = { "pretty", "html:target/cucumber-report/cucumber.html",
 				"io.qameta.allure."

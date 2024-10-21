@@ -23,14 +23,46 @@ public class TerminalLocators {
 	WebDriver driver;
 	int waitTime;
 
-	@FindBy(xpath = "//span[contains(text(), 'Submit & Next')]")
-	private WebElement ViewDocumentSubmitandNext;
-
 	@FindBy(xpath = "//input[@formcontrolname='merchant']")
-	public WebElement Merchant;
+	 public WebElement Merchant;			
+	
+	  @FindBy(xpath = "//input[@formcontrolname='terminalName']")
+	  public WebElement TerminalName;
+		
 
-	@FindBy(xpath = "//input[@formcontrolname='terminalName']")
-	private WebElement Terminal;
+	 @FindBy(xpath = "//mat-select[@formcontrolname='terminalType']")
+	 public WebElement Terminaltype;
+	 	
+	 
+	 @FindBy(xpath = "//input[@formcontrolname='deviceModel']")
+	 public WebElement DeviceModel;
+		
+	 @FindBy(xpath = "//input[@formcontrolname='deviceNumber']")
+	 public WebElement DeviceNumber;
+	 
+	 @FindBy(xpath = "//input[@formcontrolname='activeDeviceNumber']")
+	 public WebElement ActiveDeviceNumber;
+	 
+	 @FindBy(xpath = "//input[@formcontrolname='imeiNumber']")
+	 public WebElement IMEINumber;
+	 
+	 @FindBy(xpath = "//mat-select[@formcontrolname='deviceComercialMode']")
+	 public WebElement DeviceCommericialmode;
+	 
+	 @FindBy(xpath ="//mat-select[@formcontrolname='tidFeeApplicable']")
+	 public WebElement TIDFeeApplicable;
+	 
+	 @FindBy(xpath = "//input[@formcontrolname='devicePrice']")
+	 public WebElement Deviceprice;
+	 
+	 @FindBy(xpath = "//input[@formcontrolname='installationFee']")
+	 public WebElement InstallationFee;
+	 
+	 @FindBy(xpath = "//h6[contains(text(),'Transaction Sets')]")
+     public WebElement DisplayTransctionSet;
+     
+     @FindBy(xpath = "//span[contains(text(), 'Transaction Set')]")
+     public WebElement TransctionSet;
 
 	public TerminalLocators(WebDriver driver) {
 		this.waitTime = CustomWebDriverManager.getWaitTime();
@@ -38,100 +70,5 @@ public class TerminalLocators {
 		PageFactory.initElements(driver, this);
 
 	}
-
-	public void clickElement(WebElement element) {
-
-		try {
-
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.elementToBeClickable(element));
-			element.click();
-			
-		} catch (ElementClickInterceptedException e) {
-			System.out.println("Element click intercepted for the input field. Trying to interact via JavaScript.");
-			((JavascriptExecutor) driver).executeScript("arguments[0].value = arguments[1];", element);
-		} catch (TimeoutException e) {
-			System.out
-					.println("The input field with formControlName '" + element + "' is not found within the timeout.");
-		}
-	}
-
-	public void enterElement(WebElement element, String text) {
-
-		try {
-			// Wait for the input field to be visible
-			element.sendKeys(text);
-
-		} catch (ElementClickInterceptedException e) {
-			
-			element.sendKeys(text);
-			
-		} catch (TimeoutException e) {
-			System.out
-					.println("The input field with formControlName '" + element + "' is not found within the timeout.");
-		}
-	}
 	
-	public boolean isElementDisplayed(WebElement element, String elementName) {
-	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-
-	    try {
-	       
-	        wait.until(ExpectedConditions.visibilityOf(element));
-
-	        assertTrue(elementName + " is displayed.", element.isDisplayed());
-	        
-	        return true;
-
-	    } catch (NoSuchElementException e) {
-	        System.out.println(elementName + " is not displayed.");
-	        return false;
-
-	    } catch (TimeoutException e) {
-	        System.out.println(elementName + " is not displayed due to timeout.");
-	        return false;
-	    }
-	}
-
-	
-	public void CLearElement(WebElement element) {
-
-		try {
-			
-			element.clear();
-
-		} catch (ElementClickInterceptedException e) {
-			
-			element.clear();
-			
-		} catch (TimeoutException e) {
-			System.out
-					.println("The input field with formControlName '" + element + "' is not found within the timeout.");
-		}
-	}
-	
-	
-	
-//	public WebElement clickElementXpath(String xplathText) {
-//
-//		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-//		WebElement inputElement = null; // Declare the variable here
-//
-//		try {
-//			// Wait for the input field to be visible
-//			inputElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xplathText)));
-//			inputElement.click();
-//			return inputElement;
-//		} catch (TimeoutException e) {
-//			System.out.println(
-//					"The input field with formControlName '" + xplathText + "' is not found within the timeout.");
-//		} catch (ElementClickInterceptedException e) {
-//			System.out.println("Element click intercepted for the input field. Trying to interact via JavaScript.");
-//
-//			// Try sending keys via JavaScript as a fallback
-//			((JavascriptExecutor) driver).executeScript("arguments[0].value = arguments[1];", inputElement);
-//		}
-//		return inputElement;
-//	}
-
 }

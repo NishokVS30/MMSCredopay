@@ -25,20 +25,23 @@ import com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter;
 import com.github.javafaker.Faker;
 
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import io.qameta.allure.Allure;
 
 public class SystemUserMultipleISORegression {
-	
+
 	private WebDriver driver;
-	
+
+	org.Locators.BaseClassLocator BL;
+	org.Locators.SystemUserLocatores S;
 	org.Locators.LoginLocators L;
 	org.Locators.BankLocators B;
 	org.Locators.AggregatorLocators A;
-	org.Locators.SystemUserLocatores S;
 	org.Locators.ISOLocators ISO;
 	org.Locators.SUBISOLocators SUBISO;
 	org.Locators.GroupMerchantLocator GM;
 	org.Locators.MerchantLocators M;
+	org.Locators.TerminalLocators T;
 
 	ExtentTest test;
 	ExcelUtilsDataCache cache = ExcelUtilsDataCache.getInstance();
@@ -48,6 +51,45 @@ public class SystemUserMultipleISORegression {
 //		 this.driver = driver;
 		System.setProperty("webdriver.chrome.logfile", "chromedriver.log");
 		System.setProperty("webdriver.chrome.verboseLogging", "true");
+
+		BL = new org.Locators.BaseClassLocator(driver);
+
+		L = new org.Locators.LoginLocators(driver);
+
+		S = new org.Locators.SystemUserLocatores(driver);
+
+		B = new org.Locators.BankLocators(driver);
+
+		A = new org.Locators.AggregatorLocators(driver);
+
+		ISO = new org.Locators.ISOLocators(driver);
+
+		SUBISO = new org.Locators.SUBISOLocators(driver);
+
+		GM = new org.Locators.GroupMerchantLocator(driver);
+
+		M = new org.Locators.MerchantLocators(driver);
+
+		T = new org.Locators.TerminalLocators(driver);
+
+	}
+	@When("the System Maker clicks the ISO module")
+
+	public void SystemMakerClicktheBankModule() {
+
+		try {
+
+			BL.clickElement(B.ClickOnISO);
+
+		} catch (Exception e) {
+
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+
+			exceptionHandler.handleException(e, "Onboarding");
+
+			throw e;
+
+		}
 
 	}
 
@@ -120,7 +162,6 @@ public class SystemUserMultipleISORegression {
 		System.out.println("Data for row " + rowNumber + ": " + testData);
 
 		// Initialize the locators (e.g., BankLocators)
-		B = new org.Locators.BankLocators(driver);
 
 		int testCaseCount = 0;
 
@@ -148,6 +189,8 @@ public class SystemUserMultipleISORegression {
 			e.printStackTrace();
 		}
 	}
+	
+	
 
 	ArrayList<String> key = new ArrayList<>();
 	ArrayList<String> value = new ArrayList<>();
@@ -156,8 +199,6 @@ public class SystemUserMultipleISORegression {
 	private int validateFieldsForRow(String sheetName, Map<String, String> testData, int TestcaseNo, int rowNumber)
 			throws Exception {
 
-		// Initialize the locators
-		B = new org.Locators.BankLocators(driver);
 
 		// Initialize a counter to track the number of validated fields/sections
 		int validatedFieldsCount = 0;
@@ -245,7 +286,6 @@ public class SystemUserMultipleISORegression {
 			}
 		}, "KYC Details");
 
-
 		// Commercial Section
 		validatedFieldsCount += executeStep(() -> {
 			try {
@@ -311,34 +351,26 @@ public class SystemUserMultipleISORegression {
 			return 0; // Return 0 for failed execution
 		}
 	}
-	
+
 	private void fillSalesInfo(Map<String, String> testData, int TestcaseNo) throws Exception {
 		try {
-			A = new org.Locators.AggregatorLocators(driver);
-			B = new org.Locators.BankLocators(driver);
-			ISO = new org.Locators.ISOLocators(driver);
-			S = new org.Locators.SystemUserLocatores(driver);
-			
 
 			Faker faker = new Faker();
 
 			int testcaseCount = 0;
 			String errorMessage = "The data does not match or is empty.";
 
-
 			String Marsid = testData.get("Marsid");
 			String name = testData.get("Aggregator Name");
-			
-
-		
 
 			boolean DateStatus = true; // Assume success initially
 			try {
-				
-				B.ClickOnCreatebutton();
-				
-			    A.ClickOnSalesInfo();
-				A.ClickOnAggreratorApplictionDate();
+
+				BL.clickElement(B.Createbutton);
+				BL.clickElement(A.SalesInfo);
+				BL.clickElement(A.AggregatorApplicationDateCalenderOne);
+
+//				A.ClickOnAggreratorApplictionDate();
 
 				Robot r = new Robot();
 
@@ -346,8 +378,8 @@ public class SystemUserMultipleISORegression {
 
 				r.keyRelease(KeyEvent.VK_ENTER);
 
-
-				B.NOTDisplayedOnInvalidFormat();
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 			} catch (AssertionError e) {
 				DateStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
@@ -356,15 +388,15 @@ public class SystemUserMultipleISORegression {
 			logTestStep(TestcaseNo, "ISO Appliction Date", "Current Date", DateStatus, errorMessage);
 
 			try {
-				A.ClickOnAggrementnDate();
+				BL.clickElement(A.AggregatorApplicationDateCalenderTwo);
+
 				Robot r = new Robot();
 
 				r.keyPress(KeyEvent.VK_ENTER);
 
 				r.keyRelease(KeyEvent.VK_ENTER);
 
-
-				B.NOTDisplayedOnInvalidFormat();
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 			} catch (AssertionError e) {
 				DateStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
@@ -372,32 +404,30 @@ public class SystemUserMultipleISORegression {
 
 			logTestStep(TestcaseNo, "Agreement Date", "Current Date", DateStatus, errorMessage);
 
-			
 			if (name != null && !name.trim().isEmpty()) {
 
-				ISO.ClickOnAggregatorName();
-
-				B.selectDropdownOption(name);
+				BL.clickElement(ISO.AggregatorName);
+				BL.selectDropdownOption(name);
 
 				++testcaseCount;
 
 				boolean nameStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					nameStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Aggregator Name",name, nameStatus, errorMessage);
+				logTestStep(TestcaseNo, "Aggregator Name", name, nameStatus, errorMessage);
 
 			}
 
-
 			if (Marsid != null && !Marsid.trim().isEmpty()) {
-				A.ClickOnMarsid();
-				A.EnterOnMarsid(Marsid);
+
+				BL.clickElement(B.Marsid);
+				BL.enterElement(B.Marsid, Marsid);
 //				logInputData("Marsid", Marsid);
 				++testcaseCount;
 
@@ -405,7 +435,7 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					MarsidStatus = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -414,12 +444,13 @@ public class SystemUserMultipleISORegression {
 
 			}
 
-			
 			boolean NextstepStatus = true;
 			try {
-				B.ClickOnNextStep();
 
-				A.DisplayedOnIntroCompanyInfo();
+				BL.clickElement(B.NextStep);
+
+				BL.isElementDisplayed(A.IntroCompanyInfo, "Company Info Page");
+
 			} catch (AssertionError e) {
 				NextstepStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
@@ -439,8 +470,6 @@ public class SystemUserMultipleISORegression {
 	private String fillCompanyInfo(Map<String, String> testData, int TestcaseNo) throws Exception {
 		try {
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
 
 			Faker faker = new Faker();
 
@@ -467,17 +496,18 @@ public class SystemUserMultipleISORegression {
 
 			if (LegalName != null && !LegalName.trim().isEmpty()) {
 
-				A.ClickOnCompanyInfo();
-				A.ClickOnLegalName();
-				A.EnterOnLegalName(LegalName);
+				BL.clickElement(A.ComapnyInfo);
 
+				BL.clickElement(A.LegalName);
+
+				BL.enterElement(A.LegalName, LegalName);
 				++testcaseCount;
 
 				boolean legalNameStatus = true; // Assume success initially
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					legalNameStatus = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -489,9 +519,9 @@ public class SystemUserMultipleISORegression {
 
 			if (brand != null && !brand.trim().isEmpty()) {
 
-				A.ClickOnBrandName();
+				BL.clickElement(A.BrandName);
 
-				A.EnterOnBrandName(brand);
+				BL.enterElement(A.BrandName, brand);
 
 				++testcaseCount;
 
@@ -499,7 +529,7 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -511,9 +541,9 @@ public class SystemUserMultipleISORegression {
 
 			if (Address != null && !Address.trim().isEmpty()) {
 
-				A.ClickOnRegisteredAddress();
+				BL.clickElement(A.RegisteredAddress);
 
-				A.EnterOnRegisteredAddress(Address);
+				BL.enterElement(A.RegisteredAddress, Address);
 
 				++testcaseCount;
 
@@ -521,7 +551,7 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -533,9 +563,11 @@ public class SystemUserMultipleISORegression {
 
 			if (pincode != null && !pincode.trim().isEmpty()) {
 
-				A.ClickOnRegisteredPincode();
+				BL.clickElement(A.RegisteredPincode);
 
-				B.selectDropdownOption(pincode);
+				BL.enterElement(A.RegisteredPincode, pincode);
+
+				BL.selectDropdownOption(pincode);
 
 				++testcaseCount;
 
@@ -543,7 +575,7 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -555,9 +587,9 @@ public class SystemUserMultipleISORegression {
 
 			if (type != null && !type.trim().isEmpty()) {
 
-				A.ClickOnBusinessType();
+				BL.clickElement(A.BusinessType);
 
-				B.selectDropdownOption(type);
+				BL.selectDropdownOption(type);
 
 				++testcaseCount;
 
@@ -565,7 +597,7 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -577,7 +609,8 @@ public class SystemUserMultipleISORegression {
 
 			boolean DateStatus = true;
 			try {
-				A.ClickOnEstablishedYearDatepicker();
+
+				BL.clickElement(A.EstablishedYearDatepicker);
 
 				Robot r = new Robot();
 
@@ -585,9 +618,9 @@ public class SystemUserMultipleISORegression {
 
 				r.keyRelease(KeyEvent.VK_ENTER);
 
-				A.ClickOnApply();
+				BL.clickElement(A.ApplyButton);
 
-				B.NOTDisplayedOnInvalidFormat();
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 			} catch (AssertionError e) {
 				DateStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
@@ -602,8 +635,9 @@ public class SystemUserMultipleISORegression {
 
 			if (registeredNumber != null && !registeredNumber.trim().isEmpty()) {
 
-				A.CLickOnRegisterNumber();
-				A.EnterOnRegisterNumber(registeredNumber);
+				BL.clickElement(A.RegisterNumber);
+
+				BL.enterElement(A.RegisterNumber, registeredNumber);
 
 				++testcaseCount;
 
@@ -611,7 +645,7 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -623,9 +657,9 @@ public class SystemUserMultipleISORegression {
 
 			if (pan != null && !pan.trim().isEmpty()) {
 
-				A.CLickOnCompanyPAN();
+				BL.clickElement(A.ComapnyPAN);
 
-				A.EnterOnCompanyPAN(pan);
+				BL.enterElement(A.ComapnyPAN, pan);
 
 				++testcaseCount;
 
@@ -633,7 +667,7 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -645,9 +679,9 @@ public class SystemUserMultipleISORegression {
 
 			if (GstIN != null && !GstIN.trim().isEmpty()) {
 
-				A.CLickOnGSTIN();
+				BL.clickElement(A.GSTIN);
 
-				A.EnterOnGSTIN(GstIN);
+				BL.enterElement(A.GSTIN, GstIN);
 
 				++testcaseCount;
 
@@ -655,7 +689,7 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -667,9 +701,9 @@ public class SystemUserMultipleISORegression {
 
 			if (frequency != null && !frequency.trim().isEmpty()) {
 
-				A.CLickOnStatementFrequency();
+				BL.clickElement(A.StatementFrequency);
 
-				B.selectDropdownOption(frequency);
+				BL.selectDropdownOption(frequency);
 
 				++testcaseCount;
 
@@ -677,7 +711,7 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -689,9 +723,9 @@ public class SystemUserMultipleISORegression {
 
 			if (Type != null && !Type.trim().isEmpty()) {
 
-				A.CLickOnStatementType();
+				BL.clickElement(A.StatementType);
 
-				B.selectDropdownOption(Type);
+				BL.selectDropdownOption(Type);
 
 				++testcaseCount;
 
@@ -699,7 +733,7 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -711,9 +745,9 @@ public class SystemUserMultipleISORegression {
 
 			if (domain != null && !domain.trim().isEmpty()) {
 
-				A.CLickOnEmailDomain();
+				BL.clickElement(A.EmailDomain);
 
-				A.EnterOnEmailDomain(domain);
+				BL.enterElement(A.EmailDomain, domain);
 
 				performTabKeyPress();
 
@@ -723,7 +757,7 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -732,13 +766,12 @@ public class SystemUserMultipleISORegression {
 				logTestStep(TestcaseNo, "Domain", domain, Status, errorMessage);
 
 			}
-			
+
 			boolean SaveStatus = true;
 			try {
 
-				A.ClickOnSAVEPersonal();
-
-				B.OkforSuccessfully();
+				BL.clickElement(B.SaveButton);
+				BL.clickElement(B.OKButton);
 
 			} catch (AssertionError e) {
 				SaveStatus = false;
@@ -749,9 +782,11 @@ public class SystemUserMultipleISORegression {
 
 			boolean NextstepStatus = true;
 			try {
-				B.ClickOnNextStep();
 
-				A.DisplayedOnIntroPersonalInfo();
+				BL.clickElement(B.NextStep);
+
+				BL.isElementDisplayed(A.IntroPersonalInfo, "Personal Info Page");
+
 			} catch (AssertionError e) {
 				NextstepStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
@@ -772,8 +807,6 @@ public class SystemUserMultipleISORegression {
 
 	private void fillPersonalInfo(Map<String, String> testData, int TestcaseNo) throws Exception {
 		try {
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
 
 			int testcaseCount = 0;
 			String errorMessage = "The data does not match or is empty.";
@@ -795,13 +828,13 @@ public class SystemUserMultipleISORegression {
 
 			if (title != null && !title.trim().isEmpty()) {
 
-				A.ClickOnPersonalInfo();
+				BL.clickElement(A.PersonalInfo);
 
-				A.PersonalINfoADD();
+				BL.clickElement(B.AddButton);
 
-				A.ClickOntitlepersonal();
+				BL.clickElement(A.titlepersonal);
 
-				B.selectDropdownOption(title);
+				BL.selectDropdownOption(title);
 
 				++testcaseCount;
 
@@ -809,7 +842,7 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -821,9 +854,9 @@ public class SystemUserMultipleISORegression {
 
 			if (FirstName != null && !FirstName.trim().isEmpty()) {
 
-				A.ClickOnFirstNamePersonal();
+				BL.clickElement(A.FirstNamePersonal);
 
-				A.EnterOnFirstNamePersonal(FirstName);
+				BL.enterElement(A.FirstNamePersonal, FirstName);
 
 				++testcaseCount;
 
@@ -831,7 +864,7 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -843,9 +876,9 @@ public class SystemUserMultipleISORegression {
 
 			if (LastName != null && !LastName.trim().isEmpty()) {
 
-				A.ClickOnLastNamePersonal();
+				BL.clickElement(A.LastNamePersonal);
 
-				A.EnterOnLastNamePersonal(LastName);
+				BL.enterElement(A.LastNamePersonal, LastName);
 
 				++testcaseCount;
 
@@ -853,7 +886,7 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -866,19 +899,14 @@ public class SystemUserMultipleISORegression {
 			boolean DateStatus = true; // Assume success initially
 
 			try {
-				A.ClickOnOpenCalenderPersonal();
+				BL.clickElement(A.OpenCalenderPersonal);
+				BL.clickElement(A.ChooseMonthandYear);
+				BL.clickElement(A.Year);
+				BL.clickElement(A.Month);
+				BL.clickElement(A.Date);
+				BL.clickElement(A.ApplyButton);
 
-				A.ClickOnChooseMonthandYearPersonal();
-
-				A.ClickOnYearPersonal();
-
-				A.ClickOnMonthPersonal();
-
-				A.ClickOnDatePersonal();
-
-				A.ClickOnApplyPersonal();
-
-				B.NOTDisplayedOnInvalidFormat();
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 			} catch (AssertionError e) {
 				DateStatus = false; // Set status to false if assertion fails
 				errorMessage = e.getMessage(); // Capture error message
@@ -888,9 +916,9 @@ public class SystemUserMultipleISORegression {
 
 			if (pan != null && !pan.trim().isEmpty()) {
 
-				A.ClickOnPANPersonal();
+				BL.clickElement(A.PanPersonal);
 
-				A.EnterOnPanPersonal(pan);
+				BL.enterElement(A.PanPersonal, pan);
 
 				++testcaseCount;
 
@@ -898,7 +926,7 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -910,9 +938,9 @@ public class SystemUserMultipleISORegression {
 
 			if (Address != null && !Address.trim().isEmpty()) {
 
-				A.ClickOnAddressPersonal();
+				BL.clickElement(A.AddressPersonal);
 
-				A.EnterOnAddressPersonal(Address);
+				BL.enterElement(A.AddressPersonal, Address);
 
 				++testcaseCount;
 
@@ -920,7 +948,7 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -932,9 +960,9 @@ public class SystemUserMultipleISORegression {
 
 			if (pincode != null && !pincode.trim().isEmpty()) {
 
-				A.ClickOnPincodePersonal();
+				BL.clickElement(A.PincodePersonal);
 
-				B.selectDropdownOption(pincode);
+				BL.selectDropdownOption(pincode);
 
 				++testcaseCount;
 
@@ -942,7 +970,7 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -959,9 +987,9 @@ public class SystemUserMultipleISORegression {
 				String remainingDigits = faker.number().digits(9); // Generate 9 random digits
 				String Mobilenumber = firstDigit + remainingDigits;
 
-				A.ClickOnMobileNumberPersonal();
+				BL.clickElement(A.MobilePersonal);
 
-				A.EnterOnMobileNumberPersonal(Mobilenumber);
+				BL.enterElement(A.MobilePersonal, Mobilenumber);
 
 				++testcaseCount;
 
@@ -969,7 +997,7 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -981,8 +1009,9 @@ public class SystemUserMultipleISORegression {
 
 			if (telephone != null && !telephone.trim().isEmpty()) {
 
-				A.ClickOnTelephonePersonal();
-				A.EnterOnTelephonePersonal(telephone);
+				BL.clickElement(A.telephonepersonal);
+
+				BL.enterElement(A.telephonepersonal, telephone);
 
 				++testcaseCount;
 
@@ -990,7 +1019,7 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -1002,9 +1031,9 @@ public class SystemUserMultipleISORegression {
 
 			if (emailid != null && !emailid.trim().isEmpty()) {
 
-				A.ClickOnEmailPersonal();
+				BL.clickElement(A.emailPersonal);
 
-				A.EnterOnemailPersonal(emailid);
+				BL.enterElement(A.emailPersonal, emailid);
 
 				++testcaseCount;
 
@@ -1012,7 +1041,7 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -1024,9 +1053,9 @@ public class SystemUserMultipleISORegression {
 
 			if (Nationality != null && !Nationality.trim().isEmpty()) {
 
-				A.ClickOnNationalityPersonal();
+				BL.clickElement(A.Nationalitypersonal);
 
-				A.EnterOnNationalitypersonal(Nationality);
+				BL.enterElement(A.Nationalitypersonal, Nationality);
 
 				++testcaseCount;
 
@@ -1034,7 +1063,7 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -1046,9 +1075,9 @@ public class SystemUserMultipleISORegression {
 
 			if (aadhaar != null && !aadhaar.trim().isEmpty()) {
 
-				A.ClickOnAadhaarNumberPersonal();
+				BL.clickElement(A.AadhaarNumberPersonal);
 
-				A.EnterOnAadhaarNumberPersonal(aadhaar);
+				BL.enterElement(A.AadhaarNumberPersonal, aadhaar);
 
 				++testcaseCount;
 
@@ -1056,7 +1085,7 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -1068,9 +1097,9 @@ public class SystemUserMultipleISORegression {
 
 			if (Passport != null && !Passport.trim().isEmpty()) {
 
-				A.ClickOnPassportNumberPersonal();
+				BL.clickElement(A.PassportNumberPersonal);
 
-				A.EnterOnPassportNumberPersonal(Passport);
+				BL.enterElement(A.PassportNumberPersonal, Passport);
 
 				++testcaseCount;
 
@@ -1078,7 +1107,7 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
@@ -1090,7 +1119,7 @@ public class SystemUserMultipleISORegression {
 
 			try {
 
-				A.ClickOnOpenCalenderPasswordExpiry();
+				BL.clickElement(A.OpenCalenderPasswordExpiryDate);
 
 				Robot r = new Robot();
 
@@ -1098,11 +1127,11 @@ public class SystemUserMultipleISORegression {
 
 				r.keyRelease(KeyEvent.VK_ENTER);
 
-				A.ClickOnApplyPersonal();
+				BL.clickElement(A.ApplyButton);
 
 				performTabKeyPress();
 
-				B.NOTDisplayedOnInvalidFormat();
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 			} catch (AssertionError e) {
 				DateStatus = false; // Set status to false if assertion fails
 				errorMessage = e.getMessage(); // Capture error message
@@ -1113,9 +1142,9 @@ public class SystemUserMultipleISORegression {
 			boolean SaveStatus = true;
 			try {
 
-				A.ClickOnSAVEPersonal();
+				BL.clickElement(B.SaveButton);
 
-				B.OkforSuccessfully();
+				BL.clickElement(B.OKButton);
 
 			} catch (AssertionError e) {
 				SaveStatus = false;
@@ -1126,9 +1155,11 @@ public class SystemUserMultipleISORegression {
 
 			boolean NextstepStatus = true;
 			try {
-				B.ClickOnNextStep();
 
-				A.DisplayedOnIntroCommunicationInfo();
+				BL.clickElement(B.NextStep);
+
+				BL.isElementDisplayed(A.CommunicationInfo, "Communication Info Page");
+
 			} catch (AssertionError e) {
 				NextstepStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
@@ -1150,8 +1181,6 @@ public class SystemUserMultipleISORegression {
 
 		try {
 
-			B = new org.Locators.BankLocators(driver);
-
 			int testcaseCount = 0;
 			String errorMessage = "The data does not match or is empty.";
 
@@ -1161,21 +1190,22 @@ public class SystemUserMultipleISORegression {
 			String CommEmailid = testData.get("Communication EmailId");
 			String ADUSer = testData.get("AD User");
 
-			B.CLickOnCommunicationInfo();
+			BL.clickElement(B.CommunicationInfo);
 
-			B.CommADD();
+			BL.clickElement(B.ClickonCommADD);
 
 			if (CommName != null && !CommName.trim().isEmpty()) {
 
-				B.ClickOnCommName();
-				B.EnterOnCommName(CommName);
+				BL.clickElement(B.ClickonCommuName);
+
+				BL.enterElement(B.ClickonCommuName, CommName);
 
 				++testcaseCount;
 
 				boolean CommunicationNameStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					CommunicationNameStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1186,15 +1216,17 @@ public class SystemUserMultipleISORegression {
 			}
 
 			if (CommPosition != null && !CommPosition.trim().isEmpty()) {
-				B.ClickOnCommPosition();
-				B.EnterOnCommunicationPosition(CommPosition);
+
+				BL.clickElement(B.ClickonCommuPosition);
+
+				BL.enterElement(B.ClickonCommuPosition, CommPosition);
 
 				++testcaseCount;
 
 				boolean CommunicationPositionStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					CommunicationPositionStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1212,15 +1244,16 @@ public class SystemUserMultipleISORegression {
 				String remainingDigits = faker.number().digits(9); // Generate 9 random digits
 				String communicationMobileNumber = firstDigit + remainingDigits;
 
-				B.ClickonCommMobileNumber();
-				B.EnteronCommMobileNumber(communicationMobileNumber);
+				BL.clickElement(B.ClickonCommuMobileNumber);
+
+				BL.enterElement(B.ClickonCommuMobileNumber, communicationMobileNumber);
 
 				++testcaseCount;
 
 				boolean CommunicationMobileNumberStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					CommunicationMobileNumberStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1237,15 +1270,17 @@ public class SystemUserMultipleISORegression {
 				// Generate a random email address with @gmail.com
 				String randomEmailPrefix = faker.internet().slug(); // Generate a random string for the prefix
 				String Communicationemailid = randomEmailPrefix + "@gmail.com";
-				B.ClickonCommEmailid();
-				B.EnteronCommEmailid(Communicationemailid);
+
+				BL.clickElement(B.ClickonCommuEmailId);
+
+				BL.enterElement(B.ClickonCommuEmailId, Communicationemailid);
 
 				++testcaseCount;
 
 				boolean CommunicationEmailIDStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 				} catch (AssertionError e) {
 					CommunicationEmailIDStatus = false;
@@ -1257,15 +1292,15 @@ public class SystemUserMultipleISORegression {
 			}
 
 			if (ADUSer != null && !ADUSer.trim().isEmpty()) {
-				B.ClickOnAdUser();
-				B.selectDropdownOption(ADUSer);
+				BL.clickElement(B.ClickOnAdUsers);
+				BL.selectDropdownOption(ADUSer);
 
 				++testcaseCount;
 
 				boolean CommunicationADUSERStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 				} catch (AssertionError e) {
 					CommunicationADUSERStatus = false;
@@ -1277,9 +1312,8 @@ public class SystemUserMultipleISORegression {
 
 			boolean SaveStatus = true;
 			try {
-				B.CommuSavebutton();
-
-				B.NOTDisplayedOnInvalidFormat();
+				BL.clickElement(B.SaveButton);
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 			} catch (AssertionError e) {
 				SaveStatus = false;
@@ -1300,9 +1334,6 @@ public class SystemUserMultipleISORegression {
 			throws InterruptedException, AWTException {
 
 		try {
-
-			B = new org.Locators.BankLocators(driver);
-
 			int testcaseCount = 0;
 			String errorMessage = "The data does not match or is empty.";
 
@@ -1311,21 +1342,22 @@ public class SystemUserMultipleISORegression {
 			String CommMobileNumber = testData.get("Communication MobileNumber");
 			String CommEmailid = testData.get("Communication EmailId");
 
-			B.CLickOnCommunicationInfo();
+			BL.clickElement(B.CommunicationInfo);
 
-			B.CommSettlementandReconADD();
+			BL.clickElement(B.ClickonCommSettlementandReconADD);
 
 			if (CommName != null && !CommName.trim().isEmpty()) {
 
-				B.ClickOnCommName();
-				B.EnterOnCommName(CommName);
+				BL.clickElement(B.ClickonCommuName);
+
+				BL.enterElement(B.ClickonCommuName, CommName);
 
 				++testcaseCount;
 
 				boolean CommunicationNameStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					CommunicationNameStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1336,15 +1368,15 @@ public class SystemUserMultipleISORegression {
 			}
 
 			if (CommPosition != null && !CommPosition.trim().isEmpty()) {
-				B.ClickOnCommPosition();
-				B.EnterOnCommunicationPosition(CommPosition);
+				BL.clickElement(B.ClickonCommuPosition);
 
+				BL.enterElement(B.ClickonCommuPosition, CommPosition);
 				++testcaseCount;
 
 				boolean CommunicationPositionStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					CommunicationPositionStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1362,15 +1394,16 @@ public class SystemUserMultipleISORegression {
 				String remainingDigits = faker.number().digits(9); // Generate 9 random digits
 				String communicationMobileNumber = firstDigit + remainingDigits;
 
-				B.ClickonCommMobileNumber();
-				B.EnteronCommMobileNumber(communicationMobileNumber);
+				BL.clickElement(B.ClickonCommuMobileNumber);
+
+				BL.enterElement(B.ClickonCommuMobileNumber, communicationMobileNumber);
 
 				++testcaseCount;
 
 				boolean CommunicationMobileNumberStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					CommunicationMobileNumberStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1387,15 +1420,16 @@ public class SystemUserMultipleISORegression {
 				// Generate a random email address with @gmail.com
 				String randomEmailPrefix = faker.internet().slug(); // Generate a random string for the prefix
 				String Communicationemailid = randomEmailPrefix + "@gmail.com";
-				B.ClickonCommEmailid();
-				B.EnteronCommEmailid(Communicationemailid);
+				BL.clickElement(B.ClickonCommuEmailId);
+
+				BL.enterElement(B.ClickonCommuEmailId, Communicationemailid);
 
 				++testcaseCount;
 
 				boolean CommunicationEmailIDStatus = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 				} catch (AssertionError e) {
 					CommunicationEmailIDStatus = false;
@@ -1408,9 +1442,9 @@ public class SystemUserMultipleISORegression {
 
 			boolean SaveStatus = true;
 			try {
-				B.CommuSavebutton();
+				BL.clickElement(B.SaveButton);
 
-				B.NOTDisplayedOnInvalidFormat();
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 			} catch (AssertionError e) {
 				SaveStatus = false;
@@ -1422,9 +1456,9 @@ public class SystemUserMultipleISORegression {
 
 			boolean NextstepStatus = true;
 			try {
-				B.ClickOnNextStep();
+				BL.clickElement(B.NextStep);
 
-				A.DisplayedOnIntroChannelConfig();
+				BL.isElementDisplayed(A.IntroChannelConfig, "Channel Config Page");
 
 			} catch (AssertionError e) {
 				NextstepStatus = false;
@@ -1450,10 +1484,8 @@ public class SystemUserMultipleISORegression {
 		try {
 			// Initialize BankLocators and AggregatorLocators only once
 			if (B == null) {
-				B = new org.Locators.BankLocators(driver);
 			}
 			if (A == null) {
-				A = new org.Locators.AggregatorLocators(driver);
 			}
 
 			// Load cached data for "Channel Bank" sheet
@@ -1494,7 +1526,7 @@ public class SystemUserMultipleISORegression {
 //					value.add(channelbank);
 //
 //					boolean channelBankStatus = true;
-//					B.NOTDisplayedOnInvalidFormat();
+//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 //
 //					testcaseCount++;
 //					logTestStep(TestcaseNo, "Channel BANK", channelbank, channelBankStatus, errorMessage);
@@ -1505,11 +1537,11 @@ public class SystemUserMultipleISORegression {
 
 				// Process Channel
 				if (!channel.isEmpty()) {
-					A.ClickOnChannelConfig();
-//					driver.navigate().refresh();
-					B.ChannelADD();
-					B.ClickonCommercialChannel();
-					B.selectDropdownOption(channel);
+
+					BL.clickElement(A.ChannelConfig);
+					BL.clickElement(B.AddButton);
+					BL.clickElement(B.CommercialChannel);
+					BL.selectDropdownOption(channel);
 
 					key.add("Channel-" + currentRow);
 					value.add(channel);
@@ -1517,7 +1549,7 @@ public class SystemUserMultipleISORegression {
 					performTabKeyPress();
 
 					boolean channelStatus = true;
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 					testcaseCount++;
 					logTestStep(TestcaseNo, "Channel", channel, channelStatus, errorMessage);
@@ -1528,8 +1560,8 @@ public class SystemUserMultipleISORegression {
 
 				// Process Network
 				if (!network.isEmpty()) {
-					B.clickonNetwork();
-					B.selectDropdownOption(network);
+					BL.clickElement(B.ClickOntNetwork);
+					BL.selectDropdownOption(network);
 
 					key.add("Network-" + currentRow);
 					value.add(network);
@@ -1537,7 +1569,7 @@ public class SystemUserMultipleISORegression {
 					performTabKeyPress();
 
 					boolean networkStatus = true;
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 					testcaseCount++;
 					logTestStep(TestcaseNo, "Network", network, networkStatus, errorMessage);
@@ -1548,8 +1580,8 @@ public class SystemUserMultipleISORegression {
 
 				// Process Transaction Set
 				if (!transactionSet.isEmpty()) {
-					B.clickonTransactionset();
-					B.selectDropdownOption(transactionSet);
+					BL.clickElement(B.ClickOntransaction);
+					BL.selectDropdownOption(transactionSet);
 
 					key.add("Transaction Set-" + currentRow);
 					value.add(transactionSet);
@@ -1557,7 +1589,7 @@ public class SystemUserMultipleISORegression {
 					performTabKeyPress();
 
 					boolean transactionSetStatus = true;
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 					testcaseCount++;
 					logTestStep(TestcaseNo, "TransactionSet", transactionSet, transactionSetStatus, errorMessage);
@@ -1565,35 +1597,35 @@ public class SystemUserMultipleISORegression {
 				} else {
 					System.out.println("Transaction Set data is empty for row: " + currentRow);
 				}
-				
-				
-				
+
 				boolean DateStatus = true;
 				try {
-					A.ClickOnChannelStartDate();
-					A.ClickOnChannelApply();
-					performTabKeyPress();
-				
-				B.NOTDisplayedOnInvalidFormat();
+					BL.clickElement(A.ChannelOpencalender1);
+					BL.clickElement(A.ApplyButton);
 
-				testcaseCount++;
-				
+					performTabKeyPress();
+
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+
+					testcaseCount++;
+
 				} catch (AssertionError e) {
 					DateStatus = false;
 					errorMessage = e.getMessage();
 				}
 				logTestStep(TestcaseNo, "Start Date", "Valid Date", DateStatus, errorMessage);
-				
+
 				try {
-					A.ClickOnChannelENDDate();
-					A.ClickOnChannelApply();
+
+					BL.clickElement(A.ChannelOpencalender2);
+					BL.clickElement(A.ApplyButton);
+
 					performTabKeyPress();
 
-				
-				B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
-				testcaseCount++;
-				
+					testcaseCount++;
+
 				} catch (AssertionError e) {
 					DateStatus = false;
 					errorMessage = e.getMessage();
@@ -1603,8 +1635,9 @@ public class SystemUserMultipleISORegression {
 				// Process Save Button
 				boolean saveStatus = true;
 				try {
-					B.CommuSavebutton();
-					B.NOTDisplayedOnInvalidFormat();
+					BL.clickElement(B.SaveButton);
+
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 				} catch (AssertionError e) {
 					saveStatus = false;
@@ -1617,8 +1650,8 @@ public class SystemUserMultipleISORegression {
 			// Process Next Step
 			boolean nextStepStatus = true;
 			try {
-				B.ClickOnNextStep();
-				A.DisplayedOnIntroKYC();
+				BL.clickElement(B.NextStep);
+				BL.isElementDisplayed(A.IntroKYC, "KYC Page");
 
 			} catch (AssertionError e) {
 				nextStepStatus = false;
@@ -1640,25 +1673,21 @@ public class SystemUserMultipleISORegression {
 
 		try {
 
-			B = new org.Locators.BankLocators(driver);
-			A = new org.Locators.AggregatorLocators(driver);
-			ISO = new org.Locators.ISOLocators(driver);
-
 			int testcaseCount = 0;
 			String errorMessage = "The data does not match or is empty.";
 
 			String poAImage = testData.get("Company Proof of address");
 
 			if (poAImage != null && !poAImage.trim().isEmpty()) {
-				
-                A.ClickOnKYC();
-				A.UploadCompanyProofofaddress(poAImage);
+
+				BL.clickElement(B.Kyc);
+				BL.UploadImage(A.CompanyProofofaddressUpload, poAImage);
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
-					
-					B.NOTDisplayedOnInvalidFormat();
+
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1666,17 +1695,16 @@ public class SystemUserMultipleISORegression {
 				logTestStep(TestcaseNo, "KYC Details", poAImage, Status, errorMessage);
 
 			}
-			
-			B.ClickOnNextStep();
 
+			BL.clickElement(B.NextStep);
 			boolean nextStepStatus = true;
 			try {
-				
+
 				Thread.sleep(1000);
-				
-				B.ClickOnNextStep();
-				
-				ISO.DisplayedOnIntroDiscountRate();
+
+				BL.clickElement(B.NextStep);
+
+				BL.isElementDisplayed(ISO.IntroDiscountRate, " Discount Rate Page");
 
 			} catch (AssertionError e) {
 				nextStepStatus = false;
@@ -1692,7 +1720,7 @@ public class SystemUserMultipleISORegression {
 			throw e;
 		}
 	}
-	
+
 	private void FillDiscountRate(Map<String, String> testData, int TestcaseNo)
 			throws InterruptedException, AWTException, IOException {
 
@@ -1702,10 +1730,10 @@ public class SystemUserMultipleISORegression {
 		try {
 			// Initialize BankLocators and AggregatorLocators only once
 			if (B == null) {
-				B = new org.Locators.BankLocators(driver);
+
 			}
 			if (A == null) {
-				A = new org.Locators.AggregatorLocators(driver);
+
 			}
 
 			// Load cached data for "Channel Bank" sheet
@@ -1734,13 +1762,15 @@ public class SystemUserMultipleISORegression {
 
 				// Process Channel
 				if (!channel.isEmpty()) {
-					A.ClickOnDiscountRate();
-				     Thread.sleep(1000);
-					B.ChannelADD();
-		
+
+					BL.clickElement(A.DiscountRate);
+
 					Thread.sleep(1000);
-					B.clickonChannel();
-					B.selectDropdownOption(channel);
+					BL.clickElement(B.AddButton);
+
+					Thread.sleep(1000);
+					BL.clickElement(B.ClickOnChannel);
+					BL.selectDropdownOption(channel);
 
 					key.add("Channel-" + currentRow);
 					value.add(channel);
@@ -1748,7 +1778,7 @@ public class SystemUserMultipleISORegression {
 					performTabKeyPress();
 
 					boolean channelStatus = true;
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 					testcaseCount++;
 					logTestStep(TestcaseNo, "DiscountRate : Channel", channel, channelStatus, errorMessage);
@@ -1760,13 +1790,14 @@ public class SystemUserMultipleISORegression {
 				// Process Network
 				if (!pricingPlan.isEmpty()) {
 					Thread.sleep(1000);
-					A.ClickOnDiscountRatePricingPlan();
-					B.selectDropdownOption(pricingPlan);
+
+					BL.clickElement(A.DiscountRatePricingPlan);
+					BL.selectDropdownOption(pricingPlan);
 
 					performTabKeyPress();
 
 					boolean networkStatus = true;
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 					testcaseCount++;
 					logTestStep(TestcaseNo, "Pricing Plan", pricingPlan, networkStatus, errorMessage);
@@ -1778,8 +1809,9 @@ public class SystemUserMultipleISORegression {
 				// Process Save Button
 				boolean saveStatus = true;
 				try {
-					A.ClickOnSAVEPersonal();
-					B.NOTDisplayedOnInvalidFormat();
+
+					BL.clickElement(B.SaveButton);
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 				} catch (AssertionError e) {
 					saveStatus = false;
@@ -1792,10 +1824,10 @@ public class SystemUserMultipleISORegression {
 			// Process Next Step
 			boolean nextStepStatus = true;
 			try {
-				B.ClickOnNextStep();
 
-				A.DisplayedOnIntroSettlement();
+				BL.clickElement(B.NextStep);
 
+				BL.isElementDisplayed(A.IntroSettlementInfo, "Settlement Info Page");
 
 			} catch (AssertionError e) {
 				nextStepStatus = false;
@@ -1818,10 +1850,6 @@ public class SystemUserMultipleISORegression {
 		int testcaseCount = 0;
 		String errorMessage = "The data does not match or is empty.";
 
-		B = new org.Locators.BankLocators(driver);
-		A = new org.Locators.AggregatorLocators(driver);
-		ISO = new org.Locators.ISOLocators(driver);
-
 		String channel = testData.get("Settlement Channel");
 		String Account = testData.get("Account Type");
 		String IFSCCode = testData.get("IFSC Code");
@@ -1832,22 +1860,22 @@ public class SystemUserMultipleISORegression {
 
 		try {
 
-			B.clickOnSettlementInfo();
+			BL.clickElement(B.SettlementInfo);
 
-			B.ClickOnSettlementInfoADD();
+			BL.clickElement(B.AddButton);
 
 			if (channel != null && !channel.trim().isEmpty()) {
 
-				B.ClickOnSettlementChannel();
+				BL.clickElement(B.SettlementChannel);
 
-				B.selectDropdownOption(channel);
+				BL.selectDropdownOption(channel);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1857,16 +1885,16 @@ public class SystemUserMultipleISORegression {
 			}
 
 			if (Account != null && !Account.trim().isEmpty()) {
-				B.ClickOnSettlementAccountType();
+				BL.clickElement(B.SettlementAccountType);
 
-				B.selectDropdownOption(Account);
+				BL.selectDropdownOption(Account);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1876,15 +1904,15 @@ public class SystemUserMultipleISORegression {
 			}
 
 			if (BanKAccountNumber != null && !BanKAccountNumber.trim().isEmpty()) {
-				B.ClickOnBankAccountNumber();
-				B.EnterOnBankAccountNumber(BanKAccountNumber);
+				BL.clickElement(B.SettlementBankAccountNumber);
+				BL.enterElement(B.SettlementBankAccountNumber, BanKAccountNumber);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1895,9 +1923,9 @@ public class SystemUserMultipleISORegression {
 
 			if (IFSCCode != null && !IFSCCode.trim().isEmpty()) {
 
-				B.ClickOnIFSCCode();
+				BL.clickElement(B.SettlementIFSCCode);
 
-				B.selectDropdownOption(IFSCCode);
+				BL.selectDropdownOption(IFSCCode);
 
 				performTabKeyPress();
 
@@ -1906,7 +1934,7 @@ public class SystemUserMultipleISORegression {
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1917,9 +1945,9 @@ public class SystemUserMultipleISORegression {
 
 			boolean SaveStatus = true;
 			try {
-				B.ClickOnCommercialSave();
+				BL.clickElement(B.SaveButton);
 
-				B.NOTDisplayedOnInvalidFormat();
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 			} catch (AssertionError e) {
 				SaveStatus = false;
@@ -1930,11 +1958,11 @@ public class SystemUserMultipleISORegression {
 
 			boolean NextstepStatus = true;
 			try {
-				
 
-				B.ClickOnNextStep();
+				BL.clickElement(B.NextStep);
 
-				ISO.DisplayedOnIntroWhiteLabelISO();
+				BL.isElementDisplayed(ISO.IntroWhitelabelISO, "White Label Page");
+
 			} catch (AssertionError e) {
 				NextstepStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
@@ -1957,9 +1985,6 @@ public class SystemUserMultipleISORegression {
 		int testcaseCount = 0;
 		String errorMessage = "The data does not match or is empty.";
 
-		B = new org.Locators.BankLocators(driver);
-
-		
 		String ISO = testData.get("ISO Onboarding");
 		String Sales = testData.get("Sales Team Onboarding");
 		String merchant = testData.get("Allow to create merchant onboard");
@@ -1968,23 +1993,20 @@ public class SystemUserMultipleISORegression {
 
 		try {
 
-			B.clickOnWhiteLabel();
-
-		
-
-			
+			BL.clickElement(B.whitelabel);
 
 			if (ISO != null && !ISO.trim().isEmpty()) {
-				B.ClickOnWhitelabelISOOnboarding();
 
-				B.selectDropdownOption(ISO);
+				BL.clickElement(B.WhitelabelISOOnboarding);
+
+				BL.selectDropdownOption(ISO);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1993,34 +2015,33 @@ public class SystemUserMultipleISORegression {
 			}
 
 			if (Sales != null && !Sales.trim().isEmpty()) {
-				B.ClickOnWhitelabelSalesTeamOnboarding();
+				BL.clickElement(B.WhitelabelSalesTeamOnboarding);
 
-				B.selectDropdownOption(Sales);
-
+				BL.selectDropdownOption(Sales);
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
 				logTestStep(TestcaseNo, "Whitelabel Sales Team Onboarding", Sales, Status, errorMessage);
 			}
-			
-			if (merchant != null && !merchant.trim().isEmpty()) {
-				A.ClickOnAllowCreateMerchantOnboard();
 
-				B.selectDropdownOption(merchant);
+			if (merchant != null && !merchant.trim().isEmpty()) {
+				BL.clickElement(A.CreateMerchantUser);
+
+				BL.selectDropdownOption(merchant);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2029,8 +2050,9 @@ public class SystemUserMultipleISORegression {
 			}
 
 			if (MaximumNoOfPlatform != null && !MaximumNoOfPlatform.trim().isEmpty()) {
-				B.ClickOnMaximumNoofPlatform();
-				B.EnterOnMaximumNoofPlatform(MaximumNoOfPlatform);
+
+				BL.clickElement(B.WhitelabelMaxNumberOfPlatform);
+				BL.enterElement(B.WhitelabelMaxNumberOfPlatform, MaximumNoOfPlatform);
 				performTabKeyPress();
 
 				++testcaseCount;
@@ -2038,21 +2060,19 @@ public class SystemUserMultipleISORegression {
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
 				logTestStep(TestcaseNo, "Maximum No Of Platform", MaximumNoOfPlatform, Status, errorMessage);
 			}
-			
 
 			boolean NextstepStatus = true;
 			try {
-				B.ClickOnNextStep();
+				BL.clickElement(B.NextStep);
 
-				A.DisplayedOnIntroWebhook();
-
+				BL.isElementDisplayed(A.IntroWebhooks, "Webhook Page");
 
 			} catch (AssertionError e) {
 				NextstepStatus = false;
@@ -2075,28 +2095,28 @@ public class SystemUserMultipleISORegression {
 		int testcaseCount = 0;
 		String errorMessage = "The data does not match or is empty.";
 
-		B = new org.Locators.BankLocators(driver);
-
 		String type = testData.get("Webhook Type");
 		String webhookURL = testData.get("Webhook url");
 
 		try {
 
-			B.clickOnWebhooks();
+			BL.clickElement(B.webhooks);
 
-			B.ClickOnWebhookADD();
+			Thread.sleep(1000);
+
+			BL.clickElement(B.AddButton);
 
 			if (type != null && !type.trim().isEmpty()) {
-				B.ClickOnWebhooksType();
+				BL.clickElement(B.WebhookType);
 
-				B.selectDropdownOption(type);
+				BL.selectDropdownOption(type);
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2105,15 +2125,15 @@ public class SystemUserMultipleISORegression {
 			}
 
 			if (webhookURL != null && !webhookURL.trim().isEmpty()) {
-				B.ClickOnWebhooksURL();
-				B.EnterOnWebhooksURL(webhookURL);
 
+				BL.clickElement(B.WebhookTypeURL);
+				BL.enterElement(B.WebhookTypeURL, webhookURL);
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					B.NOTDisplayedOnInvalidFormat();
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -2123,9 +2143,9 @@ public class SystemUserMultipleISORegression {
 
 			boolean SaveStatus = true;
 			try {
-				B.ClickOnCommercialSave();
+				BL.clickElement(B.SaveButton);
 
-				B.NOTDisplayedOnInvalidFormat();
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 			} catch (AssertionError e) {
 				SaveStatus = false;
@@ -2136,9 +2156,9 @@ public class SystemUserMultipleISORegression {
 
 			boolean NextstepStatus = true;
 			try {
-				B.ClickOnNextStep();
+				BL.clickElement(B.NextStep);
 
-				B.DisplayedOnstatusHistory();
+				BL.isElementDisplayed(B.StatusHistory, "Status History Page");
 
 			} catch (AssertionError e) {
 				NextstepStatus = false;
@@ -2157,13 +2177,33 @@ public class SystemUserMultipleISORegression {
 
 	private void submitForVerification() throws InterruptedException {
 
-		B.ClickOnsubmitforverification();
+		BL.clickElement(B.SubmitforVerification);
 
-		B.Yesforsubmit();
+		BL.clickElement(B.YesButton);
 
-		B.OkforSuccessfully();
+		BL.clickElement(B.OKButton);
 	}
 	
+	@When("the System Verifier clicks the ISO module")
+
+	public void SystemVerifierClicktheBankModule() {
+
+		try {
+
+			BL.clickElement(B.ClickOnISO);
+
+		} catch (Exception e) {
+
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+
+			exceptionHandler.handleException(e, "Onboarding");
+
+			throw e;
+
+		}
+
+	}
+
 	@Then("the System Verifier completes ISO Onboarding, the system should prompt to verify all steps using the sheet name {string}")
 	public void processAllData1(String sheetName)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
@@ -2230,8 +2270,6 @@ public class SystemUserMultipleISORegression {
 		// Log the test data for the current row
 		System.out.println("Data for row " + rowNumber + ": " + testData);
 
-		// Initialize the locators (e.g., BankLocators)
-		B = new org.Locators.BankLocators(driver);
 
 		int testCaseCount = 0;
 
@@ -2277,14 +2315,9 @@ public class SystemUserMultipleISORegression {
 		}
 	}
 
-	private void Searchbyname(Map<String, String> testData, int TestcaseNo)
-			throws InterruptedException, AWTException {
+	private void Searchbyname(Map<String, String> testData, int TestcaseNo) throws InterruptedException, AWTException {
 
 		String LegalName = testData.get("LegalName");
-
-		B = new org.Locators.BankLocators(driver);
-
-		A = new org.Locators.AggregatorLocators(driver);
 
 		key.clear();
 		value.clear();
@@ -2297,11 +2330,10 @@ public class SystemUserMultipleISORegression {
 			try {
 				Thread.sleep(3000);
 
-				B.ClickSearchbyBankName();
-
+				BL.clickElement(B.SearchbyBankName);
 				Thread.sleep(3000);
 
-				B.SearchbyBankName(LegalName);
+				BL.UploadImage(B.SearchbyBankName, LegalName);
 
 			} catch (AssertionError e) {
 				Status = false;
@@ -2312,24 +2344,24 @@ public class SystemUserMultipleISORegression {
 
 			Thread.sleep(3000);
 
-			B.ActionClick();
+			BL.clickElement(B.ActionClick);
 
 			Thread.sleep(2000);
 
-			B.ClickonViewButton();
+			BL.ActionclickElement(B.ViewButton);
 
 			int testcaseCount = 0;
 
 			boolean verifiedStatus = true;
 			try {
-				
+
 				Thread.sleep(1000);
 
-				A.DisplayedonSalesInfo();
+				BL.isElementDisplayed(A.SalesInfo, "Sales Info");
 
-				A.ClickOnSalesInfo();
-				
-				B.VerifiedandNext();
+				BL.clickElement(A.SalesInfo);
+
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -2339,14 +2371,14 @@ public class SystemUserMultipleISORegression {
 			logTestStep(TestcaseNo, "Verified", "Sales Info", verifiedStatus, errorMessage);
 
 			try {
-				
+
 				Thread.sleep(1000);
 
-				A.DisplayedOnCompanyInfo();
+				BL.isElementDisplayed(A.ComapnyInfo, "Company Info");
 
-				A.ClickOnCompanyInfo();
+				BL.clickElement(A.ComapnyInfo);
 
-				B.VerifiedandNext();
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -2358,11 +2390,11 @@ public class SystemUserMultipleISORegression {
 			try {
 
 				Thread.sleep(1000);
-				A.DisplayedOnPersonalInfo();
+				BL.isElementDisplayed(A.PersonalInfo, "Personal Info");
 
-				A.ClickOnPersonalInfo();
+				BL.clickElement(A.PersonalInfo);
 
-				B.VerifiedandNext();
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -2372,14 +2404,14 @@ public class SystemUserMultipleISORegression {
 			logTestStep(TestcaseNo, "Verified", "Personal Info", verifiedStatus, errorMessage);
 
 			try {
-				
+
 				Thread.sleep(1000);
 
-				A.DisplayedOnCommunicationInfo();
+				BL.isElementDisplayed(A.CommunicationInfo, "Communication Info");
 
-				A.ClickOnCommunicationInfo();
+				BL.clickElement(A.CommunicationInfo);
 
-				B.VerifiedandNext();
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -2389,14 +2421,14 @@ public class SystemUserMultipleISORegression {
 			logTestStep(TestcaseNo, "Verified", "Communication Info", verifiedStatus, errorMessage);
 
 			try {
-				
+
 				Thread.sleep(1000);
 
-				A.DisplayedonChannelConfig();
+				BL.isElementDisplayed(A.ChannelConfig, "Channel Config");
 
-				A.ClickOnChannelConfig();
+				BL.clickElement(A.ChannelConfig);
 
-				B.VerifiedandNext();
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -2406,22 +2438,22 @@ public class SystemUserMultipleISORegression {
 			logTestStep(TestcaseNo, "Verified", "Channel Config", verifiedStatus, errorMessage);
 
 			try {
-				
+
 				Thread.sleep(1000);
 
-				A.DisplayedOnKYC();
-				
-				A.ClickOnKYC();
+				BL.isElementDisplayed(B.Kyc, "KYC");
 
-				A.ClickOnKYC();
+				BL.clickElement(B.Kyc);
 
-				A.ClickOnViewDocument1();
+				BL.clickElement(B.Kyc);
 
-				A.ClickonActionDiscountRate();
+				BL.clickElement(A.ViewDocument1);
 
-				A.ViewDocumentVerified();
+				BL.clickElement(A.Actions);
 
-				A.ViewDocumentSubmitandNext();
+				BL.clickElement(A.ViewDocumentVerified);
+
+				BL.clickElement(A.ViewDocumentSubmitandNext);
 
 				Robot r = new Robot();
 
@@ -2436,16 +2468,15 @@ public class SystemUserMultipleISORegression {
 
 			logTestStep(TestcaseNo, "Verified", "KYC-ISO", verifiedStatus, errorMessage);
 
-
 			try {
-				
+
 				Thread.sleep(1000);
 
-				A.DisplayedOnDiscountRate();
+				BL.isElementDisplayed(A.DiscountRate, "Discount Rate");
 
-				A.ClickOnDiscountRate();
+				BL.clickElement(A.DiscountRate);
 
-				B.VerifiedandNext();
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -2455,14 +2486,14 @@ public class SystemUserMultipleISORegression {
 			logTestStep(TestcaseNo, "Verified", "Discount Rate", verifiedStatus, errorMessage);
 
 			try {
-				
+
 				Thread.sleep(1000);
 
-				A.DisplayedOnSettlementInfo();
+				BL.isElementDisplayed(A.SettlementInfo, "Settlement Info");
 
-				A.ClickOnSettlementInfo();
+				BL.clickElement(A.SettlementInfo);
 
-				B.VerifiedandNext();
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -2472,14 +2503,14 @@ public class SystemUserMultipleISORegression {
 			logTestStep(TestcaseNo, "Verified", "Settlement Info", verifiedStatus, errorMessage);
 
 			try {
-				
+
 				Thread.sleep(1000);
 
-				A.DisplayedonWhitelabel();
+				BL.isElementDisplayed(A.Whitelabel, "WhiteLabel");
 
-				A.ClickOnWhitelabel();
+				BL.clickElement(A.Whitelabel);
 
-				B.VerifiedandNext();
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -2489,13 +2520,14 @@ public class SystemUserMultipleISORegression {
 			logTestStep(TestcaseNo, "Verified", "Whitelabel", verifiedStatus, errorMessage);
 
 			try {
-				
+
 				Thread.sleep(1000);
 
-				A.DisplayedonWebhooks();
-				A.ClickOnWebhooks();
+				BL.isElementDisplayed(A.Webhooks, "Webhooks");
 
-				B.VerifiedandNext();
+				BL.clickElement(A.Webhooks);
+
+				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -2504,18 +2536,37 @@ public class SystemUserMultipleISORegression {
 
 			logTestStep(TestcaseNo, "Verified", "Webhooks", verifiedStatus, errorMessage);
 
-			B.SubmitforApproval();
+			BL.clickElement(B.SubmitforApproval);
 
-			B.Yesforsubmit();
+			BL.clickElement(B.YesButton);
 
-			B.OkforSuccessfully();
+			BL.clickElement(B.OKButton);
 
-			B.CancelApprove();
-
+			BL.clickElement(B.ApproveCancel);
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
 			exceptionHandler.handleException(e, "Verified");
 			throw e;
+		}
+
+	}
+	
+	@When("the System Approver clicks the ISO module")
+
+	public void SystemApproverClicktheBankModule() {
+
+		try {
+
+			BL.clickElement(B.ClickOnISO);
+
+		} catch (Exception e) {
+
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+
+			exceptionHandler.handleException(e, "Onboarding");
+
+			throw e;
+
 		}
 
 	}
@@ -2586,8 +2637,7 @@ public class SystemUserMultipleISORegression {
 		// Log the test data for the current row
 		System.out.println("Data for row " + rowNumber + ": " + testData);
 
-		// Initialize the locators (e.g., BankLocators)
-		B = new org.Locators.BankLocators(driver);
+		// Initialize the locators (e.g., BankLocators
 
 		int testCaseCount = 0;
 
@@ -2603,7 +2653,6 @@ public class SystemUserMultipleISORegression {
 			throws Exception {
 
 		// Initialize the locators
-		B = new org.Locators.BankLocators(driver);
 
 		// Initialize a counter to track the number of validated fields/sections
 		int validatedFieldsCount = 0;
@@ -2637,10 +2686,6 @@ public class SystemUserMultipleISORegression {
 
 		String LegalName = testData.get("LegalName");
 
-		B = new org.Locators.BankLocators(driver);
-
-		A = new org.Locators.AggregatorLocators(driver);
-
 		key.clear();
 		value.clear();
 
@@ -2650,11 +2695,11 @@ public class SystemUserMultipleISORegression {
 		try {
 			Thread.sleep(3000);
 
-			B.ClickSearchbyBankName();
+			BL.clickElement(B.SearchbyBankName);
 
 			Thread.sleep(3000);
 
-			B.SearchbyBankName(LegalName);
+			BL.enterElement(B.SearchbyBankName, LegalName);
 
 		} catch (AssertionError e) {
 			Status = false;
@@ -2664,11 +2709,11 @@ public class SystemUserMultipleISORegression {
 		logTestStep(TestcaseNo, "Search by name", LegalName, Status, errorMessag);
 		Thread.sleep(2000);
 
-		B.ActionClick();
+		BL.ActionclickElement(B.ActionClick);
 
 		Thread.sleep(1000);
 
-		B.ClickonViewButton();
+		BL.clickElement(B.ViewButton);
 
 		int testcaseCount = 0;
 		String errorMessage = "Approve Button is not visible.";
@@ -2677,11 +2722,11 @@ public class SystemUserMultipleISORegression {
 
 		try {
 
-			B.ClickOnApprove();
+			BL.clickElement(B.Approve);
 
-			B.Yesforsubmit();
+			BL.clickElement(B.YesButton);
 
-			B.OkforSuccessfully();
+			BL.clickElement(B.OKButton);
 
 		} catch (AssertionError e) {
 			ApprovedStatus = false;
@@ -2696,100 +2741,95 @@ public class SystemUserMultipleISORegression {
 //
 //		B.OkforSuccessfully();
 
-		B.CancelApprove();
+		BL.clickElement(B.ApproveCancel);
 
 		Thread.sleep(3000);
 
-		B.ClickSearchbyBankName();
-
+		BL.clickElement(B.SearchbyBankName);
 		Thread.sleep(3000);
 
-		B.SearchbyBankName(LegalName);
-
+		BL.UploadImage(B.SearchbyBankName, LegalName);
 		Thread.sleep(3000);
 
-		B.ActionClick();
+		BL.ActionclickElement(B.ActionClick);
 
 		try {
 
-			B.ClickonViewButton();
+			BL.clickElement(B.ViewButton);
 
 		} catch (AssertionError e) {
 			ApprovedStatus = false;
 			errorMessage = e.getMessage(); // Capture error message
 		}
 
-		logTestStep(TestcaseNo, "ISO CPID", B.getCPID(), ApprovedStatus, errorMessage);
+		logTestStep(TestcaseNo, "ISO CPID", BL.getElementValue(B.CPID), ApprovedStatus, errorMessage);
 
 //		B.ClickonViewButton();
 //
 //		logInputData("Bank CPID", B.getCPID());
 
-		B.CancelApprove();
-
+		BL.clickElement(B.ApproveCancel);
 	}
 
 	// Set to track previously generated Aadhaar numbers to ensure uniqueness
 	private Set<String> existingAadhaarNumbers = new HashSet<>();
 
 	private String generateValidAadhaar() {
-	    Faker faker = new Faker();
-	    String aadhaarNumber;
+		Faker faker = new Faker();
+		String aadhaarNumber;
 
-	    // Continuously generate Aadhaar numbers until a unique and valid one is found
-	    do {
-	        StringBuilder aadhaarBuilder = new StringBuilder();
+		// Continuously generate Aadhaar numbers until a unique and valid one is found
+		do {
+			StringBuilder aadhaarBuilder = new StringBuilder();
 
-	        // Ensure the first digit is NOT 0 or 1
-	        aadhaarBuilder.append(faker.number().numberBetween(2, 10)); // First digit: 2 to 9
+			// Ensure the first digit is NOT 0 or 1
+			aadhaarBuilder.append(faker.number().numberBetween(2, 10)); // First digit: 2 to 9
 
-	        // Generate the next 10 digits randomly (digits between 0 and 9)
-	        for (int i = 1; i < 11; i++) {
-	            aadhaarBuilder.append(faker.number().numberBetween(0, 10)); // Digits between 0 and 9
-	        }
+			// Generate the next 10 digits randomly (digits between 0 and 9)
+			for (int i = 1; i < 11; i++) {
+				aadhaarBuilder.append(faker.number().numberBetween(0, 10)); // Digits between 0 and 9
+			}
 
-	        // Generate the 12th digit (check digit) using the Verhoeff algorithm
-	        int checkDigit = calculateVerhoeffCheckDigit(aadhaarBuilder.toString());
-	        aadhaarBuilder.append(checkDigit);
+			// Generate the 12th digit (check digit) using the Verhoeff algorithm
+			int checkDigit = calculateVerhoeffCheckDigit(aadhaarBuilder.toString());
+			aadhaarBuilder.append(checkDigit);
 
-	        // Final generated Aadhaar number
-	        aadhaarNumber = aadhaarBuilder.toString();
+			// Final generated Aadhaar number
+			aadhaarNumber = aadhaarBuilder.toString();
 
-	        // Check if the generated Aadhaar number is unique
-	    } while (existingAadhaarNumbers.contains(aadhaarNumber));
+			// Check if the generated Aadhaar number is unique
+		} while (existingAadhaarNumbers.contains(aadhaarNumber));
 
-	    // Add the newly generated Aadhaar number to the set to track it
-	    existingAadhaarNumbers.add(aadhaarNumber);
+		// Add the newly generated Aadhaar number to the set to track it
+		existingAadhaarNumbers.add(aadhaarNumber);
 
-	    return aadhaarNumber;
+		return aadhaarNumber;
 	}
 
 	// Verhoeff algorithm for check digit calculation (same as before)
 	private static final int[][] verhoeffMultiplicationTable = { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
-	        { 1, 2, 3, 4, 0, 6, 7, 8, 9, 5 }, { 2, 3, 4, 0, 1, 7, 8, 9, 5, 6 }, { 3, 4, 0, 1, 2, 8, 9, 5, 6, 7 },
-	        { 4, 0, 1, 2, 3, 9, 5, 6, 7, 8 }, { 5, 9, 8, 7, 6, 0, 4, 3, 2, 1 }, { 6, 5, 9, 8, 7, 1, 0, 4, 3, 2 },
-	        { 7, 6, 5, 9, 8, 2, 1, 0, 4, 3 }, { 8, 7, 6, 5, 9, 3, 2, 1, 0, 4 }, { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 } };
+			{ 1, 2, 3, 4, 0, 6, 7, 8, 9, 5 }, { 2, 3, 4, 0, 1, 7, 8, 9, 5, 6 }, { 3, 4, 0, 1, 2, 8, 9, 5, 6, 7 },
+			{ 4, 0, 1, 2, 3, 9, 5, 6, 7, 8 }, { 5, 9, 8, 7, 6, 0, 4, 3, 2, 1 }, { 6, 5, 9, 8, 7, 1, 0, 4, 3, 2 },
+			{ 7, 6, 5, 9, 8, 2, 1, 0, 4, 3 }, { 8, 7, 6, 5, 9, 3, 2, 1, 0, 4 }, { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 } };
 
 	private static final int[][] verhoeffPermutationTable = { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
-	        { 1, 5, 7, 6, 2, 8, 3, 0, 9, 4 }, { 5, 8, 0, 3, 7, 9, 6, 1, 4, 2 }, { 8, 9, 1, 6, 0, 4, 3, 5, 2, 7 },
-	        { 9, 4, 5, 3, 1, 2, 6, 8, 7, 0 }, { 4, 2, 8, 6, 5, 7, 3, 9, 0, 1 }, { 2, 7, 9, 3, 8, 0, 6, 4, 1, 5 },
-	        { 7, 0, 4, 6, 9, 1, 3, 2, 5, 8 } };
+			{ 1, 5, 7, 6, 2, 8, 3, 0, 9, 4 }, { 5, 8, 0, 3, 7, 9, 6, 1, 4, 2 }, { 8, 9, 1, 6, 0, 4, 3, 5, 2, 7 },
+			{ 9, 4, 5, 3, 1, 2, 6, 8, 7, 0 }, { 4, 2, 8, 6, 5, 7, 3, 9, 0, 1 }, { 2, 7, 9, 3, 8, 0, 6, 4, 1, 5 },
+			{ 7, 0, 4, 6, 9, 1, 3, 2, 5, 8 } };
 
 	private static final int[] verhoeffInverseTable = { 0, 4, 3, 2, 1, 5, 6, 7, 8, 9 };
 
 	// Calculate Verhoeff check digit for the given number (11 digits for Aadhaar)
 	private int calculateVerhoeffCheckDigit(String number) {
-	    int checkSum = 0;
-	    int[] digits = number.chars().map(c -> c - '0').toArray();
+		int checkSum = 0;
+		int[] digits = number.chars().map(c -> c - '0').toArray();
 
-	    for (int i = digits.length - 1, j = 0; i >= 0; i--, j++) {
-	        checkSum = verhoeffMultiplicationTable[checkSum][verhoeffPermutationTable[j % 8][digits[i]]];
-	    }
+		for (int i = digits.length - 1, j = 0; i >= 0; i--, j++) {
+			checkSum = verhoeffMultiplicationTable[checkSum][verhoeffPermutationTable[j % 8][digits[i]]];
+		}
 
-	    return verhoeffInverseTable[checkSum];
+		return verhoeffInverseTable[checkSum];
 	}
-
-
 
 	private String generateValidLegalName(Faker faker, Map<String, String> testData) {
 		String legalName;
@@ -2864,7 +2904,6 @@ public class SystemUserMultipleISORegression {
 		System.out.println(message);
 	}
 
-
 	private void performTabKeyPress() throws AWTException {
 		Robot robot = new Robot();
 		robot.keyPress(KeyEvent.VK_TAB);
@@ -2873,15 +2912,12 @@ public class SystemUserMultipleISORegression {
 
 	private void performLogout() throws InterruptedException {
 
-		B.LogoutProfile();
+		BL.clickElement(B.Profile);
 
-		B.Logoutbutton();
+		BL.clickElement(B.LogOut);
 
-		B.LogoutYESbutton();
+		BL.clickElement(B.YesButton);
 
 	}
-	
-	
-
 
 }

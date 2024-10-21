@@ -39,7 +39,7 @@ Scenario: SystemMaker Login
   
   
    Scenario: System Maker Successfully Completes Mandatory Fields in Merchant Onboarding
-    When the SystemMaker clicks the Merchant module
+    When the System Maker clicks the Merchant module
     Then the System Maker Merchant Onboarding should prompt users to enter valid inputs using the sheet name "Merchant Regression"
     
     

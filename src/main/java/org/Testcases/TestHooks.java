@@ -22,7 +22,7 @@ public class TestHooks {
             String excelFilePath = CustomWebDriverManager.getExcelFilePath();
             System.out.println("PPPPPP"+excelFilePath);
             System.out.println("AAAAAAAAAAAAAAAAAa"+CustomWebDriverManager.ExelPath);
-            String propertiesFilePath = "C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\src\\test\\resources1\\extent.properties";
+            String propertiesFilePath = "C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\src\\test\\resources\\extent.properties";
 
             // Update properties file
             PropertiesFileModifier.updatePropertiesFile(propertiesFilePath);

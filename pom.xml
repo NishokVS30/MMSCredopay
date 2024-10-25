@@ -15,9 +15,40 @@
 				<configuration>
 					<target>1.8</target>
 					<source>1.8</source>
-
-				</configuration>
+          </configuration>
 			</plugin>
+			
+			<plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>3.2.0</version> <!-- Make sure to use a compatible version -->
+            <configuration>
+                <archive>
+                    <manifest>
+                        <addClasspath>true</addClasspath>
+                        <mainClass>org.Testcases.SystemUserMultipleBankRegression</mainClass> <!-- Replace with your actual main class -->
+                    </manifest>
+                </archive>
+            </configuration>
+        </plugin>
+			
+			  <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-clean-plugin</artifactId>
+            <version>3.2.0</version>
+            <configuration>
+                <filesets>
+                    <fileset>
+                        <directory>${project.build.directory}/allure-results</directory>
+                        <includes>
+                            <include>**/*</include>
+                        </includes>
+                    </fileset>
+                </filesets>
+            </configuration>
+        </plugin>
+        
+        
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -108,19 +139,19 @@
 			<artifactId>cucumber-java</artifactId>
 			<version>6.10.4</version>
 		</dependency>
+		
 	
     <dependency>
         <groupId>com.aventstack</groupId>
         <artifactId>extentreports</artifactId>
         <version>5.0.9</version>
     </dependency>
-    <dependency>
-        <groupId>tech.grasshopper</groupId>
-        <artifactId>extent-pdf-report</artifactId>
-        <version>2.12.0</version>
-    </dependency>
-
-
+   <dependency>
+    <groupId>tech.grasshopper</groupId>
+    <artifactId>extent-pdf-report</artifactId>
+    <version>2.12.0</version>
+</dependency>
+ 
 		<dependency>
 			<groupId>io.cucumber</groupId>
 			<artifactId>cucumber-junit</artifactId>
@@ -192,6 +223,7 @@
 			<artifactId>cucumber-picocontainer</artifactId>
 			<version>6.10.4</version> <!-- use the appropriate version -->
 		</dependency>
+		
 
 
 	</dependencies>

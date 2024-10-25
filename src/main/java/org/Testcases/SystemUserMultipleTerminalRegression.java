@@ -91,10 +91,7 @@ public class SystemUserMultipleTerminalRegression {
 		}
 
 	}
-
 	
-	
-
 	int totalTestCaseCount = 0;
 
 	@Then("the System Maker Terminal Onboarding should prompt users to enter valid inputs using the sheet name {string}")
@@ -211,9 +208,7 @@ public class SystemUserMultipleTerminalRegression {
 				
 				String generatedterminalName = fillTerminalInfo(testData, TestcaseNo);
 				testData.put("TerminalName", generatedterminalName);
-				
-				
-				
+					
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -283,8 +278,6 @@ public class SystemUserMultipleTerminalRegression {
 
 			if (Merchant != null && !Merchant.trim().isEmpty()) {
 
-//				B.ClickOnCreatebutton();
-
 				BL.clickElement(B.Createbutton);
 
 				BL.clickElement(T.Merchant); // T.clickElement(T.Merchant);
@@ -310,7 +303,7 @@ public class SystemUserMultipleTerminalRegression {
 					errorMessage = e.getMessage(); // Capture error message
 				}
 				
-				  logTestStep(TestcaseNo, "TID Fee Applicable", Merchant , Status, errorMessage);
+				  logTestStep(TestcaseNo, "Merchant Name", Merchant , Status, errorMessage);
 
 			}
 			
@@ -652,7 +645,9 @@ public class SystemUserMultipleTerminalRegression {
 			} catch (AssertionError e) {
 				SaveStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
-			}		
+			}	
+			
+			logTestStep(TestcaseNo, "Transaction Set", "Save Successfully" , SaveStatus, errorMessage);
 			
 		} catch (Exception e) {
 			// Use the exception handler to log and handle exceptions gracefully
@@ -855,6 +850,10 @@ public class SystemUserMultipleTerminalRegression {
 
 		key.clear();
 		value.clear();
+		
+		String errorMessag = "The data does not match or is empty.";
+
+		boolean VerifiedStatus = true;
 
 		try {
 
@@ -869,20 +868,31 @@ public class SystemUserMultipleTerminalRegression {
 
 				BL.UploadImage(B.SearchbyBankName, TerminalName);
 
-			} catch (AssertionError e) {
-				Status = false;
-				errorMessage = e.getMessage(); // Capture error message
+			}catch (Exception e) {
+				ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+				exceptionHandler.handleException(e, "Search by name");
+				throw e;
 			}
+			
+			
+			try {
 
 			logTestStep(TestcaseNo, "Search by name", TerminalName, Status, errorMessage);
 
-			Thread.sleep(5000);
+			Thread.sleep(3000);
 
 			BL.clickElement(B.ActionClick);
 
 			Thread.sleep(2000);
 
 			BL.ActionclickElement(B.ViewButton);
+			
+			}catch (Exception e) {
+				ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+				exceptionHandler.handleException(e, "ACTION AND VIEW BUTTON");
+				throw e;
+			}
+
 
 			int testcaseCount = 0;
 
@@ -902,6 +912,8 @@ public class SystemUserMultipleTerminalRegression {
 				exceptionHandler.handleException(e, "Verified");
 				throw e;
 			}
+		
+		logTestStep(TestcaseNo, "Verified", "Terminal", VerifiedStatus, errorMessag);
 
 	}
 	
@@ -1130,7 +1142,7 @@ public class SystemUserMultipleTerminalRegression {
 	
 	private void logTestStep(int testcaseCount, String fieldName, String fieldValue, Boolean status,
 			String errorMessage) {
-		String message = "MO Test Case " + testcaseCount + ": " + fieldName + " with value '" + fieldValue + "' "
+		String message = "TO Test Case " + testcaseCount + ": " + fieldName + " with value '" + fieldValue + "' "
 				+ (status ? "passed." : "failed.");
 
 		// Log to Extent Report

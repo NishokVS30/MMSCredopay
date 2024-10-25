@@ -1,6 +1,7 @@
 package org.Locators;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.time.Duration;
 
@@ -14,6 +15,7 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -22,10 +24,10 @@ public class BaseClassLocator {
 
 	WebDriver driver;
 
-    int waitTime;
+	int waitTime;
 
 	WebDriverWait wait;
-	
+
 	public BaseClassLocator(WebDriver driver) {
 
 		this.waitTime = CustomWebDriverManager.getWaitTime(); // Get wait time from CustomWebDriverManager
@@ -79,84 +81,114 @@ public class BaseClassLocator {
 //					.println("The input field with formControlName '" + element + "' is not found within the timeout.");
 //		}
 //	}
-	
+
 	public void clickElement(WebElement element) {
-	    try {
-	        // Wait for the element to be visible and clickable
-	        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-	        wait.until(ExpectedConditions.visibilityOf(element)); // Ensure visibility
-	        wait.until(ExpectedConditions.elementToBeClickable(element)); // Ensure clickable
-	        
-	        // Scroll to the element to make sure it's in view
-	        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
-	        
-	        // Attempt to click the element
-	        element.click();
-	        System.out.println("Element clicked successfully.");
-	        
-	    } catch (ElementClickInterceptedException e) {
-	        // Handle the case where another element blocks the click
-	        System.out.println("Element click intercepted. Trying to click via JavaScript.");
-	        
-	        try {
-	            // Use JavaScript as a fallback to click the element
-	            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
-	            System.out.println("Element clicked via JavaScript.");
-	        } catch (Exception jsException) {
-	            System.out.println("JavaScript click also failed.");
-	            jsException.printStackTrace();
-	        }
-	        
-	    } catch (TimeoutException e) {
-	        // Handle timeout when waiting for the element to be clickable
-	        System.out.println("The element '" + element + "' is not clickable within the timeout.");
-	        e.printStackTrace();
-	        
-	    } catch (StaleElementReferenceException e) {
-	        // Handle stale element reference exception
-	        System.out.println("The element '" + element + "' is stale. Trying to relocate the element.");
-	        e.printStackTrace();
-	        
-	    } catch (Exception e) {
-	        // Handle any other unexpected exceptions
-	        System.out.println("An unexpected error occurred while trying to click the element.");
-	        e.printStackTrace();
-	    }
+		try {
+			// Wait for the element to be visible and clickable
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+			wait.until(ExpectedConditions.visibilityOf(element)); // Ensure visibility
+			wait.until(ExpectedConditions.elementToBeClickable(element)); // Ensure clickable
+
+			// Scroll to the element to make sure it's in view
+			((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
+
+			// Attempt to click the element
+			element.click();
+			System.out.println("Element clicked successfully.");
+
+		} catch (ElementClickInterceptedException e) {
+			// Handle the case where another element blocks the click
+			System.out.println("Element click intercepted. Trying to click via JavaScript.");
+
+			try {
+				// Use JavaScript as a fallback to click the element
+				((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+				System.out.println("Element clicked via JavaScript.");
+			} catch (Exception jsException) {
+				System.out.println("JavaScript click also failed.");
+				jsException.printStackTrace();
+			}
+
+		} catch (TimeoutException e) {
+			// Handle timeout when waiting for the element to be clickable
+			System.out.println("The element '" + element + "' is not clickable within the timeout.");
+			e.printStackTrace();
+
+		} catch (StaleElementReferenceException e) {
+			// Handle stale element reference exception
+			System.out.println("The element '" + element + "' is stale. Trying to relocate the element.");
+			e.printStackTrace();
+
+		} catch (Exception e) {
+			// Handle any other unexpected exceptions
+			System.out.println("An unexpected error occurred while trying to click the element.");
+			e.printStackTrace();
+		}
 	}
 
 	public void ActionclickElement(WebElement element) {
-	    int attempts = 0;
+		int attempts = 0;
 
-	    while (attempts < 3) {
-	        try {
-	            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-	            wait.until(ExpectedConditions.elementToBeClickable(element));
-	            JavascriptExecutor js = (JavascriptExecutor) driver;
-	            js.executeScript("arguments[0].click();", element);
-	            break;
+		while (attempts < 3) {
+			try {
+				WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+				wait.until(ExpectedConditions.elementToBeClickable(element));
+				JavascriptExecutor js = (JavascriptExecutor) driver;
+				js.executeScript("arguments[0].click();", element);
+				break;
 
-	        } catch (StaleElementReferenceException e) {
-	            attempts++;
+			} catch (StaleElementReferenceException e) {
+				attempts++;
 
-	        } catch (ElementClickInterceptedException e) {
-	            JavascriptExecutor js = (JavascriptExecutor) driver;
-	            js.executeScript("arguments[0].click();", element);
-	            break;
+			} catch (ElementClickInterceptedException e) {
+				JavascriptExecutor js = (JavascriptExecutor) driver;
+				js.executeScript("arguments[0].click();", element);
+				break;
 
-	        } catch (Exception e) {
-	            System.err.println("An unexpected error occurred: " + e.getMessage());
-	            break;
-	        }
-	    }
+			} catch (Exception e) {
+				System.err.println("An unexpected error occurred: " + e.getMessage());
+				break;
+			}
+		}
 	}
 
-	
+	public void actionDoubleClickElement(WebElement element) {
+		int attempts = 0;
+
+		while (attempts < 3) {
+			try {
+				// Wait until the element is clickable
+				WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+				wait.until(ExpectedConditions.elementToBeClickable(element));
+
+				// Perform double-click using Actions class
+				Actions actions = new Actions(driver);
+				actions.doubleClick(element).perform();
+				break;
+
+			} catch (StaleElementReferenceException e) {
+				// Retry if a stale element reference occurs
+				attempts++;
+
+			} catch (ElementClickInterceptedException e) {
+				// Retry with JavaScript if element click is intercepted
+				JavascriptExecutor js = (JavascriptExecutor) driver;
+				js.executeScript("arguments[0].click();", element);
+				break;
+
+			} catch (Exception e) {
+				// Log unexpected errors
+				System.err.println("An unexpected error occurred: " + e.getMessage());
+				break;
+			}
+		}
+	}
 
 	public void enterElement(WebElement element, String text) {
 
 		try {
 			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-    		wait.until(ExpectedConditions.elementToBeClickable(element));
+			wait.until(ExpectedConditions.elementToBeClickable(element));
 			element.sendKeys(text);
 
 		} catch (ElementClickInterceptedException e) {
@@ -168,12 +200,11 @@ public class BaseClassLocator {
 					.println("The input field with formControlName '" + element + "' is not found within the timeout.");
 		}
 	}
-	
 
 	public void UploadImage(WebElement element, String text) {
 
 		try {
-		
+
 			element.sendKeys(text);
 
 		} catch (ElementClickInterceptedException e) {
@@ -185,7 +216,6 @@ public class BaseClassLocator {
 					.println("The input field with formControlName '" + element + "' is not found within the timeout.");
 		}
 	}
-
 
 	public boolean isElementDisplayed(WebElement element, String elementName) {
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
@@ -207,27 +237,29 @@ public class BaseClassLocator {
 			return false;
 		}
 	}
-	
-	public boolean isElementNotDisplayed(WebElement element, String elementName) {
-	    boolean isDisplayed;
-	    
-	    try {
-	        isDisplayed = element.isDisplayed();
-	    } catch (org.openqa.selenium.NoSuchElementException e) {
-	        isDisplayed = false;
-	    }
-	    if (isDisplayed) {
-	        Assert.assertFalse(elementName + " is displayed, but it should not be.", isDisplayed);
-	    }
-	    
-	   	    return !isDisplayed;
-	
+
+	public boolean isElementNotDisplayed(WebElement element, String elementName) throws InterruptedException {
+		boolean isDisplayed;
+
+		try {
+			isDisplayed = element.isDisplayed();
+		} catch (org.openqa.selenium.NoSuchElementException e) {
+			isDisplayed = false;
+		}
+		if (isDisplayed) {
+			assertFalse(isDisplayed, elementName + " is displayed, but it should not be.");
+		}
+
+		return !isDisplayed;
+
 	}
+	
+	
 
 	public void CLearElement(WebElement element) {
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 		try {
-			
+
 			wait.until(ExpectedConditions.visibilityOf(element));
 
 			element.clear();
@@ -241,24 +273,37 @@ public class BaseClassLocator {
 					.println("The input field with formControlName '" + element + "' is not found within the timeout.");
 		}
 	}
-	
+
 	public String getElementValue(WebElement element) {
-		
+
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-	    try {
-	    	wait.until(ExpectedConditions.visibilityOf(element));
-	        // Get the current value of the input field using the "value" attribute
-	        return element.getAttribute("value");
-	    } catch (NoSuchElementException e) {
-	        System.out.println("Element is not found: " + element);
-	        return null;
-	    } catch (TimeoutException e) {
-	        System.out.println("The input field is not found within the timeout.");
-	        return null;
-	    }
+		try {
+			wait.until(ExpectedConditions.visibilityOf(element));
+			// Get the current value of the input field using the "value" attribute
+			return element.getAttribute("value");
+		} catch (NoSuchElementException e) {
+			System.out.println("Element is not found: " + element);
+			return null;
+		} catch (TimeoutException e) {
+			System.out.println("The input field is not found within the timeout.");
+			return null;
+		}
 	}
 
-	
-	
+	public String getElementText(WebElement element) {
+
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));				
+		try {
+			wait.until(ExpectedConditions.visibilityOf(element));
+			// Get the current value of the input field using the "value" attribute
+			return element.getText();
+		} catch (NoSuchElementException e) {
+			System.out.println("Element is not found: " + element);
+			return null;
+		} catch (TimeoutException e) {
+			System.out.println("The input field is not found within the timeout.");
+			return null;
+		}
+	}
 
 }

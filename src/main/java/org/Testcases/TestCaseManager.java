@@ -7,10 +7,10 @@ import io.qameta.allure.model.TestResultContainer;
 import java.util.List;
 import java.util.UUID;
 
+
 import com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter;
 
 import java.io.ByteArrayInputStream;
-
 
 
 public class TestCaseManager {
@@ -103,6 +103,7 @@ public class TestCaseManager {
                 .setStatus(isSuccess ? Status.PASSED : Status.FAILED);
         Allure.getLifecycle().scheduleTestCase(result);
         Allure.getLifecycle().startTestCase(currentTestCaseUuid);
+        
     }
 
     // Ends the current test case
@@ -161,6 +162,8 @@ public class TestCaseManager {
         }
         tableBuilder.append("</tr>");
         tableBuilder.append("</table>");
+        
+        ExtentCucumberAdapter.getCurrentStep();
 
         // Attach table to Allure/Extent reports
         Allure.addAttachment("Input Data", "text/html", new ByteArrayInputStream(tableBuilder.toString().getBytes()), "html");

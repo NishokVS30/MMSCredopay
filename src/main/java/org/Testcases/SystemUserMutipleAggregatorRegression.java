@@ -19,9 +19,11 @@ import org.Locators.BankLocators;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.junit.Assert;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
@@ -677,7 +679,6 @@ public class SystemUserMutipleAggregatorRegression {
 
 			logTestStep(TestcaseNo, "Established Year", "Current Date", DateStatus, errorMessage);
 
-//
 //     		if (registeredNumber.contains("E")) {
 //				Double numberInScientificNotation = Double.valueOf(registeredNumber);
 //				registeredNumber = String.format("%.0f", numberInScientificNotation);
@@ -1380,6 +1381,8 @@ public class SystemUserMutipleAggregatorRegression {
 			String CommEmailid = testData.get("Communication EmailId");
 
 			BL.clickElement(B.CommunicationInfo);
+			
+			Thread.sleep(1000);
 
 			BL.clickElement(B.ClickonCommSettlementandReconADD);
 
@@ -1689,10 +1692,10 @@ public class SystemUserMutipleAggregatorRegression {
 
 				BL.clickElement(B.Kyc);
 
-				Thread.sleep(3000);
+				Thread.sleep(5000);
 
 				BL.UploadImage(A.CompanyProofofaddressUpload, poAImage);
-				++testcaseCount;
+				++testcaseCount;	
 
 				boolean Status = true; // Assume success initially
 				try {
@@ -2446,11 +2449,11 @@ public class SystemUserMutipleAggregatorRegression {
 				if (!channel.isEmpty()) {
 
 					BL.clickElement(A.DiscountRate);
-					Thread.sleep(1000);
+//					Thread.sleep(1000);
 
 					BL.clickElement(B.ChannelADD);
 
-					Thread.sleep(1000);
+//					Thread.sleep(1000);
 					BL.clickElement(B.ClickOnChannel);
 
 					BL.selectDropdownOption(channel);
@@ -3063,11 +3066,8 @@ public class SystemUserMutipleAggregatorRegression {
 
 	private void Searchbyname(Map<String, String> testData, int TestcaseNo) throws InterruptedException, AWTException {
 
-		// String LegalName = testData.get("LegalName");
-		String LegalName = "T7n13ck";
-
-		key.clear();
-		value.clear();
+		String LegalName = testData.get("LegalName");
+//		String LegalName = "Swjubknd";
 
 		try {
 
@@ -3075,27 +3075,34 @@ public class SystemUserMutipleAggregatorRegression {
 
 			boolean Status = true;
 			try {
-				Thread.sleep(3000);
-
+			
 				BL.clickElement(B.SearchbyBankName);
+				
+				BL.enterElement(B.SearchbyBankName, LegalName);	
+
+			} catch (Exception e) {
+				ExceptionHandler exceptionHandler = new ExceptionHandler(driver,
+						ExtentCucumberAdapter.getCurrentStep());
+				exceptionHandler.handleException(e, "Search by name");
+				throw e;
+			}
+
+			try {
 
 				Thread.sleep(1000);
-
-				BL.UploadImage(B.SearchbyBankName, LegalName);
-
-				Thread.sleep(3000);
 
 				BL.clickElement(B.ActionClick);
 
 				Thread.sleep(2000);
 
-				BL.ActionclickElement(B.ViewButton);
+				BL.clickElement(B.ViewButton);
 
-			} catch (AssertionError e) {
-				Status = false;
-				errorMessage = e.getMessage(); // Capture error message
+			} catch (Exception e) {
+				ExceptionHandler exceptionHandler = new ExceptionHandler(driver,
+						ExtentCucumberAdapter.getCurrentStep());
+				exceptionHandler.handleException(e, "ACTION AND VIEW BUTTON");
+				throw e;
 			}
-
 			logTestStep(TestcaseNo, "Search by name", LegalName, Status, errorMessage);
 
 			int testcaseCount = 0;
@@ -3455,31 +3462,36 @@ public class SystemUserMutipleAggregatorRegression {
 
 		String LegalName = testData.get("LegalName");
 
-		key.clear();
-		value.clear();
-
 		String errorMessag = "The data does not match or is empty.";
 
 		boolean Status = true;
 		try {
-			Thread.sleep(3000);
 
 			BL.clickElement(B.SearchbyBankName);
 
-			Thread.sleep(2000);
-
 			BL.enterElement(B.SearchbyBankName, LegalName);
+		
+
+		} catch (Exception e) {
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+			exceptionHandler.handleException(e, "Search by name");
+			throw e;
+		}
+
+		try {
+
+			Thread.sleep(3000);
+
+			BL.clickElement(B.ActionClick);
 
 			Thread.sleep(2000);
 
-			BL.ActionclickElement(B.ActionClick);
-			Thread.sleep(1000);
+			BL.ActionclickElement(B.ViewButton);
 
-			BL.clickElement(B.ViewButton);
-
-		} catch (AssertionError e) {
-			Status = false;
-			errorMessag = e.getMessage(); // Capture error message
+		} catch (Exception e) {
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+			exceptionHandler.handleException(e, "ACTION AND VIEW BUTTON");
+			throw e;
 		}
 
 		logTestStep(TestcaseNo, "Search by name", LegalName, Status, errorMessag);
@@ -3510,19 +3522,17 @@ public class SystemUserMutipleAggregatorRegression {
 //
 //		B.OkforSuccessfully();
 
-		BL.clickElement(B.ApproveCancel);
-
-		Thread.sleep(3000);
-
-		BL.clickElement(B.SearchbyBankName);
-
-		Thread.sleep(2000);
-
-		BL.UploadImage(B.SearchbyBankName, LegalName);
 		try {
+			BL.clickElement(B.ApproveCancel);
 
+
+			BL.clickElement(B.SearchbyBankName);
+
+			BL.UploadImage(B.SearchbyBankName, LegalName);
+			
+			
 			Thread.sleep(2000);
-
+		
 			BL.ActionclickElement(B.ActionClick);
 			Thread.sleep(1000);
 
@@ -3625,7 +3635,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 	private String generateValidPAN(Faker faker) {
 		StringBuilder pan = new StringBuilder();
-
+		
 		// First 5 characters: Uppercase letters
 		for (int i = 0; i < 5; i++) {
 			pan.append(faker.regexify("[A-Z]"));

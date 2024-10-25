@@ -27,21 +27,21 @@ Feature: System Users - Aggregator Onboarding Regression
 Scenario: Load Data from Excel
     Given I load data from Excel using sheetname "Credentials"
     
-#Scenario: SystemMaker Login
- #Given I visit the System Maker Login in Regression using sheetname "Credentials" and rownumber 1
- #And I enter the credentials and click a login button in Regression using sheetname "Credentials" and rownumber 1
-#
-#
-   #Scenario: System Maker sees Onboarding in Sidemenu
-    #When System Maker - Onboarding should be displayed in the side menu
-#
-  #Scenario: System Maker sees side menu items in Onboarding
-  #Then the System Maker should see Bank, Aggregators, ISO,SUB ISO, Groupmerchant, Merchant, and Terminal in the side menu of Onboarding
-  #
-  #
-   #Scenario: System Maker Successfully Completes Mandatory Fields in Bank Onboarding
-    #When the System Maker clicks the Aggregator module
-    #Then the System Maker Aggregator Onboarding should prompt users to enter valid inputs using the sheet name "Aggregator Regression"
+Scenario: SystemMaker Login
+ Given I visit the System Maker Login in Regression using sheetname "Credentials" and rownumber 1
+ And I enter the credentials and click a login button in Regression using sheetname "Credentials" and rownumber 1
+
+
+   Scenario: System Maker sees Onboarding in Sidemenu
+    When System Maker - Onboarding should be displayed in the side menu
+
+  Scenario: System Maker sees side menu items in Onboarding
+  Then the System Maker should see Bank, Aggregators, ISO,SUB ISO, Groupmerchant, Merchant, and Terminal in the side menu of Onboarding
+  
+  
+   Scenario: System Maker Successfully Completes Mandatory Fields in Bank Onboarding
+    When the System Maker clicks the Aggregator module
+    Then the System Maker Aggregator Onboarding should prompt users to enter valid inputs using the sheet name "Aggregator Regression"
     
     
      Scenario: System verifier Login

@@ -1539,7 +1539,9 @@ public class SystemUserMultipleISORegression {
 				if (!channel.isEmpty()) {
 
 					BL.clickElement(A.ChannelConfig);
+					Thread.sleep(1000);
 					BL.clickElement(B.AddButton);
+					Thread.sleep(1000);
 					BL.clickElement(B.CommercialChannel);
 					BL.selectDropdownOption(channel);
 

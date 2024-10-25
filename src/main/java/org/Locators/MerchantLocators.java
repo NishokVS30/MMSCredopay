@@ -19,259 +19,264 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class MerchantLocators {
 
 	WebDriver driver;
-	
-	 int waitTime;
-	
-	//Merchant Locators
-	
-			//IntroPage
-			
-			@FindBy(xpath = "//h6[contains(text(),'FRM Parameters')]")
 
-			public WebElement DisplayedonRiskInfo;
-			
-			@FindBy(xpath = "//h6[contains(text(),'Discount Rate')]")
+	int waitTime;
 
-			public WebElement DisplayedonMerchantDiscount;
-			
-			@FindBy(xpath = "//h6[contains(text(),'Installation Info')]")
+	// Merchant Locators
 
-			public WebElement DisplayedonTerminals;
-			
-			@FindBy(xpath = "//h6[contains(text(),'Payment Bridge')]")
+	// IntroPage
 
-			public WebElement DisplayedonPaymentBridge;
-			
-			@FindBy(xpath = "//h6[contains(text(),'Allow Card Type')]")
+	@FindBy(xpath = "//h6[contains(text(),'FRM Parameters')]")
 
-			public WebElement DisplayedonCardBin;
-			
+	public WebElement DisplayedonRiskInfo;
 
-			@FindBy(xpath = "//span[contains(text(),'Sales Info')]")
+	@FindBy(xpath = "//h6[contains(text(),'Discount Rate')]")
 
-			public WebElement ClickonSalesInfo;
+	public WebElement DisplayedonMerchantDiscount;
 
-			@FindBy(xpath = "//span[contains(text(),'Company Info')]")
+	@FindBy(xpath = "//h6[contains(text(),'Installation Info')]")
 
-			public WebElement ClickOnComapanyInfo;
+	public WebElement DisplayedonTerminals;
 
-			@FindBy(xpath = "//span[contains(text(),'Personal Info')]")
+	@FindBy(xpath = "//h6[contains(text(),'Payment Bridge')]")
 
-			public WebElement ClickOnPersonalInfo;
+	public WebElement DisplayedonPaymentBridge;
 
-			@FindBy(xpath = "//span[contains(text(),'Communication Info')]")
+	@FindBy(xpath = "//h6[contains(text(),'Allow Card Type')]")
 
-			public WebElement ClickOnCommunicationInfo;
+	public WebElement DisplayedonCardBin;
 
-			@FindBy(xpath = "//span[contains(text(),'Risk Info')]")
+	@FindBy(xpath = "//span[contains(text(),'Sales Info')]")
 
-			public WebElement ClickOnRiskInfo;
+	public WebElement ClickonSalesInfo;
 
-			@FindBy(xpath = "//span[contains(text(),'Card/Bin Profile')]")
+	@FindBy(xpath = "//span[contains(text(),'Company Info')]")
 
-			public WebElement ClickOnCardBinProfile;
+	public WebElement ClickOnComapanyInfo;
 
-			@FindBy(xpath = "//span[contains(text(),'Settlement Info')]")
+	@FindBy(xpath = "//span[contains(text(),'Personal Info')]")
 
-			public WebElement ClickOnSettlementInfo;
+	public WebElement ClickOnPersonalInfo;
 
-			@FindBy(xpath = "(//span[contains(text(),'Terminals')])[3]")
+	@FindBy(xpath = "//span[contains(text(),'Communication Info')]")
 
-			public WebElement CLickOnTerminal;
+	public WebElement ClickOnCommunicationInfo;
 
-			@FindBy(xpath = "//span[contains(text(),'KYC')]")
+	@FindBy(xpath = "//span[contains(text(),'Risk Info')]")
 
-			public WebElement ClickOnKYC;
+	public WebElement ClickOnRiskInfo;
 
-		//Sales Info	
+	@FindBy(xpath = "//span[contains(text(),'Card/Bin Profile')]")
 
-			@FindBy(xpath = "//mat-label[contains(text(), 'Credopay Application Date')]")
+	public WebElement ClickOnCardBinProfile;
 
-			public WebElement CredopayApplicableDateLabel;
+	@FindBy(xpath = "//span[contains(text(),'Settlement Info')]")
 
-			@FindBy(xpath = "//mat-label[contains(text(), 'Merchant Reference Number')]")
+	public WebElement ClickOnSettlementInfo;
 
-			public WebElement MerchantReferenceNumberLabel;
+	@FindBy(xpath = "(//span[contains(text(),'Terminals')])[3]")
 
-			@FindBy(xpath = "//input[@formcontrolname='aggAppNumber']")
-			public WebElement MerchantReferenceNumber;
+	public WebElement CLickOnTerminal;
 
-			@FindBy(xpath = "//mat-label[contains(text(), 'Aggregator Application Date')]")
+	@FindBy(xpath = "//span[contains(text(),'KYC')]")
 
-			public WebElement AggregatorApplicationDate;
+	public WebElement ClickOnKYC;
 
-			@FindBy(xpath = "//mat-label[contains(text(), 'Aggregator')]")
+	// Sales Info
 
-			public WebElement AggregatorLabel;
+	@FindBy(xpath = "//mat-label[contains(text(), 'Credopay Application Date')]")
 
-			@FindBy(xpath = "//input[@formcontrolname='aggregator']")
-			public WebElement CLickonAggregator;
+	public WebElement CredopayApplicableDateLabel;
 
-			@FindBy(xpath = "//span[contains(text(), 'Transtrac Tech')]")
+	@FindBy(xpath = "//mat-label[contains(text(), 'Merchant Reference Number')]")
 
-			public WebElement SelectOnAggregator;
+	public WebElement MerchantReferenceNumberLabel;
 
-			@FindBy(xpath = "//mat-label[contains(text(), 'ISO')]")
+	@FindBy(xpath = "//input[@formcontrolname='aggAppNumber']")
+	public WebElement MerchantReferenceNumber;
 
-			public WebElement ISOLabel;
+	@FindBy(xpath = "//mat-label[contains(text(), 'Aggregator Application Date')]")
 
-			@FindBy(xpath = "//input[@formcontrolname='distributors']")
-			public WebElement ClickOnISO;
+	public WebElement AggregatorApplicationDate;
 
-			@FindBy(xpath = "//input[@formcontrolname='groupMerchant']")
-			public WebElement ClickOnGroupMerchant;
+	@FindBy(xpath = "//mat-label[contains(text(), 'Aggregator')]")
 
-			
-			@FindBy(xpath = "//mat-label[contains(text(), 'Sales Person')]")
+	public WebElement AggregatorLabel;
 
-			public WebElement salespersonLabel;
+	@FindBy(xpath = "//input[@formcontrolname='aggregator']")
+	public WebElement CLickonAggregator;
 
-			@FindBy(xpath = "//input[@formcontrolname='salesPerson']")
-			public WebElement ClickOnSalesPerson;
+	@FindBy(xpath = "//span[contains(text(), 'Transtrac Tech')]")
 
-			@FindBy(xpath = "//input[@formcontrolname='branchCode']")
-			public WebElement ClickonbranchCode;
+	public WebElement SelectOnAggregator;
 
-			@FindBy(xpath = "//mat-label[contains(text(), 'Branch Code')]")
+	@FindBy(xpath = "//mat-label[contains(text(), 'ISO')]")
 
-			public WebElement branchcodeLabel;
+	public WebElement ISOLabel;
 
-			
+	@FindBy(xpath = "//input[@formcontrolname='distributors']")
+	public WebElement ClickOnISO;
 
-		//Company Info	
+	@FindBy(xpath = "//input[@formcontrolname='groupMerchant']")
+	public WebElement ClickOnGroupMerchant;
 
-			@FindBy(xpath = "//mat-label[contains(text(), 'Legal Name')]")
+	@FindBy(xpath = "//mat-label[contains(text(), 'Sales Person')]")
 
-			public WebElement legalnameLabel;
+	public WebElement salespersonLabel;
 
-			@FindBy(xpath = "//mat-label[contains(text(), 'Brand Name')]")
+	@FindBy(xpath = "//input[@formcontrolname='salesPerson']")
+	public WebElement ClickOnSalesPerson;
 
-			public WebElement BrandNameLabel;
+	@FindBy(xpath = "//input[@formcontrolname='branchCode']")
+	public WebElement ClickonbranchCode;
 
-			@FindBy(xpath = "//mat-label[contains(text(), 'Registered Address')]")
+	@FindBy(xpath = "//mat-label[contains(text(), 'Branch Code')]")
 
-			public WebElement RegisteredAddressLabel;
+	public WebElement branchcodeLabel;
 
-			@FindBy(xpath = "//span[contains(text(), 'Location')]")
+	// Company Info
 
-			public WebElement LocationLabel;
+	@FindBy(xpath = "//mat-label[contains(text(), 'Legal Name')]")
 
-			@FindBy(xpath = "//mat-label[contains(text(), 'Registered Pincode')]")
+	public WebElement legalnameLabel;
 
-			public WebElement RegisteredPincodeLabel;
+	@FindBy(xpath = "//mat-label[contains(text(), 'Brand Name')]")
 
-			@FindBy(xpath = "//mat-label[contains(text(), 'State')]")
+	public WebElement BrandNameLabel;
 
-			public WebElement StateLabel;
+	@FindBy(xpath = "//mat-label[contains(text(), 'Registered Address')]")
 
-			@FindBy(xpath = "//mat-label[contains(text(), 'City')]")
+	public WebElement RegisteredAddressLabel;
 
-			public WebElement CityLabel;
+	@FindBy(xpath = "//span[contains(text(), 'Location')]")
 
-			@FindBy(xpath = "//img[@alt='map']")
-			public WebElement Location;
+	public WebElement LocationLabel;
 
-			@FindBy(xpath = "//input[@placeholder='Search for Location']")
-			public WebElement SearchtheLocation;
+	@FindBy(xpath = "//mat-label[contains(text(), 'Registered Pincode')]")
 
-			@FindBy(xpath = "//input[@formcontrolname='location']")
-			public WebElement getLocation;
+	public WebElement RegisteredPincodeLabel;
 
-			@FindBy(xpath = "//span[contains(text(), 'Enter Complete Address')]")
-			public WebElement CompleteAddress;
+	@FindBy(xpath = "//mat-label[contains(text(), 'State')]")
 
-			@FindBy(xpath = "//mat-label[contains(text(), 'Latitude')]")
+	public WebElement StateLabel;
 
-			public WebElement Latitudelabel;
+	@FindBy(xpath = "//mat-label[contains(text(), 'City')]")
 
-			@FindBy(xpath = "//mat-label[contains(text(), 'Longitude')]")
+	public WebElement CityLabel;
 
-			public WebElement Longtitudelabel;
+	@FindBy(xpath = "//img[@alt='map']")
+	public WebElement Location;
 
-			@FindBy(xpath = "//mat-label[contains(text(), 'Location Type')]")
+	@FindBy(xpath = "//input[@placeholder='Search for Location']")
+	public WebElement SearchtheLocation;
 
-			public WebElement Locationtypelabel;
+	@FindBy(xpath = "//input[@formcontrolname='location']")
+	public WebElement getLocation;
 
-			@FindBy(xpath = "//input[@formcontrolname='merchantType']")
-			public WebElement MerchantType;
+	@FindBy(xpath = "//span[contains(text(), 'Enter Complete Address')]")
+	public WebElement CompleteAddress;
 
-			@FindBy(xpath = "//mat-select[@formcontrolname='merchantClassification']")
-			public WebElement Merchantclarification;
+	@FindBy(xpath = "//mat-label[contains(text(), 'Latitude')]")
 
-		//RiskInfo
+	public WebElement Latitudelabel;
 
-			@FindBy(xpath = "//input[@formcontrolname='weekDaysFrom']")
-			public WebElement WeekDaysFrom;
+	@FindBy(xpath = "//mat-label[contains(text(), 'Longitude')]")
 
-			@FindBy(xpath = "//input[@formcontrolname='weekDaysTo']")
-			public WebElement WeekDaysTo;
+	public WebElement Longtitudelabel;
 
-			@FindBy(xpath = "//input[@formcontrolname='weekEndFrom']")
-			public WebElement WeekEndFrom;
+	@FindBy(xpath = "//mat-label[contains(text(), 'Location Type')]")
 
-			@FindBy(xpath = "//input[@formcontrolname='weekEndTo']")
-			public WebElement WeekEndTo;
+	public WebElement Locationtypelabel;
+
+	@FindBy(xpath = "//input[@formcontrolname='merchantType']")
+	public WebElement MerchantType;
+
+	@FindBy(xpath = "//mat-select[@formcontrolname='merchantClassification']")
+	public WebElement Merchantclarification;
+
+	// RiskInfo
+
+	@FindBy(xpath = "//input[@formcontrolname='weekDaysFrom']")
+	public WebElement WeekDaysFrom;
+
+	@FindBy(xpath = "//input[@formcontrolname='weekDaysTo']")
+	public WebElement WeekDaysTo;
+
+	@FindBy(xpath = "//input[@formcontrolname='weekEndFrom']")
+	public WebElement WeekEndFrom;
+
+	@FindBy(xpath = "//input[@formcontrolname='weekEndTo']")
+	public WebElement WeekEndTo;
 
 //			Card/Bin Profile
 
-			@FindBy(xpath = "//span[contains(text(),'Credit')]")
-			public WebElement Credit;
+	@FindBy(xpath = "//span[contains(text(),'Credit')]")
+	public WebElement Credit;
 
-			@FindBy(xpath = "//span[contains(text(),'Debit')]")
-			public WebElement Debit;
+	@FindBy(xpath = "//span[contains(text(),'Debit')]")
+	public WebElement Debit;
 
-			@FindBy(xpath = "//input[@formcontrolname='binNumber']")
-			public WebElement ClickOnBinNumber;
+	@FindBy(xpath = "//input[@formcontrolname='binNumber']")
+	public WebElement ClickOnBinNumber;
 
-		//SettlementInfo
+	@FindBy(xpath = "(//button[@aria-label='Example icon-button with a menu'])[3]")
+	public WebElement ActionTerminal;
+	
+	@FindBy(xpath = "//span[contains(text(),'VERIFY')]")
+	public WebElement VerifyTerminal;
 
-			@FindBy(xpath = "//mat-select[@formcontrolname='payment']")
-			public WebElement PaymentMode;
+	// SettlementInfo
 
-			@FindBy(xpath = "//mat-select[@formcontrolname='settlementFlag']")
-			public WebElement SettlementFlag;
+	@FindBy(xpath = "//mat-select[@formcontrolname='payment']")
+	public WebElement PaymentMode;
 
-		//Terminals	
+	@FindBy(xpath = "//mat-select[@formcontrolname='settlementFlag']")
+	public WebElement SettlementFlag;
 
-			@FindBy(xpath = "//input[@formcontrolname='terminalName']")
-			public WebElement Terminal;
+	// Terminals
 
-			@FindBy(xpath = "//mat-select[@formcontrolname='terminalType']")
-			public WebElement terminalType;
+	@FindBy(xpath = "(//span[contains(text(),'Terminals')])[4]")
 
-			@FindBy(xpath = "//mat-select[@formcontrolname='upiTerminalType']")
-			public WebElement UPITerminalType;
+	public WebElement Terminals;
 
-			@FindBy(xpath = "//mat-select[@formcontrolname='upiOfflineType']")
-			public WebElement UPIofflineType;
+	@FindBy(xpath = "//input[@formcontrolname='terminalName']")
+	public WebElement Terminal;
 
-			@FindBy(xpath = "//input[@formcontrolname='upiVPA']")
-			public WebElement UPIVPA;
+	@FindBy(xpath = "//mat-select[@formcontrolname='terminalType']")
+	public WebElement terminalType;
 
-			@FindBy(xpath = "//input[@formcontrolname='deviceModel']")
-			public WebElement deviceModel;
+	@FindBy(xpath = "//mat-select[@formcontrolname='upiTerminalType']")
+	public WebElement UPITerminalType;
 
-			@FindBy(xpath = "//input[@formcontrolname='deviceNumber']")
-			public WebElement deviceNumber;
+	@FindBy(xpath = "//mat-select[@formcontrolname='upiOfflineType']")
+	public WebElement UPIofflineType;
 
-			@FindBy(xpath = "//input[@formcontrolname='imeiNumber']")
-			public WebElement IMEINumber;
+	@FindBy(xpath = "//input[@formcontrolname='upiVPA']")
+	public WebElement UPIVPA;
 
-			@FindBy(xpath = "//mat-select[@formcontrolname='deviceType']")
-			public WebElement DeviceType;
+	@FindBy(xpath = "//input[@formcontrolname='deviceModel']")
+	public WebElement deviceModel;
 
-			@FindBy(xpath = "//mat-select[@formcontrolname='deviceComercialMode']")
-			public WebElement DeviceCommercial;
+	@FindBy(xpath = "//input[@formcontrolname='deviceNumber']")
+	public WebElement deviceNumber;
 
-			@FindBy(xpath = "//mat-select[@formcontrolname='tidFeeApplicable']")
-			public WebElement TIDFeeApplicable;
+	@FindBy(xpath = "//input[@formcontrolname='imeiNumber']")
+	public WebElement IMEINumber;
 
-			@FindBy(xpath = "//input[@formcontrolname='devicePrice']")
-			public WebElement DevicePrice;
+	@FindBy(xpath = "//mat-select[@formcontrolname='deviceType']")
+	public WebElement DeviceType;
 
-			@FindBy(xpath = "//input[@formcontrolname='installationFee']")
-			public WebElement InstallationFee;
+	@FindBy(xpath = "//mat-select[@formcontrolname='deviceComercialMode']")
+	public WebElement DeviceCommercial;
 
+	@FindBy(xpath = "//mat-select[@formcontrolname='tidFeeApplicable']")
+	public WebElement TIDFeeApplicable;
+
+	@FindBy(xpath = "//input[@formcontrolname='devicePrice']")
+	public WebElement DevicePrice;
+
+	@FindBy(xpath = "//input[@formcontrolname='installationFee']")
+	public WebElement InstallationFee;
 
 	public MerchantLocators(WebDriver driver) {
 		this.waitTime = CustomWebDriverManager.getWaitTime();

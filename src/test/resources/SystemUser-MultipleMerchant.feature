@@ -24,7 +24,7 @@ Feature: System Users - Merchant Onboarding Regression
  @loadDataExcelUtils
  @run
 Scenario: Load Data from Excel
-    Given I load data from Excel using sheetname "Credentials"
+    Given I load data from Excel using sheetname "Credentials"		
     
 Scenario: SystemMaker Login
  Given I visit the System Maker Login in Regression using sheetname "Credentials" and rownumber 1

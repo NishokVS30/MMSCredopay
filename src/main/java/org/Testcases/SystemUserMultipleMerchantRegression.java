@@ -643,6 +643,8 @@ public class SystemUserMultipleMerchantRegression {
 
 				BL.clickElement(A.RegisteredPincode);
 
+				BL.enterElement(A.RegisteredPincode, pincode);
+
 				BL.selectDropdownOption(pincode);
 
 				++testcaseCount;
@@ -1084,6 +1086,8 @@ public class SystemUserMultipleMerchantRegression {
 			if (pincode != null && !pincode.trim().isEmpty()) {
 
 				BL.clickElement(A.PincodePersonal);
+
+				BL.enterElement(A.PincodePersonal, pincode);
 
 				BL.selectDropdownOption(pincode);
 
@@ -2396,12 +2400,12 @@ public class SystemUserMultipleMerchantRegression {
 				errorMessage = e.getMessage();
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "KYC-GM", nextStepStatus, errorMessage);
+			logTestStep(TestcaseNo, "NextStep", "KYC-Merchant", nextStepStatus, errorMessage);
 
 		} catch (Exception e) {
 			// Handle and log exceptions
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-			exceptionHandler.handleException(e, "KYC-GM");
+			exceptionHandler.handleException(e, "KYC-Merchant");
 			throw e;
 		}
 	}
@@ -2454,7 +2458,7 @@ public class SystemUserMultipleMerchantRegression {
 					Thread.sleep(1000);
 					BL.clickElement(B.AddButton);
 
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					BL.clickElement(B.ClickOnChannel);
 					BL.selectDropdownOption(channel);
 					key.add("Channel-" + currentRow);
@@ -2501,7 +2505,7 @@ public class SystemUserMultipleMerchantRegression {
 					errorMessage = e.getMessage();
 				}
 
-				logTestStep(TestcaseNo, "Save Button", "ISO Discount Rate", saveStatus, errorMessage);
+				logTestStep(TestcaseNo, "Save Button", "Merchant Discount Rate", saveStatus, errorMessage);
 			}
 
 			// Process Next Step
@@ -2679,188 +2683,204 @@ public class SystemUserMultipleMerchantRegression {
 
 	}
 
-	private void fillTerminalDetails(Map<String, String> testData, int TestcaseNo) throws InterruptedException, AWTException {
-	    try {
+	private void fillTerminalDetails(Map<String, String> testData, int TestcaseNo)
+			throws InterruptedException, AWTException {
+		try {
 
-	        int testcaseCount = 0;
-	        String errorMessage = "The Terminaldata does not match or is empty.";
+			Faker faker = new Faker();
+			int testcaseCount = 0;
+			String errorMessage = "The Terminaldata does not match or is empty.";
 
-	        String terminalName = testData.get("Terminal Name");
-	        String terminalType = testData.get("Terminal Type");
-	        String upiTerminaltype = testData.get("UPI Terminal Type");
-	        String upiOfflinetype = testData.get("UPI Offline Type");
-	        String deviceModel = testData.get("Device Model");
-	        String deviceNumber = testData.get("Device Number");
-	        String imeiNumber = testData.get("IMEI Number");
-	        String deviceType = testData.get("Device Type");
-	        String deviceCommercialmode = testData.get("Device Commercial Mode");
-	        String tidFeeapplicable = testData.get("TID Fee Applicable");
-	        
-	        
-	        BL.clickElement(M.Terminal);
-	        
-	        BL.clickElement(B.AddButton);
+			String terminalName = testData.get("Terminal Name");
+			String terminalType = testData.get("Terminal Type");
+			String upiTerminaltype = testData.get("UPI Terminal Type");
+			String upiOfflinetype = testData.get("UPI Offline Type");
+			String DeviceModel = testData.get("Device Model");
+			String DeviceNumber = generateValidPAN(faker);
+			String imeiNumber = testData.get("IMEI Number");
+			String deviceType = testData.get("Device Type");
+			String deviceCommercialmode = testData.get("Device Commercial Mode");
+			String tidFeeapplicable = testData.get("TID Fee Applicable");
 
-	        if (terminalName != null && !terminalName.trim().isEmpty()) {
-	            BL.clickElement(T.TerminalName);
-	            BL.enterElement(T.TerminalName, terminalName);
-	            ++testcaseCount;
+			Thread.sleep(10000);
+			BL.clickElement(M.Terminals);
 
-	            boolean status = true; 
-	            try {
-	                BL.isElementNotDisplayed(B.InvalidFormat, "Invalidformat");
-	            } catch (AssertionError e) {
-	                status = false;
-	                errorMessage = e.getMessage(); 
-	            }
-	            
-	            logTestStep(TestcaseNo, "Terminal Name", terminalName , status, errorMessage);
-	        }
+			if (terminalName != null && !terminalName.trim().isEmpty()) {
+				Thread.sleep(1000);
+				BL.clickElement(B.AddButton);
+				BL.clickElement(T.TerminalName);
+				BL.enterElement(T.TerminalName, terminalName);
+				++testcaseCount;
 
-	        if (terminalType != null && !terminalType.trim().isEmpty()) {
-	            BL.clickElement(T.Terminaltype);
-	            BL.selectDropdownOption(terminalType);
-	            ++testcaseCount;
+				boolean status = true;
+				try {
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalidformat");
+				} catch (AssertionError e) {
+					status = false;
+					errorMessage = e.getMessage();
+				}
 
-	            boolean status = true;
-	            try {
-	                BL.isElementNotDisplayed(B.InvalidFormat, "Invalidformat");
-	            } catch (AssertionError e) {
-	                status = false;
-	                errorMessage = e.getMessage(); 
-	            }
-	            
-	            logTestStep(TestcaseNo, "Terminal Type", terminalType , status, errorMessage);
-	        }
+				logTestStep(TestcaseNo, "Terminal Name", terminalName, status, errorMessage);
+			}
 
-	        if (upiTerminaltype != null && !upiTerminaltype.trim().isEmpty()) {
-	            BL.clickElement(M.UPITerminalType);
-	            BL.selectDropdownOption(upiTerminaltype);
-	            ++testcaseCount;
+			if (terminalType != null && !terminalType.trim().isEmpty()) {
+				BL.clickElement(T.Terminaltype);
+				BL.selectDropdownOption(terminalType);
+				++testcaseCount;
 
-	            boolean status = true;
-	            try {
-	                BL.isElementNotDisplayed(B.InvalidFormat, "Invalidformat");
-	            } catch (AssertionError e) {
-	                status = false;
-	                errorMessage = e.getMessage(); 
-	            }
-	            logTestStep(TestcaseNo, "UPI Terminal Type", upiTerminaltype , status, errorMessage);
-	        }
+				boolean status = true;
+				try {
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalidformat");
+				} catch (AssertionError e) {
+					status = false;
+					errorMessage = e.getMessage();
+				}
 
-	        if (upiOfflinetype != null && !upiOfflinetype.trim().isEmpty()) {
-	            BL.clickElement(M.UPIofflineType);
-	            BL.selectDropdownOption(upiOfflinetype);
-	            ++testcaseCount;
+				logTestStep(TestcaseNo, "Terminal Type", terminalType, status, errorMessage);
+			}
 
-	            boolean status = true;
-	            try {
-	                BL.isElementNotDisplayed(B.InvalidFormat, "Invalidformat");
-	            } catch (AssertionError e) {
-	                status = false;
-	                errorMessage = e.getMessage(); 
-	            }
-	            
-	            logTestStep(TestcaseNo, "UPI Offline Type", upiOfflinetype , status, errorMessage);
-	        }
+			if (upiTerminaltype != null && !upiTerminaltype.trim().isEmpty()) {
+				BL.clickElement(M.UPITerminalType);
+				BL.selectDropdownOption(upiTerminaltype);
+				++testcaseCount;
 
-	        if (deviceModel != null && !deviceModel.trim().isEmpty()) {
-	            BL.clickElement(T.DeviceModel);
-	            BL.enterElement(T.DeviceModel, deviceModel);
-	            BL.selectDropdownOption(deviceModel);
-	            ++testcaseCount;
+				boolean status = true;
+				try {
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalidformat");
+				} catch (AssertionError e) {
+					status = false;
+					errorMessage = e.getMessage();
+				}
+				logTestStep(TestcaseNo, "UPI Terminal Type", upiTerminaltype, status, errorMessage);
+			}
 
-	            boolean status = true;
-	            try {
-	                BL.isElementNotDisplayed(B.InvalidFormat, "Invalidformat");
-	            } catch (AssertionError e) {
-	                status = false;
-	                errorMessage = e.getMessage(); 
-	            }
-	            
-	            logTestStep(TestcaseNo, "Device Model", deviceModel , status, errorMessage);
-	        }
+			if (upiOfflinetype != null && !upiOfflinetype.trim().isEmpty()) {
+				BL.clickElement(M.UPIofflineType);
+				BL.selectDropdownOption(upiOfflinetype);
+				++testcaseCount;
 
-	        if (deviceNumber != null && !deviceNumber.trim().isEmpty()) {
-	            BL.clickElement(T.DeviceNumber);
-	            BL.enterElement(T.DeviceNumber, deviceNumber);
-	            ++testcaseCount;
+				boolean status = true;
+				try {
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalidformat");
+				} catch (AssertionError e) {
+					status = false;
+					errorMessage = e.getMessage();
+				}
 
-	            boolean status = true;
-	            try {
-	                BL.isElementNotDisplayed(B.InvalidFormat, "Invalidformat");
-	            } catch (AssertionError e) {
-	                status = false;
-	                errorMessage = e.getMessage(); 
-	            }
-	            
-	            logTestStep(TestcaseNo, "Device Number", deviceNumber , status, errorMessage);
-	        }
+				logTestStep(TestcaseNo, "UPI Offline Type", upiOfflinetype, status, errorMessage);
+			}
 
-	        if (imeiNumber != null && !imeiNumber.trim().isEmpty()) {
-	            BL.clickElement(T.IMEINumber);
-	            BL.enterElement(T.IMEINumber, imeiNumber);
-	            ++testcaseCount;
+			if (DeviceModel != null && !DeviceModel.trim().isEmpty()) {
+				BL.clickElement(T.DeviceModel);
+				BL.enterElement(T.DeviceModel, DeviceModel);
+				BL.selectDropdownOption(DeviceModel);
+				++testcaseCount;
 
-	            boolean status = true;
-	            try {
-	                BL.isElementNotDisplayed(B.InvalidFormat, "Invalidformat");
-	            } catch (AssertionError e) {
-	                status = false;
-	                errorMessage = e.getMessage(); 
-	            }
-	            
-	            logTestStep(TestcaseNo, "IMEI Number", imeiNumber , status, errorMessage);
-	        }
+				boolean status = true;
+				try {
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalidformat");
+				} catch (AssertionError e) {
+					status = false;
+					errorMessage = e.getMessage();
+				}
 
-	        if (deviceType != null && !deviceType.trim().isEmpty()) {
-	            BL.clickElement(M.DeviceType);
-	            BL.selectDropdownOption(deviceType);
-	            ++testcaseCount;
+				logTestStep(TestcaseNo, "Device Model", DeviceModel, status, errorMessage);
+			}
 
-	            boolean status = true;
-	            try {
-	                BL.isElementNotDisplayed(B.InvalidFormat, "Invalidformat");
-	            } catch (AssertionError e) {
-	                status = false;
-	                errorMessage = e.getMessage(); 
-	            }
-	            
-	            logTestStep(TestcaseNo, "Device Type", deviceType , status, errorMessage);
-	        }
+			if (DeviceNumber != null && !DeviceNumber.trim().isEmpty()) {
+				BL.clickElement(T.DeviceNumber);
+				BL.enterElement(T.DeviceNumber, DeviceNumber);
+				++testcaseCount;
 
-	        if (deviceCommercialmode != null && !deviceCommercialmode.trim().isEmpty()) {
-	            BL.clickElement(T.DeviceCommericialmode);
-	            BL.selectDropdownOption(deviceCommercialmode);
-	            ++testcaseCount;
+				boolean status = true;
+				try {
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalidformat");
+				} catch (AssertionError e) {
+					status = false;
+					errorMessage = e.getMessage();
+				}
 
-	            boolean status = true;
-	            try {
-	                BL.isElementNotDisplayed(B.InvalidFormat, "Invalidformat");
-	            } catch (AssertionError e) {
-	                status = false;
-	                errorMessage = e.getMessage(); 
-	            }
-	            
-	            logTestStep(TestcaseNo, "Device Commercial Mode", deviceCommercialmode , status, errorMessage);
-	        }
+				logTestStep(TestcaseNo, "Device Number", DeviceNumber, status, errorMessage);
+			}
 
-	        if (tidFeeapplicable != null && !tidFeeapplicable.trim().isEmpty()) {
-	            BL.clickElement(T.TIDFeeApplicable);
-	            BL.selectDropdownOption(tidFeeapplicable);
-	            ++testcaseCount;
+			if (imeiNumber != null && !imeiNumber.trim().isEmpty()) {
+				BL.clickElement(T.IMEINumber);
+				BL.enterElement(T.IMEINumber, imeiNumber);
+				++testcaseCount;
 
-	            boolean status = true;
-	            try {
-	                BL.isElementNotDisplayed(B.InvalidFormat, "Invalidformat");
-	            } catch (AssertionError e) {
-	                status = false;
-	                errorMessage = e.getMessage(); 
-	            }
-	            
-	            logTestStep(TestcaseNo, "TID Fee Applicable", tidFeeapplicable , status, errorMessage);
-	            
-	        	boolean NextstepStatus = true;
+				boolean status = true;
+				try {
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalidformat");
+				} catch (AssertionError e) {
+					status = false;
+					errorMessage = e.getMessage();
+				}
+
+				logTestStep(TestcaseNo, "IMEI Number", imeiNumber, status, errorMessage);
+			}
+
+			if (deviceType != null && !deviceType.trim().isEmpty()) {
+				BL.clickElement(M.DeviceType);
+				BL.selectDropdownOption(deviceType);
+				++testcaseCount;
+
+				boolean status = true;
+				try {
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalidformat");
+				} catch (AssertionError e) {
+					status = false;
+					errorMessage = e.getMessage();
+				}
+
+				logTestStep(TestcaseNo, "Device Type", deviceType, status, errorMessage);
+			}
+
+			if (deviceCommercialmode != null && !deviceCommercialmode.trim().isEmpty()) {
+				BL.clickElement(T.DeviceCommericialmode);
+				BL.selectDropdownOption(deviceCommercialmode);
+				++testcaseCount;
+
+				boolean status = true;
+				try {
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalidformat");
+				} catch (AssertionError e) {
+					status = false;
+					errorMessage = e.getMessage();
+				}
+
+				logTestStep(TestcaseNo, "Device Commercial Mode", deviceCommercialmode, status, errorMessage);
+			}
+
+			if (tidFeeapplicable != null && !tidFeeapplicable.trim().isEmpty()) {
+				BL.clickElement(T.TIDFeeApplicable);
+				BL.selectDropdownOption(tidFeeapplicable);
+				++testcaseCount;
+
+				boolean status = true;
+				try {
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalidformat");
+				} catch (AssertionError e) {
+					status = false;
+					errorMessage = e.getMessage();
+				}
+
+				logTestStep(TestcaseNo, "TID Fee Applicable", tidFeeapplicable, status, errorMessage);
+
+				boolean SaveStatus = true;
+				try {
+
+					BL.clickElement(B.SaveButton);
+
+//					BL.clickElement(B.OKButton);
+
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+
+				} catch (AssertionError e) {
+					SaveStatus = false;
+					errorMessage = e.getMessage(); // Capture error message
+				}
+
+				boolean NextstepStatus = true;
 				try {
 					BL.clickElement(B.NextStep);
 					BL.isElementDisplayed(A.IntroKYC, "KYC Page");
@@ -2871,15 +2891,14 @@ public class SystemUserMultipleMerchantRegression {
 				}
 
 				logTestStep(TestcaseNo, "NextStep", "Terminals", NextstepStatus, errorMessage);
-	        }
+			}
 
-	    } catch (Exception e) {
-	        ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-	        exceptionHandler.handleException(e, "Terminal Info");
-	        throw e;
-	    }
+		} catch (Exception e) {
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+			exceptionHandler.handleException(e, "Terminal Info");
+			throw e;
+		}
 	}
-
 
 	@When("the System Verifier clicks the Merchant module")
 
@@ -3047,7 +3066,7 @@ public class SystemUserMultipleMerchantRegression {
 
 			Thread.sleep(2000);
 
-			BL.ActionclickElement(B.ViewButton);
+			BL.clickElement(B.ViewButton);
 
 			int testcaseCount = 0;
 
@@ -3190,9 +3209,23 @@ public class SystemUserMultipleMerchantRegression {
 
 			try {
 
-				Thread.sleep(1000);
+				BL.clickElement(M.ActionTerminal);
 
+				BL.clickElement(B.ViewButton);
+
+				BL.clickElement(M.VerifyTerminal);
+
+//			     Robot r = new Robot();
+//			   
+//			    r.keyPress(KeyEvent.VK_ESCAPE);
+//			    r.keyRelease(KeyEvent.VK_ESCAPE);
+
+				BL.clickElement(B.Close);
+
+				Thread.sleep(3000);
 				BL.clickElement(B.VerifiedandNext);
+
+				Thread.sleep(20000);
 
 			} catch (AssertionError e) {
 				verifiedStatus = false;
@@ -3421,7 +3454,7 @@ public class SystemUserMultipleMerchantRegression {
 			BL.clickElement(B.SearchbyBankName);
 			Thread.sleep(3000);
 
-			BL.enterElement(B.SearchbyBankName, LegalName);
+			BL.UploadImage(B.SearchbyBankName, LegalName);
 
 		} catch (AssertionError e) {
 			Status = false;
@@ -3429,11 +3462,12 @@ public class SystemUserMultipleMerchantRegression {
 		}
 
 		logTestStep(TestcaseNo, "Search by name", LegalName, Status, errorMessag);
-		Thread.sleep(4000);
 
-		BL.ActionclickElement(B.ActionClick);
+		Thread.sleep(5000);
 
-		Thread.sleep(1000);
+		BL.clickElement(B.ActionClick);
+
+		Thread.sleep(2000);
 
 		BL.clickElement(B.ViewButton);
 
@@ -3467,22 +3501,28 @@ public class SystemUserMultipleMerchantRegression {
 
 		Thread.sleep(3000);
 
-		BL.clickElement(B.SearchbyBankName);
-		Thread.sleep(3000);
-
-		BL.UploadImage(B.SearchbyBankName, LegalName);
-		Thread.sleep(3000);
-
-		BL.ActionclickElement(B.ActionClick);
-
 		try {
+			Thread.sleep(3000);
 
-			BL.clickElement(B.ViewButton);
+			BL.clickElement(B.SearchbyBankName);
+			Thread.sleep(3000);
+
+			BL.UploadImage(B.SearchbyBankName, LegalName);
 
 		} catch (AssertionError e) {
-			ApprovedStatus = false;
-			errorMessage = e.getMessage(); // Capture error message
+			Status = false;
+			errorMessag = e.getMessage(); // Capture error message
 		}
+
+		logTestStep(TestcaseNo, "Search by name", LegalName, Status, errorMessag);
+
+		Thread.sleep(5000);
+
+		BL.clickElement(B.ActionClick);
+
+		Thread.sleep(2000);
+
+		BL.ActionclickElement(B.ViewButton);
 
 		logTestStep(TestcaseNo, "Merchant CPID", BL.getElementValue(B.CPID), ApprovedStatus, errorMessage);
 

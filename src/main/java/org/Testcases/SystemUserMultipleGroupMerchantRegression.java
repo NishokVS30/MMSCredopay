@@ -450,7 +450,7 @@ public class SystemUserMultipleGroupMerchantRegression {
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "SUB ISO Name", isoname, nameStatus, errorMessage);
+				logTestStep(TestcaseNo, "SUB ISO Name", subisoname, nameStatus, errorMessage);
 
 			}
 
@@ -1570,6 +1570,7 @@ public class SystemUserMultipleGroupMerchantRegression {
 				if (!channel.isEmpty()) {
 					BL.clickElement(A.ChannelConfig);
 //						driver.navigate().refresh();
+					Thread.sleep(1000);
 					BL.clickElement(B.AddButton);
 					Thread.sleep(1000);
 					BL.clickElement(B.CommercialChannel);

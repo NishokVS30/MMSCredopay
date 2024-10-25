@@ -83,11 +83,10 @@ public class AggregatorLocators {
 	@FindBy(xpath = "//h6[contains(text(), 'ADMIN USER Details') or contains(text(), 'Admin User details') or contains(text(), 'Admin User Details')]")
 	public WebElement IntroCommunicationInfo;
 
-	@FindBy(xpath = "//h6[text()='Channel Configuration']")
+	@FindBy(xpath = "//h6[contains(text(), 'Channel Configuration')]")
 	public WebElement IntroChannelConfig;
 
-	@FindBy(xpath = "//h6[contains(text(), 'Channel Configuration')]")
-
+	@FindBy(xpath = "//h6[contains(text(), 'Personal Documents')]")
 	public WebElement IntroKYC;
 
 	@FindBy(xpath = "//h6[contains(text(), 'FRM Parameters')]")

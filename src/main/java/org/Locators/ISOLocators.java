@@ -34,6 +34,18 @@ public class ISOLocators {
 	@FindBy(xpath = "//h6[contains(text(), 'Iso Discounts') or contains(text(), 'Sub ISO Discounts')]")
     public WebElement IntroDiscountRate;
 
+// ISO Sales info invalid format 
+    
+    @FindBy(xpath ="//input[@formcontrolname='aggregator']/ancestor::mat-form-field//mat-error[contains(text(), 'Invalid aggregator') or contains(text(), 'Invalid Aggregator')]")
+    public WebElement ISOAggregatorNameInvalidFormat;
+ 
+ // ISO Personal info
+ 
+    @FindBy(xpath="//input[@formcontrolname='pincode']/ancestor::mat-form-field//mat-error[contains(text(), ' Invalid Pincode' )]")
+    public WebElement ISO_SUBISOPincodeInvalidFormat;
+   
+    
+   
 	
 	
 	public ISOLocators(WebDriver driver) {	

@@ -1,7 +1,11 @@
 package org.Runner;
 
+import static org.junit.Assert.assertEquals;
+
+import java.awt.AWTException;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.Testcases.ReportManager;
@@ -12,42 +16,44 @@ import io.cucumber.junit.CucumberOptions;
 @RunWith(Cucumber.class)
 @CucumberOptions(strict = true, monochrome = true, glue = "org.Testcases",
 
-//tags = "@run",
+//tags = "@run",				
 
 		// features = "src/test/resources/SystemUser-Bank.feature",
-		// features = "src/test/resources/SystemUser-Aggregator.feature",
+		// features = "src/test/resources/SystemUser-Aggregator.																				feature",
 		// features = "src/test/resources/SystemUser-ISO.feature",	
 		// features = "src/test/resources/SystemUser-SUBISO.feature",
-		// features = "src/test/resources/SystemUser-GroupMerchant.feature",
+		// features = "src/test/resources/SystemUser-GroupMerchant.feature	",
 		// features = "src/test/resources/SystemUser-Merchant.feature",
-		// features = "src/test/resources/SystemUser-Terminal.feature",				
+		// features = "src/test/resources/SystemUser-Terminal.feature",													
 	
-        	      features = "src/test/resources/SystemUser-MultipleBank.feature",
- //               features = "src/test/resources/SystemUser-MultipleAggregator.feature",
- //               features = "src/test/resources/SystemUser-MultipleISO.feature",
+                   features = "src/test/resources/SystemUser-MultipleBank.feature",																								
+ //      		  features = "src/test/resources/System	User-MultipleAggregator.feature",		         	
+ //               features = "src/test/resources/SystemUser-MultipleISO.feature",																																						
  //               features = "src/test/resources/SystemUser-MultipleSUBISO.feature",
- //               features = "src/test/resources/SystemUser-MultipleGroupMerchant.feature",
+ //	              features = "src/test/resources/SystemUser-MultipleGroupMerchant.feature",
  //               features = "src/test/resources/SystemUser-MultipleMerchant.feature",
- //       		  features = "src/test/resources/SystemUser-MultipleTerminal.feature",
+ //               features = "src/test/resources/SystemUser-MultipleTerminal.feature",
         	    		
         	      plugin = {
         	    			        "pretty",
-        	    			        "html:target/cucumber-report/cucumber.html",
+        	    			        "html:target/cucumber-report/cucumber.html",	
         	    			        "json:target/cucumber-report/cucumber.json",
-        	    			        "junit:target/cucumber-report/cucumber.xml",
+        	    			        "junit:target/cucumber-report/cucumber.xml", 	
         	    			        "io.qameta.allure.cucumber6jvm.AllureCucumber6Jvm",
         	    			        "com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:"
         	    			    })
-		
-public class MMSCredopayRunner {				
+					
+
+public class MMSCredopayRunner {		
 	  static {
 	        ReportManager.getExtentReports(); // Initialize reports
-}
+}					
+	  										
 }
 
 //plugin = { "pretty", "html:target/cucumber-report/cucumber.html",
 //		"io.qameta.allure."
-//		+ "cucumber6jvm.AllureCucumber6Jvm", "json:target/cucumber-report/cucumber.json",
+//		+ "cucumber6jvm.AllureCucumber6Jvm", "json:target/cucu	mber-report/cucumber.json",
 //		"junit:target/cucumber-report/cucumber.xml",
 //		"com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:",
 //		"html:target/cucumber-reports" })
@@ -65,7 +71,7 @@ public class MMSCredopayRunner {
 //
 //// feature s = "src/test/resources/Login.feature",
 //
-////              features = "src/test/resources/Bankvalidation.feature",
+////              features = "src/test/resources/Bankvalidation.feature",	
 //
 //		// features = "src/test/resources/Aggregator.feature",
 //						
@@ -94,3 +100,41 @@ public class MMSCredopayRunner {
 //public class MMSCredopayRunner {
 
 //}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

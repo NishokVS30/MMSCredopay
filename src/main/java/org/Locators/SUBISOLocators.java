@@ -23,7 +23,18 @@ public class SUBISOLocators {
 	@FindBy(xpath = "//input[@formcontrolname='distributors']")
 	public WebElement ISOName;
 	
-
+	
+//SUBISO
+	
+// sales info invalid format
+    
+    @FindBy(xpath = "//input[@formcontrolname='aggregator']/ancestor::mat-form-field//mat-error[contains(text(), ' Invalid Aggregator Name ')]")
+    public WebElement SubISOAggregatorNameInvalidForamt;
+    
+    @FindBy(xpath = "//input[@formcontrolname='distributors']/ancestor::mat-form-field//mat-error[contains(text(), ' Invalid ISO Name ')]")
+    public WebElement SubISONameInvalidForamt;
+ 
+ 
 	
 	public SUBISOLocators(WebDriver driver) {
 

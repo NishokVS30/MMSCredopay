@@ -1,5 +1,7 @@
 package org.Testcases;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
@@ -7,26 +9,19 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import org.Locators.AggregatorLocators;
-import org.Locators.BankLocators;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.junit.Assert;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 
 import com.aventstack.extentreports.ExtentTest;
-import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter;
 import com.github.javafaker.Faker;
 
@@ -34,7 +29,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.qameta.allure.Allure;
 
-public class SystemUserMutipleAggregatorRegression {
+public class SystemUserMutipleAggregatorRegression extends TestHooks{
 
 	private WebDriver driver;
 
@@ -147,7 +142,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (rowNumber == numberOfRows) {
 				System.out.println("Finished processing the last row. Logging out...");
-				performLogout();
+				performLogout(rowNumber);
 			}
 		}
 
@@ -206,15 +201,6 @@ public class SystemUserMutipleAggregatorRegression {
 
 		// Initialize a counter to track the number of validated fields/sections
 		int validatedFieldsCount = 0;
-
-//		validatedFieldsCount += executeStep(() -> fillLoginDetails(testData, TestcaseNo), "Login Details");
-//		validatedFieldsCount += executeStep(
-//				() -> SystemMakerOnboardingshouldbedisplayedinthesidemenu(testData, TestcaseNo), "Onboarding Display");
-//		validatedFieldsCount += executeStep(() -> SystemMakershouldseeallSideMenu(testData, TestcaseNo),
-//				"Side Menu Visibility");
-//		validatedFieldsCount += executeStep(() -> SystemMakerclicksthebankmodule(testData, TestcaseNo),
-//				"Bank Module Click");
-
 		// Sales Details Section
 
 		validatedFieldsCount += executeStep(() -> {
@@ -294,7 +280,7 @@ public class SystemUserMutipleAggregatorRegression {
 		validatedFieldsCount += executeStep(() -> {
 			try {
 				fillRiskInfo(testData, TestcaseNo);
-			} catch (InterruptedException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -334,7 +320,7 @@ public class SystemUserMutipleAggregatorRegression {
 		validatedFieldsCount += executeStep(() -> {
 			try {
 				configureWebhooks(testData, TestcaseNo);
-			} catch (InterruptedException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -343,7 +329,7 @@ public class SystemUserMutipleAggregatorRegression {
 		// Final Submission
 		validatedFieldsCount += executeStep(() -> {
 			try {
-				submitForVerification();
+				submitForVerification(TestcaseNo);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -375,29 +361,44 @@ public class SystemUserMutipleAggregatorRegression {
 			String errorMessage = "The data does not match or is empty.";
 
 			String VAS1 = testData.get("VAS Commission");
-			String aggregatorCode = null;
+			String aggregatorCode = testData.get("Aggregator Code");
+			String SelfMerchant = testData.get("Self Merchant");
 			String Marsid = testData.get("Marsid");
-			String VAS2 = testData.get("EKYC Required");
+			String AutoDeactivation = testData.get("Auto Deactivation Days");
+			String TMSAggregator = testData.get("TMS Aggregator");	
+			String EKycRequired = testData.get("EKYC Required");
 
 			if (VAS1 != null && !VAS1.trim().isEmpty()) {
 
-				BL.clickElement(B.Createbutton);
+				boolean CreateStatus = true; // Assume success initially
+				try {
+					BL.clickElement(B.Createbutton);
+				} catch (AssertionError e) {
+					CreateStatus = false; // Set status to false if assertion fails
+					errorMessage = e.getMessage(); // Capture error message
+				}
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Create : ", "Aggregator", CreateStatus,
+						errorMessage);
+
 				BL.clickElement(A.SalesInfo);
 				BL.clickElement(A.VASCommissionOne);
 				BL.selectDropdownOption(VAS1);
 
 				++testcaseCount;
 
-				boolean VASStatus = true; // Assume success initially
+				String actualValue = BL.getElementValue(A.VASCommissionOne);
+				boolean Status = true; // Assume success initially
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					if (actualValue != null) {
+						assertEquals(VAS1.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
-					VASStatus = false;
+					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "VAS Commission", VAS1, VASStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Sales Info : VAS Commission", VAS1, Status,
+						errorMessage);
 
 			}
 
@@ -427,28 +428,51 @@ public class SystemUserMutipleAggregatorRegression {
 
 			logTestStep(TestcaseNo, "Agreement Date", "Current Date", DateStatus, errorMessage);
 
-			if (aggregatorCode == null || aggregatorCode.trim().isEmpty()
-					|| !aggregatorCode.matches("^[a-zA-Z0-9]{6}$")) {
-				aggregatorCode = generateValidAggregatorCode(faker, testData);
-			}
-
 			if (aggregatorCode != null && !aggregatorCode.trim().isEmpty()) {
 				BL.clickElement(A.AggregatorCode);
 				BL.enterElement(A.AggregatorCode, aggregatorCode);
-//				logInputData("Aggregator Code", aggregatorCode);
+				performTabKeyPress();
 				++testcaseCount;
 
-				boolean AggregatorStatus = true; // Assume success initially
+				boolean Status = true;
+				String actualValue = BL.getElementValue(A.AggregatorCode);// Assume success initially
 
 				try {
+					if (actualValue != null) {
+						BL.isElementNotDisplayed(A.AggregatorCodefieldrequired, "Field is Required");
+						assertEquals(aggregatorCode.toUpperCase(), actualValue.toUpperCase());
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					}
+
 				} catch (AssertionError e) {
-					AggregatorStatus = false; // Set status to false if assertion fails
+					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Aggregator Code", aggregatorCode, AggregatorStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Sales Info : Aggregator Code", aggregatorCode,
+						Status, errorMessage);
+			}
+
+			if (SelfMerchant != null && !SelfMerchant.trim().isEmpty()) {
+
+				BL.clickElement(A.AllowSelfMerchantOnboard);
+				BL.selectDropdownOption(SelfMerchant);
+
+				++testcaseCount;
+
+				String actualValue = BL.getElementValue(A.AllowSelfMerchantOnboard);
+				boolean Status = true; // Assume success initially
+				try {
+					if (actualValue != null) {
+						assertEquals(SelfMerchant.toUpperCase(), actualValue.toUpperCase());
+					}
+				} catch (AssertionError e) {
+					Status = false;
+					errorMessage = e.getMessage(); // Capture error message
+				}
+
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Sales Info : Allow Self Merchant ", SelfMerchant,
+						Status, errorMessage);
 			}
 
 			if (Marsid.contains("E")) {
@@ -462,37 +486,88 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.enterElement(B.Marsid, Marsid);
 				++testcaseCount;
 
-				boolean MarsidStatus = true;
+				boolean Status = true;
+				String actualMarsidValue = BL.getElementValue(A.MarsId); // Fetch the value
 
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					if (actualMarsidValue != null) {
+						assertEquals(Marsid.toUpperCase(), actualMarsidValue.toUpperCase());
+					} else {
+						Status = false;
+						errorMessage = "Actual Marsid value is null.";
+					}
 				} catch (AssertionError e) {
-					MarsidStatus = false; // Set status to false if assertion fails
+					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Marsid :", Marsid, MarsidStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Sales Info : Marsid :", Marsid, Status,
+						errorMessage);
 
 			}
 
-			if (VAS2 != null && !VAS2.trim().isEmpty()) {
+			if (AutoDeactivation != null && !AutoDeactivation.trim().isEmpty()) {
 
-				BL.clickElement(A.EKycRequired);
+				BL.clickElement(A.AutoDeactivationdays);
+				BL.enterElement(A.AutoDeactivationdays, AutoDeactivation);
+				++testcaseCount;
 
-				BL.selectDropdownOption(VAS2);
+				boolean Status = true;
+				try {
+					assertEquals(AutoDeactivation, BL.getElementValue(A.AutoDeactivationdays));
+
+				} catch (AssertionError e) {
+					Status = false; // Set status to false if assertion fails
+					errorMessage = e.getMessage(); // Capture error message
+				}
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Sales Info : Auto Deactivation Days :",
+						AutoDeactivation, Status, errorMessage);
+
+			}
+
+			if (TMSAggregator != null && !TMSAggregator.trim().isEmpty()) {
+
+				BL.clickElement(A.IsTMSAggregator);
+				BL.selectDropdownOption(TMSAggregator);
 
 				++testcaseCount;
 
-				boolean VASStatus = true; // Assume success initially
+				String actualValue = BL.getElementValue(A.IsTMSAggregator);
+				boolean Status = true; // Assume success initially
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					if (actualValue != null) {
+						assertEquals(TMSAggregator.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
-					VASStatus = false;
+					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "EKYC Required", VAS2, VASStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Sales Info : TMS Aggregator ", TMSAggregator,
+						Status, errorMessage);
+			}
+
+			if (EKycRequired != null && !EKycRequired.trim().isEmpty()) {
+
+				BL.clickElement(A.EKycRequired);
+
+				BL.selectDropdownOption(EKycRequired);
+
+				++testcaseCount;
+
+				String actualValue = BL.getElementValue(A.EKycRequired);
+
+				boolean Status = true; // Assume success initially
+				try {
+					if (actualValue != null) {
+						assertEquals(EKycRequired.toUpperCase(), actualValue.toUpperCase());
+					}
+				} catch (AssertionError e) {
+					Status = false;
+					errorMessage = e.getMessage(); // Capture error message
+				}
+
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Sales Info : EKYC Required", EKycRequired,
+						Status, errorMessage);
 
 			}
 
@@ -507,7 +582,8 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "Sales Info", NextstepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Sales Info : ", "NextStep", NextstepStatus,
+					errorMessage);
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
@@ -523,13 +599,13 @@ public class SystemUserMutipleAggregatorRegression {
 			Faker faker = new Faker();
 
 //			String LegalName = null;
-			String LegalName = testData.get("LegalName");
+			String LegalName = testData.get("Legal Name");
 			String brand = testData.get("Brand Name");
 			String Address = testData.get("Registered Address");
 			String pincode = testData.get("Registered Pincode");
 			String type = testData.get("Business Type");
 			String registeredNumber = testData.get("Registered Number");
-			String pan = generateValidPAN(faker);
+			String pan = testData.get("Company PAN");
 			String GstIN = testData.get("GSTIN");
 			String frequency = testData.get("Statement Frequency");
 			String Type = testData.get("Statement Type");
@@ -540,10 +616,6 @@ public class SystemUserMutipleAggregatorRegression {
 
 			TestCaseManager testCaseManager = new TestCaseManager();
 
-			if (LegalName == null || LegalName.trim().isEmpty()) {
-				LegalName = generateValidLegalName(faker, testData);
-			}
-
 			if (LegalName != null && !LegalName.trim().isEmpty()) {
 
 				BL.clickElement(A.ComapnyInfo);
@@ -551,6 +623,7 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.clickElement(A.LegalName);
 
 				BL.enterElement(A.LegalName, LegalName);
+				performTabKeyPress();
 
 				++testcaseCount;
 
@@ -558,13 +631,15 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyLegalNameInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyLegalNameFieldisRequired, "Field Required");
 				} catch (AssertionError e) {
 					legalNameStatus = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Legal Name", LegalName, legalNameStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Company Info : Legal Name", LegalName,
+						legalNameStatus, errorMessage);
 
 			}
 
@@ -573,6 +648,7 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.clickElement(A.BrandName);
 
 				BL.enterElement(A.BrandName, brand);
+				performTabKeyPress();
 
 				++testcaseCount;
 
@@ -580,13 +656,15 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyBrandNameInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyBrandNameFieldisRequired, "Field Required");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Brand Name", brand, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Company Info : Brand Name", brand, Status,
+						errorMessage);
 
 			}
 
@@ -595,20 +673,22 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.clickElement(A.RegisteredAddress);
 
 				BL.enterElement(A.RegisteredAddress, Address);
-
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyRegAddressInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyRegAddressFieldisRequired, "Field Required");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Registered Address", Address, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Company Info : Registered Address", Address,
+						Status, errorMessage);
 
 			}
 
@@ -619,6 +699,7 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.enterElement(A.RegisteredPincode, pincode);
 
 				BL.selectDropdownOption(pincode);
+				performTabKeyPress();
 
 				++testcaseCount;
 
@@ -626,13 +707,15 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyRegPincodeInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyRegPinFieldisRequired, "Field Required");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Registered Pincode", pincode, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Company Info : Registered Pincode", pincode,
+						Status, errorMessage);
 
 			}
 
@@ -647,14 +730,19 @@ public class SystemUserMutipleAggregatorRegression {
 				boolean Status = true; // Assume success initially
 
 				try {
+					String actualValue = BL.getElementText(A.BusinessType);
+					if (actualValue != null) {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+						BL.isElementNotDisplayed(A.CompanyBusinessTypFieldisRequired, "Field Required");
+						assertEquals(type.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Business Type", type, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Company Info : Business Type", type, Status,
+						errorMessage);
 
 			}
 
@@ -671,7 +759,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 				BL.clickElement(A.ApplyButton);
 
-				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+				BL.isElementNotDisplayed(A.CompanyCalenderFieldisRequired, "Field is Required");
 			} catch (AssertionError e) {
 				DateStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
@@ -679,15 +767,12 @@ public class SystemUserMutipleAggregatorRegression {
 
 			logTestStep(TestcaseNo, "Established Year", "Current Date", DateStatus, errorMessage);
 
-//     		if (registeredNumber.contains("E")) {
-//				Double numberInScientificNotation = Double.valueOf(registeredNumber);
-//				registeredNumber = String.format("%.0f", numberInScientificNotation);
-
 			if (registeredNumber != null && !registeredNumber.trim().isEmpty()) {
 
 				BL.clickElement(A.RegisterNumber);
 
 				BL.enterElement(A.RegisterNumber, registeredNumber);
+				performTabKeyPress();
 
 				++testcaseCount;
 
@@ -695,21 +780,24 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyRegNumInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyRegNumFieldisRequired, "Field Required");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Registered Number", registeredNumber, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Company Info : 	Registered Number",
+						registeredNumber, Status, errorMessage);
 
 			}
 
 			if (pan != null && !pan.trim().isEmpty()) {
 
-				BL.clickElement(A.ComapnyPAN);
+				BL.clickElement(A.CompanyPAN);
 
-				BL.enterElement(A.ComapnyPAN, pan);
+				BL.enterElement(A.CompanyPAN, pan);
+				performTabKeyPress();
 
 				++testcaseCount;
 
@@ -717,13 +805,15 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyCmpPanInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyRegPanFieldisRequired, "Field Required");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Company PAN", pan, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Company Info : Company PAN", pan, Status,
+						errorMessage);
 
 			}
 
@@ -732,6 +822,7 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.clickElement(A.GSTIN);
 
 				BL.enterElement(A.GSTIN, GstIN);
+				performTabKeyPress();
 
 				++testcaseCount;
 
@@ -739,13 +830,15 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyCmpGSTInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyCmpGSTFieldisRequired, "Field Required");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "GstIN", GstIN, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Company Info : GstIN", GstIN, Status,
+						errorMessage);
 
 			}
 
@@ -760,14 +853,18 @@ public class SystemUserMutipleAggregatorRegression {
 				boolean Status = true; // Assume success initially
 
 				try {
+					String actualValue = BL.getElementText(A.StatementFrequency);
+					if (actualValue != null) {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+						assertEquals(frequency.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Statement Frequency", frequency, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Company Info : 	Statement Frequency", frequency,
+						Status, errorMessage);
 
 			}
 
@@ -783,13 +880,19 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					String actualValue = BL.getElementText(A.StatementType);
+					if (actualValue != null) {
+
+						BL.isElementNotDisplayed(A.CompanyStatementTypeFieldisRequired, "Field Required");
+						assertEquals(Type.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Statement Type", Type, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Company Info : Statement Type", Type, Status,
+						errorMessage);
 
 			}
 
@@ -807,13 +910,15 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyEmailDomainFieldisRequired, "Field Required");
+					BL.isElementNotDisplayed(A.CompanyEmailDomainInvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Domain", domain, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Company Info : Domain", domain, Status,
+						errorMessage);
 
 			}
 
@@ -828,7 +933,8 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "Company Info", NextstepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Company Info : ", "NextStep", NextstepStatus,
+					errorMessage);
 
 			return LegalName;
 
@@ -852,14 +958,14 @@ public class SystemUserMutipleAggregatorRegression {
 			String title = testData.get("Title");
 			String FirstName = testData.get("First Name");
 			String LastName = testData.get("Last Name");
-			String pan = generateValidPAN(faker);
+			String pan = testData.get("PAN");
 			String Address = testData.get("Address");
 			String pincode = testData.get("Personal Pincode");
 			String PMobilenumber = testData.get("Personal Mobile Number");
 			String telephone = testData.get("TelePhone Number");
 			String emailid = testData.get("Email");
 			String Nationality = testData.get("Nationality");
-			String aadhaar = generateValidAadhaar();
+			String aadhaar = testData.get("Aadhaar Number");
 			String Passport = testData.get("Passport");
 
 			if (title != null && !title.trim().isEmpty()) {
@@ -871,6 +977,7 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.clickElement(A.titlepersonal);
 
 				BL.selectDropdownOption(title);
+				performTabKeyPress();
 
 				++testcaseCount;
 
@@ -878,13 +985,20 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					String actualValue = BL.getElementValue(A.titlepersonal);
+					if (actualValue != null) {
+
+						BL.isElementNotDisplayed(A.PersonalinfoTitleFieldrequired, "Field is Required");
+
+						assertEquals(title.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Title", title, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Personal Info : Title", title, Status,
+						errorMessage);
 
 			}
 
@@ -893,20 +1007,23 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.clickElement(A.FirstNamePersonal);
 
 				BL.enterElement(A.FirstNamePersonal, FirstName);
+				performTabKeyPress();
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 
 				try {
+					BL.isElementNotDisplayed(A.PersonalinfoFirstNameFieldrequired, "Field is Required");
+					BL.isElementNotDisplayed(A.PersonalInfoFirstNameInvalidFormat, "Invalid Format");
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "FirstName", FirstName, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Personal Info : FirstName", FirstName, Status,
+						errorMessage);
 
 			}
 
@@ -915,20 +1032,21 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.clickElement(A.LastNamePersonal);
 
 				BL.enterElement(A.LastNamePersonal, LastName);
-
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 
 				try {
+					BL.isElementNotDisplayed(A.PersonalInfoLastNameInvalidFormat, "Invalid Format");
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "LastName", LastName, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Personal Info : LastName", LastName, Status,
+						errorMessage);
 
 			}
 
@@ -942,34 +1060,38 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.clickElement(A.Month);
 				BL.clickElement(A.Date);
 				BL.clickElement(A.ApplyButton);
+				performTabKeyPress();
 
-				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+				BL.isElementNotDisplayed(A.PersonalinfoDOBFieldrequired, "Field is Required");
+
 			} catch (AssertionError e) {
 				DateStatus = false; // Set status to false if assertion fails
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Date Of Birth", "30/11/1998", DateStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Personal Info :  Date Of Birth", "30/11/1998",
+					DateStatus, errorMessage);
 
 			if (pan != null && !pan.trim().isEmpty()) {
 
 				BL.clickElement(A.PanPersonal);
 
 				BL.enterElement(A.PanPersonal, pan);
-
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 
 				try {
+					BL.isElementNotDisplayed(A.PersonalinfoPANFieldrequired, "Field is Required");
+					BL.isElementNotDisplayed(A.PersonalInfoPanInvalidFormat, "Invalid Format");
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Pan", pan, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Personal Info : Pan", pan, Status, errorMessage);
 
 			}
 
@@ -978,20 +1100,21 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.clickElement(A.AddressPersonal);
 
 				BL.enterElement(A.AddressPersonal, Address);
-
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalinfoAddressFieldrequired, "Field is Required");
+					BL.isElementNotDisplayed(A.PersonalInfoAddressInvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Address", Address, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Personal Info : Address", Address, Status,
+						errorMessage);
 
 			}
 
@@ -999,21 +1122,24 @@ public class SystemUserMutipleAggregatorRegression {
 
 				BL.clickElement(A.PincodePersonal);
 
-				BL.selectDropdownOption(pincode);
+				BL.enterElement(A.PincodePersonal, pincode);
 
+				BL.selectDropdownOption(pincode);
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalinfoPincodeFieldrequired, "Field is Required");
+					BL.isElementNotDisplayed(A.PersonalInfoPincodeInvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Pincode", pincode, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Personal Info : Pincode", pincode, Status,
+						errorMessage);
 
 			}
 
@@ -1027,6 +1153,7 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.clickElement(A.MobilePersonal);
 
 				BL.enterElement(A.MobilePersonal, Mobilenumber);
+				performTabKeyPress();
 
 				++testcaseCount;
 
@@ -1034,13 +1161,16 @@ public class SystemUserMutipleAggregatorRegression {
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalinfoMobileFieldrequired, "Field is Required");
+					BL.isElementNotDisplayed(A.PersonalInfoMobileInvalidFormat, "Invalid Format");
+
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Mobilenumber", Mobilenumber, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Personal Info : Mobilenumber", Mobilenumber,
+						Status, errorMessage);
 
 			}
 
@@ -1049,20 +1179,20 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.clickElement(A.telephonepersonal);
 
 				BL.enterElement(A.telephonepersonal, telephone);
-
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalInfoTelephoneInvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Telephone Number", telephone, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Personal Info : Telephone Number", telephone,
+						Status, errorMessage);
 
 			}
 
@@ -1071,20 +1201,21 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.clickElement(A.emailPersonal);
 
 				BL.enterElement(A.emailPersonal, emailid);
-
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalinfoEmailFieldrequired, "Field is Required");
+					BL.isElementNotDisplayed(A.PersonalinfoEmailFieldrequired, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Emailid", emailid, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Personal Info : Emailid", emailid, Status,
+						errorMessage);
 
 			}
 
@@ -1093,20 +1224,22 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.clickElement(A.Nationalitypersonal);
 
 				BL.enterElement(A.Nationalitypersonal, Nationality);
-
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 
 				try {
+					BL.isElementNotDisplayed(A.PersonalinfoNationalityFieldrequired, "Field is Required");
+					BL.isElementNotDisplayed(A.PersonalInfoNationalityInvalidFormat, "Invalid Format");
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Nationality", Nationality, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Personal Info : Nationality", Nationality,
+						Status, errorMessage);
 
 			}
 
@@ -1115,20 +1248,21 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.clickElement(A.AadhaarNumberPersonal);
 
 				BL.enterElement(A.AadhaarNumberPersonal, aadhaar);
-
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 
 				try {
+					BL.isElementNotDisplayed(A.PersonalInfoAadhaarInvalidFormat, "Invalid Format");
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Aadhaar", aadhaar, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Personal Info : Aadhaar", aadhaar, Status,
+						errorMessage);
 
 			}
 
@@ -1137,20 +1271,21 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.clickElement(A.PassportNumberPersonal);
 
 				BL.enterElement(A.PassportNumberPersonal, Passport);
-
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 
 				try {
+					BL.isElementNotDisplayed(A.PersonalInfoPassportNumberInvalidFormat, "Invalid Format");
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Passport", Passport, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Personal Info : Passport", Passport, Status,
+						errorMessage);
 
 			}
 
@@ -1174,7 +1309,8 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Date", "Passport ExpiryDate", DateStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Personal Info : Date", "Passport ExpiryDate",
+					DateStatus, errorMessage);
 
 			boolean SaveStatus = true;
 			try {
@@ -1188,7 +1324,8 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Save Button", "Personal Info", SaveStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Personal Info : ", "Save Button", SaveStatus,
+					errorMessage);
 
 			boolean NextstepStatus = true;
 			try {
@@ -1201,7 +1338,8 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "Personal Info", NextstepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Personal Info : ", "NextStep", NextstepStatus,
+					errorMessage);
 
 		} catch (Exception e) {
 			// Use the exception handler to log and handle exceptions gracefully
@@ -1235,19 +1373,21 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.clickElement(B.ClickonCommuName);
 
 				BL.enterElement(B.ClickonCommuName, CommName);
-
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean CommunicationNameStatus = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationNameInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationNameFieldisRequired, "Field is Required");
 				} catch (AssertionError e) {
 					CommunicationNameStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Admin user details Communication Name", CommName, CommunicationNameStatus,
-						errorMessage);
+				logTestStep(TestcaseNo,
+						"MMS : Aggregator Onboarding : Communication Info : Admin user details Communication Name",
+						CommName, CommunicationNameStatus, errorMessage);
 
 			}
 
@@ -1256,19 +1396,21 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.clickElement(B.ClickonCommuPosition);
 
 				BL.enterElement(B.ClickonCommuPosition, CommPosition);
-
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean CommunicationPositionStatus = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationPositionInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationPositionFieldisRequired, "Field is Required");
 				} catch (AssertionError e) {
 					CommunicationPositionStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Admin user details Communication Position", CommPosition,
-						CommunicationPositionStatus, errorMessage);
+				logTestStep(TestcaseNo,
+						"MMS : Aggregator Onboarding : Communication Info : Admin user details Communication Position",
+						CommPosition, CommunicationPositionStatus, errorMessage);
 
 			}
 
@@ -1283,19 +1425,21 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.clickElement(B.ClickonCommuMobileNumber);
 
 				BL.enterElement(B.ClickonCommuMobileNumber, communicationMobileNumber);
-
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean CommunicationMobileNumberStatus = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationMobileInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationMobileFieldisRequired, "Field is Required");
 				} catch (AssertionError e) {
 					CommunicationMobileNumberStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Admin user details Communication MobileNumber", communicationMobileNumber,
-						CommunicationMobileNumberStatus, errorMessage);
+				logTestStep(TestcaseNo,
+						"MMS : Aggregator Onboarding : Communication Info : Admin user details Communication MobileNumber",
+						communicationMobileNumber, CommunicationMobileNumberStatus, errorMessage);
 
 			}
 
@@ -1310,20 +1454,21 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.clickElement(B.ClickonCommuEmailId);
 
 				BL.enterElement(B.ClickonCommuEmailId, Communicationemailid);
-
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean CommunicationEmailIDStatus = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationEmailFieldisRequired, "Field is Required");
 
 				} catch (AssertionError e) {
 					CommunicationEmailIDStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Admin user details Communication Emailid", Communicationemailid,
-						CommunicationEmailIDStatus, errorMessage);
+				logTestStep(TestcaseNo,
+						"MMS : Aggregator Onboarding : Communication Info : Admin user details Communication Emailid",
+						Communicationemailid, CommunicationEmailIDStatus, errorMessage);
 
 			}
 
@@ -1336,13 +1481,19 @@ public class SystemUserMutipleAggregatorRegression {
 				boolean CommunicationADUSERStatus = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					String actualValue = BL.getElementText(B.ClickOnAdUsers);
+					if (actualValue != null) {
 
+						System.out.println("Expected network: " + ADUSer);
+						System.out.println("Actual ADUser from UI: " + BL.getElementText(B.ClickOnAdUsers));
+						assertEquals(ADUSer.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					CommunicationADUSERStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Admin user details AD User", ADUSer, CommunicationADUSERStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Communication Info : Admin user details AD User",
+						ADUSer, CommunicationADUSERStatus, errorMessage);
 
 			}
 
@@ -1357,7 +1508,8 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Admin user details Save Button", "Communication Info", SaveStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Communication Info : ",
+					"Admin user details Save Button", SaveStatus, errorMessage);
 
 		} catch (Exception e) {
 			// Use the exception handler to log and handle exceptions gracefully
@@ -1381,8 +1533,6 @@ public class SystemUserMutipleAggregatorRegression {
 			String CommEmailid = testData.get("Communication EmailId");
 
 			BL.clickElement(B.CommunicationInfo);
-			
-			Thread.sleep(1000);
 
 			BL.clickElement(B.ClickonCommSettlementandReconADD);
 
@@ -1391,19 +1541,21 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.clickElement(B.ClickonCommuName);
 
 				BL.enterElement(B.ClickonCommuName, CommName);
-
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean CommunicationNameStatus = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationNameInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationNameFieldisRequired, "Field is Required");
 				} catch (AssertionError e) {
 					CommunicationNameStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "SettlementReconContactDetails Communication Name", CommName,
-						CommunicationNameStatus, errorMessage);
+				logTestStep(TestcaseNo,
+						"MMS : Aggregator Onboarding : Communication Info : SettlementReconContactDetails Communication Name",
+						CommName, CommunicationNameStatus, errorMessage);
 
 			}
 
@@ -1412,19 +1564,21 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.clickElement(B.ClickonCommuPosition);
 
 				BL.enterElement(B.ClickonCommuPosition, CommPosition);
-
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean CommunicationPositionStatus = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationPositionInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationPositionFieldisRequired, "Field is Required");
 				} catch (AssertionError e) {
 					CommunicationPositionStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "SettlementReconContactDetails Communication Position", CommPosition,
-						CommunicationPositionStatus, errorMessage);
+				logTestStep(TestcaseNo,
+						"MMS : Aggregator Onboarding : Communication Info : SettlementReconContactDetails Communication Position",
+						CommPosition, CommunicationPositionStatus, errorMessage);
 
 			}
 
@@ -1439,18 +1593,20 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.clickElement(B.ClickonCommuMobileNumber);
 
 				BL.enterElement(B.ClickonCommuMobileNumber, communicationMobileNumber);
-
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean CommunicationMobileNumberStatus = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationMobileInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationMobileFieldisRequired, "Field is Required");
 				} catch (AssertionError e) {
 					CommunicationMobileNumberStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "SettlementReconContactDetails Communication MobileNumber",
+				logTestStep(TestcaseNo,
+						"MMS : Aggregator Onboarding : Communication Info : SettlementReconContactDetails Communication MobileNumber",
 						communicationMobileNumber, CommunicationMobileNumberStatus, errorMessage);
 
 			}
@@ -1466,20 +1622,21 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.clickElement(B.ClickonCommuEmailId);
 
 				BL.enterElement(B.ClickonCommuEmailId, Communicationemailid);
-
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean CommunicationEmailIDStatus = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationEmailFieldisRequired, "Field is Required");
 
 				} catch (AssertionError e) {
 					CommunicationEmailIDStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "SettlementReconContactDetails Communication Emailid", Communicationemailid,
-						CommunicationEmailIDStatus, errorMessage);
+				logTestStep(TestcaseNo,
+						"MMS : Aggregator Onboarding : Communication Info : SettlementReconContactDetails Communication Emailid",
+						Communicationemailid, CommunicationEmailIDStatus, errorMessage);
 
 			}
 
@@ -1495,8 +1652,8 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "SettlementReconContactDetails Save Button", "Communication Info", SaveStatus,
-					errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Communication Info : ",
+					"SettlementReconContactDetails Save Button", SaveStatus, errorMessage);
 
 			boolean NextstepStatus = true;
 			try {
@@ -1510,7 +1667,8 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "Communication Info", NextstepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Communication Info : ", "NextStep", NextstepStatus,
+					errorMessage);
 
 		} catch (Exception e) {
 			// Use the exception handler to log and handle exceptions gracefully
@@ -1552,8 +1710,9 @@ public class SystemUserMutipleAggregatorRegression {
 				// Retrieve data for each field, handling null or empty values
 				String channelbank = rowData.getOrDefault("Channel Bank Name", "").trim();
 				String channel = rowData.getOrDefault("Channel", "").trim();
-				String network = rowData.getOrDefault("Network", "").trim();
-				String transactionSet = rowData.getOrDefault("Transaction Sets", "").trim();
+				String networkData = rowData.getOrDefault("Network", "").trim().replaceAll("\\s*,\\s*", ",");
+				String transactionSet = rowData.getOrDefault("Transaction Sets", "").trim().replaceAll("\\s*,\\s*",
+						",");
 				String routing = rowData.getOrDefault("Routing", "").trim();
 
 				// Clear the key-value arrays before each iteration
@@ -1569,15 +1728,17 @@ public class SystemUserMutipleAggregatorRegression {
 					BL.clickElement(A.ChannelBankName);
 					BL.enterElement(A.ChannelBankName, channelbank);
 					BL.selectDropdownOption(channelbank);
-
+					performTabKeyPress();
 					key.add("Channel Bank Name-" + currentRow);
 					value.add(channelbank);
 
 					boolean channelBankStatus = true;
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.ChannelAggregatorBankNameInvalidBankName, "Invalid Format");
+					BL.isElementNotDisplayed(A.ChannelAggregatorBankNameFieldRequired, "Field is Required");
 
 					testcaseCount++;
-					logTestStep(TestcaseNo, "Channel BANK", channelbank, channelBankStatus, errorMessage);
+					logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Channel Config : Channel BANK", channelbank,
+							channelBankStatus, errorMessage);
 
 				} else {
 					System.out.println("ChannelBank data is empty for row: " + currentRow);
@@ -1592,53 +1753,107 @@ public class SystemUserMutipleAggregatorRegression {
 					value.add(channel);
 
 					performTabKeyPress();
+					String actualValue = BL.getElementText(B.CommercialChannel);
 
-					boolean channelStatus = true;
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-
+					boolean Status = true;
+					try {
+						if (actualValue != null) {
+							BL.isElementNotDisplayed(B.ChannelnameFieldisRequired, "Field is Required");
+							assertEquals(channel.toUpperCase(), actualValue.toUpperCase());
+						}
+					} catch (AssertionError e) {
+						Status = false;
+						errorMessage = e.getMessage(); // Capture the assertion error
+					}
 					testcaseCount++;
-					logTestStep(TestcaseNo, "Channel", channel, channelStatus, errorMessage);
+					logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Channel Config : Channel", channel, Status,
+							errorMessage);
 
 				} else {
 					System.out.println("Channel data is empty for row: " + currentRow);
 				}
 
 				// Process Network
-				if (!network.isEmpty()) {
-					BL.clickElement(B.ClickOntNetwork);
-					BL.selectDropdownOption(network);
 
-					key.add("Network-" + currentRow);
-					value.add(network);
+				if (!networkData.isEmpty()) {
+					try {
+						String[] networks = networkData.split(",");
+						for (String network : networks) {
+							network = network.trim();
+							if (!network.isEmpty()) {
+								BL.clickElement(B.ClickOntNetwork);
+								BL.selectDropdownOption(network);
 
-					performTabKeyPress();
+								key.add("Network-" + currentRow);
+								value.add(network);
 
-					boolean networkStatus = true;
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+								performTabKeyPress();
 
-					testcaseCount++;
-					logTestStep(TestcaseNo, "Network", network, networkStatus, errorMessage);
+							}
+						}
+						String actualValue = BL.getElementText(B.ClickOntNetwork);
+						boolean Status = true;
+						try {
+							if (actualValue != null) {
 
+								BL.isElementNotDisplayed(B.ChannelNetworkFieldisRequired, "Field is Required");
+								assertEquals(networkData.toUpperCase(), actualValue.toUpperCase());
+							}
+						} catch (AssertionError e) {
+							Status = false;
+							errorMessage = e.getMessage(); // Capture the assertion error
+						}
+						testcaseCount++;
+						logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Channel Config : Network", networkData,
+								Status, errorMessage);
+					} catch (Exception e) {
+						System.out.println(
+								"Error in processing Network data for row: " + currentRow + " - " + e.getMessage());
+						throw e;
+
+					}
 				} else {
 					System.out.println("Network data is empty for row: " + currentRow);
 				}
 
 				// Process Transaction Set
 				if (!transactionSet.isEmpty()) {
-					BL.clickElement(B.ClickOntransaction);
-					BL.selectDropdownOption(transactionSet);
+					try {
+						String[] transa = transactionSet.split(",");
+						for (String trans : transa) {
+							trans = trans.trim();
+							if (!trans.isEmpty()) {
+								BL.clickElement(B.ClickOntransaction);
+								BL.selectDropdownOption(trans);
 
-					key.add("Transaction Set-" + currentRow);
-					value.add(transactionSet);
+								key.add("Transaction Set-" + currentRow);
+								value.add(transactionSet);
 
-					performTabKeyPress();
+								performTabKeyPress();
 
-					boolean transactionSetStatus = true;
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+							}
 
-					testcaseCount++;
-					logTestStep(TestcaseNo, "TransactionSet", transactionSet, transactionSetStatus, errorMessage);
+						}
+						String actualValue = BL.getElementText(B.ClickOntransaction);
+						boolean Status = true;
+						try {
+							if (actualValue != null) {
+								BL.isElementNotDisplayed(B.ChannelTransactionFieldisRequired, "Field is Required");
+								assertEquals(transactionSet.toUpperCase(), actualValue.toUpperCase());
+							}
+						} catch (AssertionError e) {
+							Status = false;
+							errorMessage = e.getMessage(); // Capture the assertion error
+						}
+						testcaseCount++;
+						logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Channel Config : TransactionSet",
+								transactionSet, Status, errorMessage);
 
+					} catch (Exception e) {
+						System.out.println(
+								"Error in processing Network data for row: " + currentRow + " - " + e.getMessage());
+						throw e;
+					}
 				} else {
 					System.out.println("Transaction Set data is empty for row: " + currentRow);
 				}
@@ -1654,7 +1869,8 @@ public class SystemUserMutipleAggregatorRegression {
 					errorMessage = e.getMessage();
 				}
 
-				logTestStep(TestcaseNo, "Save Button", "Channel Config", saveStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Channel Config : ", "Save Button", saveStatus,
+						errorMessage);
 			}
 
 			// Process Next Step
@@ -1668,7 +1884,8 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage();
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "Channel Config", nextStepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Channel Config : ", "NextStep", nextStepStatus,
+					errorMessage);
 
 		} catch (Exception e) {
 			// Handle and log exceptions
@@ -1688,14 +1905,14 @@ public class SystemUserMutipleAggregatorRegression {
 
 			String poAImage = testData.get("Company Proof of address");
 
+			BL.ActionclickElement(B.Kyc);
+
 			if (poAImage != null && !poAImage.trim().isEmpty()) {
 
-				BL.clickElement(B.Kyc);
-
-				Thread.sleep(5000);
+				Thread.sleep(3000);
 
 				BL.UploadImage(A.CompanyProofofaddressUpload, poAImage);
-				++testcaseCount;	
+				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
@@ -1705,7 +1922,8 @@ public class SystemUserMutipleAggregatorRegression {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "KYC Details", poAImage, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : KYC : KYC Details", poAImage, Status,
+						errorMessage);
 
 			}
 
@@ -1723,7 +1941,7 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage();
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "KYC-Aggregator", nextStepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : KYC : ", "NextStep", nextStepStatus, errorMessage);
 
 		} catch (Exception e) {
 			// Handle and log exceptions
@@ -1733,7 +1951,7 @@ public class SystemUserMutipleAggregatorRegression {
 		}
 	}
 
-	private void fillRiskInfo(Map<String, String> testData, int TestcaseNo) throws InterruptedException {
+	private void fillRiskInfo(Map<String, String> testData, int TestcaseNo) throws Exception {
 
 		String VelocityCheckMinutes = testData.get("Velocity Check Minutes");
 
@@ -1813,7 +2031,7 @@ public class SystemUserMutipleAggregatorRegression {
 				boolean Status1 = true; // Assume success initially
 				try {
 					// Check if there is an invalid format
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.VcheckminutesFieldisRequired, "Field is Required");
 				} catch (AssertionError e) {
 					// If an AssertionError occurs, set the status to false and capture the error
 					// message
@@ -1823,13 +2041,11 @@ public class SystemUserMutipleAggregatorRegression {
 
 				// Log the test step with the test case number, field, input value, status, and
 				// error message (if any)
-				logTestStep(TestcaseNo, "Velocity Check Minutes", VelocityCheckMinutes, Status1, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : Velocity Check Minutes",
+						VelocityCheckMinutes, Status1, errorMessage);
 			}
 
 			if (VelocityCheckCount != null && !VelocityCheckCount.trim().isEmpty()) {
-//		if (VelocityCheckCount != null && VelocityCheckCount.matches("\\d+\\.0")) {
-//			VelocityCheckCount = VelocityCheckCount.substring(0, VelocityCheckCount.indexOf(".0"));
-
 				BL.clickElement(A.VelocityCheckCount);
 
 				BL.enterElement(A.VelocityCheckCount, VelocityCheckCount);
@@ -1838,12 +2054,13 @@ public class SystemUserMutipleAggregatorRegression {
 				boolean Status = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.VcheckcountFieldisRequired, "Field is Required");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Velocity Check Count", VelocityCheckCount, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : Velocity Check Count",
+						VelocityCheckCount, Status, errorMessage);
 
 			}
 
@@ -1856,12 +2073,13 @@ public class SystemUserMutipleAggregatorRegression {
 				boolean Status = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CashposcountFieldisRequired, "Field is Required");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "CashPOSCount", CashPOSCount, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : CashPOSCount", CashPOSCount, Status,
+						errorMessage);
 
 			}
 
@@ -1875,12 +2093,13 @@ public class SystemUserMutipleAggregatorRegression {
 				boolean Status = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.MicroATMCountFieldisRequired, "Field is Required");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MicroATMCount", MicroATMCount, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : MicroATMCount", MicroATMCount,
+						Status, errorMessage);
 
 			}
 
@@ -1891,16 +2110,20 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.selectDropdownOption(card);
 
 				++testcaseCount;
+				String actualValue = BL.getElementText(A.InternationalCardCount);
 
 				boolean Status = true; // Assume success initially
 				try {
+					if (actualValue != null) {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+						assertEquals(card.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "International Card Acceptance", card, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : International Card Acceptance", card,
+						Status, errorMessage);
 
 			}
 
@@ -1915,12 +2138,14 @@ public class SystemUserMutipleAggregatorRegression {
 				boolean Status = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.ICADailyFieldisRequired, "Field is Required");
+					BL.isElementNotDisplayed(B.ICAdailylessthanweeklylimtError, "Field is Required");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "ICA DAILY", ICADAILY, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : ICA DAILY", ICADAILY, Status,
+						errorMessage);
 
 			}
 
@@ -1934,12 +2159,15 @@ public class SystemUserMutipleAggregatorRegression {
 				boolean Status = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.ICAWeeklyFieldisRequired, "Field is Required");
+					BL.isElementNotDisplayed(B.ICAWeeklygreaterthanDailylimtError, "Field is Required");
+					BL.isElementNotDisplayed(B.ICAWeeklylessthanmonthlylimtError, "Field is Required");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "ICA WEEKLY", ICAWEEKLY, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : ICA WEEKLY", ICAWEEKLY, Status,
+						errorMessage);
 
 			}
 
@@ -1952,35 +2180,38 @@ public class SystemUserMutipleAggregatorRegression {
 				boolean Status = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.ICAMonthlyFieldisRequired, "Field is Required");
+					BL.isElementNotDisplayed(B.ICAMonthlygreaterthanweeklylimtError, "Field is Required");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "ICA Monthly", ICAMonthly, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : ICA Monthly", ICAMonthly, Status,
+						errorMessage);
 
 			}
 
-//POS	
-
+//POS
 			if (POSDAILY != null && !POSDAILY.trim().isEmpty()) {
 				BL.clickElement(B.POSDaily);
 
 				BL.CLearElement(B.POSDaily);
 
 				BL.enterElement(B.POSDaily, POSDAILY);
-
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
 					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "POS DAILY", POSDAILY, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : POS DAILY", POSDAILY, Status,
+						errorMessage);
 
 			}
 
@@ -2002,7 +2233,8 @@ public class SystemUserMutipleAggregatorRegression {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "POS WEEKLY", POSWEEKLY, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : POS WEEKLY", POSWEEKLY, Status,
+						errorMessage);
 
 			}
 
@@ -2012,17 +2244,20 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.CLearElement(B.POSMonthly);
 
 				BL.enterElement(B.POSMonthly, POSMonthly);
+
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.MonthlyEqualValueNotAllowed, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "POS Monthly", POSMonthly, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : POS Monthly", POSMonthly, Status,
+						errorMessage);
 
 			}
 
@@ -2042,7 +2277,8 @@ public class SystemUserMutipleAggregatorRegression {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "POS Minimum", POSMinimum, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : POS Minimum", POSMinimum, Status,
+						errorMessage);
 
 			}
 
@@ -2062,7 +2298,8 @@ public class SystemUserMutipleAggregatorRegression {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "POS Maximum", POSMaximum, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : POS Maximum", POSMaximum, Status,
+						errorMessage);
 
 			}
 
@@ -2074,17 +2311,17 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.CLearElement(B.UPIDaily);
 
 				BL.enterElement(B.UPIDaily, UPIDAILY);
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "UPI DAILY", UPIDAILY, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : UPI DAILY", UPIDAILY, Status,
+						errorMessage);
 
 			}
 
@@ -2104,7 +2341,8 @@ public class SystemUserMutipleAggregatorRegression {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "UPI WEEKLY", UPIWEEKLY, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : UPI WEEKLY", UPIWEEKLY, Status,
+						errorMessage);
 
 			}
 
@@ -2114,17 +2352,19 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.CLearElement(B.UPIMonthly);
 
 				BL.enterElement(B.UPIMonthly, UPIMonthly);
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.MonthlyEqualValueNotAllowed, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "UPI Monthly", UPIMonthly, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : UPI Monthly", UPIMonthly, Status,
+						errorMessage);
 
 			}
 
@@ -2145,7 +2385,8 @@ public class SystemUserMutipleAggregatorRegression {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "UPI Minimum", UPIMinimum, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : UPI Minimum", UPIMinimum, Status,
+						errorMessage);
 
 			}
 
@@ -2167,19 +2408,19 @@ public class SystemUserMutipleAggregatorRegression {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "UPI Maximum", UPIMaximum, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : UPI Maximum", UPIMaximum, Status,
+						errorMessage);
 
 			}
 
 //AEPS		
-
 			if (AEPSDAILY != null && !AEPSDAILY.trim().isEmpty()) {
 				BL.clickElement(B.AEPSDaily);
 
 				BL.CLearElement(B.AEPSDaily);
 
 				BL.enterElement(B.AEPSDaily, AEPSDAILY);
-
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
@@ -2190,7 +2431,8 @@ public class SystemUserMutipleAggregatorRegression {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "AEPS DAILY", AEPSDAILY, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : AEPS DAILY", AEPSDAILY, Status,
+						errorMessage);
 
 			}
 
@@ -2211,7 +2453,8 @@ public class SystemUserMutipleAggregatorRegression {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "AEPS WEEKLY", AEPSWEEKLY, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : AEPS WEEKLY", AEPSWEEKLY, Status,
+						errorMessage);
 
 			}
 
@@ -2221,18 +2464,20 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.CLearElement(B.AEPSMonthly);
 
 				BL.enterElement(B.AEPSMonthly, AEPSMonthly);
+				performTabKeyPress();
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.MonthlyEqualValueNotAllowed, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "AEPS Monthly", AEPSMonthly, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : AEPS Monthly", AEPSMonthly, Status,
+						errorMessage);
 
 			}
 
@@ -2253,7 +2498,8 @@ public class SystemUserMutipleAggregatorRegression {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "AEPS Minimum", AEPSMinimum, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : AEPS Minimum", AEPSMinimum, Status,
+						errorMessage);
 
 			}
 
@@ -2275,7 +2521,8 @@ public class SystemUserMutipleAggregatorRegression {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "AEPS Maximum", AEPSMaximum, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : AEPS Maximum", AEPSMaximum, Status,
+						errorMessage);
 
 			}
 
@@ -2287,7 +2534,7 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.CLearElement(B.MATMDaily);
 
 				BL.enterElement(B.MATMDaily, MATMDAILY);
-
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
@@ -2298,7 +2545,8 @@ public class SystemUserMutipleAggregatorRegression {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MATM DAILY", MATMDAILY, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : MATM DAILY", MATMDAILY, Status,
+						errorMessage);
 
 			}
 
@@ -2319,7 +2567,8 @@ public class SystemUserMutipleAggregatorRegression {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MATM WEEKLY", MATMWEEKLY, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : MATM WEEKLY", MATMWEEKLY, Status,
+						errorMessage);
 
 			}
 
@@ -2329,17 +2578,19 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.CLearElement(B.MATMMonthly);
 
 				BL.enterElement(B.MATMMonthly, MATMMonthly);
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
+					BL.isElementNotDisplayed(B.MonthlyEqualValueNotAllowed, "Equal Value Not Allowed");
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MATM Monthly", MATMMonthly, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : MATM Monthly", MATMMonthly, Status,
+						errorMessage);
 
 			}
 
@@ -2360,7 +2611,8 @@ public class SystemUserMutipleAggregatorRegression {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MATM Minimum", MATMMinimum, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : MATM Minimum", MATMMinimum, Status,
+						errorMessage);
 
 			}
 
@@ -2382,7 +2634,8 @@ public class SystemUserMutipleAggregatorRegression {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MATM Maximum", MATMMaximum, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : MATM Maximum", MATMMaximum, Status,
+						errorMessage);
 
 			}
 
@@ -2397,7 +2650,8 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "Risk Info", NextstepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Risk Info : ", "NextStep", NextstepStatus,
+					errorMessage);
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
@@ -2449,11 +2703,11 @@ public class SystemUserMutipleAggregatorRegression {
 				if (!channel.isEmpty()) {
 
 					BL.clickElement(A.DiscountRate);
-//					Thread.sleep(1000);
+					Thread.sleep(1000);
 
 					BL.clickElement(B.ChannelADD);
 
-//					Thread.sleep(1000);
+					Thread.sleep(1000);
 					BL.clickElement(B.ClickOnChannel);
 
 					BL.selectDropdownOption(channel);
@@ -2462,12 +2716,15 @@ public class SystemUserMutipleAggregatorRegression {
 					value.add(channel);
 
 					performTabKeyPress();
+					String actualValue = BL.getElementText(B.ClickOnChannel);
 
-					boolean channelStatus = true;
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-
+					boolean Status = true;
+					if (actualValue != null) {
+						assertEquals(channel.toLowerCase(), actualValue.toLowerCase());
+					}
 					testcaseCount++;
-					logTestStep(TestcaseNo, "DiscountRate : Channel", channel, channelStatus, errorMessage);
+					logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Discount Rate : Channel", channel, Status,
+							errorMessage);
 
 				} else {
 					System.out.println("Channel data is empty for row: " + currentRow);
@@ -2480,12 +2737,23 @@ public class SystemUserMutipleAggregatorRegression {
 					BL.selectDropdownOption(pricingPlan);
 
 					performTabKeyPress();
+					String actualValue = BL.getElementText(A.DiscountRatePricingPlan);
 
-					boolean networkStatus = true;
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					boolean Status = true;
+					try {
+						if (actualValue != null) {
+
+							BL.isElementNotDisplayed(A.DiscountRatePricingPlanFieldRequired, "Field is Required");
+							assertEquals(pricingPlan.toUpperCase(), actualValue.toUpperCase());
+						}
+					} catch (AssertionError e) {
+						Status = false;
+						errorMessage = e.getMessage();
+					}
 
 					testcaseCount++;
-					logTestStep(TestcaseNo, "Pricing Plan", pricingPlan, networkStatus, errorMessage);
+					logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Discount Rate : Pricing Plan", pricingPlan,
+							Status, errorMessage);
 
 				} else {
 					System.out.println("Network data is empty for row: " + currentRow);
@@ -2503,7 +2771,8 @@ public class SystemUserMutipleAggregatorRegression {
 					errorMessage = e.getMessage();
 				}
 
-				logTestStep(TestcaseNo, "Save Button", "Aggregator Discount Rate", saveStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Discount Rate : ", "Save Button", saveStatus,
+						errorMessage);
 			}
 // Process Next Step
 			boolean nextStepStatus = true;
@@ -2517,7 +2786,8 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage();
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "Aggregator Discount Rate", nextStepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Discount Rate : ", "NextStep", nextStepStatus,
+					errorMessage);
 
 		} catch (Exception e) {
 			// Handle and log exceptions
@@ -2558,16 +2828,20 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.selectDropdownOption(channel);
 
 				++testcaseCount;
-
+				String actualValue = BL.getElementText(B.SettlementChannel);
 				boolean Status = true; // Assume success initially
 				try {
+					if (actualValue != null) {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+						BL.isElementNotDisplayed(B.SettlementChannelFieldisRequired, "Field is Required");
+						assertEquals(channel.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Settlement Channel", channel, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Settlement Info : Channel", channel, Status,
+						errorMessage);
 
 			}
 
@@ -2577,16 +2851,19 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.selectDropdownOption(Account);
 
 				++testcaseCount;
-
+				String actualValue = BL.getElementText(B.SettlementAccountType);
 				boolean Status = true; // Assume success initially
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					if (actualValue != null) {
+						BL.isElementNotDisplayed(B.SettlementAccTypeFieldisRequired, "Field is Required");
+						assertEquals(Account.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Settlement AccountType", Account, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Settlement Info : AccountType", Account, Status,
+						errorMessage);
 
 			}
 
@@ -2597,13 +2874,15 @@ public class SystemUserMutipleAggregatorRegression {
 
 				boolean Status = true; // Assume success initially
 				try {
+					BL.isElementNotDisplayed(B.SettlementBankAccNumberFieldisRequired, "Field is Required");
+					assertEquals(BanKAccountNumber, BL.getElementText(B.SettlementBankAccountNumber));
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "BanKAccountNumber", BanKAccountNumber, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Settlement Info : BanKAccountNumber",
+						BanKAccountNumber, Status, errorMessage);
 
 			}
 
@@ -2619,13 +2898,14 @@ public class SystemUserMutipleAggregatorRegression {
 
 				boolean Status = true; // Assume success initially
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.SettlementIFSCFieldisRequired, "Field is Required");
+					BL.isElementNotDisplayed(B.SettlementIFSCInvalid, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "IFSC Code", IFSCCode, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Settlement Info : IFSC Code", IFSCCode, Status,
+						errorMessage);
 
 			}
 
@@ -2640,7 +2920,8 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Save Button", "Commercial", SaveStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Settlement Info : Save Button", "Commercial",
+					SaveStatus, errorMessage);
 
 			if (Mode != null && !Mode.trim().isEmpty()) {
 
@@ -2651,16 +2932,19 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.selectDropdownOption(Mode);
 
 				++testcaseCount;
-
+				String actualValue = BL.getElementText(A.SettlementMode);
 				boolean Status = true; // Assume success initially
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					if (actualValue != null) {
+						BL.isElementNotDisplayed(A.SettlementmodeFieldisRequired, "Field is Required");
+						assertEquals(Mode.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Settlement Mode", Mode, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Settlement Info : Settlement Mode", Mode, Status,
+						errorMessage);
 
 			}
 
@@ -2671,16 +2955,20 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.selectDropdownOption(payment);
 
 				++testcaseCount;
+				String actualValue = BL.getElementText(A.PaymentFlag);
 
 				boolean Status = true; // Assume success initially
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					if (actualValue != null) {
+						BL.isElementNotDisplayed(A.PaymentFlagFieldisRequired, "Field is Required");
+						assertEquals(payment.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Payment Flag", payment, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Settlement Info : Payment Flag", payment, Status,
+						errorMessage);
 
 			}
 
@@ -2695,7 +2983,8 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "Settlement Info", NextstepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Settlement Info : ", "NextStep", NextstepStatus,
+					errorMessage);
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
@@ -2729,16 +3018,18 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.selectDropdownOption(ISO);
 
 				++testcaseCount;
-
+				String actualValue = BL.getElementText(B.WhitelabelISOOnboarding);
 				boolean Status = true; // Assume success initially
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					if (actualValue != null) {
+						assertEquals(ISO.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Whitelabel ISO Onboarding", ISO, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Whitelabel : ISO Onboarding", ISO, Status,
+						errorMessage);
 			}
 
 			if (Sales != null && !Sales.trim().isEmpty()) {
@@ -2748,16 +3039,18 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.selectDropdownOption(Sales);
 
 				++testcaseCount;
-
+				String actualValue = BL.getElementText(B.WhitelabelSalesTeamOnboarding);
 				boolean Status = true; // Assume success initially
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					if (actualValue != null) {
+						assertEquals(Sales.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Whitelabel Sales Team Onboarding", Sales, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Whitelabel : Sales Team Onboarding", Sales,
+						Status, errorMessage);
 			}
 
 			if (merchant != null && !merchant.trim().isEmpty()) {
@@ -2766,16 +3059,18 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.selectDropdownOption(merchant);
 
 				++testcaseCount;
-
+				String actualValue = BL.getElementText(A.CreateMerchantUser);
 				boolean Status = true; // Assume success initially
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					if (actualValue != null) {
+						assertEquals(merchant.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Allow to create merchant onboard", merchant, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Whitelabel : Allow to create merchant onboard",
+						merchant, Status, errorMessage);
 			}
 
 			if (MaximumNoOfPlatform != null && !MaximumNoOfPlatform.trim().isEmpty()) {
@@ -2788,12 +3083,13 @@ public class SystemUserMutipleAggregatorRegression {
 				boolean Status = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.MaxPlatformUserInvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Maximum No Of Platform", MaximumNoOfPlatform, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Whitelabel : Maximum No Of Platform",
+						MaximumNoOfPlatform, Status, errorMessage);
 			}
 
 			if (usernameAs != null && !usernameAs.trim().isEmpty()) {
@@ -2803,16 +3099,18 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.selectDropdownOption(usernameAs);
 
 				++testcaseCount;
-
+				String actualValue = BL.getElementText(A.UserNameAs);
 				boolean Status = true; // Assume success initially
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					if (actualValue != null) {
+						assertEquals(usernameAs.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "UsernameAs", usernameAs, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Whitelabel : UsernameAs", usernameAs, Status,
+						errorMessage);
 			}
 
 			boolean NextstepStatus = true;
@@ -2826,7 +3124,8 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "Whitelabel", NextstepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Whitelabel : ", "NextStep", NextstepStatus,
+					errorMessage);
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
@@ -2837,7 +3136,7 @@ public class SystemUserMutipleAggregatorRegression {
 	}
 
 	// Method to configure Webhooks
-	private void configureWebhooks(Map<String, String> testData, int TestcaseNo) throws InterruptedException {
+	private void configureWebhooks(Map<String, String> testData, int TestcaseNo) throws Exception {
 
 		int testcaseCount = 0;
 		String errorMessage = "The data does not match or is empty.";
@@ -2860,34 +3159,38 @@ public class SystemUserMutipleAggregatorRegression {
 				BL.selectDropdownOption(type);
 
 				++testcaseCount;
-
+				String actualValue = BL.getElementText(B.WebhookType);
 				boolean Status = true; // Assume success initially
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					if (actualValue != null) {
+						BL.isElementNotDisplayed(B.Webhooktypes, "Field is Required");
+						assertEquals(type.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Webhook Type", type, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Webhook : Webhook Type", type, Status,
+						errorMessage);
 			}
 
 			if (webhookURL != null && !webhookURL.trim().isEmpty()) {
 
 				BL.clickElement(B.WebhookTypeURL);
 				BL.enterElement(B.WebhookTypeURL, webhookURL);
-
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.WebhookURLFieldisRequired, "Field is Required");
+					BL.isElementNotDisplayed(B.WebhookURLInvalidformat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Webhook URL", webhookURL, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Webhook : Webhook URL", webhookURL, Status,
+						errorMessage);
 			}
 
 			boolean SaveStatus = true;
@@ -2901,7 +3204,8 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Save Button", "Webhooks", SaveStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Webhook : ", "Save Button", SaveStatus,
+					errorMessage);
 
 			boolean NextstepStatus = true;
 			try {
@@ -2914,7 +3218,8 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "Webhooks", NextstepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Webhook : ", "NextStep", NextstepStatus,
+					errorMessage);
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
@@ -2924,14 +3229,41 @@ public class SystemUserMutipleAggregatorRegression {
 
 	}
 
-	private void submitForVerification() throws InterruptedException {
+	private void submitForVerification(int TestcaseNo) throws InterruptedException {
 
-		BL.clickElement(B.SubmitforVerification);
+		try {
+			String errorMessage = "The data does not match or is empty.";
+			boolean SaveStatus = true;
+			try {
+				BL.clickElement(B.SubmitforVerification);
 
-		BL.clickElement(B.YesButton);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Submit for Verification", "Aggregator",
+						SaveStatus, errorMessage);
 
-		BL.clickElement(B.OKButton);
+			} catch (AssertionError e) {
+				SaveStatus = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
 
+			try {
+				BL.clickElement(B.YesButton);
+				BL.clickElement(B.OKButton);
+
+				BL.isElementDisplayed(B.VerfiedSuccessCompleted, "Submit for Verification");
+
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : System Maker : Yes Button",
+						"Submit for Verfication", SaveStatus, errorMessage);
+
+			} catch (AssertionError e) {
+				SaveStatus = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
+
+		} catch (Exception e) {
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+			exceptionHandler.handleException(e, "Submit for verification");
+			throw e;
+		}
 	}
 
 	@When("the System Verifier clicks the Aggregator module")
@@ -2999,7 +3331,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (rowNumber == numberOfRows) {
 				System.out.println("Finished processing the last row. Logging out...");
-				performLogout();
+				performLogout(rowNumber);
 			}
 		}
 
@@ -3067,7 +3399,10 @@ public class SystemUserMutipleAggregatorRegression {
 	private void Searchbyname(Map<String, String> testData, int TestcaseNo) throws InterruptedException, AWTException {
 
 		String LegalName = testData.get("LegalName");
-//		String LegalName = "Swjubknd";
+//		String LegalName = "T7n13ck";
+
+		key.clear();
+		value.clear();
 
 		try {
 
@@ -3075,35 +3410,28 @@ public class SystemUserMutipleAggregatorRegression {
 
 			boolean Status = true;
 			try {
-			
+
 				BL.clickElement(B.SearchbyBankName);
-				
-				BL.enterElement(B.SearchbyBankName, LegalName);	
-
-			} catch (Exception e) {
-				ExceptionHandler exceptionHandler = new ExceptionHandler(driver,
-						ExtentCucumberAdapter.getCurrentStep());
-				exceptionHandler.handleException(e, "Search by name");
-				throw e;
-			}
-
-			try {
 
 				Thread.sleep(1000);
+
+				BL.enterSplitElement(B.SearchbyBankName, LegalName);
+
+				Thread.sleep(2000);
 
 				BL.clickElement(B.ActionClick);
 
 				Thread.sleep(2000);
 
-				BL.clickElement(B.ViewButton);
+				BL.ActionclickElement(B.ViewButton);
 
-			} catch (Exception e) {
-				ExceptionHandler exceptionHandler = new ExceptionHandler(driver,
-						ExtentCucumberAdapter.getCurrentStep());
-				exceptionHandler.handleException(e, "ACTION AND VIEW BUTTON");
-				throw e;
+			} catch (AssertionError e) {
+				Status = false;
+				errorMessage = e.getMessage(); // Capture error message
 			}
-			logTestStep(TestcaseNo, "Search by name", LegalName, Status, errorMessage);
+
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Actions and View", "Aggregator Status Inprogress",
+					Status, errorMessage);
 
 			int testcaseCount = 0;
 
@@ -3127,7 +3455,8 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Sales Info", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Verified", "Sales Info", verifiedStatus,
+					errorMessage);
 
 			try {
 
@@ -3144,7 +3473,8 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Company Info", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Verified", "Company Info", verifiedStatus,
+					errorMessage);
 
 			try {
 
@@ -3161,7 +3491,8 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Personal Info", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Verified", "Personal Info", verifiedStatus,
+					errorMessage);
 
 			try {
 
@@ -3177,7 +3508,8 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Communication Info", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Verified", "Communication Info", verifiedStatus,
+					errorMessage);
 
 			try {
 
@@ -3194,7 +3526,8 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Channel Config", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Verified", "Channel Config", verifiedStatus,
+					errorMessage);
 
 			try {
 
@@ -3225,7 +3558,8 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "KYC-Aggregator", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Verified", "KYC-Aggregator", verifiedStatus,
+					errorMessage);
 
 			try {
 
@@ -3242,7 +3576,8 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Risk Info", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Verified", "Risk Info", verifiedStatus,
+					errorMessage);
 
 			try {
 
@@ -3259,7 +3594,8 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Discount Rate", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Verified", "Discount Rate", verifiedStatus,
+					errorMessage);
 
 			try {
 
@@ -3276,7 +3612,8 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Settlement Info", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Verified", "Settlement Info", verifiedStatus,
+					errorMessage);
 
 			try {
 
@@ -3293,7 +3630,8 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Whitelabel", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Verified", "Whitelabel", verifiedStatus,
+					errorMessage);
 
 			try {
 
@@ -3310,24 +3648,39 @@ public class SystemUserMutipleAggregatorRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Webhooks", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Verified", "Webhooks", verifiedStatus, errorMessage);
 
-			BL.clickElement(B.SubmitforApproval);
+			boolean SaveStatus = true;
+			try {
+				BL.clickElement(B.SubmitforApproval);
 
-			BL.clickElement(B.YesButton);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Submit for Approval", "Aggregator", SaveStatus,
+						errorMessage);
 
-			BL.clickElement(B.OKButton);
+			} catch (AssertionError e) {
+				SaveStatus = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
+			try {
+				BL.clickElement(B.YesButton);
+				BL.clickElement(B.OKButton);
 
-			Thread.sleep(1000);
+				BL.isElementDisplayed(B.VerfiedSuccessCompleted, "Submit for Approval");
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : System Verifier : Yes Button",
+						"Submit for Approval", SaveStatus, errorMessage);
+
+			} catch (AssertionError e) {
+				SaveStatus = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
 
 			BL.clickElement(B.ApproveCancel);
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-			exceptionHandler.handleException(e, "Verified");
+			exceptionHandler.handleException(e, "Submit for Approval");
 			throw e;
 		}
-
 	}
 
 	@When("the System Approver clicks the Aggregator module")
@@ -3395,7 +3748,7 @@ public class SystemUserMutipleAggregatorRegression {
 
 			if (rowNumber == numberOfRows) {
 				System.out.println("Finished processing the last row. Logging out...");
-				performLogout();
+				performLogout(rowNumber);
 			}
 		}
 
@@ -3462,6 +3815,9 @@ public class SystemUserMutipleAggregatorRegression {
 
 		String LegalName = testData.get("LegalName");
 
+		key.clear();
+		value.clear();
+
 		String errorMessag = "The data does not match or is empty.";
 
 		boolean Status = true;
@@ -3469,70 +3825,64 @@ public class SystemUserMutipleAggregatorRegression {
 
 			BL.clickElement(B.SearchbyBankName);
 
-			BL.enterElement(B.SearchbyBankName, LegalName);
-		
+			Thread.sleep(1000);
 
-		} catch (Exception e) {
-			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-			exceptionHandler.handleException(e, "Search by name");
-			throw e;
-		}
-
-		try {
-
-			Thread.sleep(3000);
-
-			BL.clickElement(B.ActionClick);
+			BL.enterSplitElement(B.SearchbyBankName, LegalName);
 
 			Thread.sleep(2000);
 
-			BL.ActionclickElement(B.ViewButton);
+			BL.ActionclickElement(B.ActionClick);
+			Thread.sleep(1000);
 
-		} catch (Exception e) {
-			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-			exceptionHandler.handleException(e, "ACTION AND VIEW BUTTON");
-			throw e;
+			BL.clickElement(B.ViewButton);
+
+		} catch (AssertionError e) {
+			Status = false;
+			errorMessag = e.getMessage(); // Capture error message
 		}
 
-		logTestStep(TestcaseNo, "Search by name", LegalName, Status, errorMessag);
+		logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Search by name", LegalName, Status, errorMessag);
 
 		int testcaseCount = 0;
 		String errorMessage = "Approve Button is not visible.";
 
 		boolean ApprovedStatus = true;
-
 		try {
-
 			BL.clickElement(B.Approve);
 
-			BL.clickElement(B.YesButton);
-
-			BL.clickElement(B.OKButton);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Approval", "Aggregator", ApprovedStatus,
+					errorMessage);
 
 		} catch (AssertionError e) {
 			ApprovedStatus = false;
 			errorMessage = e.getMessage(); // Capture error message
 		}
 
-		logTestStep(TestcaseNo, "Approved", "Aggregator", ApprovedStatus, errorMessage);
-
-//		B.ClickOnApprove();
-//
-//		B.Yesforsubmit();
-//
-//		B.OkforSuccessfully();
-
 		try {
-			BL.clickElement(B.ApproveCancel);
+			BL.clickElement(B.YesButton);
+			BL.clickElement(B.OKButton);
 
+			BL.isElementDisplayed(B.VerfiedSuccessCompleted, "Approval");
 
-			BL.clickElement(B.SearchbyBankName);
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : System Approver : Yes", "Approval", ApprovedStatus,
+					errorMessage);
 
-			BL.UploadImage(B.SearchbyBankName, LegalName);
-			
-			
+		} catch (AssertionError e) {
+			ApprovedStatus = false;
+			errorMessage = e.getMessage(); // Capture error message
+		}
+
+		BL.clickElement(B.ApproveCancel);
+
+		BL.clickElement(B.SearchbyBankName);
+
+		Thread.sleep(2000);
+
+		BL.enterSplitElement(B.SearchbyBankName, LegalName);
+		try {
+
 			Thread.sleep(2000);
-		
+
 			BL.ActionclickElement(B.ActionClick);
 			Thread.sleep(1000);
 
@@ -3543,113 +3893,10 @@ public class SystemUserMutipleAggregatorRegression {
 			errorMessage = e.getMessage(); // Capture error message
 		}
 
-		logTestStep(TestcaseNo, "Aggregator CPID", BL.getElementValue(B.CPID), ApprovedStatus, errorMessage);
-
-//		B.ClickonViewButton();
-//
-//		logInputData("Bank CPID", B.getCPID());
-
+		logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Aggregator CPID", BL.getElementValue(B.CPID),
+				ApprovedStatus, errorMessage);
 		BL.clickElement(B.ApproveCancel);
 
-	}
-
-	// Set to track previously generated Aadhaar numbers to ensure uniqueness
-	private Set<String> existingAadhaarNumbers = new HashSet<>();
-
-	private String generateValidAadhaar() {
-		Faker faker = new Faker();
-		String aadhaarNumber;
-
-		// Continuously generate Aadhaar numbers until a unique and valid one is found
-		do {
-			StringBuilder aadhaarBuilder = new StringBuilder();
-
-			// Ensure the first digit is NOT 0 or 1
-			aadhaarBuilder.append(faker.number().numberBetween(2, 10)); // First digit: 2 to 9
-
-			// Generate the next 10 digits randomly (digits between 0 and 9)
-			for (int i = 1; i < 11; i++) {
-				aadhaarBuilder.append(faker.number().numberBetween(0, 10)); // Digits between 0 and 9
-			}
-
-			// Generate the 12th digit (check digit) using the Verhoeff algorithm
-			int checkDigit = calculateVerhoeffCheckDigit(aadhaarBuilder.toString());
-			aadhaarBuilder.append(checkDigit);
-
-			// Final generated Aadhaar number
-			aadhaarNumber = aadhaarBuilder.toString();
-
-			// Check if the generated Aadhaar number is unique
-		} while (existingAadhaarNumbers.contains(aadhaarNumber));
-
-		// Add the newly generated Aadhaar number to the set to track it
-		existingAadhaarNumbers.add(aadhaarNumber);
-
-		return aadhaarNumber;
-	}
-
-	// Verhoeff algorithm for check digit calculation (same as before)
-	private static final int[][] verhoeffMultiplicationTable = { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
-			{ 1, 2, 3, 4, 0, 6, 7, 8, 9, 5 }, { 2, 3, 4, 0, 1, 7, 8, 9, 5, 6 }, { 3, 4, 0, 1, 2, 8, 9, 5, 6, 7 },
-			{ 4, 0, 1, 2, 3, 9, 5, 6, 7, 8 }, { 5, 9, 8, 7, 6, 0, 4, 3, 2, 1 }, { 6, 5, 9, 8, 7, 1, 0, 4, 3, 2 },
-			{ 7, 6, 5, 9, 8, 2, 1, 0, 4, 3 }, { 8, 7, 6, 5, 9, 3, 2, 1, 0, 4 }, { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 } };
-
-	private static final int[][] verhoeffPermutationTable = { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
-			{ 1, 5, 7, 6, 2, 8, 3, 0, 9, 4 }, { 5, 8, 0, 3, 7, 9, 6, 1, 4, 2 }, { 8, 9, 1, 6, 0, 4, 3, 5, 2, 7 },
-			{ 9, 4, 5, 3, 1, 2, 6, 8, 7, 0 }, { 4, 2, 8, 6, 5, 7, 3, 9, 0, 1 }, { 2, 7, 9, 3, 8, 0, 6, 4, 1, 5 },
-			{ 7, 0, 4, 6, 9, 1, 3, 2, 5, 8 } };
-
-	private static final int[] verhoeffInverseTable = { 0, 4, 3, 2, 1, 5, 6, 7, 8, 9 };
-
-	// Calculate Verhoeff check digit for the given number (11 digits for Aadhaar)
-	private int calculateVerhoeffCheckDigit(String number) {
-		int checkSum = 0;
-		int[] digits = number.chars().map(c -> c - '0').toArray();
-
-		for (int i = digits.length - 1, j = 0; i >= 0; i--, j++) {
-			checkSum = verhoeffMultiplicationTable[checkSum][verhoeffPermutationTable[j % 8][digits[i]]];
-		}
-
-		return verhoeffInverseTable[checkSum];
-	}
-
-	private String generateValidLegalName(Faker faker, Map<String, String> testData) {
-		String legalName;
-		Set<String> existingLegalNames = new HashSet<>();
-
-		// Extract the "LegalName" from testData if it exists and add it to the set
-		if (testData.get("LegalName") != null) {
-			existingLegalNames.add(testData.get("LegalName"));
-		}
-
-		while (true) {
-			// Generate a unique legal name (7 to 10 alphanumeric characters)
-			legalName = faker.regexify("[A-Za-z0-9]{7,10}");
-
-			// Ensure the generated legal name is unique
-			if (!existingLegalNames.contains(legalName)) {
-				return legalName; // Return the valid unique legal name
-			}
-		}
-	}
-
-	private String generateValidPAN(Faker faker) {
-		StringBuilder pan = new StringBuilder();
-		
-		// First 5 characters: Uppercase letters
-		for (int i = 0; i < 5; i++) {
-			pan.append(faker.regexify("[A-Z]"));
-		}
-
-		// Next 4 characters: Digits
-		for (int i = 0; i < 4; i++) {
-			pan.append(faker.number().numberBetween(0, 10));
-		}
-
-		// Last character: Uppercase letter
-		pan.append(faker.regexify("[A-Z]"));
-
-		return pan.toString();
 	}
 
 	private void logTestStep(int testcaseCount, String fieldName, String fieldValue, Boolean status,
@@ -3686,34 +3933,43 @@ public class SystemUserMutipleAggregatorRegression {
 		System.out.println(message);
 	}
 
-	private String generateValidAggregatorCode(Faker faker, Map<String, String> testData) {
-		String aggregatorCode;
-		Set<String> existingAggregatorCodes = new HashSet<>(Collections.singletonList(testData.get("Aggregator Code")));
-
-		while (true) {
-			// Generate a 6-character alphanumeric Aggregator Code
-			aggregatorCode = faker.regexify("[A-Za-z0-9]{6}");
-
-			// Ensure the code is unique and matches the required format
-			if (!existingAggregatorCodes.contains(aggregatorCode) && aggregatorCode.matches("^[a-zA-Z0-9]{6}$")) {
-				return aggregatorCode; // Return valid, unique Aggregator Code
-			}
-		}
-	}
-
 	private void performTabKeyPress() throws AWTException {
 		Robot robot = new Robot();
 		robot.keyPress(KeyEvent.VK_TAB);
 		robot.keyRelease(KeyEvent.VK_TAB);
 	}
 
-	private void performLogout() throws InterruptedException {
+	private void performLogout(int TestcaseNo) throws InterruptedException {
 
-		BL.clickElement(B.Profile);
+		try {
+			String errorMessage = "The data does not match or is empty.";
+			boolean SaveStatus = true;
+			try {
+				BL.clickElement(B.Profile);
+				BL.clickElement(B.LogOut);
 
-		BL.clickElement(B.LogOut);
+				logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Profile & Log Out", "Aggregator", SaveStatus,
+						errorMessage);
 
-		BL.clickElement(B.YesButton);
+			} catch (AssertionError e) {
+				SaveStatus = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
+
+			try {
+				BL.clickElement(B.YesButton);
+
+			} catch (AssertionError e) {
+				SaveStatus = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
+			logTestStep(TestcaseNo, "MMS : Aggregator Onboarding : Yes Button", "Log-Out", SaveStatus, errorMessage);
+
+		} catch (Exception e) {
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+			exceptionHandler.handleException(e, "Log Out");
+			throw e;
+		}
+
 	}
-
 }

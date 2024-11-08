@@ -1,5 +1,7 @@
 package org.Testcases;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
@@ -7,11 +9,8 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -28,7 +27,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.qameta.allure.Allure;
 
-public class SystemUserMultipleISORegression {
+public class SystemUserMultipleISORegression extends TestHooks {
 
 	private WebDriver driver;
 
@@ -53,26 +52,18 @@ public class SystemUserMultipleISORegression {
 		System.setProperty("webdriver.chrome.verboseLogging", "true");
 
 		BL = new org.Locators.BaseClassLocator(driver);
-
 		L = new org.Locators.LoginLocators(driver);
-
 		S = new org.Locators.SystemUserLocatores(driver);
-
 		B = new org.Locators.BankLocators(driver);
-
 		A = new org.Locators.AggregatorLocators(driver);
-
 		ISO = new org.Locators.ISOLocators(driver);
-
 		SUBISO = new org.Locators.SUBISOLocators(driver);
-
 		GM = new org.Locators.GroupMerchantLocator(driver);
-
 		M = new org.Locators.MerchantLocators(driver);
-
 		T = new org.Locators.TerminalLocators(driver);
 
 	}
+
 	@When("the System Maker clicks the ISO module")
 
 	public void SystemMakerClicktheBankModule() {
@@ -88,9 +79,7 @@ public class SystemUserMultipleISORegression {
 			exceptionHandler.handleException(e, "Onboarding");
 
 			throw e;
-
 		}
-
 	}
 
 	int totalTestCaseCount = 0;
@@ -140,7 +129,7 @@ public class SystemUserMultipleISORegression {
 
 			if (rowNumber == numberOfRows) {
 				System.out.println("Finished processing the last row. Logging out...");
-				performLogout();
+				performLogout(rowNumber);
 			}
 		}
 
@@ -175,8 +164,7 @@ public class SystemUserMultipleISORegression {
 		try {
 
 			File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-			String screenshotPath = "C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\Screenshots\\" + rowNumber
-					+ ".png";
+			String screenshotPath = "/home/kriyatec/eclipse-workspace/MMSCredopay/Screenshots" + rowNumber + ".png";
 
 			FileUtils.copyFile(screenshot, new File(screenshotPath));
 
@@ -189,8 +177,6 @@ public class SystemUserMultipleISORegression {
 			e.printStackTrace();
 		}
 	}
-	
-	
 
 	ArrayList<String> key = new ArrayList<>();
 	ArrayList<String> value = new ArrayList<>();
@@ -199,17 +185,8 @@ public class SystemUserMultipleISORegression {
 	private int validateFieldsForRow(String sheetName, Map<String, String> testData, int TestcaseNo, int rowNumber)
 			throws Exception {
 
-
 		// Initialize a counter to track the number of validated fields/sections
 		int validatedFieldsCount = 0;
-
-//		validatedFieldsCount += executeStep(() -> fillLoginDetails(testData, TestcaseNo), "Login Details");
-//		validatedFieldsCount += executeStep(
-//				() -> SystemMakerOnboardingshouldbedisplayedinthesidemenu(testData, TestcaseNo), "Onboarding Display");
-//		validatedFieldsCount += executeStep(() -> SystemMakershouldseeallSideMenu(testData, TestcaseNo),
-//				"Side Menu Visibility");
-//		validatedFieldsCount += executeStep(() -> SystemMakerclicksthebankmodule(testData, TestcaseNo),
-//				"Bank Module Click");
 
 		// Sales Details Section
 
@@ -320,7 +297,7 @@ public class SystemUserMultipleISORegression {
 		validatedFieldsCount += executeStep(() -> {
 			try {
 				configureWebhooks(testData, TestcaseNo);
-			} catch (InterruptedException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -329,7 +306,7 @@ public class SystemUserMultipleISORegression {
 		// Final Submission
 		validatedFieldsCount += executeStep(() -> {
 			try {
-				submitForVerification();
+				submitForVerification(TestcaseNo);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -359,68 +336,96 @@ public class SystemUserMultipleISORegression {
 
 			int testcaseCount = 0;
 			String errorMessage = "The data does not match or is empty.";
-
+			String VASCommission = testData.get("VAS Commission");
 			String Marsid = testData.get("Marsid");
 			String name = testData.get("Aggregator Name");
 
-			boolean DateStatus = true; // Assume success initially
-			try {
+			if (VASCommission != null && !VASCommission.trim().isEmpty()) {
 
-				BL.clickElement(B.Createbutton);
+				boolean CreateStatus = true; // Assume success initially
+				try {
+					BL.clickElement(B.Createbutton);
+				} catch (AssertionError e) {
+					CreateStatus = false; // Set status to false if assertion fails
+					errorMessage = e.getMessage(); // Capture error message
+				}
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Create : ", "ISO", CreateStatus,
+						errorMessage);
+
 				BL.clickElement(A.SalesInfo);
+				BL.clickElement(A.VASCommissionOne);
+				BL.selectDropdownOption(VASCommission);
+
+				++testcaseCount;
+
+				String actualValue = BL.getElementValue(A.VASCommissionOne);
+				boolean Status = true; // Assume success initially
+				try {
+					if (actualValue != null) {
+						assertEquals(VASCommission.toUpperCase(), actualValue.toUpperCase());
+					}
+				} catch (AssertionError e) {
+					Status = false;
+					errorMessage = e.getMessage(); // Capture error message
+				}
+
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Sales Info : VAS Commission", VASCommission, Status,
+						errorMessage);
+
+			}
+
+			boolean DateStatus = true; // Assume success initially
+			try {	
 				BL.clickElement(A.AggregatorApplicationDateCalenderOne);
-
-//				A.ClickOnAggreratorApplictionDate();
-
+				performTabKeyPress();
 				Robot r = new Robot();
-
 				r.keyPress(KeyEvent.VK_ENTER);
-
 				r.keyRelease(KeyEvent.VK_ENTER);
+				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
-				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 			} catch (AssertionError e) {
 				DateStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "ISO Appliction Date", "Current Date", DateStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : Sales Info : ISO Appliction Date", "Current Date",
+					DateStatus, errorMessage);
 
 			try {
 				BL.clickElement(A.AggregatorApplicationDateCalenderTwo);
-
 				Robot r = new Robot();
-
 				r.keyPress(KeyEvent.VK_ENTER);
-
 				r.keyRelease(KeyEvent.VK_ENTER);
-
 				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 			} catch (AssertionError e) {
 				DateStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Agreement Date", "Current Date", DateStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : Sales Info : Agreement Date", "Current Date", DateStatus, errorMessage);
 
 			if (name != null && !name.trim().isEmpty()) {
 
 				BL.clickElement(ISO.AggregatorName);
 				BL.selectDropdownOption(name);
-
+				performTabKeyPress();
 				++testcaseCount;
+				String actualValue = BL.getElementText(ISO.AggregatorName);
 
-				boolean nameStatus = true; // Assume success initially
+				boolean Status = true; // Assume success initially
 				try {
+					if (actualValue != null) {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+						assertEquals(name.toUpperCase(), actualValue.toUpperCase());
+						BL.isElementNotDisplayed(ISO.ISOAggregatorNameInvalidFormat, "Invalid Format");
+					}
 				} catch (AssertionError e) {
-					nameStatus = false;
+					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Aggregator Name", name, nameStatus, errorMessage);
+				logTestStep(TestcaseNo, " MMS : ISO Onboarding : Sales Info : Aggregator Name", name, Status,
+						errorMessage);
 
 			}
 
@@ -428,7 +433,7 @@ public class SystemUserMultipleISORegression {
 
 				BL.clickElement(B.Marsid);
 				BL.enterElement(B.Marsid, Marsid);
-//				logInputData("Marsid", Marsid);
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean MarsidStatus = true;
@@ -440,23 +445,20 @@ public class SystemUserMultipleISORegression {
 					MarsidStatus = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Marsid :", Marsid, MarsidStatus, errorMessage);
-
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Sales Info : Marsid :", Marsid, MarsidStatus,
+						errorMessage);
 			}
 
 			boolean NextstepStatus = true;
 			try {
-
 				BL.clickElement(B.NextStep);
-
 				BL.isElementDisplayed(A.IntroCompanyInfo, "Company Info Page");
 
 			} catch (AssertionError e) {
 				NextstepStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
 			}
-
-			logTestStep(TestcaseNo, "NextStep", "Sales Info", NextstepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : Sales Info :", " NextStep ", NextstepStatus, errorMessage);
 
 		} catch (Exception e) {
 			// Use the exception handler to log and handle exceptions gracefully
@@ -470,16 +472,14 @@ public class SystemUserMultipleISORegression {
 	private String fillCompanyInfo(Map<String, String> testData, int TestcaseNo) throws Exception {
 		try {
 
-
 			Faker faker = new Faker();
-
-			String LegalName = testData.get("LegalName");
+			String LegalName = testData.get("Legal Name");
 			String brand = testData.get("Brand Name");
 			String Address = testData.get("Registered Address");
 			String pincode = testData.get("Registered Pincode");
 			String type = testData.get("Business Type");
 			String registeredNumber = testData.get("Registered Number");
-			String pan = generateValidPAN(faker);
+			String pan = testData.get("Company PAN");
 			String GstIN = testData.get("GSTIN");
 			String frequency = testData.get("Statement Frequency");
 			String Type = testData.get("Statement Type");
@@ -489,84 +489,77 @@ public class SystemUserMultipleISORegression {
 			int testcaseCount = 0;
 
 			TestCaseManager testCaseManager = new TestCaseManager();
-
-			if (LegalName == null || LegalName.trim().isEmpty()) {
-				LegalName = generateValidLegalName(faker, testData);
-			}
-
 			if (LegalName != null && !LegalName.trim().isEmpty()) {
 
 				BL.clickElement(A.ComapnyInfo);
-
 				BL.clickElement(A.LegalName);
-
 				BL.enterElement(A.LegalName, LegalName);
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean legalNameStatus = true; // Assume success initially
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyLegalNameInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyLegalNameFieldisRequired, "Field is Required");
 				} catch (AssertionError e) {
 					legalNameStatus = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Legal Name", LegalName, legalNameStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Company Info :Legal Name", LegalName, legalNameStatus,
+						errorMessage);
 
 			}
 
 			if (brand != null && !brand.trim().isEmpty()) {
-
 				BL.clickElement(A.BrandName);
-
 				BL.enterElement(A.BrandName, brand);
-
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyBrandNameInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyBrandNameFieldisRequired, "Field is Required");
+					performTabKeyPress();
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Brand Name", brand, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Company Info: Brand Name", brand, Status, errorMessage);
 
 			}
 
 			if (Address != null && !Address.trim().isEmpty()) {
-
 				BL.clickElement(A.RegisteredAddress);
-
 				BL.enterElement(A.RegisteredAddress, Address);
+				performTabKeyPress();
 
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyRegAddressInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyRegAddressFieldisRequired, "Field is Required");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Registered Address", Address, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Company Info: Registered Address", Address, Status,
+						errorMessage);
 
 			}
 
 			if (pincode != null && !pincode.trim().isEmpty()) {
 
 				BL.clickElement(A.RegisteredPincode);
-
 				BL.enterElement(A.RegisteredPincode, pincode);
-
 				BL.selectDropdownOption(pincode);
 
 				++testcaseCount;
@@ -575,35 +568,37 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyRegPincodeInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyRegPinFieldisRequired, "Field is Required");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Registered Pincode", pincode, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Company Info: Registered Pincode", pincode, Status,
+						errorMessage);
 
 			}
 
 			if (type != null && !type.trim().isEmpty()) {
 
 				BL.clickElement(A.BusinessType);
-
 				BL.selectDropdownOption(type);
-
 				++testcaseCount;
-
+				String actualValue = BL.getElementText(A.BusinessType);
 				boolean Status = true; // Assume success initially
-
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					if (actualValue != null) {
+						assertEquals(type.toUpperCase(), actualValue.toUpperCase());
+						BL.isElementNotDisplayed(A.CompanyBusinessTypFieldisRequired, "Field is Required");
+					}
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Business Type", type, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Company Info: Business Type", type, Status,
+						errorMessage);
 
 			}
 
@@ -611,33 +606,23 @@ public class SystemUserMultipleISORegression {
 			try {
 
 				BL.clickElement(A.EstablishedYearDatepicker);
-
 				Robot r = new Robot();
-
 				r.keyPress(KeyEvent.VK_ENTER);
-
 				r.keyRelease(KeyEvent.VK_ENTER);
-
 				BL.clickElement(A.ApplyButton);
-
 				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 			} catch (AssertionError e) {
 				DateStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Established Year", "Current Date", DateStatus, errorMessage);
-
-//
-//     		if (registeredNumber.contains("E")) {
-//				Double numberInScientificNotation = Double.valueOf(registeredNumber);
-//				registeredNumber = String.format("%.0f", numberInScientificNotation);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : Company Info: Established Year", "Current Date", DateStatus,
+					errorMessage);
 
 			if (registeredNumber != null && !registeredNumber.trim().isEmpty()) {
-
 				BL.clickElement(A.RegisterNumber);
-
 				BL.enterElement(A.RegisterNumber, registeredNumber);
+				performTabKeyPress();
 
 				++testcaseCount;
 
@@ -645,21 +630,22 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyRegNumInvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Registered Number", registeredNumber, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Company Info: Registered Number", registeredNumber,
+						Status, errorMessage);
 
 			}
 
 			if (pan != null && !pan.trim().isEmpty()) {
 
-				BL.clickElement(A.ComapnyPAN);
-
-				BL.enterElement(A.ComapnyPAN, pan);
+				BL.clickElement(A.CompanyPAN);
+				BL.enterElement(A.CompanyPAN, pan);
+				performTabKeyPress();
 
 				++testcaseCount;
 
@@ -667,21 +653,21 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyCmpPanInvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Company PAN", pan, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Company Info: Company PAN", pan, Status, errorMessage);
 
 			}
 
 			if (GstIN != null && !GstIN.trim().isEmpty()) {
 
 				BL.clickElement(A.GSTIN);
-
 				BL.enterElement(A.GSTIN, GstIN);
+				performTabKeyPress();
 
 				++testcaseCount;
 
@@ -689,64 +675,66 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyCmpGSTInvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "GstIN", GstIN, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Company Info: GstIN", GstIN, Status, errorMessage);
 
 			}
 
 			if (frequency != null && !frequency.trim().isEmpty()) {
 
 				BL.clickElement(A.StatementFrequency);
-
 				BL.selectDropdownOption(frequency);
 
 				++testcaseCount;
-
+				String actualValue = BL.getElementText(A.StatementFrequency);
 				boolean Status = true; // Assume success initially
 
 				try {
+					if (actualValue != null) {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+						assertEquals(frequency.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Statement Frequency", frequency, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Company Info: Statement Frequency", frequency, Status,
+						errorMessage);
 
 			}
 
 			if (Type != null && !Type.trim().isEmpty()) {
 
 				BL.clickElement(A.StatementType);
-
 				BL.selectDropdownOption(Type);
 
 				++testcaseCount;
-
+				String actualValue = BL.getElementText(A.StatementType);
 				boolean Status = true; // Assume success initially
 
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					if (actualValue != null) {
+						assertEquals(Type.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Statement Type", Type, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Company Info: Statement Type", Type, Status,
+						errorMessage);
 
 			}
 
 			if (domain != null && !domain.trim().isEmpty()) {
 
 				BL.clickElement(A.EmailDomain);
-
 				BL.enterElement(A.EmailDomain, domain);
 
 				performTabKeyPress();
@@ -756,14 +744,14 @@ public class SystemUserMultipleISORegression {
 				boolean Status = true; // Assume success initially
 
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.GeneralinfoDomainInvalidformat, "Invalid Format");
+					BL.isElementNotDisplayed(B.GeneralinfoDomainRequiredField, "Field is Required");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Domain", domain, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Company Info: Domain", domain, Status, errorMessage);
 
 			}
 
@@ -778,7 +766,8 @@ public class SystemUserMultipleISORegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Save Button", "Company Info", SaveStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : Company Info: Save Button", "Company Info", SaveStatus,
+					errorMessage);
 
 			boolean NextstepStatus = true;
 			try {
@@ -792,7 +781,7 @@ public class SystemUserMultipleISORegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "Company Info", NextstepStatus, errorMessage);
+			logTestStep(TestcaseNo, " MMS : ISO Onboarding : Company Info: ", "NextStep", NextstepStatus, errorMessage);
 
 			return LegalName;
 
@@ -816,69 +805,66 @@ public class SystemUserMultipleISORegression {
 			String title = testData.get("Title");
 			String FirstName = testData.get("First Name");
 			String LastName = testData.get("Last Name");
-			String pan = generateValidPAN(faker);
+			String pan = testData.get("PAN");
 			String Address = testData.get("Address");
 			String pincode = testData.get("Personal Pincode");
 			String PMobilenumber = testData.get("Personal Mobile Number");
 			String telephone = testData.get("TelePhone Number");
 			String emailid = testData.get("Email");
 			String Nationality = testData.get("Nationality");
-			String aadhaar = generateValidAadhaar();
+			String aadhaar = testData.get("Aadhaar Number");
 			String Passport = testData.get("Passport");
 
 			if (title != null && !title.trim().isEmpty()) {
 
 				BL.clickElement(A.PersonalInfo);
-
 				BL.clickElement(B.AddButton);
-
 				BL.clickElement(A.titlepersonal);
-
 				BL.selectDropdownOption(title);
-
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalinfoTitleFieldrequired, "Field is Required");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Title", title, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Personal Info: Title", title, Status, errorMessage);
 
 			}
 
 			if (FirstName != null && !FirstName.trim().isEmpty()) {
 
 				BL.clickElement(A.FirstNamePersonal);
-
 				BL.enterElement(A.FirstNamePersonal, FirstName);
-
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalInfoFirstNameInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalinfoFirstNameFieldrequired, "Field is Required ");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "FirstName", FirstName, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Personal Info: FirstName", FirstName, Status,
+						errorMessage);
 
 			}
 
 			if (LastName != null && !LastName.trim().isEmpty()) {
 
 				BL.clickElement(A.LastNamePersonal);
-
 				BL.enterElement(A.LastNamePersonal, LastName);
+				performTabKeyPress();
 
 				++testcaseCount;
 
@@ -886,13 +872,14 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalInfoLastNameInvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "LastName", LastName, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Personal Info: LastName", LastName, Status,
+						errorMessage);
 
 			}
 
@@ -906,19 +893,21 @@ public class SystemUserMultipleISORegression {
 				BL.clickElement(A.Date);
 				BL.clickElement(A.ApplyButton);
 
-				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+				BL.isElementNotDisplayed(A.PersonalinfoDOBFieldrequired, "Invalid Format");
 			} catch (AssertionError e) {
 				DateStatus = false; // Set status to false if assertion fails
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Date Of Birth", "30/11/1998", DateStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : Personal Info: Date Of Birth", "30/11/1998", DateStatus,
+					errorMessage);
 
 			if (pan != null && !pan.trim().isEmpty()) {
 
 				BL.clickElement(A.PanPersonal);
 
 				BL.enterElement(A.PanPersonal, pan);
+				performTabKeyPress();
 
 				++testcaseCount;
 
@@ -926,41 +915,44 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalInfoPanInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalinfoPANFieldrequired, " Field is Required");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Pan", pan, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Personal Info: Pan", pan, Status, errorMessage);
 
 			}
 
 			if (Address != null && !Address.trim().isEmpty()) {
 
 				BL.clickElement(A.AddressPersonal);
-
 				BL.enterElement(A.AddressPersonal, Address);
-
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalInfoAddressInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalinfoAddressFieldrequired, "Field is Required");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Address", Address, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Personal Info: Address", Address, Status, errorMessage);
 
 			}
 
 			if (pincode != null && !pincode.trim().isEmpty()) {
 
 				BL.clickElement(A.PincodePersonal);
+
+				BL.enterElement(A.PincodePersonal, pincode);
 
 				BL.selectDropdownOption(pincode);
 
@@ -970,13 +962,14 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalInfoPincodeInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalinfoPincodeFieldrequired, "Field is Required");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Pincode", pincode, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Personal Info: Pincode", pincode, Status, errorMessage);
 
 			}
 
@@ -988,8 +981,8 @@ public class SystemUserMultipleISORegression {
 				String Mobilenumber = firstDigit + remainingDigits;
 
 				BL.clickElement(A.MobilePersonal);
-
 				BL.enterElement(A.MobilePersonal, Mobilenumber);
+				performTabKeyPress();
 
 				++testcaseCount;
 
@@ -997,21 +990,23 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalInfoMobileInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalinfoMobileFieldrequired, "Field is Required");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Mobilenumber", Mobilenumber, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Personal Info: Mobilenumber", Mobilenumber, Status,
+						errorMessage);
 
 			}
 
 			if (telephone != null && !telephone.trim().isEmpty()) {
 
 				BL.clickElement(A.telephonepersonal);
-
 				BL.enterElement(A.telephonepersonal, telephone);
+				performTabKeyPress();
 
 				++testcaseCount;
 
@@ -1019,21 +1014,22 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalInfoTelephoneInvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Telephone Number", telephone, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Personal Info: Telephone Number", telephone, Status,
+						errorMessage);
 
 			}
 
 			if (emailid != null && !emailid.trim().isEmpty()) {
 
 				BL.clickElement(A.emailPersonal);
-
 				BL.enterElement(A.emailPersonal, emailid);
+				performTabKeyPress();
 
 				++testcaseCount;
 
@@ -1041,21 +1037,22 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalInfoEmailInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalinfoEmailFieldrequired, "Field is Required");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Emailid", emailid, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Personal Info: Emailid", emailid, Status, errorMessage);
 
 			}
 
 			if (Nationality != null && !Nationality.trim().isEmpty()) {
 
 				BL.clickElement(A.Nationalitypersonal);
-
 				BL.enterElement(A.Nationalitypersonal, Nationality);
+				performTabKeyPress();
 
 				++testcaseCount;
 
@@ -1063,21 +1060,23 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalInfoNationalityInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalinfoNationalityFieldrequired, "Field is Required");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Nationality", Nationality, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Personal Info: Nationality", Nationality, Status,
+						errorMessage);
 
 			}
 
 			if (aadhaar != null && !aadhaar.trim().isEmpty()) {
 
 				BL.clickElement(A.AadhaarNumberPersonal);
-
 				BL.enterElement(A.AadhaarNumberPersonal, aadhaar);
+				performTabKeyPress();
 
 				++testcaseCount;
 
@@ -1085,21 +1084,21 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalInfoAadhaarInvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Aadhaar", aadhaar, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Personal Info: Aadhaar", aadhaar, Status, errorMessage);
 
 			}
 
 			if (Passport != null && !Passport.trim().isEmpty()) {
 
 				BL.clickElement(A.PassportNumberPersonal);
-
 				BL.enterElement(A.PassportNumberPersonal, Passport);
+				performTabKeyPress();
 
 				++testcaseCount;
 
@@ -1107,28 +1106,24 @@ public class SystemUserMultipleISORegression {
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalInfoPassportNumberInvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Passport", Passport, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Personal Info: Passport", Passport, Status,
+						errorMessage);
 
 			}
 
 			try {
 
 				BL.clickElement(A.OpenCalenderPasswordExpiryDate);
-
 				Robot r = new Robot();
-
 				r.keyPress(KeyEvent.VK_ENTER);
-
 				r.keyRelease(KeyEvent.VK_ENTER);
-
 				BL.clickElement(A.ApplyButton);
-
 				performTabKeyPress();
 
 				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
@@ -1137,7 +1132,8 @@ public class SystemUserMultipleISORegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Date", "Passport ExpiryDate", DateStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : Personal Info: Date", "Passport ExpiryDate", DateStatus,
+					errorMessage);
 
 			boolean SaveStatus = true;
 			try {
@@ -1151,13 +1147,13 @@ public class SystemUserMultipleISORegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Save Button", "Personal Info", SaveStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : Personal Info: Save Button", "Personal Info", SaveStatus,
+					errorMessage);
 
 			boolean NextstepStatus = true;
 			try {
 
 				BL.clickElement(B.NextStep);
-
 				BL.isElementDisplayed(A.CommunicationInfo, "Communication Info Page");
 
 			} catch (AssertionError e) {
@@ -1165,7 +1161,7 @@ public class SystemUserMultipleISORegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "Personal Info", NextstepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : Personal Info:", "NextStep", NextstepStatus, errorMessage);
 
 		} catch (Exception e) {
 			// Use the exception handler to log and handle exceptions gracefully
@@ -1183,7 +1179,6 @@ public class SystemUserMultipleISORegression {
 
 			int testcaseCount = 0;
 			String errorMessage = "The data does not match or is empty.";
-
 			String CommName = testData.get("Communication Name");
 			String CommPosition = testData.get("Communication Position");
 			String CommMobileNumber = testData.get("Communication MobileNumber");
@@ -1197,42 +1192,47 @@ public class SystemUserMultipleISORegression {
 			if (CommName != null && !CommName.trim().isEmpty()) {
 
 				BL.clickElement(B.ClickonCommuName);
-
 				BL.enterElement(B.ClickonCommuName, CommName);
+				performTabKeyPress();
 
 				++testcaseCount;
 
 				boolean CommunicationNameStatus = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationNameInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationNameFieldisRequired, "Field is Required");
+
 				} catch (AssertionError e) {
 					CommunicationNameStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Admin user details Communication Name", CommName, CommunicationNameStatus,
-						errorMessage);
+				logTestStep(TestcaseNo,
+						"MMS : ISO Onboarding : Communication Info: Admin user details Communication Name", CommName,
+						CommunicationNameStatus, errorMessage);
 
 			}
 
 			if (CommPosition != null && !CommPosition.trim().isEmpty()) {
 
 				BL.clickElement(B.ClickonCommuPosition);
-
 				BL.enterElement(B.ClickonCommuPosition, CommPosition);
+				performTabKeyPress();
 
 				++testcaseCount;
 
 				boolean CommunicationPositionStatus = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationPositionInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationPositionFieldisRequired, "Field is Required");
 				} catch (AssertionError e) {
 					CommunicationPositionStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Admin user details Communication Position", CommPosition,
-						CommunicationPositionStatus, errorMessage);
+				logTestStep(TestcaseNo,
+						"MMS : ISO Onboarding : Communication Info: Admin user details Communication Position",
+						CommPosition, CommunicationPositionStatus, errorMessage);
 
 			}
 
@@ -1245,21 +1245,23 @@ public class SystemUserMultipleISORegression {
 				String communicationMobileNumber = firstDigit + remainingDigits;
 
 				BL.clickElement(B.ClickonCommuMobileNumber);
-
 				BL.enterElement(B.ClickonCommuMobileNumber, communicationMobileNumber);
+				performTabKeyPress();
 
 				++testcaseCount;
 
 				boolean CommunicationMobileNumberStatus = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationMobileInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationMobileFieldisRequired, "Field is Required");
 				} catch (AssertionError e) {
 					CommunicationMobileNumberStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Admin user details Communication MobileNumber", communicationMobileNumber,
-						CommunicationMobileNumberStatus, errorMessage);
+				logTestStep(TestcaseNo,
+						"MMS : ISO Onboarding : Communication Info: Admin user details Communication MobileNumber",
+						communicationMobileNumber, CommunicationMobileNumberStatus, errorMessage);
 
 			}
 
@@ -1272,41 +1274,47 @@ public class SystemUserMultipleISORegression {
 				String Communicationemailid = randomEmailPrefix + "@gmail.com";
 
 				BL.clickElement(B.ClickonCommuEmailId);
-
 				BL.enterElement(B.ClickonCommuEmailId, Communicationemailid);
+				performTabKeyPress();
 
 				++testcaseCount;
 
 				boolean CommunicationEmailIDStatus = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationEmailInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationEmailFieldisRequired, "Field is Required");
 
 				} catch (AssertionError e) {
 					CommunicationEmailIDStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Admin user details Communication Emailid", Communicationemailid,
-						CommunicationEmailIDStatus, errorMessage);
+				logTestStep(TestcaseNo,
+						"MMS : ISO Onboarding : Communication Info: Admin user details Communication Emailid",
+						Communicationemailid, CommunicationEmailIDStatus, errorMessage);
 
 			}
 
 			if (ADUSer != null && !ADUSer.trim().isEmpty()) {
 				BL.clickElement(B.ClickOnAdUsers);
 				BL.selectDropdownOption(ADUSer);
+				performTabKeyPress();
 
 				++testcaseCount;
+				String actualValue = BL.getElementText(B.ClickOnAdUsers);
 
-				boolean CommunicationADUSERStatus = true; // Assume success initially
+				boolean Status = true; // Assume success initially
 				try {
+					if (actualValue != null) {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-
+						assertEquals(ADUSer.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
-					CommunicationADUSERStatus = false;
+					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Admin user details AD User", ADUSer, CommunicationADUSERStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Communication Info: Admin user details AD User", ADUSer,
+						Status, errorMessage);
 
 			}
 
@@ -1320,7 +1328,8 @@ public class SystemUserMultipleISORegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Admin user details Save Button", "Communication Info", SaveStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : Communication Info: Admin user details Save Button",
+					"Communication Info", SaveStatus, errorMessage);
 
 		} catch (Exception e) {
 			// Use the exception handler to log and handle exceptions gracefully
@@ -1343,46 +1352,48 @@ public class SystemUserMultipleISORegression {
 			String CommEmailid = testData.get("Communication EmailId");
 
 			BL.clickElement(B.CommunicationInfo);
-
 			BL.clickElement(B.ClickonCommSettlementandReconADD);
 
 			if (CommName != null && !CommName.trim().isEmpty()) {
 
 				BL.clickElement(B.ClickonCommuName);
-
 				BL.enterElement(B.ClickonCommuName, CommName);
+				performTabKeyPress();
 
 				++testcaseCount;
 
 				boolean CommunicationNameStatus = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationNameInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationNameFieldisRequired, "Field is Required");
 				} catch (AssertionError e) {
 					CommunicationNameStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "SettlementReconContactDetails Communication Name", CommName,
-						CommunicationNameStatus, errorMessage);
+				logTestStep(TestcaseNo,
+						"MMS : ISO Onboarding : Communication Info: SettlementReconContactDetails Communication Name",
+						CommName, CommunicationNameStatus, errorMessage);
 
 			}
 
 			if (CommPosition != null && !CommPosition.trim().isEmpty()) {
 				BL.clickElement(B.ClickonCommuPosition);
-
 				BL.enterElement(B.ClickonCommuPosition, CommPosition);
 				++testcaseCount;
 
 				boolean CommunicationPositionStatus = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationPositionInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationPositionFieldisRequired, "Field is Required");
 				} catch (AssertionError e) {
 					CommunicationPositionStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "SettlementReconContactDetails Communication Position", CommPosition,
-						CommunicationPositionStatus, errorMessage);
+				logTestStep(TestcaseNo,
+						"MMS : ISO Onboarding : Communication Info: SettlementReconContactDetails Communication Position",
+						CommPosition, CommunicationPositionStatus, errorMessage);
 
 			}
 
@@ -1395,20 +1406,22 @@ public class SystemUserMultipleISORegression {
 				String communicationMobileNumber = firstDigit + remainingDigits;
 
 				BL.clickElement(B.ClickonCommuMobileNumber);
-
 				BL.enterElement(B.ClickonCommuMobileNumber, communicationMobileNumber);
+				performTabKeyPress();
 
 				++testcaseCount;
 
 				boolean CommunicationMobileNumberStatus = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationMobileInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationMobileFieldisRequired, "Field is Required");
 				} catch (AssertionError e) {
 					CommunicationMobileNumberStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "SettlementReconContactDetails Communication MobileNumber",
+				logTestStep(TestcaseNo,
+						"MMS : ISO Onboarding : Communication Info: SettlementReconContactDetails Communication MobileNumber",
 						communicationMobileNumber, CommunicationMobileNumberStatus, errorMessage);
 
 			}
@@ -1421,29 +1434,30 @@ public class SystemUserMultipleISORegression {
 				String randomEmailPrefix = faker.internet().slug(); // Generate a random string for the prefix
 				String Communicationemailid = randomEmailPrefix + "@gmail.com";
 				BL.clickElement(B.ClickonCommuEmailId);
-
 				BL.enterElement(B.ClickonCommuEmailId, Communicationemailid);
+				performTabKeyPress();
 
 				++testcaseCount;
 
 				boolean CommunicationEmailIDStatus = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationEmailInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationEmailFieldisRequired, "Field is Required");
 
 				} catch (AssertionError e) {
 					CommunicationEmailIDStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "SettlementReconContactDetails Communication Emailid", Communicationemailid,
-						CommunicationEmailIDStatus, errorMessage);
+				logTestStep(TestcaseNo,
+						"MMS : ISO Onboarding : Communication Info: SettlementReconContactDetails Communication Emailid",
+						Communicationemailid, CommunicationEmailIDStatus, errorMessage);
 
 			}
 
 			boolean SaveStatus = true;
 			try {
 				BL.clickElement(B.SaveButton);
-
 				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 			} catch (AssertionError e) {
@@ -1451,13 +1465,13 @@ public class SystemUserMultipleISORegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "SettlementReconContactDetails Save Button", "Communication Info", SaveStatus,
-					errorMessage);
+			logTestStep(TestcaseNo,
+					"MMS : ISO Onboarding : Communication Info: SettlementReconContactDetails Save Button",
+					"Communication Info", SaveStatus, errorMessage);
 
 			boolean NextstepStatus = true;
 			try {
 				BL.clickElement(B.NextStep);
-
 				BL.isElementDisplayed(A.IntroChannelConfig, "Channel Config Page");
 
 			} catch (AssertionError e) {
@@ -1465,7 +1479,8 @@ public class SystemUserMultipleISORegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "Communication Info", NextstepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : Communication Info:", "NextStep", NextstepStatus,
+					errorMessage);
 
 		} catch (Exception e) {
 			// Use the exception handler to log and handle exceptions gracefully
@@ -1503,43 +1518,17 @@ public class SystemUserMultipleISORegression {
 				Map<String, String> rowData = cachedData.get(currentRow - 1);
 
 				// Retrieve data for each field, handling null or empty values
-				String channelbank = rowData.getOrDefault("Channel Bank Name", "").trim();
 				String channel = rowData.getOrDefault("Channel", "").trim();
 				String network = rowData.getOrDefault("Network", "").trim();
 				String transactionSet = rowData.getOrDefault("Transaction Sets", "").trim();
-				String routing = rowData.getOrDefault("Routing", "").trim();
-
 				// Clear the key-value arrays before each iteration
 				key.clear();
 				value.clear();
-
-				// Process Channel Bank Name
-//				if (!channelbank.isEmpty()) {
-//					A.ClickOnChannelConfig();
-//					driver.navigate().refresh();
-//					B.ChannelADD();
-//					A.ClickOnChannelBankName();
-//					A.EnterOnChannelBankName(channelbank);
-//					B.selectDropdownOption(channelbank);
-//
-//					key.add("Channel Bank Name-" + currentRow);
-//					value.add(channelbank);
-//
-//					boolean channelBankStatus = true;
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-//
-//					testcaseCount++;
-//					logTestStep(TestcaseNo, "Channel BANK", channelbank, channelBankStatus, errorMessage);
-//
-//				} else {
-//					System.out.println("ChannelBank data is empty for row: " + currentRow);
-//				}
 
 				// Process Channel
 				if (!channel.isEmpty()) {
 
 					BL.clickElement(A.ChannelConfig);
-					Thread.sleep(1000);
 					BL.clickElement(B.AddButton);
 					Thread.sleep(1000);
 					BL.clickElement(B.CommercialChannel);
@@ -1549,12 +1538,21 @@ public class SystemUserMultipleISORegression {
 					value.add(channel);
 
 					performTabKeyPress();
+					String actualValue = BL.getElementText(B.CommercialChannel);
+					boolean Status = true;
+					try {
+						if (actualValue != null) {
 
-					boolean channelStatus = true;
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-
+							assertEquals(channel.toUpperCase(), actualValue.toUpperCase());
+							BL.isElementNotDisplayed(B.ChannelnameFieldisRequired, "Field is Required");
+						}
+					} catch (AssertionError e) {
+						Status = false;
+						errorMessage = e.getMessage(); // Capture error message
+					}
 					testcaseCount++;
-					logTestStep(TestcaseNo, "Channel", channel, channelStatus, errorMessage);
+					logTestStep(TestcaseNo, "MMS : ISO Onboarding : ChannelConfig : Channel", channel, Status,
+							errorMessage);
 
 				} else {
 					System.out.println("Channel data is empty for row: " + currentRow);
@@ -1569,33 +1567,65 @@ public class SystemUserMultipleISORegression {
 					value.add(network);
 
 					performTabKeyPress();
+					String actualValue = BL.getElementText(B.ClickOntNetwork);
 
-					boolean networkStatus = true;
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					boolean Status = true;
+					try {
+						if (actualValue != null) {
 
+							assertEquals(network.toUpperCase(), actualValue.toUpperCase());
+						}
+					} catch (AssertionError e) {
+						Status = false;
+						errorMessage = e.getMessage(); // Capture error message
+					}
 					testcaseCount++;
-					logTestStep(TestcaseNo, "Network", network, networkStatus, errorMessage);
+					logTestStep(TestcaseNo, "MMS : ISO Onboarding : ChannelConfig : Network", network, Status,
+							errorMessage);
 
 				} else {
 					System.out.println("Network data is empty for row: " + currentRow);
 				}
 
 				// Process Transaction Set
+
 				if (!transactionSet.isEmpty()) {
-					BL.clickElement(B.ClickOntransaction);
-					BL.selectDropdownOption(transactionSet);
+					try {
+						String[] transa = transactionSet.split(",");
+						for (String trans : transa) {
+							trans = trans.trim();
+							if (!trans.isEmpty()) {
+								BL.clickElement(B.ClickOntransaction);
+								BL.selectDropdownOption(trans);
 
-					key.add("Transaction Set-" + currentRow);
-					value.add(transactionSet);
+								key.add("Transaction Set-" + currentRow);
+								value.add(transactionSet);
 
-					performTabKeyPress();
+								performTabKeyPress();
 
-					boolean transactionSetStatus = true;
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+							}
 
-					testcaseCount++;
-					logTestStep(TestcaseNo, "TransactionSet", transactionSet, transactionSetStatus, errorMessage);
+						}
 
+						boolean transactionSetStatus = true;
+						try {
+							BL.isElementNotDisplayed(B.ChannelTransactionFieldisRequired, "Field is Required");
+							assertEquals(transactionSet.toUpperCase(),
+									BL.getElementText(B.ClickOntransaction).toUpperCase());
+
+						} catch (AssertionError e) {
+							transactionSetStatus = false;
+							errorMessage = e.getMessage(); // Capture the assertion error
+						}
+						testcaseCount++;
+						logTestStep(TestcaseNo, "MMS : ISO Onboarding : Channel Config : TransactionSet",
+								transactionSet, transactionSetStatus, errorMessage);
+
+					} catch (Exception e) {
+						System.out.println(
+								"Error in processing Network data for row: " + currentRow + " - " + e.getMessage());
+						throw e;
+					}
 				} else {
 					System.out.println("Transaction Set data is empty for row: " + currentRow);
 				}
@@ -1607,7 +1637,8 @@ public class SystemUserMultipleISORegression {
 
 					performTabKeyPress();
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.ChannelStartDateFieldisRequired, "Field is Required");
+					;
 
 					testcaseCount++;
 
@@ -1615,7 +1646,8 @@ public class SystemUserMultipleISORegression {
 					DateStatus = false;
 					errorMessage = e.getMessage();
 				}
-				logTestStep(TestcaseNo, "Start Date", "Valid Date", DateStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : ChannelConfig : Start Date", "Valid Date", DateStatus,
+						errorMessage);
 
 				try {
 
@@ -1624,7 +1656,7 @@ public class SystemUserMultipleISORegression {
 
 					performTabKeyPress();
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.ChannelEndDateFieldisRequired, "Field is Required");
 
 					testcaseCount++;
 
@@ -1632,7 +1664,8 @@ public class SystemUserMultipleISORegression {
 					DateStatus = false;
 					errorMessage = e.getMessage();
 				}
-				logTestStep(TestcaseNo, "END Date", "Valid Date", DateStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : ChannelConfig : END Date", "Valid Date", DateStatus,
+						errorMessage);
 
 				// Process Save Button
 				boolean saveStatus = true;
@@ -1646,7 +1679,8 @@ public class SystemUserMultipleISORegression {
 					errorMessage = e.getMessage();
 				}
 
-				logTestStep(TestcaseNo, "Save Button", "Channel Config", saveStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : ChannelConfig : Save Button", "Channel Config",
+						saveStatus, errorMessage);
 			}
 
 			// Process Next Step
@@ -1657,10 +1691,12 @@ public class SystemUserMultipleISORegression {
 
 			} catch (AssertionError e) {
 				nextStepStatus = false;
+
 				errorMessage = e.getMessage();
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "Channel Config", nextStepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : ChannelConfig : ", "NextStep", nextStepStatus,
+					errorMessage);
 
 		} catch (Exception e) {
 			// Handle and log exceptions
@@ -1680,9 +1716,11 @@ public class SystemUserMultipleISORegression {
 
 			String poAImage = testData.get("Company Proof of address");
 
+			BL.ActionclickElement(B.Kyc);
+
 			if (poAImage != null && !poAImage.trim().isEmpty()) {
 
-				BL.clickElement(B.Kyc);
+				Thread.sleep(3000);
 				BL.UploadImage(A.CompanyProofofaddressUpload, poAImage);
 				++testcaseCount;
 
@@ -1694,7 +1732,7 @@ public class SystemUserMultipleISORegression {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "KYC Details", poAImage, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : KYC :KYC Details", poAImage, Status, errorMessage);
 
 			}
 
@@ -1713,7 +1751,7 @@ public class SystemUserMultipleISORegression {
 				errorMessage = e.getMessage();
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "KYC-ISO", nextStepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : KYC : ", " NextStep ", nextStepStatus, errorMessage);
 
 		} catch (Exception e) {
 			// Handle and log exceptions
@@ -1773,17 +1811,21 @@ public class SystemUserMultipleISORegression {
 					Thread.sleep(1000);
 					BL.clickElement(B.ClickOnChannel);
 					BL.selectDropdownOption(channel);
-
+					performTabKeyPress();
 					key.add("Channel-" + currentRow);
 					value.add(channel);
-
 					performTabKeyPress();
 
-					boolean channelStatus = true;
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					String actualValue = BL.getElementText(B.ClickOnChannel);
+					boolean Status = true;
+					if (actualValue != null) {
+						BL.isElementNotDisplayed(B.ChannelnameFieldisRequired, "Field is Required");
+						assertEquals(channel.toUpperCase(), actualValue.toUpperCase());
+					}
 
 					testcaseCount++;
-					logTestStep(TestcaseNo, "DiscountRate : Channel", channel, channelStatus, errorMessage);
+					logTestStep(TestcaseNo, "MMS : ISO Onboarding :DiscountRate : Channel", channel, Status,
+							errorMessage);
 
 				} else {
 					System.out.println("Channel data is empty for row: " + currentRow);
@@ -1797,12 +1839,15 @@ public class SystemUserMultipleISORegression {
 					BL.selectDropdownOption(pricingPlan);
 
 					performTabKeyPress();
-
-					boolean networkStatus = true;
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-
+					String actualValue = BL.getElementText(A.DiscountRatePricingPlan);
+					boolean Status = true;
+					if (actualValue != null) {
+						BL.isElementNotDisplayed(B.BankOnboardingPricingPlanFieldisRequired, "Field is Required");
+						assertEquals(pricingPlan.toUpperCase(), actualValue.toUpperCase());
+					}
 					testcaseCount++;
-					logTestStep(TestcaseNo, "Pricing Plan", pricingPlan, networkStatus, errorMessage);
+					logTestStep(TestcaseNo, "MMS : ISO Onboarding :DiscountRate : Pricing Plan", pricingPlan, Status,
+							errorMessage);
 
 				} else {
 					System.out.println("Network data is empty for row: " + currentRow);
@@ -1820,7 +1865,8 @@ public class SystemUserMultipleISORegression {
 					errorMessage = e.getMessage();
 				}
 
-				logTestStep(TestcaseNo, "Save Button", "ISO Discount Rate", saveStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding :DiscountRate :Save Button", "ISO Discount Rate",
+						saveStatus, errorMessage);
 			}
 
 			// Process Next Step
@@ -1836,7 +1882,8 @@ public class SystemUserMultipleISORegression {
 				errorMessage = e.getMessage();
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "ISO Discount Rate", nextStepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding :DiscountRate : ", " NextStep ", nextStepStatus,
+					errorMessage);
 
 		} catch (Exception e) {
 			// Handle and log exceptions
@@ -1857,9 +1904,6 @@ public class SystemUserMultipleISORegression {
 		String IFSCCode = testData.get("IFSC Code");
 
 		String BanKAccountNumber = testData.get("Bank Account Number");
-		String Mode = testData.get("Settlement Mode");
-		String payment = testData.get("Payment Flag");
-
 		try {
 
 			BL.clickElement(B.SettlementInfo);
@@ -1873,16 +1917,21 @@ public class SystemUserMultipleISORegression {
 				BL.selectDropdownOption(channel);
 
 				++testcaseCount;
+				String actualValue = BL.getElementText(B.SettlementChannel);
 
 				boolean Status = true; // Assume success initially
 				try {
+					if (actualValue != null) {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+						BL.isElementNotDisplayed(B.ChannelnameFieldisRequired, "Field is Required");
+						assertEquals(channel.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Settlement Channel", channel, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : SettlementInfo : Settlement Channel", channel, Status,
+						errorMessage);
 
 			}
 
@@ -1892,16 +1941,21 @@ public class SystemUserMultipleISORegression {
 				BL.selectDropdownOption(Account);
 
 				++testcaseCount;
+				String actualValue = BL.getElementText(B.SettlementAccountType);
 
 				boolean Status = true; // Assume success initially
 				try {
+					if (actualValue != null) {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+						BL.isElementNotDisplayed(B.SettlementAccTypeFieldisRequired, "Field is Required");
+						assertEquals(Account.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Settlement AccountType", Account, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : SettlementInfo : Settlement AccountType", Account,
+						Status, errorMessage);
 
 			}
 
@@ -1909,17 +1963,19 @@ public class SystemUserMultipleISORegression {
 				BL.clickElement(B.SettlementBankAccountNumber);
 				BL.enterElement(B.SettlementBankAccountNumber, BanKAccountNumber);
 
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.SettlementBankAccNumberFieldisRequired, "Field is Required");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "BanKAccountNumber", BanKAccountNumber, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : SettlementInfo : BanKAccountNumber", BanKAccountNumber,
+						Status, errorMessage);
 
 			}
 
@@ -1936,12 +1992,13 @@ public class SystemUserMultipleISORegression {
 				boolean Status = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.SettlementIFSCFieldisRequired, "Field is Required");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "IFSC Code", IFSCCode, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : SettlementInfo : IFSC Code", IFSCCode, Status,
+						errorMessage);
 
 			}
 
@@ -1956,7 +2013,8 @@ public class SystemUserMultipleISORegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Save Button", "Commercial", SaveStatus, errorMessage);
+			logTestStep(TestcaseNo, " MMS : ISO Onboarding : SettlementInfo : Save Button", "Commercial", SaveStatus,
+					errorMessage);
 
 			boolean NextstepStatus = true;
 			try {
@@ -1970,7 +2028,8 @@ public class SystemUserMultipleISORegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "Settlement Info", NextstepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : SettlementInfo :", "NextStep", NextstepStatus,
+					errorMessage);
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
@@ -1991,8 +2050,6 @@ public class SystemUserMultipleISORegression {
 		String Sales = testData.get("Sales Team Onboarding");
 		String merchant = testData.get("Allow to create merchant onboard");
 		String MaximumNoOfPlatform = testData.get("Maximum No of Platform");
-		String usernameAs = testData.get("UsernamAs");
-
 		try {
 
 			BL.clickElement(B.whitelabel);
@@ -2004,16 +2061,19 @@ public class SystemUserMultipleISORegression {
 				BL.selectDropdownOption(ISO);
 
 				++testcaseCount;
+				String actualValue = BL.getElementText(B.WhitelabelISOOnboarding);
 
 				boolean Status = true; // Assume success initially
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					if (actualValue != null) {
+						assertEquals(ISO.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Whitelabel ISO Onboarding", ISO, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Whitelabel : ISO Onboarding", ISO, Status,
+						errorMessage);
 			}
 
 			if (Sales != null && !Sales.trim().isEmpty()) {
@@ -2021,16 +2081,18 @@ public class SystemUserMultipleISORegression {
 
 				BL.selectDropdownOption(Sales);
 				++testcaseCount;
-
+				String actualValue = BL.getElementText(B.WhitelabelSalesTeamOnboarding);
 				boolean Status = true; // Assume success initially
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					if (actualValue != null) {
+						assertEquals(Sales.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Whitelabel Sales Team Onboarding", Sales, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Whitelabel : Sales Team Onboarding", Sales, Status,
+						errorMessage);
 			}
 
 			if (merchant != null && !merchant.trim().isEmpty()) {
@@ -2039,16 +2101,18 @@ public class SystemUserMultipleISORegression {
 				BL.selectDropdownOption(merchant);
 
 				++testcaseCount;
-
+				String actualValue = BL.getElementText(A.CreateMerchantUser);
 				boolean Status = true; // Assume success initially
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					if (actualValue != null) {
+						assertEquals(merchant.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Allow to create merchant onboard", merchant, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Whitelabel : Allow to create merchant onboard",
+						merchant, Status, errorMessage);
 			}
 
 			if (MaximumNoOfPlatform != null && !MaximumNoOfPlatform.trim().isEmpty()) {
@@ -2067,7 +2131,8 @@ public class SystemUserMultipleISORegression {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Maximum No Of Platform", MaximumNoOfPlatform, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Whitelabel : Maximum No Of Platform",
+						MaximumNoOfPlatform, Status, errorMessage);
 			}
 
 			boolean NextstepStatus = true;
@@ -2081,7 +2146,7 @@ public class SystemUserMultipleISORegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "Whitelabel", NextstepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : Whitelabel : ", " NextStep ", NextstepStatus, errorMessage);
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
@@ -2092,7 +2157,7 @@ public class SystemUserMultipleISORegression {
 	}
 
 	// Method to configure Webhooks
-	private void configureWebhooks(Map<String, String> testData, int TestcaseNo) throws InterruptedException {
+	private void configureWebhooks(Map<String, String> testData, int TestcaseNo) throws Exception {
 
 		int testcaseCount = 0;
 		String errorMessage = "The data does not match or is empty.";
@@ -2114,33 +2179,39 @@ public class SystemUserMultipleISORegression {
 				BL.selectDropdownOption(type);
 
 				++testcaseCount;
+				String actualValue = BL.getElementText(B.WebhookType);
 
 				boolean Status = true; // Assume success initially
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					if (actualValue != null) {
+						BL.isElementNotDisplayed(B.Webhooktypes, "Invalid Format");
+						assertEquals(type.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Webhook Type", type, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Webhooks : Webhook Type", type, Status, errorMessage);
 			}
 
 			if (webhookURL != null && !webhookURL.trim().isEmpty()) {
 
 				BL.clickElement(B.WebhookTypeURL);
 				BL.enterElement(B.WebhookTypeURL, webhookURL);
+				performTabKeyPress();
 				++testcaseCount;
 
 				boolean Status = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.WebhookURLFieldisRequired, "Field is Required");
+					BL.isElementNotDisplayed(B.WebhookURLInvalidformat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Webhook URL", webhookURL, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Webhooks : Webhook URL", webhookURL, Status,
+						errorMessage);
 			}
 
 			boolean SaveStatus = true;
@@ -2154,7 +2225,8 @@ public class SystemUserMultipleISORegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Save Button", "Webhooks", SaveStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : Webhooks : Save Button", "Webhooks", SaveStatus,
+					errorMessage);
 
 			boolean NextstepStatus = true;
 			try {
@@ -2167,7 +2239,7 @@ public class SystemUserMultipleISORegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "Webhooks", NextstepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : Webhooks :", " NextStep", NextstepStatus, errorMessage);
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
@@ -2177,15 +2249,42 @@ public class SystemUserMultipleISORegression {
 
 	}
 
-	private void submitForVerification() throws InterruptedException {
+	private void submitForVerification(int TestcaseNo) throws InterruptedException {
+		try {
+			String errorMessage = "The data does not match or is empty.";
+			boolean SaveStatus = true;
+			try {
+				BL.clickElement(B.SubmitforVerification);
 
-		BL.clickElement(B.SubmitforVerification);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Submit for Verification", "ISO", SaveStatus,
+						errorMessage);
 
-		BL.clickElement(B.YesButton);
+			} catch (AssertionError e) {
+				SaveStatus = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
 
-		BL.clickElement(B.OKButton);
+			try {
+				BL.clickElement(B.YesButton);
+				BL.clickElement(B.OKButton);
+
+				BL.isElementDisplayed(B.VerfiedSuccessCompleted, "Submit for Verification");
+
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : System Maker : Yes Button", "Submit for Verfication",
+						SaveStatus, errorMessage);
+
+			} catch (AssertionError e) {
+				SaveStatus = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
+
+		} catch (Exception e) {
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+			exceptionHandler.handleException(e, "Submit for verification");
+			throw e;
+		}
 	}
-	
+
 	@When("the System Verifier clicks the ISO module")
 
 	public void SystemVerifierClicktheBankModule() {
@@ -2251,7 +2350,7 @@ public class SystemUserMultipleISORegression {
 
 			if (rowNumber == numberOfRows) {
 				System.out.println("Finished processing the last row. Logging out...");
-				performLogout();
+				performLogout(rowNumber);
 			}
 		}
 
@@ -2271,7 +2370,6 @@ public class SystemUserMultipleISORegression {
 
 		// Log the test data for the current row
 		System.out.println("Data for row " + rowNumber + ": " + testData);
-
 
 		int testCaseCount = 0;
 
@@ -2319,7 +2417,7 @@ public class SystemUserMultipleISORegression {
 
 	private void Searchbyname(Map<String, String> testData, int TestcaseNo) throws InterruptedException, AWTException {
 
-		String LegalName = testData.get("LegalName");
+		String LegalName = testData.get("Legal Name");
 
 		key.clear();
 		value.clear();
@@ -2333,24 +2431,20 @@ public class SystemUserMultipleISORegression {
 				Thread.sleep(3000);
 
 				BL.clickElement(B.SearchbyBankName);
+				Thread.sleep(1000);
+				BL.enterSplitElement(B.SearchbyBankName, LegalName);
 				Thread.sleep(3000);
-
-				BL.UploadImage(B.SearchbyBankName, LegalName);
+				BL.clickElement(B.ActionClick);
+				Thread.sleep(2000);
+				BL.ActionclickElement(B.ViewButton);
 
 			} catch (AssertionError e) {
 				Status = false;
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Search by name", LegalName, Status, errorMessage);
-
-			Thread.sleep(3000);
-
-			BL.clickElement(B.ActionClick);
-
-			Thread.sleep(2000);
-
-			BL.ActionclickElement(B.ViewButton);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : Actions and View", "ISO Status Inprogress", Status,
+					errorMessage);
 
 			int testcaseCount = 0;
 
@@ -2370,7 +2464,7 @@ public class SystemUserMultipleISORegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Sales Info", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : Verified", "Sales Info", verifiedStatus, errorMessage);
 
 			try {
 
@@ -2387,7 +2481,7 @@ public class SystemUserMultipleISORegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Company Info", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : Verified", "Company Info", verifiedStatus, errorMessage);
 
 			try {
 
@@ -2403,7 +2497,7 @@ public class SystemUserMultipleISORegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Personal Info", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : Verified", "Personal Info", verifiedStatus, errorMessage);
 
 			try {
 
@@ -2420,7 +2514,8 @@ public class SystemUserMultipleISORegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Communication Info", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : Verified", "Communication Info", verifiedStatus,
+					errorMessage);
 
 			try {
 
@@ -2437,7 +2532,7 @@ public class SystemUserMultipleISORegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Channel Config", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : Verified", "Channel Config", verifiedStatus, errorMessage);
 
 			try {
 
@@ -2468,7 +2563,7 @@ public class SystemUserMultipleISORegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "KYC-ISO", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : Verified", "KYC-ISO", verifiedStatus, errorMessage);
 
 			try {
 
@@ -2485,7 +2580,7 @@ public class SystemUserMultipleISORegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Discount Rate", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : Verified", "Discount Rate", verifiedStatus, errorMessage);
 
 			try {
 
@@ -2502,7 +2597,7 @@ public class SystemUserMultipleISORegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Settlement Info", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : Verified", "Settlement Info", verifiedStatus, errorMessage);
 
 			try {
 
@@ -2519,7 +2614,7 @@ public class SystemUserMultipleISORegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Whitelabel", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : Verified", "Whitelabel", verifiedStatus, errorMessage);
 
 			try {
 
@@ -2536,23 +2631,41 @@ public class SystemUserMultipleISORegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Webhooks", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : Verified", "Webhooks", verifiedStatus, errorMessage);
 
-			BL.clickElement(B.SubmitforApproval);
+			boolean SaveStatus = true;
+			try {
+				BL.clickElement(B.SubmitforApproval);
 
-			BL.clickElement(B.YesButton);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Submit for Approval", "ISO", SaveStatus, errorMessage);
 
-			BL.clickElement(B.OKButton);
+			} catch (AssertionError e) {
+				SaveStatus = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
+
+			try {
+				BL.clickElement(B.YesButton);
+				BL.clickElement(B.OKButton);
+
+				BL.isElementDisplayed(B.VerfiedSuccessCompleted, "Submit for Approval");
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : System Verifier : Yes Button", "Submit for Approval",
+						SaveStatus, errorMessage);
+
+			} catch (AssertionError e) {
+				SaveStatus = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
 
 			BL.clickElement(B.ApproveCancel);
+
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-			exceptionHandler.handleException(e, "Verified");
+			exceptionHandler.handleException(e, "Submit for Approval");
 			throw e;
 		}
-
 	}
-	
+
 	@When("the System Approver clicks the ISO module")
 
 	public void SystemApproverClicktheBankModule() {
@@ -2618,7 +2731,7 @@ public class SystemUserMultipleISORegression {
 
 			if (rowNumber == numberOfRows) {
 				System.out.println("Finished processing the last row. Logging out...");
-				performLogout();
+				performLogout(rowNumber);
 			}
 		}
 
@@ -2686,7 +2799,7 @@ public class SystemUserMultipleISORegression {
 
 	private void approveOnboarding(Map<String, String> testData, int TestcaseNo) throws InterruptedException {
 
-		String LegalName = testData.get("LegalName");
+		String LegalName = testData.get("Legal Name");
 
 		key.clear();
 		value.clear();
@@ -2701,175 +2814,71 @@ public class SystemUserMultipleISORegression {
 
 			Thread.sleep(3000);
 
-			BL.enterElement(B.SearchbyBankName, LegalName);
+			BL.enterSplitElement(B.SearchbyBankName, LegalName);
 
 		} catch (AssertionError e) {
 			Status = false;
 			errorMessag = e.getMessage(); // Capture error message
 		}
-
-		logTestStep(TestcaseNo, "Search by name", LegalName, Status, errorMessag);
+		logTestStep(TestcaseNo, "MMS : ISO Onboarding : Search by name", LegalName, Status, errorMessag);
 		Thread.sleep(2000);
-
 		BL.ActionclickElement(B.ActionClick);
-
 		Thread.sleep(1000);
-
 		BL.clickElement(B.ViewButton);
 
 		int testcaseCount = 0;
 		String errorMessage = "Approve Button is not visible.";
-
 		boolean ApprovedStatus = true;
+		try {
+			BL.clickElement(B.Approve);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : Approval", "ISO", ApprovedStatus, errorMessage);
+
+		} catch (AssertionError e) {
+			ApprovedStatus = false;
+			errorMessage = e.getMessage(); // Capture error message
+		}
 
 		try {
-
-			BL.clickElement(B.Approve);
 
 			BL.clickElement(B.YesButton);
-
-			BL.clickElement(B.OKButton);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : System Approver : Yes", "Approval", ApprovedStatus,
+					errorMessage);
 
 		} catch (AssertionError e) {
 			ApprovedStatus = false;
 			errorMessage = e.getMessage(); // Capture error message
 		}
-
-		logTestStep(TestcaseNo, "Approved", "ISO", ApprovedStatus, errorMessage);
-
-//		B.ClickOnApprove();
-//
-//		B.Yesforsubmit();
-//
-//		B.OkforSuccessfully();
-
-		BL.clickElement(B.ApproveCancel);
-
-		Thread.sleep(3000);
-
-		BL.clickElement(B.SearchbyBankName);
-		Thread.sleep(3000);
-
-		BL.UploadImage(B.SearchbyBankName, LegalName);
-		Thread.sleep(3000);
-
-		BL.ActionclickElement(B.ActionClick);
-
 		try {
-
-			BL.clickElement(B.ViewButton);
+			BL.clickElement(B.OKButton);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : System Approver : Success pop-up Ok", "Approval",
+					ApprovedStatus, errorMessage);
 
 		} catch (AssertionError e) {
 			ApprovedStatus = false;
 			errorMessage = e.getMessage(); // Capture error message
 		}
+		try {
+			BL.clickElement(B.ApproveCancel);
+			BL.clickElement(B.SearchbyBankName);
+			Thread.sleep(1000);
+			BL.enterSplitElement(B.SearchbyBankName, LegalName);
+			Thread.sleep(2000);
+			BL.ActionclickElement(B.ActionClick);
+			BL.clickElement(B.ViewButton);
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : ISO CPID", BL.getElementValue(B.CPID), ApprovedStatus,
+					errorMessage);
+			BL.clickElement(B.ApproveCancel);
 
-		logTestStep(TestcaseNo, "ISO CPID", BL.getElementValue(B.CPID), ApprovedStatus, errorMessage);
+		} catch (AssertionError e) {
+			ApprovedStatus = false;
+			errorMessage = e.getMessage(); // Capture error message
 
-//		B.ClickonViewButton();
-//
-//		logInputData("Bank CPID", B.getCPID());
-
-		BL.clickElement(B.ApproveCancel);
-	}
-
-	// Set to track previously generated Aadhaar numbers to ensure uniqueness
-	private Set<String> existingAadhaarNumbers = new HashSet<>();
-
-	private String generateValidAadhaar() {
-		Faker faker = new Faker();
-		String aadhaarNumber;
-
-		// Continuously generate Aadhaar numbers until a unique and valid one is found
-		do {
-			StringBuilder aadhaarBuilder = new StringBuilder();
-
-			// Ensure the first digit is NOT 0 or 1
-			aadhaarBuilder.append(faker.number().numberBetween(2, 10)); // First digit: 2 to 9
-
-			// Generate the next 10 digits randomly (digits between 0 and 9)
-			for (int i = 1; i < 11; i++) {
-				aadhaarBuilder.append(faker.number().numberBetween(0, 10)); // Digits between 0 and 9
-			}
-
-			// Generate the 12th digit (check digit) using the Verhoeff algorithm
-			int checkDigit = calculateVerhoeffCheckDigit(aadhaarBuilder.toString());
-			aadhaarBuilder.append(checkDigit);
-
-			// Final generated Aadhaar number
-			aadhaarNumber = aadhaarBuilder.toString();
-
-			// Check if the generated Aadhaar number is unique
-		} while (existingAadhaarNumbers.contains(aadhaarNumber));
-
-		// Add the newly generated Aadhaar number to the set to track it
-		existingAadhaarNumbers.add(aadhaarNumber);
-
-		return aadhaarNumber;
-	}
-
-	// Verhoeff algorithm for check digit calculation (same as before)
-	private static final int[][] verhoeffMultiplicationTable = { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
-			{ 1, 2, 3, 4, 0, 6, 7, 8, 9, 5 }, { 2, 3, 4, 0, 1, 7, 8, 9, 5, 6 }, { 3, 4, 0, 1, 2, 8, 9, 5, 6, 7 },
-			{ 4, 0, 1, 2, 3, 9, 5, 6, 7, 8 }, { 5, 9, 8, 7, 6, 0, 4, 3, 2, 1 }, { 6, 5, 9, 8, 7, 1, 0, 4, 3, 2 },
-			{ 7, 6, 5, 9, 8, 2, 1, 0, 4, 3 }, { 8, 7, 6, 5, 9, 3, 2, 1, 0, 4 }, { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 } };
-
-	private static final int[][] verhoeffPermutationTable = { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
-			{ 1, 5, 7, 6, 2, 8, 3, 0, 9, 4 }, { 5, 8, 0, 3, 7, 9, 6, 1, 4, 2 }, { 8, 9, 1, 6, 0, 4, 3, 5, 2, 7 },
-			{ 9, 4, 5, 3, 1, 2, 6, 8, 7, 0 }, { 4, 2, 8, 6, 5, 7, 3, 9, 0, 1 }, { 2, 7, 9, 3, 8, 0, 6, 4, 1, 5 },
-			{ 7, 0, 4, 6, 9, 1, 3, 2, 5, 8 } };
-
-	private static final int[] verhoeffInverseTable = { 0, 4, 3, 2, 1, 5, 6, 7, 8, 9 };
-
-	// Calculate Verhoeff check digit for the given number (11 digits for Aadhaar)
-	private int calculateVerhoeffCheckDigit(String number) {
-		int checkSum = 0;
-		int[] digits = number.chars().map(c -> c - '0').toArray();
-
-		for (int i = digits.length - 1, j = 0; i >= 0; i--, j++) {
-			checkSum = verhoeffMultiplicationTable[checkSum][verhoeffPermutationTable[j % 8][digits[i]]];
+		} catch (Exception e) {
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+			exceptionHandler.handleException(e, "Submit for Approval");
+			throw e;
 		}
 
-		return verhoeffInverseTable[checkSum];
-	}
-
-	private String generateValidLegalName(Faker faker, Map<String, String> testData) {
-		String legalName;
-		Set<String> existingLegalNames = new HashSet<>();
-
-		// Extract the "LegalName" from testData if it exists and add it to the set
-		if (testData.get("LegalName") != null) {
-			existingLegalNames.add(testData.get("LegalName"));
-		}
-
-		while (true) {
-			// Generate a unique legal name (7 to 10 alphanumeric characters)
-			legalName = faker.regexify("[A-Za-z0-9]{7,10}");
-
-			// Ensure the generated legal name is unique
-			if (!existingLegalNames.contains(legalName)) {
-				return legalName; // Return the valid unique legal name
-			}
-		}
-	}
-
-	private String generateValidPAN(Faker faker) {
-		StringBuilder pan = new StringBuilder();
-
-		// First 5 characters: Uppercase letters
-		for (int i = 0; i < 5; i++) {
-			pan.append(faker.regexify("[A-Z]"));
-		}
-
-		// Next 4 characters: Digits
-		for (int i = 0; i < 4; i++) {
-			pan.append(faker.number().numberBetween(0, 10));
-		}
-
-		// Last character: Uppercase letter
-		pan.append(faker.regexify("[A-Z]"));
-
-		return pan.toString();
 	}
 
 	private void logTestStep(int testcaseCount, String fieldName, String fieldValue, Boolean status,
@@ -2912,14 +2921,36 @@ public class SystemUserMultipleISORegression {
 		robot.keyRelease(KeyEvent.VK_TAB);
 	}
 
-	private void performLogout() throws InterruptedException {
+	private void performLogout(int TestcaseNo) throws InterruptedException {
 
-		BL.clickElement(B.Profile);
+		try {
+			String errorMessage = "The data does not match or is empty.";
+			boolean SaveStatus = true;
+			try {
+				BL.clickElement(B.Profile);
+				BL.clickElement(B.LogOut);
 
-		BL.clickElement(B.LogOut);
+				logTestStep(TestcaseNo, "MMS : ISO Onboarding : Profile & Log Out", "ISO", SaveStatus, errorMessage);
 
-		BL.clickElement(B.YesButton);
+			} catch (AssertionError e) {
+				SaveStatus = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
+
+			try {
+				BL.clickElement(B.YesButton);
+
+			} catch (AssertionError e) {
+				SaveStatus = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
+			logTestStep(TestcaseNo, "MMS : ISO Onboarding : Yes Button", "Log-Out", SaveStatus, errorMessage);
+
+		} catch (Exception e) {
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+			exceptionHandler.handleException(e, "Log Out");
+			throw e;
+		}
 
 	}
-
 }

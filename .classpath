@@ -36,19 +36,5 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/DELL 7480/Downloads/jar_files/graphics2d-0.30.jar"/>
-	<classpathentry kind="lib" path="C:/Users/DELL 7480/Downloads/jar_files/lombok-1.18.18.jar"/>
-	<classpathentry kind="lib" path="C:/Users/DELL 7480/Downloads/jar_files/rest-assured-cucumber-pdf-report-1.5.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/DELL 7480/Downloads/jar_files/snakeyaml-2.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/DELL 7480/Downloads/jar_files/VectorGraphics2D-0.13.jar"/>
-	<classpathentry kind="lib" path="C:/Users/DELL 7480/Downloads/jar_files/animated-gif-lib-1.4.jar"/>
-	<classpathentry kind="lib" path="C:/Users/DELL 7480/Downloads/jar_files/commons-logging-1.2.jar"/>
-	<classpathentry kind="lib" path="C:/Users/DELL 7480/Downloads/jar_files/cucumber-pdf-report-2.14.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/DELL 7480/Downloads/jar_files/extent-pdf-report-2.12.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/DELL 7480/Downloads/jar_files/fontbox-2.0.26.jar"/>
-	<classpathentry kind="lib" path="C:/Users/DELL 7480/Downloads/jar_files/jsoup-1.15.3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/DELL 7480/Downloads/jar_files/pdfbox-2.0.26.jar"/>
-	<classpathentry kind="lib" path="C:/Users/DELL 7480/Downloads/jar_files/table-layout-1.5.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/DELL 7480/Downloads/jar_files/xchart-3.8.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

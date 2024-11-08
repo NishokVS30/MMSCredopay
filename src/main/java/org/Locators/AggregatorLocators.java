@@ -12,7 +12,7 @@ public class AggregatorLocators {
 	WebDriver driver;
 	int waitTime;
 
-	// AggregatorLocators
+// AggregatorLocators
 
 	@FindBy(xpath = "//mat-error[contains(text(), 'Invalid bank name')]")
 
@@ -22,7 +22,7 @@ public class AggregatorLocators {
 
 	public WebElement InvalidDocumenterror;
 
-	// SideMenu
+// SideMenu
 
 	@FindBy(xpath = "//span[contains(text(), 'Sales Info')]")
 
@@ -72,7 +72,7 @@ public class AggregatorLocators {
 
 	public WebElement ChangeLog;
 
-	// IntroMenu
+// IntroMenu
 
 	@FindBy(xpath = "//h6[contains(text(), 'Brand Info')]")
 	public WebElement IntroCompanyInfo;
@@ -83,10 +83,11 @@ public class AggregatorLocators {
 	@FindBy(xpath = "//h6[contains(text(), 'ADMIN USER Details') or contains(text(), 'Admin User details') or contains(text(), 'Admin User Details')]")
 	public WebElement IntroCommunicationInfo;
 
-	@FindBy(xpath = "//h6[contains(text(), 'Channel Configuration')]")
+	@FindBy(xpath = "//h6[text()='Channel Configuration']")
 	public WebElement IntroChannelConfig;
 
-	@FindBy(xpath = "//h6[contains(text(), 'Personal Documents')]")
+	@FindBy(xpath = "//h6[contains(text(), 'KYC Config') or contains(text(), 'Personal Documents')]")
+
 	public WebElement IntroKYC;
 
 	@FindBy(xpath = "//h6[contains(text(), 'FRM Parameters')]")
@@ -109,7 +110,7 @@ public class AggregatorLocators {
 
 	public WebElement IntroWebhooks;
 
-	// SalesInfo
+// SalesInfo
 
 	@FindBy(xpath = "(//mat-label[contains(text(), 'VAS Commission')])[1]")
 
@@ -180,7 +181,7 @@ public class AggregatorLocators {
 	@FindBy(xpath = "//mat-select[@formcontrolname='isEkycRequired']")
 	public WebElement EKycRequired;
 
-	// ComapanyInfo
+// ComapanyInfo
 
 	@FindBy(xpath = "//mat-label[contains(text(), 'Legal Name')]")
 
@@ -254,7 +255,7 @@ public class AggregatorLocators {
 	public WebElement ComapanyPANLabel;
 
 	@FindBy(xpath = "//input[@formcontrolname='companyPan']")
-	public WebElement ComapnyPAN;
+	public WebElement CompanyPAN;
 
 	@FindBy(xpath = "//mat-label[contains(text(), 'GSTIN')]")
 
@@ -293,7 +294,7 @@ public class AggregatorLocators {
 	@FindBy(xpath = "//input[@oninput='this.value=this.value.toLowerCase()']")
 	public WebElement EmailDomain;
 
-	// Personal Info
+// Personal Info
 
 	@FindBy(xpath = "//mat-label[text()='Title']")
 	public WebElement titlepersonallabel;
@@ -407,7 +408,7 @@ public class AggregatorLocators {
 
 //   		@FindBy(xpath = "//span[text()='Save'] | //span[text()=' Save ']")
 
-	// Channel Config
+// Channel Config
 
 	@FindBy(xpath = "//mat-label[contains(text(), 'Bank Name')]")
 
@@ -455,7 +456,7 @@ public class AggregatorLocators {
 
 	public WebElement ApplyButton;
 
-	// KYC
+// KYC
 
 	@FindBy(xpath = "(//input[@type='file'])[2]")
 	public WebElement CompanyProofofaddressUpload;
@@ -469,9 +470,9 @@ public class AggregatorLocators {
 	@FindBy(xpath = "(//input[@type='file'])[4]")
 	public WebElement AadhaarUpload;
 
-	// RiskInfo
+// RiskInfo
 
-	// Label
+// Label
 	@FindBy(xpath = "//mat-label[contains(text(), 'Velocity Check Minutes')]")
 
 	public WebElement VelocityCheckMinuteLabel;
@@ -500,7 +501,7 @@ public class AggregatorLocators {
 
 	public WebElement MonthlyLabel;
 
-	// Click
+// Click
 
 	@FindBy(xpath = "//input[@formcontrolname='vCheckMinutes']")
 	public WebElement VelocityCheckMinute;
@@ -525,8 +526,9 @@ public class AggregatorLocators {
 
 	@FindBy(xpath = "//input[@formcontrolname='frmMonthly']")
 	public WebElement ICAMonthly;
-
-	// POS
+	
+// POS
+	
 	@FindBy(xpath = "(//input[@formcontrolname='dailyLimit'])[3]")
 	public WebElement POSDaily;
 
@@ -542,7 +544,7 @@ public class AggregatorLocators {
 	@FindBy(xpath = "(//input[@formcontrolname='maximumAmount'])[3]")
 	public WebElement POSMaximumAmount;
 
-	// AEPS
+// AEPS
 
 	@FindBy(xpath = "(//input[@formcontrolname='dailyLimit'])[2]")
 	public WebElement AEPSDaily;
@@ -559,7 +561,7 @@ public class AggregatorLocators {
 	@FindBy(xpath = "(//input[@formcontrolname='maximumAmount'])[2]")
 	public WebElement AEPSMaximumAmount;
 
-	// UPI
+// UPI
 
 	@FindBy(xpath = "(//input[@formcontrolname='dailyLimit'])[1]")
 	public WebElement UPIDaily;
@@ -576,11 +578,12 @@ public class AggregatorLocators {
 	@FindBy(xpath = "(//input[@formcontrolname='maximumAmount'])[1]")
 	public WebElement UPIMaximumAmount;
 
-	// DiscountRate
+// DiscountRate
+	
 	@FindBy(xpath = "//input[@formcontrolname='pricingPlanDescription']")
 	public WebElement DiscountRatePricingPlan;
 
-	// Settlement
+// Settlement
 
 	@FindBy(xpath = "//mat-label[contains(text(), 'Settlement Mode')]")
 
@@ -603,7 +606,7 @@ public class AggregatorLocators {
 
 	public WebElement SelectOnPaymenrFlag;
 
-	// WhiteLabel
+// WhiteLabel
 
 	@FindBy(xpath = "//mat-label[contains(text(), 'Allow to Create Merchant User')]")
 
@@ -623,7 +626,7 @@ public class AggregatorLocators {
 
 	public WebElement SelectonUserNameAs;
 
-	// Manual Takeover
+// Manual Takeover
 
 	@FindBy(xpath = "//span[contains(text(), 'Manual Takeover')]")
 	public WebElement ManualTakeOver;
@@ -645,6 +648,163 @@ public class AggregatorLocators {
 
 	@FindBy(xpath = "//span[contains(text(), 'Submit & Next')]")
 	public WebElement ViewDocumentSubmitandNext;
+
+// Sales Info
+
+	@FindBy(xpath = "//input[@formcontrolname='aggregatorCode']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
+	public WebElement AggregatorCodefieldrequired;
+
+//  Company Info Invalid Format
+
+	@FindBy(xpath = "//input[@formcontrolname='legalName']/ancestor::mat-form-field//mat-error[contains(text(), 'Invalid format') or contains(text(), 'Invalid Format')]")
+	public WebElement CompanyLegalNameInvalidFormat;
+
+	@FindBy(xpath = "//input[@formcontrolname='brandName']/ancestor::mat-form-field//mat-error[contains(text(), 'Invalid format') or contains(text(), 'Invalid Format')]")
+	public WebElement CompanyBrandNameInvalidFormat;
+
+	@FindBy(xpath = "//input[@formcontrolname='registerAddress']/ancestor::mat-form-field//mat-error[contains(text(), 'Invalid format') or contains(text(), 'Invalid Format')]")
+	public WebElement CompanyRegAddressInvalidFormat;
+
+	@FindBy(xpath = "//input[@formcontrolname='registerPin']/ancestor::mat-form-field//mat-error[contains(text(), '  Invalid Pincode ')]")
+	public WebElement CompanyRegPincodeInvalidFormat;
+
+	@FindBy(xpath = "//input[@formcontrolname='registeredNumber']/ancestor::mat-form-field//mat-error[contains(text(), 'Invalid format') or contains(text(), 'Invalid Format')]")
+	public WebElement CompanyRegNumInvalidFormat;
+
+	@FindBy(xpath = "//input[@formcontrolname='companyPan']/ancestor::mat-form-field//mat-error[contains(text(), 'Invalid format') or contains(text(), 'Invalid Format')]")
+	public WebElement CompanyCmpPanInvalidFormat;
+
+	@FindBy(xpath = "//input[@formcontrolname='gstin']/ancestor::mat-form-field//mat-error[contains(text(), 'Invalid format') or contains(text(), 'Invalid Format')]")
+	public WebElement CompanyCmpGSTInvalidFormat;
+
+	@FindBy(xpath = "//mat-chip-list[@formcontrolname='emailDomain']/ancestor::mat-form-field//mat-error[contains(text(), 'Invalid format') or contains(text(), 'Invalid Format')]")
+	public WebElement CompanyEmailDomainInvalidFormat;
+
+// Company Info Field is Required
+
+	@FindBy(xpath = "//input[@formcontrolname='legalName']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
+	public WebElement CompanyLegalNameFieldisRequired;
+
+	@FindBy(xpath = "//input[@formcontrolname='brandName']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
+	public WebElement CompanyBrandNameFieldisRequired;
+
+	@FindBy(xpath = "//input[@formcontrolname='registerAddress']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
+	public WebElement CompanyRegAddressFieldisRequired;
+
+	@FindBy(xpath = "//input[@formcontrolname='registerPin']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
+	public WebElement CompanyRegPinFieldisRequired;
+
+	@FindBy(xpath = "//mat-select[@formcontrolname='businessType']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
+	public WebElement CompanyBusinessTypFieldisRequired;
+
+	@FindBy(xpath = "//mat-chip-list[@formcontrolname='emailDomain']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
+	public WebElement CompanyEmailDomainFieldisRequired;
+
+	@FindBy(xpath = "//input[@formcontrolname='establishYear']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
+	public WebElement CompanyCalenderFieldisRequired;
+
+	@FindBy(xpath = "//input[@formcontrolname='registeredNumber']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
+	public WebElement CompanyRegNumFieldisRequired;
+
+	@FindBy(xpath = "//input[@formcontrolname='companyPan']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
+	public WebElement CompanyRegPanFieldisRequired;
+
+	@FindBy(xpath = "//input[@formcontrolname='gstin']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
+	public WebElement CompanyCmpGSTFieldisRequired;
+
+	@FindBy(xpath = "//mat-select[@formcontrolname='statementType']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
+	public WebElement CompanyStatementTypeFieldisRequired;
+
+// Personal Info
+
+	@FindBy(xpath = "//mat-select[@formcontrolname='title']/ancestor::mat-form-field//mat-error[contains(text(), 'This field is required ')]")
+	public WebElement PersonalinfoTitleFieldrequired;
+
+	@FindBy(xpath = "//input[@formcontrolname='firstName']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
+	public WebElement PersonalinfoFirstNameFieldrequired;
+
+	@FindBy(xpath = "//input[@formcontrolname='dob']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
+	public WebElement PersonalinfoDOBFieldrequired;
+
+	@FindBy(xpath = "//input[@formcontrolname='pan']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
+	public WebElement PersonalinfoPANFieldrequired;
+
+	@FindBy(xpath = "//input[@formcontrolname='address']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
+	public WebElement PersonalinfoAddressFieldrequired;
+
+	@FindBy(xpath = "//input[@formcontrolname='pincode']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
+	public WebElement PersonalinfoPincodeFieldrequired;
+
+	@FindBy(xpath = "//input[@formcontrolname='mobile']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
+	public WebElement PersonalinfoMobileFieldrequired;
+
+	@FindBy(xpath = "//input[@formcontrolname='email']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
+	public WebElement PersonalinfoEmailFieldrequired;
+
+	@FindBy(xpath = "//input[@formcontrolname='nationality']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
+	public WebElement PersonalinfoNationalityFieldrequired;
+
+// Personal info invalid format
+
+	@FindBy(xpath = "//input[@formcontrolname='firstName']/ancestor::mat-form-field//mat-error[contains(text(), 'Invalid format') or contains(text(), 'Invalid Format')]")
+	public WebElement PersonalInfoFirstNameInvalidFormat;
+
+	@FindBy(xpath = "//input[@formcontrolname='lastName']/ancestor::mat-form-field//mat-error[contains(text(), 'Invalid format') or contains(text(), 'Invalid Format')]")
+	public WebElement PersonalInfoLastNameInvalidFormat;
+
+	@FindBy(xpath = "//input[@formcontrolname='pan']/ancestor::mat-form-field//mat-error[contains(text(), 'Invalid format') or contains(text(), 'Invalid Format')]")
+	public WebElement PersonalInfoPanInvalidFormat;
+
+	@FindBy(xpath = "//input[@formcontrolname='address']/ancestor::mat-form-field//mat-error[contains(text(), 'Invalid format') or contains(text(), 'Invalid Format')]")
+	public WebElement PersonalInfoAddressInvalidFormat;
+
+	@FindBy(xpath = "//input[@formcontrolname='mobile']/ancestor::mat-form-field//mat-error[contains(text(), 'Invalid format') or contains(text(), 'Invalid Format')]")
+	public WebElement PersonalInfoMobileInvalidFormat;
+
+	@FindBy(xpath = "//input[@formcontrolname='telephone']/ancestor::mat-form-field//mat-error[contains(text(), 'Invalid format') or contains(text(), 'Invalid Format')]")
+	public WebElement PersonalInfoTelephoneInvalidFormat;
+
+	@FindBy(xpath = "//input[@formcontrolname='email']/ancestor::mat-form-field//mat-error[contains(text(), 'Invalid format') or contains(text(), 'Invalid Format')]")
+	public WebElement PersonalInfoEmailInvalidFormat;
+
+	@FindBy(xpath = "//input[@formcontrolname='nationality']/ancestor::mat-form-field//mat-error[contains(text(), 'Invalid format') or contains(text(), 'Invalid Format')]")
+	public WebElement PersonalInfoNationalityInvalidFormat;
+
+	@FindBy(xpath = "//input[@formcontrolname='aadharNumber']/ancestor::mat-form-field//mat-error[contains(text(), 'Invalid format') or contains(text(), 'Invalid Format')]")
+	public WebElement PersonalInfoAadhaarInvalidFormat;
+
+	@FindBy(xpath = "//input[@formcontrolname='passportNumber']/ancestor::mat-form-field//mat-error[contains(text(), 'Invalid format') or contains(text(), 'Invalid Format')]")
+	public WebElement PersonalInfoPassportNumberInvalidFormat;
+
+	@FindBy(xpath = "//input[@formcontrolname='pincode']/ancestor::mat-form-field//mat-error[contains(text(), 'Invalid format') or contains(text(), '  Invalid Pincode ')]")
+	public WebElement PersonalInfoPincodeInvalidFormat;
+
+// Channel info
+
+	@FindBy(xpath = "//input[@formcontrolname='bankName']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
+	public WebElement ChannelAggregatorBankNameFieldRequired;
+
+	@FindBy(xpath = "//input[@formcontrolname='bankName']/ancestor::mat-form-field//mat-error[contains(text(), ' Invalid bank name ')]")
+	public WebElement ChannelAggregatorBankNameInvalidBankName;
+
+	@FindBy(xpath = "//input[@formcontrolname='startDate']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
+	public WebElement ChannelStartDateFieldisRequired;
+
+	@FindBy(xpath = "//input[@formcontrolname='endDate']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
+	public WebElement ChannelEndDateFieldisRequired;
+
+// Discount Rate
+
+	@FindBy(xpath = "//input[@formcontrolname='pricingPlanDescription']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
+	public WebElement DiscountRatePricingPlanFieldRequired;
+
+//Aggregator settlement info field Required
+
+	@FindBy(xpath = "//mat-select[@formcontrolname='settlementMode']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
+	public WebElement SettlementmodeFieldisRequired;
+	
+	@FindBy(xpath = "//mat-select[@formcontrolname='paymentFlag']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
+	public WebElement PaymentFlagFieldisRequired;
 
 	public AggregatorLocators(WebDriver driver) {
 

@@ -116,7 +116,10 @@ import java.util.*;
 public class ExcelUtilsDataCache {
 
 	private generateFaker fakerUtil = new generateFaker();
-	private Set<String> existingBankNames = new HashSet<>();;
+	private Set<String> existingBankNames = new HashSet<>();
+	private Set<String> existingAadhaarNumbers = new HashSet<>();
+	private Set<String> existingUniqueReferenceNumber = new HashSet<>();
+	
 
 	private static ExcelUtilsDataCache instance;
 	private Map<String, List<Map<String, String>>> cachedData;
@@ -140,7 +143,8 @@ public class ExcelUtilsDataCache {
 		if (cachedData.isEmpty()) { // Check if cache is empty before loading data
 			ExcelUtils utils = new ExcelUtils(); // Assuming ExcelUtils is a utility class for reading Excel data
 			cachedData = utils.getAllData(excelPath); // Load all sheets at once into the cache
-			System.out.println("===============excelPathexcelPathexcelPathexcelPath==============================="+excelPath);
+			System.out.println(
+					"===============excelPathexcelPathexcelPathexcelPath===============================" + excelPath);
 			randomvaluegenerate();
 		}
 	}
@@ -152,7 +156,7 @@ public class ExcelUtilsDataCache {
 
 	// Method to update cached data for a specific sheet
 	public void setCachedData(String sheetName, List<Map<String, String>> data) {
-	 	cachedData.put(sheetName, data); // Update the cache with new data for the given sheet
+		cachedData.put(sheetName, data); // Update the cache with new data for the given sheet
 	}
 
 	public void randomvaluegenerate() {
@@ -161,7 +165,7 @@ public class ExcelUtilsDataCache {
 		for (String sheetName : allSheetData.keySet()) { // Loop through each sheet
 			List<Map<String, String>> sheetData = allSheetData.get(sheetName); // Get data for the current sheet
 			System.out.println("Processing sheet: " + sheetName); // Optional: log the current sheet name
- 			for (Map<String, String> rowData : sheetData) { // Loop through each row in the sheet
+			for (Map<String, String> rowData : sheetData) { // Loop through each row in the sheet
 				for (String key : rowData.keySet()) {
 					String value = rowData.get(key);
 
@@ -169,19 +173,38 @@ public class ExcelUtilsDataCache {
 					if ("Random.Bank".equalsIgnoreCase(value)) {
 						value = fakerUtil.generateValidBankName(fakerUtil.faker, existingBankNames);
 					} else if ("Random.Address".equalsIgnoreCase(value)) {
-						value = fakerUtil.generateRandomAddress(fakerUtil.faker);
+						value = fakerUtil.generateRandomAddress();
 					} else if ("Random.Gst".equalsIgnoreCase(value)) {
 						value = fakerUtil.generateValidGST();
 					} else if ("Random.Pan".equalsIgnoreCase(value)) {
 						value = fakerUtil.generateValidPAN();
+					} else if ("Random.Name".equalsIgnoreCase(value)) {
+						value = fakerUtil.generateRandomName();
+					} else if ("Random.Number".equalsIgnoreCase(value)) {
+						value = fakerUtil.generateMobileNumber();
+					} else if ("Random.Email".equalsIgnoreCase(value)) {
+						value = fakerUtil.generateEmail();
+					} else if ("Random.AccountNumber".equalsIgnoreCase(value)) {
+						value = fakerUtil.generateValidBankAccountNumber();
+					}else if ("Random.Code".equalsIgnoreCase(value)) {
+						value = fakerUtil.generateValidAggregatorCode();
+					} else if ("Random.Aadhaar".equalsIgnoreCase(value)) {
+						value = fakerUtil.generateValidAadhaar(fakerUtil.faker, existingAadhaarNumbers);
+					}else if ("Random.Passport".equalsIgnoreCase(value)) {
+						value = fakerUtil.generateIndianPassportNumber();
 					}
+					else if ("Random.UniqueRefNumber".equalsIgnoreCase(value)) {
+						value = fakerUtil.generateValidUniqueReferenceNumber(fakerUtil.faker, existingUniqueReferenceNumber);
+					}
+					
+
 					// Update the rowData with the generated value
 					rowData.put(key, value);
- 				}
-				
+				}
+
 			}
 
-			setCachedData(sheetName,sheetData);
+			setCachedData(sheetName, sheetData);
 		}
 
 	}

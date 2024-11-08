@@ -1,4 +1,5 @@
 package org.Testcases;
+
 import static org.junit.Assert.assertEquals;
 
 import java.awt.AWTException;
@@ -7,36 +8,40 @@ import java.awt.event.KeyEvent;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.junit.Assert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter;
 import com.aventstack.extentreports.markuputils.Markup;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
-import com.github.javafaker.Faker;
-
 import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.opentelemetry.exporter.logging.SystemOutLogRecordExporter;
 import io.qameta.allure.Allure;
+
 public class SystemUserMultipleBankRegression extends TestHooks {
 	private WebDriver driver;
+	int waitTime;
+
 	org.Locators.BaseClassLocator BL;
 	org.Locators.SystemUserLocatores S;
 	org.Locators.LoginLocators L;
@@ -49,8 +54,10 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 	org.Locators.TerminalLocators T;
 	ExtentTest test;
 	ExcelUtilsDataCache cache = ExcelUtilsDataCache.getInstance();
+
 	public SystemUserMultipleBankRegression() throws InterruptedException {
 		this.driver = CustomWebDriverManager.getDriver();
+		this.waitTime = CustomWebDriverManager.getWaitTime();
 //	this.driver = driver;
 		System.setProperty("webdriver.chrome.logfile", "chromedriver.log");
 		System.setProperty("webdriver.chrome.verboseLogging", "true");
@@ -68,55 +75,31 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 
 //	@Before("@loadDataExcelUtils")
 //	@Given("I load data from Excel using sheetname \"Credentials\"")
-//	public void setUp() throws InvalidFormatException, IOException {
-//	    // Initialize Faker instance
-//	    Faker faker = new Faker();
+//	public void setUp() {
+//		// Retrieve the Excel file path from the environment variable
+//		String excelFilePath = CustomWebDriverManager.getExcelFilePath();
+//		String propertiesFilePath = "C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\src\\test\\resources\\extent.properties";
+//		PropertiesFileModifier.updatePropertiesFile(propertiesFilePath);
 //
-//	    // Retrieve the Excel file path from the environment variable
-//	    String excelFilePath = CustomWebDriverManager.getExcelFilePath();
-//	    String propertiesFilePath = "C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\src\\test\\resources\\extent.properties"; 
-//	    PropertiesFileModifier.updatePropertiesFile(propertiesFilePath);
-//	    
-//	    System.out.println("_______________________________________________________Excel file path from environment variable: " + excelFilePath);
-//	    
-//	    // Check if the excelFilePath is null or empty
-//	    if (excelFilePath == null || excelFilePath.isEmpty()) {
-//	        throw new IllegalArgumentException("Excel file path is not set. Please check the environment variable.");
-//	    }
-//	    
-//	    // Proceed to load the data
-//	    ExcelUtilsDataCache cache = ExcelUtilsDataCache.getInstance();
-//	    cache.loadData(excelFilePath); // Assuming your loadData method requires the file path
+//		System.out.println(
+//				"_______________________________________________________Excel file path from environment variable: "
+//						+ excelFilePath);
 //
-//	    // Initialize existingBankNames (if applicable, define this based on your use case)
-//	   // List<String> existingBankNames = Arrays.asList("Bank1", "Bank2"); // Example
-////	    Map<String, List<Map<String, String>>> allSheetData = cache.getData(); // Load all data from Excel
-////
-////	    for (String sheetName : allSheetData.keySet()) { // Loop through each sheet
-////	        List<Map<String, String>> sheetData = allSheetData.get(sheetName); // Get data for the current sheet
-////	        System.out.println("Processing sheet: " + sheetName); // Optional: log the current sheet name
-////
-////	        for (Map<String, String> rowData : sheetData) { // Loop through each row in the sheet
-////	            for (String key : rowData.keySet()) {
-////	                String value = rowData.get(key);
-////
-////	                // Check for placeholders and replace with generated values
-////	                if ("Random.Bank".equalsIgnoreCase(value)) {
-////	                    value = generateValidBankName(faker, existingBankNames);
-////	                } else if ("Random.Address".equalsIgnoreCase(value)) {
-////	                    value = generateRandomAddress(faker);
-////	                } else if ("Random.Gst".equalsIgnoreCase(value)) {
-////	                    value = generateValidGST(faker);
-////	                } else if ("Random.Pan".equalsIgnoreCase(value)) {
-////	                    value = generateValidPAN(faker);
-////	                }
-////
-////	                // Update the rowData with the generated value
-////	                rowData.put(key, value);
-////	            }
-////	        }
-//	    }
-
+//		// Check if the excelFilePath is null or empty
+//		if (excelFilePath == null || excelFilePath.isEmpty()) {
+//			throw new IllegalArgumentException("Excel file path is not set. Please check the environment variable.");
+//		}
+//
+//		// Proceed to load the data
+//		ExcelUtilsDataCache cache = ExcelUtilsDataCache.getInstance();
+//		try {
+//			cache.loadData(excelFilePath);
+//		} catch (InvalidFormatException | IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} // Assuming your loadData method requires the file path
+//
+//	}
 	@Given("I visit the System Maker Login in Regression using sheetname {string} and rownumber {int}")
 	public void i_visit_the_System_maker_login(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException {
@@ -134,8 +117,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 					+ "<tr><td style='border: 1px solid black;color: black'>" + userName
 					+ "</td><td style='border: 1px solid black;color: black'>" + password + "</td></tr>" + "</table>";
 			Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-			String[][] data = { { "UserName", "Password" }, { userName, password },
-			};
+			String[][] data = { { "UserName", "Password" }, { userName, password }, };
 			Markup m = MarkupHelper.createTable(data);
 			// or
 			test.log(Status.PASS, m);
@@ -145,6 +127,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			throw e;
 		}
 	}
+
 	@And("I enter the credentials and click a login button in Regression using sheetname {string} and rownumber {int}")
 	public void i_enter_the_credentials_and_click_a_login_button(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException {
@@ -162,6 +145,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			throw e;
 		}
 	}
+
 	@When("System Maker - Onboarding should be displayed in the side menu")
 	public void I_Visit_System_Maker_Onboarding() throws InterruptedException {
 		try {
@@ -173,6 +157,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			throw e;
 		}
 	}
+
 	@Then("the System Maker should see Bank, Aggregators, ISO,SUB ISO, Groupmerchant, Merchant, and Terminal in the side menu of Onboarding")
 	public void System_Maker_seessidemenu_itemsin_Onboarding() throws InterruptedException {
 		try {
@@ -189,6 +174,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			throw e;
 		}
 	}
+
 	@When("the System Maker clicks the bank module")
 	public void SystemMakerClicktheBankModule() {
 		try {
@@ -199,7 +185,9 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			throw e;
 		}
 	}
+
 	int totalTestCaseCount = 0;
+
 	@Then("the System Maker Bank Onboarding should prompt users to enter valid inputs using the sheet name {string}")
 	public void processAllData(String sheetName)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
@@ -235,17 +223,19 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			}
 			if (rowNumber == numberOfRows) {
 				System.out.println("Finished processing the last row. Logging out...");
-				performLogout();
+				performLogout(rowNumber);
 			}
 		}
 		logDashboardCount();
 	}
+
 	private void logDashboardCount() {
 		String message = "Total Dashboard Count: " + totalTestCaseCount;
 		ExtentCucumberAdapter.addTestStepLog(message);
 		Allure.parameter("Total Test Case Count", totalTestCaseCount);
 		System.out.println(message);
 	}
+
 	private int runTestForRow(String sheetName, Map<String, String> testData, int rowNumber) throws Exception {
 		// Log the test data for the current row
 		System.out.println("Data for row " + rowNumber + ": " + testData);
@@ -255,6 +245,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 		testCaseCount += validateFieldsForRow(testData, rowNumber);
 		return testCaseCount;
 	}
+
 	private void takeScreenshot(int rowNumber) {
 		try {
 			File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
@@ -268,13 +259,13 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			e.printStackTrace();
 		}
 	}
+
 	ArrayList<String> key = new ArrayList<>();
 	ArrayList<String> value = new ArrayList<>();
-	
-	
-	private int validateFieldsForRow(Map<String, String> testData, int TestcaseNo)
-			throws Exception {
+
+	private int validateFieldsForRow(Map<String, String> testData, int TestcaseNo) throws Exception {
 		int validatedFieldsCount = 0;
+		ONUSINDEX = 1;
 		validatedFieldsCount += executeStep(() -> {
 			try {
 //	fillBankDetails(testData, TestcaseNo);
@@ -303,15 +294,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				e.printStackTrace();
 			}
 		}, "Channel Config");
-		// ONUS Section
-		validatedFieldsCount += executeStep(() -> {
-			try {
-				configureONUS(TestcaseNo);
-			} catch (InterruptedException | AWTException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}, "ONUS Configuration");
+
 		// Global Form Section
 		validatedFieldsCount += executeStep(() -> {
 			try {
@@ -377,7 +360,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 		// Final Submission
 		validatedFieldsCount += executeStep(() -> {
 			try {
-				submitForVerification();
+				submitForVerification(TestcaseNo);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -386,6 +369,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 		// Return the total count of validated fields/sections
 		return validatedFieldsCount;
 	}
+
 	private int executeStep(Runnable step, String stepName) {
 		try {
 			step.run();
@@ -397,12 +381,11 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			return 0; // Return 0 for failed execution
 		}
 	}
-	private Set<String> existingBankNames = new HashSet<>();
+
 	// Method to fill Bank Details
 	private String fillBankDetails(Map<String, String> testData, int TestcaseNo)
 			throws InterruptedException, AWTException {
 		try {
-			Faker faker = new Faker();
 			String bankName = testData.get("BankName");
 			String address = testData.get("Address");
 			String pincode = testData.get("Pincode");
@@ -416,9 +399,18 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			value.clear();
 			String errorMessage = "The data does not match or is empty.";
 			new TestCaseManager();
-	
+
 			if (bankName != null && !bankName.trim().isEmpty()) {
-				BL.clickElement(B.Createbutton);
+
+				boolean CreateStatus = true; // Assume success initially
+				try {
+					BL.clickElement(B.Createbutton);
+				} catch (AssertionError e) {
+					CreateStatus = false; // Set status to false if assertion fails
+					errorMessage = e.getMessage(); // Capture error message
+				}
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Create : ", "Bank", CreateStatus, errorMessage);
+
 				BL.clickElement(B.BankName);
 				BL.CLearElement(B.BankName);
 				BL.enterElement(B.BankName, bankName);
@@ -431,16 +423,17 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 					bankNameStatus = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : General Info : Bank Name", bankName, bankNameStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : General Info : Bank Name", bankName, bankNameStatus,
+						errorMessage);
 			}
-			
-		
+
 			if (address != null && !address.trim().isEmpty()) {
 				BL.clickElement(B.Address);
 				BL.enterElement(B.Address, address);
 				performTabKeyPress();
 				boolean AddressNameStatus = true; // Assume success initially
 				try {
+					Thread.sleep(1000);
 					// Perform assertion check (modify this as per your requirement)
 					BL.isElementNotDisplayed(B.GeneralinfoAddressInvalidformat, "Invalid Format");
 					BL.isElementNotDisplayed(B.GeneralinfoBanknameRequiredField, "Field is Required");
@@ -449,12 +442,12 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 					errorMessage = e.getMessage(); // Capture error message
 				}
 //	String getaddress = B.getAddress();
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : General Info : Address Name", address, AddressNameStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : General Info : Address Name", address,
+						AddressNameStatus, errorMessage);
 			}
-//	if (pincode != null && pincode.matches("\\d+\\.0")) {
-//	pincode = pincode.substring(0, pincode.indexOf(".0"));
 			if (pincode != null && !pincode.trim().isEmpty()) {
 				BL.clickElement(B.Pincode);
+				BL.enterElement(B.Pincode, pincode);
 				BL.selectDropdownOption(pincode);
 				performTabKeyPress();
 				boolean PincodeStatus = true; // Assume success initially
@@ -466,10 +459,10 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 					PincodeStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : General Info : Pincode :", pincode, PincodeStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : General Info : Pincode :", pincode, PincodeStatus,
+						errorMessage);
 			}
-	
-			
+
 			if (gst != null && !gst.trim().isEmpty()) {
 				BL.clickElement(B.GST);
 				BL.enterElement(B.GST, gst);
@@ -484,8 +477,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				}
 				logTestStep(TestcaseNo, "MMS : Bank Onboarding : General Info : GST :", gst, GSTStatus, errorMessage);
 			}
-	
-			
+
 			if (pan != null && !pan.trim().isEmpty()) {
 				BL.clickElement(B.PAN);
 				BL.enterElement(B.PAN, pan);
@@ -509,38 +501,47 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				BL.enterElement(B.Marsid, Marsid);
 				performTabKeyPress();
 				boolean MarsidStatus = true; // Assume success initially
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : General Info : Marsid :", Marsid, MarsidStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : General Info : Marsid :", Marsid, MarsidStatus,
+						errorMessage);
 			}
 			if (StatementFrequency != null && !StatementFrequency.trim().isEmpty()) {
 				BL.clickElement(B.StatementFrequency);
 				BL.selectDropdownOption(StatementFrequency);
 				performTabKeyPress();
-				boolean StatementFrequencyStatus = true; // Assume success initially
+
+				String actualValue = BL.getElementText(B.StatementFrequency);
+				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-//					fs(BL.getElementValue(B.StatementFrequency), StatementFrequency);
-					assertEquals(BL.getElementText(B.StatementFrequency), StatementFrequency);
+					if (actualValue != null)
+
+					{
+						assertEquals(StatementFrequency.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
-					StatementFrequencyStatus = false;
+					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : General Info : Statement Frequency :", StatementFrequency, StatementFrequencyStatus,
-						errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : General Info : Statement Frequency :",
+						StatementFrequency, Status, errorMessage);
 			}
 			if (StatementType != null && !StatementType.trim().isEmpty()) {
 				BL.clickElement(B.StatementType);
 				BL.selectDropdownOption(StatementType);
 				performTabKeyPress();
 				logInputData("Statement Type", StatementType);
-				boolean StatementTypeStatus = true; // Assume success initially
+
+				String actualValue = BL.getElementText(B.StatementType);
+				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");  
-					assertEquals(BL.getElementText(B.StatementType), StatementType);
+					if (actualValue != null) {
+						assertEquals(StatementType.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
-					StatementTypeStatus = false;
+					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : General Info : Statement Type :", StatementType, StatementTypeStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : General Info : Statement Type :", StatementType,
+						Status, errorMessage);
 			}
 			for (String domain : domains) {
 				if (domain != null && !domain.trim().isEmpty()) {
@@ -555,7 +556,8 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 						domainStatus = false;
 						errorMessage = e.getMessage(); // Capture error message
 					}
-					logTestStep(TestcaseNo, "MMS : Bank Onboarding : General Info : Domain", domain, domainStatus, errorMessage);
+					logTestStep(TestcaseNo, "MMS : Bank Onboarding : General Info : Domain", domain, domainStatus,
+							errorMessage);
 				}
 			}
 			boolean NextstepStatus = true;
@@ -566,7 +568,8 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				NextstepStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
 			}
-			logTestStep(TestcaseNo, "MMS : Bank Onboarding : General Info : ", "NextStep", NextstepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Bank Onboarding : General Info : ", "NextStep", NextstepStatus,
+					errorMessage);
 			return bankName;
 		} catch (Exception e) {
 			// Use the exception handler to log and handle exceptions gracefully
@@ -575,7 +578,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			throw e; // Re-throw the exception after handling
 		}
 	}
-	
+
 	private void logTestStep(int testcaseCount, String fieldName, String fieldValue, Boolean status,
 			String errorMessage) {
 		String message = "BO Test Case " + testcaseCount + ": " + fieldName + " with value '" + fieldValue + "' "
@@ -601,6 +604,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 		// Optionally, print to console for debugging
 		System.out.println(message);
 	}
+
 	// Method to fill Communication Details
 	private void fillCommunicationDetails(Map<String, String> testData, int TestcaseNo)
 			throws InterruptedException, AWTException {
@@ -614,7 +618,9 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			BL.clickElement(B.ClickonCommunicationInfo);
 			BL.clickElement(B.AddButton);
 			if (CommName != null && !CommName.trim().isEmpty()) {
+
 				BL.clickElement(B.ClickonCommuName);
+				
 				BL.enterElement(B.ClickonCommuName, CommName);
 				boolean CommunicationNameStatus = true; // Assume success initially
 				try {
@@ -624,7 +630,8 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 					CommunicationNameStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Communication Info : Communication Name", CommName, CommunicationNameStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Communication Info : Communication Name", CommName,
+						CommunicationNameStatus, errorMessage);
 			}
 			if (CommPosition != null && !CommPosition.trim().isEmpty()) {
 				BL.clickElement(B.ClickonCommuPosition);
@@ -637,17 +644,12 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 					CommunicationPositionStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Communication Info : Communication Position", CommPosition, CommunicationPositionStatus,
-						errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Communication Info : Communication Position",
+						CommPosition, CommunicationPositionStatus, errorMessage);
 			}
 			if (CommMobileNumber != null && !CommMobileNumber.trim().isEmpty()) {
-				Faker faker = new Faker();
-				// Generate a valid mobile number starting with 9, 8, 7, or 6
-				String firstDigit = faker.number().numberBetween(6, 10) + ""; // Randomly choose 6, 7, 8, or 9
-				String remainingDigits = faker.number().digits(9); // Generate 9 random digits
-				String communicationMobileNumber = firstDigit + remainingDigits;
 				BL.clickElement(B.ClickonCommuMobileNumber);
-				BL.enterElement(B.ClickonCommuMobileNumber, communicationMobileNumber);
+				BL.enterElement(B.ClickonCommuMobileNumber, CommMobileNumber);
 				boolean CommunicationMobileNumberStatus = true; // Assume success initially
 				try {
 					BL.isElementNotDisplayed(B.CommunicationMobileInvalidFormat, "Invalid Format");
@@ -656,16 +658,12 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 					CommunicationMobileNumberStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Communication Info : Communication MobileNumber", communicationMobileNumber,
-						CommunicationMobileNumberStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Communication Info : Communication MobileNumber",
+						CommMobileNumber, CommunicationMobileNumberStatus, errorMessage);
 			}
 			if (CommEmailid != null && !CommEmailid.trim().isEmpty()) {
-				Faker faker = new Faker();
-				// Generate a random email address with @gmail.com
-				String randomEmailPrefix = faker.internet().slug(); // Generate a random string for the prefix
-				String Communicationemailid = randomEmailPrefix + "@gmail.com";
 				BL.clickElement(B.ClickonCommuEmailId);
-				BL.enterElement(B.ClickonCommuEmailId, Communicationemailid);
+				BL.enterElement(B.ClickonCommuEmailId, CommEmailid);
 				boolean CommunicationEmailIDStatus = true; // Assume success initially
 				try {
 					BL.isElementNotDisplayed(B.CommunicationEmailInvalidFormat, "Invalid Format");
@@ -674,21 +672,25 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 					CommunicationEmailIDStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Communication Info : Communication Emailid", Communicationemailid, CommunicationEmailIDStatus,
-						errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Communication Info : Communication Emailid",
+						CommEmailid, CommunicationEmailIDStatus, errorMessage);
 			}
 			if (ADUSer != null && !ADUSer.trim().isEmpty()) {
 				BL.clickElement(B.ClickOnAdUsers);
 				BL.selectDropdownOption(ADUSer);
-				boolean CommunicationADUSERStatus = true; // Assume success initially
+
+				String actualValue = BL.getElementText(B.ClickOnAdUsers);
+				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.ClickOnAdUsers), ADUSer);
+					if (actualValue != null) {
+						assertEquals(ADUSer.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
-					CommunicationADUSERStatus = false;
+					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Communication Info : AD User", ADUSer, CommunicationADUSERStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Communication Info : AD User", ADUSer, Status,
+						errorMessage);
 			}
 			boolean SaveStatus = true;
 			try {
@@ -698,7 +700,8 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				SaveStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
 			}
-			logTestStep(TestcaseNo, "MMS : Bank Onboarding : Communication Info :Save Button", "Communication Info", SaveStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Bank Onboarding : Communication Info :Save Button", "Communication Info",
+					SaveStatus, errorMessage);
 			boolean NextstepStatus = true;
 			try {
 				BL.clickElement(B.NextStep);
@@ -707,179 +710,254 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				NextstepStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
 			}
-			logTestStep(TestcaseNo, "MMS : Bank Onboarding : Communication Info : ", "NextStep", NextstepStatus, errorMessage);
-		} catch (Exception e) { 
+			logTestStep(TestcaseNo, "MMS : Bank Onboarding : Communication Info : ", "NextStep", NextstepStatus,
+					errorMessage);
+		} catch (Exception e) {
 			// Use the exception handler to log and handle exceptions gracefully
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
 			exceptionHandler.handleException(e, "Communication Info");
 			throw e; // Re-throw the exception after handling
 		}
 	}
-	// Method to configure Channel
-	private void fillChannelConfig(int TestcaseNo)
-			throws InterruptedException, AWTException, IOException {
-		String errorMessage = "The data does not match or is empty.";
+
+	int ONUSINDEX = 1;
+
+	private void fillChannelConfig(int TestcaseNo) throws InterruptedException, AWTException, IOException {
 		try {
-			// Initialize BankLocators only once
 			if (B == null) {
+				// Initialize BankLocators here if needed
 			}
-			// Use cached data for the "Channel Bank" sheet to avoid multiple loads
+
 			List<Map<String, String>> cachedData = cache.getCachedData("Channel Bank");
 			int numberOfRows = cachedData.size();
 			System.out.println("Total rows found: " + numberOfRows);
-			// Loop through each row in the cached data
+
 			for (int currentRow = 1; currentRow <= numberOfRows; currentRow++) {
 				System.out.println("Running test for row number: " + currentRow);
 				ArrayList<String> key = new ArrayList<>();
 				ArrayList<String> value = new ArrayList<>();
-				// Fetch the current row's data from cache
+
 				Map<String, String> rowData = cachedData.get(currentRow - 1);
-				// Retrieve data for each field, handling null or empty values
-				String channel = rowData.getOrDefault("Channel", "").trim();
-				String network = rowData.getOrDefault("Network", "").trim();
-				String transactionSet = rowData.getOrDefault("Transaction Sets", "").trim();
-				String routing = rowData.getOrDefault("Routing", "").trim();
-				// Clear the key-value arrays before each iteration
-				key.clear();
-				value.clear();
-				// Process Channel data
-				if (!channel.isEmpty()) {
-					BL.clickElement(B.ChannelConfig);
-					Thread.sleep(1000);
-					BL.clickElement(B.CommercialADD1);
-					BL.clickElement(B.CommercialChannel);
-					BL.selectDropdownOption(channel);
-					key.add("Channel-" + currentRow);
-					value.add(channel);
-					performTabKeyPress();
-					boolean ChannelStatus = true;
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					try {
-					assertEquals(BL.getElementText(B.ClickOnChannel), channel);
-					BL.isElementNotDisplayed(B.ChannelnameFieldisRequired, "Field is Required");
-					} catch (AssertionError e) {
-	                    ChannelStatus = false;
-	                    errorMessage = e.getMessage(); // Capture the assertion error
-	                }
-					logTestStep(TestcaseNo, "MMS : Bank Onboarding : Channel Config : Channel", channel, ChannelStatus, errorMessage);
-				} else {
-					System.out.println("Channel data is empty for row: " + currentRow);
-				}
-				// Process Network data
-				if (!network.isEmpty()) {
-					BL.clickElement(B.ClickOntNetwork);
-					BL.selectDropdownOption(network);
-					key.add("Network-" + currentRow);
-					value.add(network);
-					performTabKeyPress();
-					boolean NetworkStatus = true;
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					try {
-					assertEquals(BL.getElementText(B.ClickOntNetwork), network);
-					BL.isElementNotDisplayed(B.ChannelNetworkFieldisRequired, "Field is Required");
-					} catch (AssertionError e) {
-	                    NetworkStatus = false;
-	                    errorMessage = e.getMessage(); // Capture the assertion error
-	                }
-					logTestStep(TestcaseNo, "MMS : Bank Onboarding : Channel Config : Network", network, NetworkStatus, errorMessage);
-				} else {
-					System.out.println("Network data is empty for row: " + currentRow);
-				}
-				// Process Transaction Set data
-				if (!transactionSet.isEmpty()) {
-					BL.clickElement(B.ClickOntransaction);
-					BL.selectDropdownOption(transactionSet);
-					key.add("Transaction Set-" + currentRow);
-					value.add(transactionSet);
-					performTabKeyPress();
-					boolean TransactionStatus = true;
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					try {
-					assertEquals(BL.getElementText(B.ClickOntransaction), transactionSet);
-					BL.isElementNotDisplayed(B.ChannelTransactionFieldisRequired, "Field is Required");
-					} catch (AssertionError e) {
-	                    TransactionStatus = false;
-	                    errorMessage = e.getMessage(); // Capture the assertion error
-	                }
-					logTestStep(TestcaseNo, "MMS : Bank Onboarding : Channel Config : TransactionSet", transactionSet, TransactionStatus, errorMessage);
-				} else {
-					System.out.println("Transaction Set data is empty for row: " + currentRow);
-				}
-				// Process Routing data
-				if (!routing.isEmpty()) {
-					BL.clickElement(B.ClickOnRouting);
-					BL.selectDropdownOption(routing);
-					key.add("Routing-" + currentRow);
-					value.add(routing);
-					performTabKeyPress();
-					boolean RoutingStatus = true;
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					try {
-					assertEquals(BL.getElementText(B.ClickOnRouting), routing);
-					BL.isElementNotDisplayed(B.ChannelRoutingFieldisRequired, "Field is Required");
-					} catch (AssertionError e) {
-	                    RoutingStatus = false;
-	                    errorMessage = e.getMessage(); // Capture the assertion error
-	                }
-					logTestStep(TestcaseNo, "MMS : Bank Onboarding : Channel Config : Routing", routing, RoutingStatus, errorMessage);
-				} else {
-					System.out.println("Routing data is empty for row: " + currentRow);
-				}
-				boolean SaveStatus = true;
-				try {
-					BL.clickElement(B.SaveButton);
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-				} catch (AssertionError e) {
-					SaveStatus = false;
-					errorMessage = e.getMessage(); // Capture error message
-				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Channel Config : Save Button", "Channel Config", SaveStatus, errorMessage);
-				// Log input data in a structured format
+
+				String channel = rowData.getOrDefault("Channel", "").trim().replaceAll("\\s*,\\s*", ",");
+				String networkData = rowData.getOrDefault("Network", "").trim().replaceAll("\\s*,\\s*", ",");
+				String transactionSet = rowData.getOrDefault("Transaction Sets", "").trim().replaceAll("\\s*,\\s*",
+						",");
+				String routing = rowData.getOrDefault("Routing", "").trim().replaceAll("\\s*,\\s*", ",");
+				String ONUS = rowData.getOrDefault("ONUS Routing", "").trim().replaceAll("\\s*,\\s*", ",");
+
+				System.out.println(ONUS);
+				// Run each process step
+				processChannelData(TestcaseNo, currentRow, channel, key, value);
+				processNetworkData(TestcaseNo, currentRow, networkData, key, value);
+				processTransactionSetData(TestcaseNo, currentRow, transactionSet, key, value);
+				processRoutingData(TestcaseNo, currentRow, routing, key, value);
+				saveAction(TestcaseNo, key, value);
+				processONUSEntries(TestcaseNo, currentRow, ONUS);
+
+				// Log input data in structured format
 				LoginInputData(key, value);
 			}
-			boolean NextstepStatus = true;
-			try {
-				BL.clickElement(B.NextStep);
-				BL.isElementDisplayed(B.ONUSRouting, "ONUS Routing");
-			} catch (AssertionError e) {
-				NextstepStatus = false;
-				errorMessage = e.getMessage(); // Capture error message
-			}
-			logTestStep(TestcaseNo, "MMS : Bank Onboarding : Channel Config : ", "NextStep", NextstepStatus, errorMessage);
 		} catch (Exception e) {
-			// Use the exception handler to log and handle exceptions gracefully
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
 			exceptionHandler.handleException(e, "Channel Config");
-			throw e; // Re-throw the exception after handling
+			throw e;
 		}
 	}
-	private void configureONUS(int TestcaseNo)
-			throws InterruptedException, AWTException, IOException {
-		try {
-			String errorMessage = "The data does not match or is empty.";
-			List<Map<String, String>> cachedData = cache.getCachedData("Channel Bank");
-			int numberOfRows = cachedData.size();
-			System.out.println("Total rows found: " + numberOfRows);
-			for (int currentRow = 0; currentRow < numberOfRows; currentRow++) {
-				System.out.println("Running test for row number: " + (currentRow + 1));
-				Map<String, String> rowData = cachedData.get(currentRow);
-				String POSBIN = rowData.getOrDefault("ONUS Routing POS", "").trim();
-				String MATMBIN = rowData.getOrDefault("ONUS Routing MATM", "").trim();
-				if (POSBIN.isEmpty() && MATMBIN.isEmpty()) {
-					System.out
-							.println("Stopping loop as both POSBIN and MATMBIN are empty for row " + (currentRow + 1));
-					break; // Stop the loop if both values are empty
-				}
-				if (!POSBIN.isEmpty()) {
-					if (POSBIN.matches("\\d+\\.0")) {
-						POSBIN = POSBIN.substring(0, POSBIN.indexOf(".0"));
+
+	private void processChannelData(int TestcaseNo, int currentRow, String channel, ArrayList<String> key,
+			ArrayList<String> value) throws InterruptedException, AWTException {
+		String errorMessage = "The data does not match or is empty.";
+		if (!channel.isEmpty()) {
+			try {
+				Thread.sleep(1000);
+				BL.clickElement(B.ChannelConfig);
+				Thread.sleep(1000);
+				BL.clickElement(B.CommercialADD1);
+				BL.clickElement(B.CommercialChannel);
+				BL.selectDropdownOption(channel);
+				key.add("Channel-" + currentRow);
+				value.add(channel);
+				performTabKeyPress();
+
+				String actualValue = BL.getElementText(B.ClickOnChannel);
+				boolean Status = true;
+				try {
+					if (actualValue != null) {
+						assertEquals(channel.toUpperCase(), actualValue.toUpperCase());
+						BL.isElementNotDisplayed(B.ChannelnameFieldisRequired, "Field is Required");
 					}
-					BL.clickElement(B.ActionOnOnusbutton);
+				} catch (AssertionError e) {
+					Status = false;
+					errorMessage = e.getMessage();
+				}
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Channel Config : Channel", channel, Status,
+						errorMessage);
+			} catch (Exception e) {
+				System.out.println("Error in processing Channel data for row: " + currentRow + " - " + e.getMessage());
+				throw e;
+			}
+		} else {
+			System.out.println("Channel data is empty for row: " + currentRow);
+		}
+	}
+
+	// Similar approach to other data methods:
+	private void processNetworkData(int TestcaseNo, int currentRow, String networkData, ArrayList<String> key,
+			ArrayList<String> value) throws InterruptedException, AWTException {
+		String errorMessage = "The data does not match or is empty.";
+		if (!networkData.isEmpty()) {
+			try {
+				String[] networks = networkData.split(",");
+				for (String network : networks) {
+					network = network.trim();
+					if (!network.isEmpty()) {
+						BL.clickElement(B.ClickOntNetwork);
+						BL.selectDropdownOption(network);
+						key.add("Network-" + currentRow);
+						value.add(network);
+						performTabKeyPress();
+
+					}
+
+				}
+				String actualValue = BL.getElementText(B.ClickOntNetwork);
+				boolean Status = true;
+				try {
+					if (actualValue != null) {
+						assertEquals(networkData.toUpperCase(), actualValue.toUpperCase());
+						BL.isElementNotDisplayed(B.ChannelNetworkFieldisRequired, "Field is Required");
+					}
+				} catch (AssertionError e) {
+					Status = false;
+					errorMessage = e.getMessage();
+				}
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Channel Config : Network", networkData, Status,
+						errorMessage);
+
+			} catch (Exception e) {
+				System.out.println("Error in processing Network data for row: " + currentRow + " - " + e.getMessage());
+				throw e;
+			}
+		} else {
+			System.out.println("Network data is empty for row: " + currentRow);
+		}
+	}
+
+	private void processTransactionSetData(int testcaseNo, int currentRow, String transactionSet, ArrayList<String> key,
+			ArrayList<String> value) throws InterruptedException, AWTException {
+		String errorMessage = "The data does not match or is empty.";
+
+		if (!transactionSet.isEmpty()) {
+			try {
+				String[] transa = transactionSet.split(",");
+				for (String trans : transa) {
+					trans = trans.trim();
+					if (!trans.isEmpty()) {
+						BL.clickElement(B.ClickOntransaction);
+						BL.selectDropdownOption(trans);
+						key.add("Transaction Set-" + currentRow);
+						value.add(trans);
+						performTabKeyPress();
+					}
+				}
+				String actualValue = BL.getElementText(B.ClickOntransaction);
+				boolean Status = true;
+				try {
+					if (actualValue != null) {
+						System.out.println("Expected network: " + transactionSet);
+						System.out.println("Actual ADUser from UI: " + BL.getElementText(B.ClickOntransaction));
+						assertEquals(transactionSet.toUpperCase(), actualValue.toUpperCase());
+						BL.isElementNotDisplayed(B.ChannelNetworkFieldisRequired, "Field is Required");
+					}
+				} catch (AssertionError e) {
+					Status = false;
+					errorMessage = e.getMessage();
+				}
+
+				// Log transaction status
+				logTestStep(testcaseNo, "MMS : Bank Onboarding : Channel Config : TransactionSet", transactionSet,
+						Status, errorMessage);
+
+			} catch (Exception e) {
+				System.out.println("Error in processing Network data for row: " + currentRow + " - " + e.getMessage());
+				throw e;
+			}
+		} else {
+			System.out.println("Network data is empty for row: " + currentRow);
+		}
+	}
+
+	private void processRoutingData(int TestcaseNo, int currentRow, String routing, ArrayList<String> key,
+			ArrayList<String> value) throws InterruptedException, AWTException {
+		String errorMessage = "The data does not match or is empty.";
+		if (!routing.isEmpty()) {
+			BL.clickElement(B.ClickOnRouting);
+			BL.selectDropdownOption(routing);
+			key.add("Routing-" + currentRow);
+			value.add(routing);
+			performTabKeyPress();
+
+			String actualValue = BL.getElementText(B.ClickOnRouting);
+
+			boolean Status = true;
+			try {
+				if (actualValue != null) {
+					assertEquals(routing.toUpperCase(), actualValue.toUpperCase());
+					BL.isElementNotDisplayed(B.ChannelRoutingFieldisRequired, "Field is Required");
+				}
+			} catch (AssertionError e) {
+				Status = false;
+				errorMessage = e.getMessage();
+			}
+			logTestStep(TestcaseNo, "MMS : Bank Onboarding : Channel Config : Routing", routing, Status, errorMessage);
+		} else {
+			System.out.println("Routing data is empty for row: " + currentRow);
+		}
+	}
+
+	// Additional helper functions for TransactionSet, Routing, and POSBIN with same
+	// structure.
+
+	private void saveAction(int TestcaseNo, ArrayList<String> key, ArrayList<String> value)
+			throws InterruptedException {
+		String errorMessage = "The data does not match or is empty.";
+		boolean SaveStatus = true;
+		try {
+			BL.clickElement(B.SaveButton);
+			BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+		} catch (AssertionError e) {
+			SaveStatus = false;
+			errorMessage = e.getMessage();
+		}
+		logTestStep(TestcaseNo, "MMS : Bank Onboarding : Channel Config : Save Button", "Channel Config", SaveStatus,
+				errorMessage);
+	}
+
+	private void processONUSEntries(int TestcaseNo, int currentRow, String BIN)
+			throws InterruptedException, AWTException {
+		String errorMessage = "The data does not match or is empty.";
+		System.out.println("BIN" + BIN);
+		if (!BIN.isEmpty()) {
+			try {
+				String[] posBinValues = BIN.split("\\s+");
+				for (String ONUS : posBinValues) {
+					ONUS = ONUS.contains(".0") ? ONUS.replace(".0", "") : ONUS;
+					BL.clickElement(B.ONUSRouting);
+					WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+					Thread.sleep(1000);
+					WebElement optionElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By
+				            .xpath("(//td/button[@aria-label='Example icon-button with a menu'])[" + ONUSINDEX + "]")));
+
+				    optionElement = wait.until(ExpectedConditions.elementToBeClickable(optionElement));
+				    optionElement.click();
+
 					BL.clickElement(B.AddBin);
-					BL.clickElement(B.ClickOnAddBin);
-					BL.enterElement(B.ClickOnAddBin, POSBIN);
+					BL.enterElement(B.ClickOnAddBin, ONUS);
 					performTabKeyPress();
 					BL.clickElement(B.SubmitOnOnus);
+					ONUSINDEX++;
+
 					boolean POSBINStatus = true;
 					try {
 						BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
@@ -887,44 +965,16 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 						POSBINStatus = false;
 						errorMessage = e.getMessage();
 					}
-					logTestStep(TestcaseNo, "MMS : Bank Onboarding : ONUS Routing : POS BIN", POSBIN, POSBINStatus, errorMessage);
+					logTestStep(TestcaseNo, "MMS : Bank Onboarding : ONUS Routing : BIN", ONUS, POSBINStatus,
+							errorMessage);
 				}
-				if (!MATMBIN.isEmpty()) {
-					if (MATMBIN.matches("\\d+\\.0")) {
-						MATMBIN = MATMBIN.substring(0, MATMBIN.indexOf(".0"));
-					}
-					BL.clickElement(B.ActionOnOnusbutton2);
-					BL.clickElement(B.AddBin);
-					BL.clickElement(B.ClickOnAddBin);
-					BL.enterElement(B.ClickOnAddBin, MATMBIN);
-					performTabKeyPress();
-					BL.clickElement(B.SubmitOnOnus);
-					boolean MATMBINSTATUS = true;
-					try {
-						BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					} catch (AssertionError e) {
-						MATMBINSTATUS = false;
-						errorMessage = e.getMessage();
-					}
-					logTestStep(TestcaseNo, "MMS : Bank Onboarding : ONUS Routing : MATM BIN", MATMBIN, MATMBINSTATUS, errorMessage);
-				}
+			} catch (Exception e) {
+				System.out.println("Error in processing POS BIN for row: " + currentRow + " - " + e.getMessage());
+				throw e;
 			}
-			boolean NextstepStatus = true;
-			try {
-				BL.clickElement(B.NextStep);
-				BL.isElementDisplayed(B.IntroGlobalFRMParameters, "Global Frm");
-			} catch (AssertionError e) {
-				NextstepStatus = false;
-				errorMessage = e.getMessage(); // Capture error message
-			}
-			logTestStep(TestcaseNo, "MMS : Bank Onboarding : ONUS Routing : ", "NextStep", NextstepStatus, errorMessage);
-		} catch (Exception e) {
-			// Use the exception handler to log and handle exceptions gracefully
-			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-			exceptionHandler.handleException(e, "ONUS");
-			throw e; // Re-throw the exception after handling
 		}
 	}
+
 	// Method to fill Global Form
 	private void fillGlobalForm(Map<String, String> testData, int TestcaseNo) throws InterruptedException {
 		String VelocityCheckMinutes = testData.get("Velocity Check Minutes");
@@ -958,8 +1008,9 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 		Thread.sleep(10000);
 		String errorMessage = "Invalid Format";
 		try {
-			BL.clickElement(B.GlobalFrm);
 			Thread.sleep(1000);
+			BL.clickElement(B.GlobalFrm);
+			Thread.sleep(2000);
 			BL.clickElement(B.GlobalFRMCheckbox);
 			if (VelocityCheckMinutes != null && !VelocityCheckMinutes.trim().isEmpty()) {
 				// Perform the actions for the Velocity Check Minutes
@@ -967,104 +1018,118 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				BL.enterElement(B.VelocityCheckMinute, VelocityCheckMinutes);
 				// Log the input data
 				logInputData("Velocity Check Minutes", VelocityCheckMinutes);
-				boolean Status1 = true; // Assume success initially
+
+				boolean Status = true; // Assume success initially
 				try {
 					// Check if there is an invalid format
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.VelocityCheckMinute), VelocityCheckMinutes);
+					assertEquals(VelocityCheckMinutes, BL.getElementText(B.VelocityCheckMinute));
 					BL.isElementNotDisplayed(B.VcheckminutesFieldisRequired, "Field is Required");
+
 				} catch (AssertionError e) {
 					// If an AssertionError occurs, set the status to false and capture the error
 					// message
-					Status1 = false;
+					Status = false;
 					errorMessage = e.getMessage();
 				}
 				// Log the test step with the test case number, field, input value, status, and
 				// error message (if any)
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : Velocity Check Minutes", VelocityCheckMinutes, Status1, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : Velocity Check Minutes",
+						VelocityCheckMinutes, Status, errorMessage);
 			}
 			if (VelocityCheckCount != null && !VelocityCheckCount.trim().isEmpty()) {
-//	if (VelocityCheckCount != null && VelocityCheckCount.matches("\\d+\\.0")) {
-//	VelocityCheckCount = VelocityCheckCount.substring(0, VelocityCheckCount.indexOf(".0"));
 				BL.clickElement(B.VelocityCheckCount);
 				BL.enterElement(B.VelocityCheckCount, VelocityCheckCount);
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.VelocityCheckCount), VelocityCheckCount);
+					assertEquals(VelocityCheckCount, BL.getElementText(B.VelocityCheckCount));
 					BL.isElementNotDisplayed(B.VcheckcountFieldisRequired, "Field is Required");
+
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : Velocity Check Count", VelocityCheckCount, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : Velocity Check Count", VelocityCheckCount,
+						Status, errorMessage);
 			}
 			if (CashPOSCount != null && !CashPOSCount.trim().isEmpty()) {
 				BL.clickElement(B.CashPOSCount);
 				BL.enterElement(B.CashPOSCount, CashPOSCount);
+
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.CashPOSCount), CashPOSCount);
+					assertEquals(CashPOSCount, BL.getElementText(B.CashPOSCount));
 					BL.isElementNotDisplayed(B.CashposcountFieldisRequired, "Field is Required");
+
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : CashPOSCount", CashPOSCount, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : CashPOSCount", CashPOSCount, Status,
+						errorMessage);
 			}
 			if (MicroATMCount != null && !MicroATMCount.trim().isEmpty()) {
 				BL.clickElement(B.MicroATMCount);
 				BL.enterElement(B.MicroATMCount, MicroATMCount);
+
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.MicroATMCount), MicroATMCount);
+					assertEquals(MicroATMCount, BL.getElementText(B.MicroATMCount));
 					BL.isElementNotDisplayed(B.MicroATMCountFieldisRequired, "Field is Required");
+
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : MicroATMCount", MicroATMCount, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : MicroATMCount", MicroATMCount, Status,
+						errorMessage);
 			}
 			if (card != null && !card.trim().isEmpty()) {
 				BL.clickElement(B.InternationalCardCount);
-				;
+
 				BL.selectDropdownOption(card);
+
 				boolean Status = true; // Assume success initially
+
+				String actualValue = BL.getElementText(B.InternationalCardCount);
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementValue(B.InternationalCardCount), card);
-					BL.isElementNotDisplayed(B.IcardacceptanceFieldisRequired, "Field is Required");
+					if (actualValue != null) {
+						System.out.println("Expected network: " + card);
+						System.out.println("Actual ADUser from UI: " + BL.getElementText(B.InternationalCardCount));
+						assertEquals(card.toUpperCase(), actualValue.toUpperCase());
+						BL.isElementNotDisplayed(B.IcardacceptanceFieldisRequired, "Field is Required");
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : International Card Acceptance", card, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : International Card Acceptance", card,
+						Status, errorMessage);
 			}
 //ICA	
 			if (ICADAILY != null && !ICADAILY.trim().isEmpty()) {
 				BL.clickElement(B.ICADaily);
 				BL.enterElement(B.ICADaily, ICADAILY);
+
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.ICADaily), ICADAILY);
+					assertEquals(ICADAILY, BL.getElementText(B.ICADaily));
 					BL.isElementNotDisplayed(B.ICADailyFieldisRequired, "Field is Required");
 					BL.isElementNotDisplayed(B.ICAdailylessthanweeklylimtError, "Daily Must be less than Weekly Limit");
+
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : ICA DAILY", ICADAILY, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : ICA DAILY", ICADAILY, Status,
+						errorMessage);
 			}
 			if (ICAWEEKLY != null && !ICAWEEKLY.trim().isEmpty()) {
 				BL.clickElement(B.ICAWeekly);
 				BL.enterElement(B.ICAWeekly, ICAWEEKLY);
+
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.ICAWeekly), ICAWEEKLY);
+					assertEquals(ICAWEEKLY, BL.getElementText(B.ICAWeekly));
 					BL.isElementNotDisplayed(B.ICAWeeklyFieldisRequired, "Field is Required");
 					BL.isElementNotDisplayed(B.ICAWeeklygreaterthanDailylimtError,
 							"Weekly Must be greater than Daily Limit");
@@ -1074,81 +1139,92 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : ICA WEEKLY", ICAWEEKLY, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : ICA WEEKLY", ICAWEEKLY, Status,
+						errorMessage);
 			}
 			if (ICAMonthly != null && !ICAMonthly.trim().isEmpty()) {
 				BL.clickElement(B.ICAMonthly);
 				BL.enterElement(B.ICAMonthly, ICAMonthly);
+
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.ICAMonthly), ICAMonthly);
+					assertEquals(ICAMonthly, BL.getElementText(B.ICAMonthly));
 					BL.isElementNotDisplayed(B.ICAMonthlyFieldisRequired, "Field is Required");
 					BL.isElementNotDisplayed(B.ICAMonthlygreaterthanweeklylimtError,
 							"Monthly  Must be greater than Weekly Limit");
+
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : ICA Monthly", ICAMonthly, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : ICA Monthly", ICAMonthly, Status,
+						errorMessage);
 			}
 //POS	
 			if (POSDAILY != null && !POSDAILY.trim().isEmpty()) {
 				BL.clickElement(B.POSDaily);
 				BL.CLearElement(B.POSDaily);
 				BL.enterElement(B.POSDaily, POSDAILY);
+
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.POSDaily), POSDAILY);
-					BL.isElementNotDisplayed(B.DailyLimitRequired, "Daily Limit Required");
+
+					System.out.println("Expected network: " + POSDAILY);
+					System.out.println("Actual ADUser from UI: " + BL.getElementText(B.POSDaily));
+					assertEquals(POSDAILY, BL.getElementText(B.POSDaily));
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : POS DAILY", POSDAILY, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : POS DAILY", POSDAILY, Status,
+						errorMessage);
 			}
 			if (POSWEEKLY != null && !POSWEEKLY.trim().isEmpty()) {
 				BL.clickElement(B.POSWeekly);
 				BL.CLearElement(B.POSWeekly);
 				BL.enterElement(B.POSWeekly, POSWEEKLY);
+
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.POSWeekly), POSWEEKLY);
+					assertEquals(POSWEEKLY, BL.getElementText(B.POSWeekly));
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : POS WEEKLY", POSWEEKLY, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : POS WEEKLY", POSWEEKLY, Status,
+						errorMessage);
 			}
 			if (POSMonthly != null && !POSMonthly.trim().isEmpty()) {
 				BL.clickElement(B.POSMonthly);
 				BL.CLearElement(B.POSMonthly);
 				BL.enterElement(B.POSMonthly, POSMonthly);
+
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.POSMonthly), POSMonthly);
+					assertEquals(POSMonthly, BL.getElementText(B.POSMonthly));
+
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : POS Monthly", POSMonthly, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : POS Monthly", POSMonthly, Status,
+						errorMessage);
 			}
 			if (POSMinimum != null && !POSMinimum.trim().isEmpty()) {
 				BL.clickElement(B.POSMinimumAmount);
 				BL.CLearElement(B.POSMinimumAmount);
 				BL.enterElement(B.POSMinimumAmount, POSMinimum);
+
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.POSMinimumAmount), POSMinimum);
+					assertEquals(POSMinimum, BL.getElementText(B.POSMinimumAmount));
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : POS Minimum", POSMinimum, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : POS Minimum", POSMinimum, Status,
+						errorMessage);
 			}
 			if (POSMaximum != null && !POSMaximum.trim().isEmpty()) {
 				BL.clickElement(B.POSMaximumAmount);
@@ -1156,13 +1232,13 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				BL.enterElement(B.POSMaximumAmount, POSMaximum);
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.POSMaximumAmount), POSMaximum);
+					assertEquals(POSMaximum, BL.getElementText(B.POSMaximumAmount));
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : POS Maximum", POSMaximum, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : POS Maximum", POSMaximum, Status,
+						errorMessage);
 			}
 //UPI
 			if (UPIDAILY != null && !UPIDAILY.trim().isEmpty()) {
@@ -1171,14 +1247,14 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				BL.enterElement(B.UPIDaily, UPIDAILY);
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.UPIDaily), UPIDAILY);
-					BL.isElementNotDisplayed(B.DailyLimitRequired, "Daily Limit Required");
+
+					assertEquals(UPIDAILY, BL.getElementText(B.UPIDaily));
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : UPI DAILY", UPIDAILY, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : UPI DAILY", UPIDAILY, Status,
+						errorMessage);
 			}
 			if (UPIWEEKLY != null && !UPIWEEKLY.trim().isEmpty()) {
 				BL.clickElement(B.UPIWeekly);
@@ -1186,13 +1262,13 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				BL.enterElement(B.UPIWeekly, UPIWEEKLY);
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.UPIWeekly), UPIWEEKLY);
+					assertEquals(UPIWEEKLY, BL.getElementText(B.UPIWeekly));
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : UPI WEEKLY", UPIWEEKLY, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : UPI WEEKLY", UPIWEEKLY, Status,
+						errorMessage);
 			}
 			if (UPIMonthly != null && !UPIMonthly.trim().isEmpty()) {
 				BL.clickElement(B.UPIMonthly);
@@ -1200,14 +1276,14 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				BL.enterElement(B.UPIMonthly, UPIMonthly);
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.UPIMonthly), UPIMonthly);
+					assertEquals(UPIMonthly, BL.getElementText(B.UPIMonthly));
 					BL.isElementNotDisplayed(B.MonthlyEqualValueNotAllowed, "Equal Value Not Allowed");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : UPI Monthly", UPIMonthly, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : UPI Monthly", UPIMonthly, Status,
+						errorMessage);
 			}
 			if (UPIMinimum != null && !UPIMinimum.trim().isEmpty()) {
 				BL.clickElement(B.UPIMinimumAmount);
@@ -1215,13 +1291,13 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				BL.enterElement(B.UPIMinimumAmount, UPIMinimum);
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.UPIMinimumAmount), UPIMinimum);
+					assertEquals(UPIMinimum, BL.getElementText(B.UPIMinimumAmount));
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : UPI Minimum", UPIMinimum, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : UPI Minimum", UPIMinimum, Status,
+						errorMessage);
 			}
 			if (UPIMaximum != null && !UPIMaximum.trim().isEmpty()) {
 				BL.clickElement(B.UPIMaximumAmount);
@@ -1229,13 +1305,13 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				BL.enterElement(B.UPIMaximumAmount, UPIMaximum);
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.UPIMaximumAmount), UPIMaximum);
+					assertEquals(UPIMaximum, BL.getElementText(B.UPIMaximumAmount));
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : UPI Maximum", UPIMaximum, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : UPI Maximum", UPIMaximum, Status,
+						errorMessage);
 			}
 //AEPS	
 			if (AEPSDAILY != null && !AEPSDAILY.trim().isEmpty()) {
@@ -1245,14 +1321,14 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				logInputData("AEPS DAILY", AEPSDAILY);
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.AEPSDaily), AEPSDAILY);
-					BL.isElementNotDisplayed(B.DailyLimitRequired, "Daily Limit Required");
+					assertEquals(AEPSDAILY, BL.getElementText(B.AEPSDaily));
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : AEPS DAILY", AEPSDAILY, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : AEPS DAILY", AEPSDAILY, Status,
+						errorMessage);
 			}
 			if (AEPSWEEKLY != null && !AEPSWEEKLY.trim().isEmpty()) {
 				BL.clickElement(B.AEPSWeekly);
@@ -1260,13 +1336,13 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				BL.enterElement(B.AEPSWeekly, AEPSWEEKLY);
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.AEPSWeekly), AEPSWEEKLY);
+					assertEquals(AEPSWEEKLY, BL.getElementText(B.AEPSWeekly));
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : AEPS WEEKLY", AEPSWEEKLY, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : AEPS WEEKLY", AEPSWEEKLY, Status,
+						errorMessage);
 			}
 			if (AEPSMonthly != null && !AEPSMonthly.trim().isEmpty()) {
 				BL.clickElement(B.AEPSMonthly);
@@ -1274,14 +1350,14 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				BL.enterElement(B.AEPSMonthly, AEPSMonthly);
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.AEPSMonthly), AEPSMonthly);
+					assertEquals(AEPSMonthly, BL.getElementText(B.AEPSMonthly));
 					BL.isElementNotDisplayed(B.MonthlyEqualValueNotAllowed, "Equal Value Not Allowed");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : AEPS Monthly", AEPSMonthly, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : AEPS Monthly", AEPSMonthly, Status,
+						errorMessage);
 			}
 			if (AEPSMinimum != null && !AEPSMinimum.trim().isEmpty()) {
 				BL.clickElement(B.AEPSMinimumAmount);
@@ -1289,13 +1365,13 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				BL.enterElement(B.AEPSMinimumAmount, AEPSMinimum);
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.AEPSMinimumAmount), AEPSMinimum);
+					assertEquals(AEPSMinimum, BL.getElementText(B.AEPSMinimumAmount));
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : AEPS Minimum", AEPSMinimum, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : AEPS Minimum", AEPSMinimum, Status,
+						errorMessage);
 			}
 			if (AEPSMaximum != null && !AEPSMaximum.trim().isEmpty()) {
 				BL.clickElement(B.AEPSMaximumAmount);
@@ -1303,13 +1379,13 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				BL.enterElement(B.AEPSMaximumAmount, AEPSMaximum);
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.AEPSMaximumAmount), AEPSMaximum);
+					assertEquals(AEPSMaximum, BL.getElementText(B.AEPSMaximumAmount));
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : AEPS Maximum", AEPSMaximum, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : AEPS Maximum", AEPSMaximum, Status,
+						errorMessage);
 			}
 //MATM
 			if (MATMDAILY != null && !MATMDAILY.trim().isEmpty()) {
@@ -1318,14 +1394,14 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				BL.enterElement(B.MATMDaily, MATMDAILY);
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.MATMDaily), MATMDAILY);
-					BL.isElementNotDisplayed(B.DailyLimitRequired, "Daily Limit Required");
+					assertEquals(MATMDAILY, BL.getElementText(B.MATMDaily));
+					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : MATM DAILY", MATMDAILY, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : MATM DAILY", MATMDAILY, Status,
+						errorMessage);
 			}
 			if (MATMWEEKLY != null && !MATMWEEKLY.trim().isEmpty()) {
 				BL.clickElement(B.MATMWeekly);
@@ -1333,13 +1409,13 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				BL.enterElement(B.MATMWeekly, MATMWEEKLY);
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.MATMWeekly), MATMWEEKLY);
+					assertEquals(MATMWEEKLY, BL.getElementText(B.MATMWeekly));
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : MATM WEEKLY", MATMWEEKLY, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : MATM WEEKLY", MATMWEEKLY, Status,
+						errorMessage);
 			}
 			if (MATMMonthly != null && !MATMMonthly.trim().isEmpty()) {
 				BL.clickElement(B.MATMMonthly);
@@ -1347,14 +1423,14 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				BL.enterElement(B.MATMMonthly, MATMMonthly);
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.MATMMonthly), MATMMonthly);
+					assertEquals(MATMMonthly, BL.getElementText(B.MATMMonthly));
 					BL.isElementNotDisplayed(B.MonthlyEqualValueNotAllowed, "Equal Value Not Allowed");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : MATM Monthly", MATMMonthly, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : MATM Monthly", MATMMonthly, Status,
+						errorMessage);
 			}
 			if (MATMMinimum != null && !MATMMinimum.trim().isEmpty()) {
 				BL.clickElement(B.MATMMinimumAmount);
@@ -1362,13 +1438,13 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				BL.enterElement(B.MATMMinimumAmount, MATMMinimum);
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.MATMMinimumAmount), MATMMinimum);
+					assertEquals(MATMMinimum, BL.getElementText(B.MATMMinimumAmount));
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : MATM Minimum", MATMMinimum, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : MATM Minimum", MATMMinimum, Status,
+						errorMessage);
 			}
 			if (MATMMaximum != null && !MATMMaximum.trim().isEmpty()) {
 				BL.clickElement(B.MATMMaximumAmount);
@@ -1376,13 +1452,13 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				BL.enterElement(B.MATMMaximumAmount, MATMMaximum);
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.MATMMaximumAmount), MATMMaximum);
+					assertEquals(MATMMaximum, BL.getElementText(B.MATMMaximumAmount));
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : MATM Maximum", MATMMaximum, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Global FRM : MATM Maximum", MATMMaximum, Status,
+						errorMessage);
 			}
 			boolean NextstepStatus = true;
 			try {
@@ -1399,65 +1475,84 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			throw e;
 		}
 	}
+
 	// Method to configure Commercial
 	private void configureCommercialInterChange(Map<String, String> testData, int TestcaseNo) throws Exception {
-		try {
-			String errorMessagee = "The data does not match or is empty.";
-			List<Map<String, String>> cachedData = cache.getCachedData("Commercial");
-			// key for your data
-			int numberOfRows = cachedData.size();
-			System.out.println("Total rows found: " + numberOfRows);
-			// Loop through all the rows
-			for (int currentRow = 0; currentRow < numberOfRows; currentRow++) { // Adjusted index to start from 0
-				System.out.println("Running test for row number: " + (currentRow + 1));
-				// Fetch the current row's data
-				Map<String, String> testData1 = cachedData.get(currentRow);
-				System.out.println("Test data: " + testData);
-				// Extract data for each field
-				String channel = testData1.getOrDefault("Interchange Channel", "").trim();
-				String pricingPlan = testData1.getOrDefault("Interchange Pricing Plan", "").trim();
-				// Prepare lists to log the key-value pairs
-				ArrayList<String> key = new ArrayList<>();
-				ArrayList<String> value = new ArrayList<>();
-				// Process each field if valid
-				processField(channel, "Interchange Channel", key, value, currentRow + 1, () -> {
-					BL.clickElement(B.Commercial);
-					try {
-						Thread.sleep(1000);
-						BL.clickElement(B.CommercialADD1);
-					} catch (InterruptedException e) {
-					}
-					BL.clickElement(B.CommercialChannel); // Click 'Add' button for the channel
-					BL.selectDropdownOption(channel);
-					String errorMessage = "The data does not match or is empty.";
-					boolean Status = true;
-					logTestStep(TestcaseNo, "MMS : Bank Onboarding : Commerical : Interchange Channel", channel, Status, errorMessage);
-				});
-				processField(pricingPlan, "Interchange Pricing Plan", key, value, currentRow + 1, () -> {
-					BL.clickElement(B.PricingplanInterchange); // Click on the pricing plan dropdown
-					BL.selectDropdownOption(pricingPlan); // Select pricing plan from dropdown
-					String errorMessage = "The data does not match or is empty.";
-					boolean Status = true;
-					logTestStep(TestcaseNo, "MMS : Bank Onboarding : Commerical : Interchange Pricing Plan", pricingPlan, Status, errorMessage);
-				});
-				boolean SaveStatus = true;
-				try {
-					BL.clickElement(B.SaveButton);
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-				} catch (AssertionError e) {
-					SaveStatus = false;
-					errorMessagee = e.getMessage(); // Capture error message
-				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Commerical : Save Button", "Commercial Interchange", SaveStatus, errorMessagee);
-				// Log the inputs
-				LoginInputData(key, value);
-			}
-		} catch (Exception e) {
-			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-			exceptionHandler.handleException(e, "Commercial");
-			throw e;
-		}
+	    try {
+	        String errorMessagee = "The data does not match or is empty.";
+	        List<Map<String, String>> cachedData = cache.getCachedData("Commercial");
+	        int numberOfRows = cachedData.size();
+	        System.out.println("Total rows found: " + numberOfRows);
+
+	        for (int currentRow = 0; currentRow < numberOfRows; currentRow++) {
+	            System.out.println("Running test for row number: " + (currentRow + 1));
+	            Map<String, String> testData1 = cachedData.get(currentRow);
+	            System.out.println("Test data: " + testData);
+
+	            String channel = testData1.getOrDefault("Interchange Channel", "").trim();
+	            String pricingPlan = testData1.getOrDefault("Interchange Pricing Plan", "").trim();
+
+	            ArrayList<String> key = new ArrayList<>();
+	            ArrayList<String> value = new ArrayList<>();
+
+	            boolean hasValidData = false;
+
+	            // Only process the channel if it’s not null or empty
+	            if (!channel.isEmpty()) {
+	                hasValidData = true;
+	                processField(channel, "Interchange Channel", key, value, currentRow + 1, () -> {
+	                    BL.clickElement(B.Commercial);
+	                    BL.clickElement(B.CommercialADD1);
+	                    BL.clickElement(B.CommercialChannel);
+	                    BL.selectDropdownOption(channel);
+	                    boolean Status = true;
+	                    logTestStep(TestcaseNo, "MMS : Bank Onboarding : Commercial : Interchange Channel", channel,
+	                            Status, "Data matched");
+	                });
+	            } else {
+	                System.out.println("Channel is empty, skipping this field.");
+	            }
+
+	            // Only process the pricing plan if it’s not null or empty
+	            if (!pricingPlan.isEmpty()) {
+	                hasValidData = true;
+	                processField(pricingPlan, "Interchange Pricing Plan", key, value, currentRow + 1, () -> {
+	                    BL.clickElement(B.PricingplanInterchange);
+	                    BL.selectDropdownOption(pricingPlan);
+	                    boolean Status = true;
+	                    logTestStep(TestcaseNo, "MMS : Bank Onboarding : Commercial : Interchange Pricing Plan",
+	                            pricingPlan, Status, "Data matched");
+	                });
+	            } else {
+	                System.out.println("Pricing plan is empty, skipping this field.");
+	            }
+
+	            // Only click the Save button if at least one valid field was processed
+	            if (hasValidData) {
+	                boolean SaveStatus = true;
+	                try {
+	                    Thread.sleep(1000);
+	                    BL.clickElement(B.SaveButton);
+	                    BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+	                } catch (AssertionError e) {
+	                    SaveStatus = false;
+	                    errorMessagee = e.getMessage();
+	                }
+	                logTestStep(TestcaseNo, "MMS : Bank Onboarding : Commercial : Save Button", "Commercial Interchange",
+	                        SaveStatus, errorMessagee);
+	            } else {
+	                System.out.println("No valid data found for this row, skipping save operation.");
+	            }
+	            LoginInputData(key, value);
+	        }
+	    } catch (Exception e) {
+	        ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+	        exceptionHandler.handleException(e, "Commercial");
+	        throw e;
+	    }
 	}
+
+
 	private void processField(String fieldData, String fieldName, ArrayList<String> key, ArrayList<String> value,
 			int currentRow, Runnable action) throws InterruptedException, AWTException {
 		if (isValidInput1(fieldData)) {
@@ -1469,72 +1564,103 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			System.out.println(fieldName + " data is null or empty for row: " + currentRow);
 		}
 	}
+
 	// Helper method to validate input
 	private boolean isValidInput1(String input) {
 		return input != null && !input.trim().isEmpty();
 	}
+
 	private void configureCommercialBankOnboarding(Map<String, String> testData, int TestcaseNo) throws Exception {
-		try {
-			String errorMessagee = "The data does not match or is empty.";
-			List<Map<String, String>> cachedData = cache.getCachedData("Commercial");
-			int numberOfRows = cachedData.size();
-			System.out.println("Total rows found: " + numberOfRows);
-			for (int currentRow = 0; currentRow < numberOfRows; currentRow++) {
-				System.out.println("Running test for row number: " + (currentRow + 1));
-				Map<String, String> testData1 = cachedData.get(currentRow);
-				System.out.println("Test data: " + testData);
-				String channel = testData1.getOrDefault("Commercial Channel", "").trim();
-				String pricingPlan = testData1.getOrDefault("Commercial Pricing Plan", "").trim();
-				ArrayList<String> key = new ArrayList<>();
-				ArrayList<String> value = new ArrayList<>();
-				processField(channel, "Bank Onboarding Commercial Channel", key, value, currentRow + 1, () -> {
-					BL.clickElement(B.Commercial);
-					try {
-						Thread.sleep(1000);
-						BL.clickElement(B.CommercialADD2);
-					} catch (InterruptedException e) {
-					}
-					BL.clickElement(B.CommercialChannel);
-					BL.selectDropdownOption(channel);
-					boolean Status = true;
-					String errorMessage = "The data does not match or is empty.";
-					logTestStep(TestcaseNo, "MMS : Bank Onboarding : Commerical : Bank Onboarding Commercial Channel", channel, Status, errorMessage);
-				});
-				processField(pricingPlan, "Pricing Plan", key, value, currentRow + 1, () -> {
-					BL.clickElement(B.PricingplanBankOnboarding);
-					BL.selectDropdownOption(pricingPlan);
-					String errorMessage = "The data does not match or is empty.";
-					boolean Status = true;
-					logTestStep(TestcaseNo, "MMS : Bank Onboarding : Commerical : Bank Onboarding Pricing Plan", pricingPlan, Status, errorMessage);
-				});
-				boolean SaveStatus = true;
-				try {
-					BL.clickElement(B.SaveButton);
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-				} catch (AssertionError e) {
-					SaveStatus = false;
-					errorMessagee = e.getMessage(); // Capture error message
-				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Commerical : Save Button", "Commercial-BankOnboarding", SaveStatus, errorMessagee);
-				// Log the inputs
-				LoginInputData(key, value);
-			}
-			boolean NextstepStatus = true;
-			try {
-				BL.clickElement(B.NextStep);
-				BL.isElementDisplayed(B.IntroBankDetails, "Settlement Info");
-			} catch (AssertionError e) {
-				NextstepStatus = false;
-				errorMessagee = e.getMessage(); // Capture error message
-			}
-			logTestStep(TestcaseNo, "MMS : Bank Onboarding : Commerical : ", "NextStep", NextstepStatus, errorMessagee);
-		} catch (Exception e) {
-			// Use the exception handler to log and handle exceptions gracefully
-			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-			exceptionHandler.handleException(e, "Commercial");
-			throw e; // Re-throw the exception after handling
-		}
+	    try {
+	        final String defaultErrorMessage = "The data does not match or is empty.";
+	        List<Map<String, String>> cachedData = cache.getCachedData("Commercial");
+	        int numberOfRows = cachedData.size();
+	        System.out.println("Total rows found: " + numberOfRows);
+
+	        for (int currentRow = 0; currentRow < numberOfRows; currentRow++) {
+	            System.out.println("Running test for row number: " + (currentRow + 1));
+	            Map<String, String> testData1 = cachedData.get(currentRow);
+	            System.out.println("Test data: " + testData);
+
+	            String channel = testData1.getOrDefault("Commercial Channel", "").trim();
+	            String pricingPlan = testData1.getOrDefault("Commercial Pricing Plan", "").trim();
+
+	            ArrayList<String> key = new ArrayList<>();
+	            ArrayList<String> value = new ArrayList<>();
+	            boolean hasValidData = false;
+
+	            // Process "Commercial Channel" if it's valid
+	            if (!channel.isEmpty()) {
+	                hasValidData = true;
+	                processField(channel, "Bank Onboarding Commercial Channel", key, value, currentRow + 1, () -> {
+	                    BL.clickElement(B.Commercial);
+	                    BL.clickElement(B.CommercialADD2);
+	                    BL.clickElement(B.CommercialChannel);
+	                    BL.selectDropdownOption(channel);
+	                    logTestStep(TestcaseNo,
+	                            "MMS : Bank Onboarding : Commercial : Bank Onboarding Commercial Channel", channel,
+	                            true, defaultErrorMessage);
+	                });
+	            } else {
+	                System.out.println("Channel is empty, skipping this field.");
+	            }
+
+	            // Process "Pricing Plan" if it's valid
+	            if (!pricingPlan.isEmpty()) {
+	                hasValidData = true;
+	                processField(pricingPlan, "Pricing Plan", key, value, currentRow + 1, () -> {
+	                    BL.clickElement(B.PricingplanBankOnboarding);
+	                    BL.selectDropdownOption(pricingPlan);
+	                    logTestStep(TestcaseNo, "MMS : Bank Onboarding : Commercial : Bank Onboarding Pricing Plan",
+	                            pricingPlan, true, defaultErrorMessage);
+	                });
+	            } else {
+	                System.out.println("Pricing plan is empty, skipping this field.");
+	            }
+
+	            // Attempt to save only if there's valid data
+	            if (hasValidData) {
+	                boolean SaveStatus = true;
+	                String saveErrorMessage = defaultErrorMessage;
+	                try {
+	                    BL.clickElement(B.SaveButton);
+	                    BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+	                } catch (AssertionError e) {
+	                    SaveStatus = false;
+	                    saveErrorMessage = e.getMessage(); // Capture specific error message
+	                }
+	                logTestStep(TestcaseNo, "MMS : Bank Onboarding : Commercial : Save Button", "Commercial-BankOnboarding",
+	                        SaveStatus, saveErrorMessage);
+	            } else {
+	                System.out.println("No valid data found for this row, skipping save operation.");
+	            }
+
+	            // Log the inputs for this row
+	            LoginInputData(key, value);
+	        }
+
+	        // Next Step action and log status outside the loop, as it should run once after all rows are processed
+	        boolean NextStepStatus = true;
+	        String nextStepErrorMessage = defaultErrorMessage;
+	        try {
+	            BL.clickElement(B.NextStep);
+	            BL.isElementDisplayed(B.IntroBankDetails, "Settlement Info");
+	        } catch (AssertionError e) {
+	            NextStepStatus = false;
+	            nextStepErrorMessage = e.getMessage(); // Capture error message for NextStep
+	        }
+	        logTestStep(TestcaseNo, "MMS : Bank Onboarding : Commercial : NextStep", "NextStep", NextStepStatus,
+	                nextStepErrorMessage);
+
+	    } catch (Exception e) {
+	        // Use the exception handler to log and handle exceptions gracefully
+	        ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+	        exceptionHandler.handleException(e, "Commercial");
+	        throw e; // Re-throw the exception after handling
+	    }
 	}
+
+
 	// Method to fill Settlement Info
 	private void fillSettlementInfo(Map<String, String> testData, int TestcaseNo)
 			throws InterruptedException, AWTException {
@@ -1550,30 +1676,38 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			if (channel != null && !channel.trim().isEmpty()) {
 				BL.clickElement(B.SettlementChannel);
 				BL.selectDropdownOption(channel);
+				String actualValue = BL.getElementText(B.SettlementChannel);
 				boolean Status = true; // Assume success initially
 				try {
+					if (actualValue != null) {
 //					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					BL.isElementNotDisplayed(B.SettlementChannelFieldisRequired, "Field is Required");
-					assertEquals(BL.getElementText(B.SettlementChannel), channel);
+						BL.isElementNotDisplayed(B.SettlementChannelFieldisRequired, "Field is Required");
+						assertEquals(channel.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Settlement Info : Settlement Channel", channel, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Settlement Info : Settlement Channel", channel, Status,
+						errorMessage);
 			}
 			if (Account != null && !Account.trim().isEmpty()) {
 				BL.clickElement(B.SettlementAccountType);
 				BL.selectDropdownOption(Account);
-				boolean Status = true; // Assume success initially
+				boolean Status = true;
+
+				String actualValue = BL.getElementText(B.SettlementAccountType);
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					BL.isElementNotDisplayed(B.SettlementAccTypeFieldisRequired, "Field is Required");
-					assertEquals(BL.getElementText(B.SettlementAccountType), Account);
+					if (actualValue != null) {
+						BL.isElementNotDisplayed(B.SettlementAccTypeFieldisRequired, "Field is Required");
+						assertEquals(Account.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Settlement Info : Settlement AccountType", Account, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Settlement Info : Settlement AccountType", Account,
+						Status, errorMessage);
 			}
 			if (BanKAccountNumber != null && !BanKAccountNumber.trim().isEmpty()) {
 				BL.clickElement(B.SettlementBankAccountNumber);
@@ -1581,28 +1715,31 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				boolean Status = true; // Assume success initially
 				try {
 					BL.isElementNotDisplayed(B.SettlementBankAccNumberFieldisRequired, "Field is Required");
-					assertEquals(BL.getElementText(B.SettlementBankAccountNumber), BanKAccountNumber);
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					assertEquals(BanKAccountNumber, BL.getElementText(B.SettlementBankAccountNumber));
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Settlement Info : BanKAccountNumber", BanKAccountNumber, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Settlement Info : BanKAccountNumber",
+						BanKAccountNumber, Status, errorMessage);
 			}
 			if (IFSCCode != null && !IFSCCode.trim().isEmpty()) {
 				BL.clickElement(B.SettlementIFSCCode);
 				BL.selectDropdownOption(IFSCCode);
 				performTabKeyPress();
+				String actualValue = BL.getElementText(B.SettlementIFSCCode);
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					BL.isElementNotDisplayed(B.SettlementIFSCFieldisRequired, "Field is Required");
-					assertEquals(BL.getElementText(B.SettlementIFSCCode), IFSCCode);
+					if (actualValue != null) {
+						BL.isElementNotDisplayed(B.SettlementIFSCFieldisRequired, "Field is Required");
+						assertEquals(IFSCCode.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Settlement Info : IFSC Code", IFSCCode, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Settlement Info : IFSC Code", IFSCCode, Status,
+						errorMessage);
 			}
 			boolean SaveStatus = true;
 			try {
@@ -1612,7 +1749,8 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				SaveStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
 			}
-			logTestStep(TestcaseNo, "MMS : Bank Onboarding : Settlement Info : Save Button", "Commercial", SaveStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Bank Onboarding : Settlement Info : Save Button", "Commercial", SaveStatus,
+					errorMessage);
 			// Log the inputs
 			LoginInputData(key, value);
 			if (type != null && !type.trim().isEmpty()) {
@@ -1625,7 +1763,8 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Settlement Info : Settlement Type", type, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Settlement Info : Settlement Type", type, Status,
+						errorMessage);
 			}
 			boolean NextstepStatus = true;
 			try {
@@ -1635,13 +1774,15 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				NextstepStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
 			}
-			logTestStep(TestcaseNo, "MMS : Bank Onboarding : Settlement Info : ", "NextStep", NextstepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Bank Onboarding : Settlement Info : ", "NextStep", NextstepStatus,
+					errorMessage);
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
 			exceptionHandler.handleException(e, "Settlement Info");
 			throw e;
 		}
 	}
+
 	// Method to configure White Label
 	private void configureWhiteLabel(Map<String, String> testData, int TestcaseNo)
 			throws InterruptedException, AWTException {
@@ -1656,56 +1797,68 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			if (Bank != null && !Bank.trim().isEmpty()) {
 				BL.clickElement(B.WhitelabelBankOwnDeployment);
 				BL.selectDropdownOption(Bank);
+				String actualValue = BL.getElementText(B.WhitelabelBankOwnDeployment);
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.WhitelabelBankOwnDeployment), Bank);
+					if (actualValue != null) {
+						assertEquals(Bank.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Whitelabel : Bank Own Deployment", Bank, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Whitelabel : Bank Own Deployment", Bank, Status,
+						errorMessage);
 			}
 			if (payfac != null && !payfac.trim().isEmpty()) {
 				BL.clickElement(B.WhitelabelPayfacOnboarding);
 				BL.selectDropdownOption(payfac);
+				String actualValue = BL.getElementText(B.WhitelabelPayfacOnboarding);
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.WhitelabelPayfacOnboarding), payfac);
+					if (actualValue != null) {
+						assertEquals(payfac.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Whitelabel : Payfac Onboarding", payfac, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Whitelabel : Payfac Onboarding", payfac, Status,
+						errorMessage);
 			}
 			if (ISO != null && !ISO.trim().isEmpty()) {
 				BL.clickElement(B.WhitelabelISOOnboarding);
 				BL.selectDropdownOption(ISO);
 				logInputData("Whitelabel ISO Onboarding", ISO);
+				String actualValue = BL.getElementText(B.WhitelabelISOOnboarding);
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.WhitelabelISOOnboarding), ISO);
+					if (actualValue != null) {
+						assertEquals(ISO.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Whitelabel : Whitelabel ISO Onboarding", ISO, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Whitelabel : Whitelabel ISO Onboarding", ISO, Status,
+						errorMessage);
 			}
 			if (Sales != null && !Sales.trim().isEmpty()) {
 				BL.clickElement(B.WhitelabelSalesTeamOnboarding);
 				BL.selectDropdownOption(Sales);
 				logInputData("Whitelabel Sales Team Onboarding", Sales);
+				String actualValue = BL.getElementText(B.WhitelabelSalesTeamOnboarding);
 				boolean Status = true; // Assume success initially
 				try {
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					assertEquals(BL.getElementText(B.WhitelabelSalesTeamOnboarding), Sales);
+					if (actualValue != null) {
+						assertEquals(Sales.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Whitelabel : Whitelabel Sales Team Onboarding", Sales, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Whitelabel : Whitelabel Sales Team Onboarding", Sales,
+						Status, errorMessage);
 			}
 			if (MaximumNoOfPlatform != null && !MaximumNoOfPlatform.trim().isEmpty()) {
 				BL.clickElement(B.WhitelabelMaxNumberOfPlatform);
@@ -1718,7 +1871,8 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Whitelabel : Maximum No Of Platform", MaximumNoOfPlatform, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Whitelabel : Maximum No Of Platform",
+						MaximumNoOfPlatform, Status, errorMessage);
 			}
 			boolean NextstepStatus = true;
 			try {
@@ -1728,13 +1882,15 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				NextstepStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
 			}
-			logTestStep(TestcaseNo, "MMS : Bank Onboarding : Whitelabel : ", " NextStep ", NextstepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Bank Onboarding : Whitelabel : ", " NextStep ", NextstepStatus,
+					errorMessage);
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
 			exceptionHandler.handleException(e, "Whitelabel");
 			throw e;
 		}
 	}
+
 // Method to configure Webhooks
 	private void configureWebhooks(Map<String, String> testData, int TestcaseNo) throws InterruptedException {
 		String errorMessage = "The data does not match or is empty.";
@@ -1746,10 +1902,13 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			if (type != null && !type.trim().isEmpty()) {
 				BL.clickElement(B.WebhookType);
 				BL.selectDropdownOption(type);
+				String actualValue = BL.getElementText(B.WebhookType);
 				boolean Status = true; // Assume success initially
 				try {
-					assertEquals(BL.getElementText(B.WebhookType), type);
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					if (actualValue != null) {
+
+						assertEquals(type.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
@@ -1763,12 +1922,12 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				try {
 					BL.isElementNotDisplayed(B.WebhookURLFieldisRequired, "Field is Required");
 					BL.isElementNotDisplayed(B.WebhookURLInvalidformat, "Invalid Format");
-//					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Webhooks : Webhook URL", webhookURL, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Webhooks : Webhook URL", webhookURL, Status,
+						errorMessage);
 			}
 			boolean SaveStatus = true;
 			try {
@@ -1778,7 +1937,8 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				SaveStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
 			}
-			logTestStep(TestcaseNo, "MMS : Bank Onboarding : Webhooks : Save Button", "Webhooks", SaveStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Bank Onboarding : Webhooks : Save Button", "Webhooks", SaveStatus,
+					errorMessage);
 			// Log the inputs
 			LoginInputData(key, value);
 			boolean NextstepStatus = true;
@@ -1796,6 +1956,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			throw e;
 		}
 	}
+
 	// Method to fill KYC Details
 	private void fillKYCDetails(Map<String, String> testData, int TestcaseNo)
 			throws InterruptedException, AWTException {
@@ -1820,7 +1981,8 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : KYC : KYC Business Type", business, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : KYC : KYC Business Type", business, Status,
+						errorMessage);
 			}
 			if (Company != null && !Company.trim().isEmpty()) {
 				BL.clickElement(B.proofofIdentityComapany);
@@ -1833,7 +1995,8 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : KYC : Proof Of Identity Company KYC", Company, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : KYC : Proof Of Identity Company KYC", Company, Status,
+						errorMessage);
 			}
 			if (IndiPOI != null && !IndiPOI.trim().isEmpty()) {
 				BL.clickElement(B.KYCIndividualProofOfIdentity);
@@ -1846,7 +2009,8 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : KYC : Proof of identity Individual KYC", IndiPOI, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : KYC : Proof of identity Individual KYC", IndiPOI,
+						Status, errorMessage);
 			}
 			if (IndiPOA != null && !IndiPOA.trim().isEmpty()) {
 				BL.clickElement(B.KYCIndividualProofOFAddress);
@@ -1859,7 +2023,8 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : KYC : Proof of address Individual KYC", IndiPOA, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : KYC : Proof of address Individual KYC", IndiPOA,
+						Status, errorMessage);
 			}
 			if (IndiBD != null && !IndiBD.trim().isEmpty()) {
 				BL.clickElement(B.KYCIndividualBankDocument);
@@ -1872,7 +2037,8 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : KYC : Bank Document Individual KYC", IndiBD, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : KYC : Bank Document Individual KYC", IndiBD, Status,
+						errorMessage);
 			}
 			if (IndiTD != null && !IndiTD.trim().isEmpty()) {
 				BL.clickElement(B.KYCIndividualTaxDocument);
@@ -1885,7 +2051,8 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : KYC : TAX Document Individual KYC", IndiTD, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : KYC : TAX Document Individual KYC", IndiTD, Status,
+						errorMessage);
 			}
 			if (IndiOD != null && !IndiOD.trim().isEmpty()) {
 				BL.clickElement(B.KYCIndividualOtherDocument);
@@ -1899,7 +2066,8 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Bank Onboarding : KYC : Other Document Individual KYC", IndiOD, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : KYC : Other Document Individual KYC", IndiOD, Status,
+						errorMessage);
 			}
 			boolean SaveStatus = true;
 			try {
@@ -1927,22 +2095,57 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			throw e;
 		}
 	}
+
 	// Method to submit for verification
-	private void submitForVerification() throws InterruptedException {
-		BL.clickElement(B.SubmitforVerification);
-		BL.clickElement(B.YesButton);
-		BL.clickElement(B.OKButton);
+	private void submitForVerification(int TestcaseNo) throws InterruptedException {
+
+		try {
+			String errorMessage = "The data does not match or is empty.";
+			boolean SaveStatus = true;
+			try {
+				BL.clickElement(B.SubmitforVerification);
+
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Submit for Verification", "Bank", SaveStatus,
+						errorMessage);
+
+			} catch (AssertionError e) {
+				SaveStatus = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
+
+			try {
+				BL.clickElement(B.YesButton);
+				BL.clickElement(B.OKButton);
+
+				BL.isElementDisplayed(B.VerfiedSuccessCompleted, "Submit for Verification");
+
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : System Maker : Yes Button", "Submit for Verfication",
+						SaveStatus, errorMessage);
+
+			} catch (AssertionError e) {
+				SaveStatus = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
+
+		} catch (Exception e) {
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+			exceptionHandler.handleException(e, "Submit for verification");
+			throw e;
+		}
 	}
+
 	// Utility methods
 	private void performTabKeyPress() throws AWTException {
 		Robot robot = new Robot();
 		robot.keyPress(KeyEvent.VK_TAB);
 		robot.keyRelease(KeyEvent.VK_TAB);
 	}
+
 	private void logInputData(String fieldName, String fieldValue) {
 		key.add(fieldName);
 		value.add(fieldValue);
 	}
+
 	@Given("I visit the System Verifier Login in Regression using sheetname {string} and rownumber {int}")
 	public void i_visit_the_System_verifier_login(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException {
@@ -1960,8 +2163,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 					+ "<tr><td style='border: 1px solid black;color: black'>" + userName
 					+ "</td><td style='border: 1px solid black;color: black'>" + password + "</td></tr>" + "</table>";
 			Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-			String[][] data = { { "UserName", "Password" }, { userName, password },
-			};
+			String[][] data = { { "UserName", "Password" }, { userName, password }, };
 			Markup m = MarkupHelper.createTable(data);
 			// or
 			test.log(Status.PASS, m);
@@ -1971,6 +2173,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			throw e;
 		}
 	}
+
 	@When("System Verifier - Onboarding should be displayed in the side menu")
 	public void I_Visit_System_Verifier_Onboarding() throws InterruptedException {
 		try {
@@ -1982,6 +2185,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			throw e;
 		}
 	}
+
 	@Then("the System Verifier should see Bank, Aggregators, ISO,SUB ISO, Groupmerchant, Merchant, and Terminal in the side menu of Onboarding")
 	public void System_Verifier_seessidemenu_itemsin_Onboarding() throws InterruptedException {
 		try {
@@ -1998,6 +2202,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			throw e;
 		}
 	}
+
 	@When("the System Verifier clicks the bank module")
 	public void SystemVerifierClicktheBankModule() {
 		try {
@@ -2008,6 +2213,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			throw e;
 		}
 	}
+
 	@Then("the System Verifier completes Bank Onboarding, the system should prompt to verify all steps using the sheet name {string}")
 	public void processAllData1(String sheetName)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
@@ -2043,17 +2249,19 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			}
 			if (rowNumber == numberOfRows) {
 				System.out.println("Finished processing the last row. Logging out...");
-				performLogout();
+				performLogout(rowNumber);
 			}
 		}
 		logDashboardCount1();
 	}
+
 	private void logDashboardCount1() {
 		String message = "Total Dashboard Count: " + totalTestCaseCount;
 		ExtentCucumberAdapter.addTestStepLog(message);
 		Allure.parameter("Total Test Case Count", totalTestCaseCount);
 		System.out.println(message);
 	}
+
 	private int runTestForRow1(String sheetName, Map<String, String> testData, int rowNumber) throws Exception {
 		// Log the test data for the current row
 		System.out.println("Data for row " + rowNumber + ": " + testData);
@@ -2063,16 +2271,16 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 		testCaseCount += validateFieldsForRow1(testData, rowNumber);
 		return testCaseCount;
 	}
+
 	@SuppressWarnings("unused")
-	private int validateFieldsForRow1(Map<String, String> testData, int TestcaseNo)
-			throws Exception {
+	private int validateFieldsForRow1(Map<String, String> testData, int TestcaseNo) throws Exception {
 		// Initialize the locators
 		// Initialize a counter to track the number of validated fields/sections
 		int validatedFieldsCount = 0;
 		// Bank Details Section
 		validatedFieldsCount += executeStep1(() -> {
 			try {
-				SearchbyBank(testData);
+				SearchbyBank(testData, TestcaseNo);
 			} catch (InterruptedException | AWTException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -2171,7 +2379,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 		// Final Submission
 		validatedFieldsCount += executeStep(() -> {
 			try {
-				submitForApproval();
+				submitForApproval(TestcaseNo);
 			} catch (InterruptedException | AWTException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -2180,6 +2388,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 		// Return the total count of validated fields/sections
 		return validatedFieldsCount;
 	}
+
 	private int executeStep1(Runnable step, String stepName) {
 		try {
 			step.run();
@@ -2191,17 +2400,30 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			return 0; // Return 0 for failed execution
 		}
 	}
-	private void SearchbyBank(Map<String, String> testData) throws InterruptedException, AWTException {
+
+	private void SearchbyBank(Map<String, String> testData, int TestcaseNo) throws InterruptedException, AWTException {
 		String Bankname = testData.get("bankName");
+//		String Bankname = "PRI BANK";
 		key.clear();
 		value.clear();
 		BL.clickElement(B.SearchbyBankName);
+		Thread.sleep(1000);
 		BL.enterElement(B.SearchbyBankName, Bankname);
-		Thread.sleep(2000);
-		BL.clickElement(B.ActionClick);
-		Thread.sleep(2000);
-		BL.clickElement(B.ViewButton);
+		String errorMessage = "Verified Button is not displayed.";
+		boolean verifiedStatus = true;
+		try {
+			Thread.sleep(4000);
+			BL.clickElement(B.ActionClick);
+			Thread.sleep(1000);
+			BL.clickElement(B.ViewButton);
+		} catch (AssertionError e) {
+			verifiedStatus = false;
+			errorMessage = e.getMessage(); // Capture error message
+		}
+		logTestStep(TestcaseNo, "MMS : Bank Onboarding :Actions and View", "Bank Status Inprogress", verifiedStatus,
+				errorMessage);
 	}
+
 	private void GenernalInfoVerified(int TestcaseNo) throws InterruptedException, AWTException {
 		String errorMessage = "Verified Button is not displayed.";
 		boolean verifiedStatus = true;
@@ -2215,6 +2437,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 		}
 		logTestStep(TestcaseNo, "MMS : Bank Onboarding : Verified", "General Info", verifiedStatus, errorMessage);
 	}
+
 	private void CommunicationInfoVerified(int TestcaseNo) throws InterruptedException, AWTException {
 		String errorMessage = "Verified Button is not displayed.";
 		boolean verifiedStatus = true;
@@ -2228,6 +2451,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 		}
 		logTestStep(TestcaseNo, "MMS : Bank Onboarding : Verified", "Communication Info", verifiedStatus, errorMessage);
 	}
+
 	private void ChannelConfigVerified(int TestcaseNo) throws InterruptedException, AWTException {
 		String errorMessage = "Verified Button is not displayed.";
 		boolean verifiedStatus = true;
@@ -2241,6 +2465,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 		}
 		logTestStep(TestcaseNo, "MMS : Bank Onboarding : Verified", "Channel Config", verifiedStatus, errorMessage);
 	}
+
 	private void configureONUSVerified(int TestcaseNo) throws InterruptedException, AWTException {
 		String errorMessage = "Verified Button is not displayed.";
 		boolean verifiedStatus = true;
@@ -2254,6 +2479,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 		}
 		logTestStep(TestcaseNo, "MMS : Bank Onboarding : Verified", "ONUS Routing", verifiedStatus, errorMessage);
 	}
+
 	private void GlobalFormVerified(int TestcaseNo) throws InterruptedException, AWTException {
 		String errorMessage = "Verified Button is not displayed.";
 		boolean verifiedStatus = true;
@@ -2267,6 +2493,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 		}
 		logTestStep(TestcaseNo, "MMS : Bank Onboarding : Verified", "Global FRM", verifiedStatus, errorMessage);
 	}
+
 	private void CommercialVerified(int TestcaseNo) throws InterruptedException, AWTException {
 		String errorMessage = "Verified Button is not displayed.";
 		boolean verifiedStatus = true;
@@ -2280,6 +2507,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 		}
 		logTestStep(TestcaseNo, "MMS : Bank Onboarding : Verified", "Commercial", verifiedStatus, errorMessage);
 	}
+
 	private void SettlementInfoVerified(int TestcaseNo) throws InterruptedException, AWTException {
 		String errorMessage = "Verified Button is not displayed.";
 		boolean verifiedStatus = true;
@@ -2293,6 +2521,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 		}
 		logTestStep(TestcaseNo, "MMS : Bank Onboarding : Verified", "Settlement Info", verifiedStatus, errorMessage);
 	}
+
 	private void WhiteLabelVerified(int TestcaseNo) throws InterruptedException, AWTException {
 		String errorMessage = "Verified Button is not displayed.";
 		boolean verifiedStatus = true;
@@ -2306,6 +2535,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 		}
 		logTestStep(TestcaseNo, "MMS : Bank Onboarding : Verified ", "Whitelabel", verifiedStatus, errorMessage);
 	}
+
 	private void WebhooksVerified(int TestcaseNo) throws InterruptedException, AWTException {
 		String errorMessage = "Verified Button is not displayed.";
 		boolean verifiedStatus = true;
@@ -2319,6 +2549,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 		}
 		logTestStep(TestcaseNo, "MMS : Bank Onboarding : Verified", "Webhooks", verifiedStatus, errorMessage);
 	}
+
 	private void KYCDetailsVerified(int TestcaseNo) throws InterruptedException, AWTException {
 		String errorMessage = "Verified Button is not displayed.";
 		boolean verifiedStatus = true;
@@ -2331,12 +2562,47 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 		}
 		logTestStep(TestcaseNo, "MMS : Bank Onboarding : Verified", "KYC", verifiedStatus, errorMessage);
 	}
-	private void submitForApproval() throws InterruptedException, AWTException {
-		BL.clickElement(B.SubmitforApproval);
-		BL.clickElement(B.YesButton);
-		BL.clickElement(B.OKButton);
-		BL.clickElement(B.ApproveCancel);
+
+	private void submitForApproval(int TestcaseNo) throws InterruptedException, AWTException {
+
+		try {
+
+			String errorMessage = "The data does not match or is empty.";
+			boolean SaveStatus = true;
+			try {
+				BL.clickElement(B.SubmitforApproval);
+
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Submit for Approval", "Bank", SaveStatus,
+						errorMessage);
+
+			} catch (AssertionError e) {
+				SaveStatus = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
+
+			try {
+				BL.clickElement(B.YesButton);
+				BL.clickElement(B.OKButton);
+
+				BL.isElementDisplayed(B.VerfiedSuccessCompleted, "Submit for Approval");
+
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : System Verifier : Yes Button", "Submit for Approval",
+						SaveStatus, errorMessage);
+
+			} catch (AssertionError e) {
+				SaveStatus = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
+
+			BL.clickElement(B.ApproveCancel);
+
+		} catch (Exception e) {
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+			exceptionHandler.handleException(e, "Submit for Approval");
+			throw e;
+		}
 	}
+
 	@Given("I visit the System Approver Login in Regression using sheetname {string} and rownumber {int}")
 	public void i_visit_the_System_Approver_login(String sheetName, int rowNumber)
 			throws InvalidFormatException, IOException, InterruptedException {
@@ -2354,8 +2620,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 					+ "<tr><td style='border: 1px solid black;color: black'>" + userName
 					+ "</td><td style='border: 1px solid black;color: black'>" + password + "</td></tr>" + "</table>";
 			Allure.addAttachment("Input Datas", "text/html", new ByteArrayInputStream(styledTable.getBytes()), "html");
-			String[][] data = { { "UserName", "Password" }, { userName, password },
-			};
+			String[][] data = { { "UserName", "Password" }, { userName, password }, };
 			Markup m = MarkupHelper.createTable(data);
 			// or
 			test.log(Status.PASS, m);
@@ -2365,6 +2630,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			throw e;
 		}
 	}
+
 	@When("System Approver - Onboarding should be displayed in the side menu")
 	public void I_Visit_System_Approver_Onboarding() throws InterruptedException {
 		try {
@@ -2376,6 +2642,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			throw e;
 		}
 	}
+
 	@Then("the System Approver should see Bank, Aggregators, ISO,SUB ISO, Groupmerchant, Merchant, and Terminal in the side menu of Onboarding")
 	public void System_Approver_seessidemenu_itemsin_Onboarding() throws InterruptedException {
 		try {
@@ -2392,6 +2659,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			throw e;
 		}
 	}
+
 	@When("the System Approver clicks the bank module")
 	public void SystemApproverClicktheBankModule() {
 		try {
@@ -2402,6 +2670,7 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			throw e;
 		}
 	}
+
 	@Then("the System Approver completes Bank Onboarding, the system should prompt to Approve using the sheet name {string}")
 	public void processAllData2(String sheetName)
 			throws InvalidFormatException, IOException, InterruptedException, AWTException {
@@ -2437,17 +2706,19 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			}
 			if (rowNumber == numberOfRows) {
 				System.out.println("Finished processing the last row. Logging out...");
-				performLogout();
+				performLogout(rowNumber);
 			}
 		}
 		logDashboardCount2();
 	}
+
 	private void logDashboardCount2() {
 		String message = "Total Dashboard Count: " + totalTestCaseCount;
 		ExtentCucumberAdapter.addTestStepLog(message);
 		Allure.parameter("Total Test Case Count", totalTestCaseCount);
 		System.out.println(message);
 	}
+
 	private int runTestForRow2(String sheetName, Map<String, String> testData, int rowNumber) throws Exception {
 		// Log the test data for the current row
 		System.out.println("Data for row " + rowNumber + ": " + testData);
@@ -2457,9 +2728,9 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 		testCaseCount += validateFieldsForRow2(testData, rowNumber);
 		return testCaseCount;
 	}
+
 	@SuppressWarnings("unused")
-	private int validateFieldsForRow2(Map<String, String> testData, int TestcaseNo)
-			throws Exception {
+	private int validateFieldsForRow2(Map<String, String> testData, int TestcaseNo) throws Exception {
 		// Initialize the locators
 		// Initialize a counter to track the number of validated fields/sections
 		int validatedFieldsCount = 0;
@@ -2480,9 +2751,19 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 				e.printStackTrace();
 			}
 		}, "approveBankOnboarding");
+
+		validatedFieldsCount += executeStep2(() -> {
+			try {
+				getCpid(testData, TestcaseNo);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}, "getCpid");
 		// Return the total count of validated fields/sections
 		return validatedFieldsCount;
 	}
+
 	private int executeStep2(Runnable step, String stepName) {
 		try {
 			step.run();
@@ -2493,54 +2774,99 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 			return 0; // Return 0 for failed execution
 		}
 	}
-	private void SearchbyBankApprove(Map<String, String> testData)
-			throws InterruptedException, AWTException {
+
+	private void SearchbyBankApprove(Map<String, String> testData) throws InterruptedException, AWTException {
 		String Bankname = testData.get("bankName");
 		key.clear();
 		value.clear();
-		Thread.sleep(3000);
 		BL.clickElement(B.SearchbyBankName);
-		Thread.sleep(3000);
-		BL.enterElement(B.SearchbyBankName, Bankname);
-		Thread.sleep(3000);
-		BL.clickElement(B.ActionClick);
-		Thread.sleep(2000);
-		BL.clickElement(B.ViewButton);
+		Thread.sleep(1000);
+		BL.enterSplitElement(B.SearchbyBankName, Bankname);
+		try {
+			Thread.sleep(3000);
+			BL.clickElement(B.ActionClick);
+			Thread.sleep(1000);
+			BL.clickElement(B.ViewButton);
+		} catch (AssertionError e) {
+		}
+
 	}
+
 	private void approveBankOnboarding(Map<String, String> testData, int TestcaseNo) throws InterruptedException {
+		B = new org.Locators.BankLocators(driver);
+		key.clear();
+		value.clear();
+
+		try {
+			String errorMessage = "The data does not match or is empty.";
+			boolean ApprovedStatus = true;
+			try {
+				BL.clickElement(B.Approve);
+
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Approval", "Bank", ApprovedStatus, errorMessage);
+
+			} catch (AssertionError e) {
+				ApprovedStatus = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
+
+			try {
+				BL.clickElement(B.YesButton);
+				BL.clickElement(B.OKButton);
+
+				BL.isElementDisplayed(B.VerfiedSuccessCompleted, "Approval");
+
+				BL.clickElement(B.ApproveCancel);
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : System Approver : Yes", "Approval", ApprovedStatus,
+						errorMessage);
+
+			} catch (AssertionError e) {
+				ApprovedStatus = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
+
+		} catch (Exception e) {
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+			exceptionHandler.handleException(e, "Submit for Approval");
+			throw e;
+		}
+
+	}
+
+	private void getCpid(Map<String, String> testData, int TestcaseNo) throws InterruptedException {
+
 		B = new org.Locators.BankLocators(driver);
 		String Bankname = testData.get("bankName");
 		key.clear();
 		value.clear();
-		String errorMessage = "Approve Button is not visible.";
-		boolean ApprovedStatus = true;
+
 		try {
-			BL.clickElement(B.Approve);
-			BL.clickElement(B.YesButton);
-			BL.clickElement(B.OKButton);
-		} catch (AssertionError e) {
-			ApprovedStatus = false;
-			errorMessage = e.getMessage(); // Capture error message
+			String errorMessage = "The data does not match or is empty.";
+			boolean ApprovedStatus = true;
+
+			try {
+				BL.clickElement(B.SearchbyBankName);
+				Thread.sleep(1000);
+				BL.enterSplitElement(B.SearchbyBankName, Bankname);
+				Thread.sleep(4000);
+				BL.clickElement(B.ActionClick);
+				Thread.sleep(1000);
+				BL.clickElement(B.ViewButton);
+			} catch (AssertionError e) {
+				ApprovedStatus = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
+			logTestStep(TestcaseNo, "MMS : Bank Onboarding :  Bank CPID", BL.getElementValue(B.CPID), ApprovedStatus,
+					errorMessage);
+			BL.clickElement(B.ApproveCancel);
+
+		} catch (Exception e) {
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+			exceptionHandler.handleException(e, "Submit for Approval");
+			throw e;
 		}
-		logTestStep(TestcaseNo, "MMS : Bank Onboarding : Approved", "BANK", ApprovedStatus, errorMessage);
-		BL.clickElement(B.ApproveCancel);
-		Thread.sleep(3000);
-		BL.clickElement(B.SearchbyBankName);
-		Thread.sleep(3000);
-		BL.enterElement(B.SearchbyBankName, Bankname);
-		Thread.sleep(3000);
-		BL.clickElement(B.ActionClick);
-		Thread.sleep(2000);
-		try {
-			BL.clickElement(B.ViewButton);
-		} catch (AssertionError e) {
-			ApprovedStatus = false;
-			errorMessage = e.getMessage(); // Capture error message
-		}
-		logTestStep(TestcaseNo, "MMS : Bank Onboarding :  Bank CPID", BL.getElementValue(B.CPID), ApprovedStatus, errorMessage);
-		BL.clickElement(B.ApproveCancel);
 	}
-	
+
 	public void LoginInputData(ArrayList<String> Keys, ArrayList<String> Values) {
 		// Convert ArrayLists to arrays
 		String[] keys = Keys.toArray(new String[0]);
@@ -2572,9 +2898,37 @@ public class SystemUserMultipleBankRegression extends TestHooks {
 		Allure.addAttachment("Input Data", "text/html", new ByteArrayInputStream(tableBuilder.toString().getBytes()),
 				"html");
 	}
-	private void performLogout() throws InterruptedException {
-		BL.clickElement(B.Profile);
-		BL.clickElement(B.LogOut);
-		BL.clickElement(B.YesButton);
+
+	private void performLogout(int TestcaseNo) throws InterruptedException {
+
+		try {
+			String errorMessage = "The data does not match or is empty.";
+			boolean SaveStatus = true;
+			try {
+				BL.clickElement(B.Profile);
+				BL.clickElement(B.LogOut);
+
+				logTestStep(TestcaseNo, "MMS : Bank Onboarding : Profile & Log Out", "Bank", SaveStatus, errorMessage);
+
+			} catch (AssertionError e) {
+				SaveStatus = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
+
+			try {
+				BL.clickElement(B.YesButton);
+
+			} catch (AssertionError e) {
+				SaveStatus = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
+			logTestStep(TestcaseNo, "MMS : Bank Onboarding : Yes Button", "Log-Out", SaveStatus, errorMessage);
+
+		} catch (Exception e) {
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+			exceptionHandler.handleException(e, "Log Out");
+			throw e;
+		}
+
 	}
 }

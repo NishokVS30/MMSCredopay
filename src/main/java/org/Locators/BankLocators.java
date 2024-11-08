@@ -1,26 +1,34 @@
 package org.Locators;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.time.Duration;
+
 import org.Testcases.CustomWebDriverManager;
+import org.junit.Assert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.ElementClickInterceptedException;
+import org.openqa.selenium.ElementNotInteractableException;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class BankLocators {
 
 	WebDriver driver;
 	int waitTime;
 
-	// Bank Locators
-	
-	@FindBy(xpath = "//mat-icon[contains(text(),'refresh')]")
-    public WebElement refresh;
-    
-    @FindBy(xpath = "//app-table-header/div[@id='container']/form[1]/div[2]/button[4]/span[1]/*[1]")
-    public WebElement Clear;
-    
-    @FindBy(xpath = "//button[@class='close']")
-    public WebElement Close;
+// Bank Locators
 
 	@FindBy(xpath = "//mat-error[contains(text(),'Daily Limit Required')]")
 	public WebElement DailyLimitrequired;
@@ -106,7 +114,7 @@ public class BankLocators {
 	@FindBy(xpath = "//span[contains(text(),'CREATE')]")
 	public WebElement Createbutton;
 
-	// IntroPage
+// IntroPage
 
 	@FindBy(xpath = "//h6[contains(text(), 'Channel Configuration')]")
 	public WebElement IntroChannelConfiguration;
@@ -135,7 +143,7 @@ public class BankLocators {
 	@FindBy(xpath = "//h6[contains(text(), 'Status History')]")
 	public WebElement IntrostatusHistory;
 
-	// BankSideMenu
+// BankSideMenu
 
 	@FindBy(xpath = "//span[contains(text(), 'General Info')]")
 	public WebElement GeneralInfo;
@@ -173,7 +181,7 @@ public class BankLocators {
 	@FindBy(xpath = "//span[contains(text(), 'Change Log')]")
 	public WebElement Changelog;
 
-	// Bank
+// Bank
 
 	@FindBy(xpath = "//mat-label[contains(text(), 'Bank Name')]")
 	public WebElement BankLabelName;
@@ -241,11 +249,10 @@ public class BankLocators {
 	@FindBy(xpath = "//mat-select[@formcontrolname='statementType']")
 	public WebElement StatementType;
 
-//		@FindBy(xpath = "//mat-chip-list[@formcontrolname='domain']")
 	@FindBy(xpath = "//input[@oninput='this.value=this.value.toLowerCase()']")
 	public WebElement Domain;
 
-	// Communication Info
+// Communication Info
 
 	@FindBy(xpath = "//span[contains(text(), 'Communication Info')]")
 	public WebElement ClickonCommunicationInfo;
@@ -295,7 +302,7 @@ public class BankLocators {
 	@FindBy(xpath = "//mat-select[@formcontrolname='isAdEnabled']")
 	public WebElement ClickOnAdUsers;
 
-	// Channel Config
+// Channel Config
 
 	@FindBy(xpath = "//span[contains(text(), 'Add')]")
 	public WebElement ChannelADD;
@@ -324,7 +331,7 @@ public class BankLocators {
 	@FindBy(xpath = "//mat-select[@formcontrolname='routing']")
 	public WebElement ClickOnRouting;
 
-	// ONUS Routing
+// ONUS Routing
 
 	@FindBy(xpath = "(//button[@type='button'])[2]")
 	public WebElement ActionOnOnusbutton;
@@ -341,46 +348,38 @@ public class BankLocators {
 	@FindBy(xpath = "//span[contains(text(), 'Submit')]")
 	public WebElement SubmitOnOnus;
 
-	// Global FRM
+// Global FRM
 
 	@FindBy(xpath = "//mat-checkbox[@formcontrolname='frmCheck']")
 	public WebElement GlobalFRMCheckbox;
 
-	// Label
+// Label
 
 	@FindBy(xpath = "//mat-label[contains(text(), 'Velocity Check Minutes')]")
-
 	public WebElement VelocityCheckMinuteLabel;
 
 	@FindBy(xpath = "//mat-label[contains(text(), 'Velocity Check Count')]")
-
 	public WebElement VelocityCheckCountLabel;
 
 	@FindBy(xpath = "//mat-label[contains(text(), 'Cash@POS Count')]")
-
 	public WebElement CashPOSCountLabel;
 
 	@FindBy(xpath = "//mat-label[contains(text(), 'Micro ATM Count')]")
-
 	public WebElement MicroATMCountLabel;
 
 	@FindBy(xpath = "//mat-label[contains(text(), 'International Card Acceptance')]")
-
 	public WebElement InternationalCardCountLabel;
 
 	@FindBy(xpath = "//mat-label[contains(text(), 'Daily')]")
-
 	public WebElement DailyLabel;
 
 	@FindBy(xpath = "//mat-label[contains(text(), 'Weekly')]")
-
 	public WebElement WeeklyLabel;
 
 	@FindBy(xpath = "//mat-label[contains(text(), 'Monthly')]")
-
 	public WebElement MonthlyLabel;
 
-	// Click
+// Click
 
 	@FindBy(xpath = "//input[@formcontrolname='Vcheckminutes']")
 	public WebElement VelocityCheckMinute;
@@ -406,7 +405,8 @@ public class BankLocators {
 	@FindBy(xpath = "//input[@formcontrolname='frmmonthly']")
 	public WebElement ICAMonthly;
 
-	// POS
+// POS
+
 	@FindBy(xpath = "(//input[@formcontrolname='dailyLimit'])[1]")
 	public WebElement POSDaily;
 
@@ -422,7 +422,7 @@ public class BankLocators {
 	@FindBy(xpath = "(//input[@formcontrolname='maximumAmount'])[1]")
 	public WebElement POSMaximumAmount;
 
-	// UPI
+// UPI
 
 	@FindBy(xpath = "(//input[@formcontrolname='dailyLimit'])[2]")
 	public WebElement UPIDaily;
@@ -439,7 +439,7 @@ public class BankLocators {
 	@FindBy(xpath = "(//input[@formcontrolname='maximumAmount'])[2]")
 	public WebElement UPIMaximumAmount;
 
-	// AEPS
+// AEPS
 
 	@FindBy(xpath = "(//input[@formcontrolname='dailyLimit'])[3]")
 	public WebElement AEPSDaily;
@@ -456,7 +456,7 @@ public class BankLocators {
 	@FindBy(xpath = "(//input[@formcontrolname='maximumAmount'])[3]")
 	public WebElement AEPSMaximumAmount;
 
-	// MATM
+// MATM
 
 	@FindBy(xpath = "(//input[@formcontrolname='dailyLimit'])[4]")
 	public WebElement MATMDaily;
@@ -474,7 +474,6 @@ public class BankLocators {
 	public WebElement MATMMaximumAmount;
 
 	@FindBy(xpath = "(//span[contains(text(), 'Add')])[1]")
-
 	public WebElement CommercialADD1;
 
 	@FindBy(xpath = "(//span[contains(text(), 'Add')])[2]")
@@ -562,23 +561,18 @@ public class BankLocators {
 	// Label
 
 	@FindBy(xpath = "//mat-label[contains(text(), 'Bank Own Deployment')]")
-
 	public WebElement WhiteLabelBankOwnDeployemntLabel;
 
 	@FindBy(xpath = "//mat-label[contains(text(), 'PayFac Onboarding')]")
-
 	public WebElement WhitelabelPayfacOnboardingLabel;
 
 	@FindBy(xpath = "//mat-label[contains(text(), 'ISO Onboarding')]")
-
 	public WebElement WhitelabelISOOnboardingLabel;
 
 	@FindBy(xpath = "//mat-label[contains(text(), 'Sales Team Onboarding')]")
-
 	public WebElement WhitelabelSalesTeamOnboardingLabel;
 
 	@FindBy(xpath = "//mat-label[contains(text(), 'Max Number of Platform Users')]")
-
 	public WebElement WhitelabelMaximumNumberOfPlatformLabel;
 
 	@FindBy(xpath = "//mat-select[@formcontrolname='bankOwnDeployement']")
@@ -602,16 +596,14 @@ public class BankLocators {
 	@FindBy(xpath = "//div[contains(@class, 'mat-select-panel') and @role='listbox']//mat-option//span[contains(text(), 'No')]")
 	public WebElement WhitelabelNO;
 
-	// Webhook
+// Webhook
 
-	// Label
+// Label
 
 	@FindBy(xpath = "//mat-label[contains(text(), 'Webhook Type')]")
-
 	public WebElement WebhookTypeLabel;
 
 	@FindBy(xpath = "//mat-label[contains(text(), 'Webhook Url')]")
-
 	public WebElement WebhookURLLabel;
 
 	@FindBy(xpath = "//mat-select[@formcontrolname='type']")
@@ -620,10 +612,9 @@ public class BankLocators {
 	@FindBy(xpath = "//input[@formcontrolname='url']")
 	public WebElement WebhookTypeURL;
 
-	// KYC
+// KYC
 
 	@FindBy(xpath = "//span[contains(text(), 'Add')]")
-
 	public WebElement AddButton;
 
 	@FindBy(xpath = "//mat-select[@formcontrolname='businessType']")
@@ -657,7 +648,6 @@ public class BankLocators {
 	public WebElement KYCIndividualProofOfIdentity;
 
 	@FindBy(xpath = "//span[contains(text(), 'Aadhaar')]")
-
 	public WebElement Aadhaar;
 
 	@FindBy(xpath = "//input[@formcontrolname='numberofDocinPoi']")
@@ -681,7 +671,7 @@ public class BankLocators {
 	@FindBy(xpath = "//input[@formcontrolname='keyPersonNumberofOtherDoc']")
 	public WebElement keyPersonNumberofOtherDocIndividual3;
 
-	// Submit
+// Submit
 
 	@FindBy(xpath = "//span[contains(text(), 'SUBMIT FOR VERIFICATION')]")
 	public WebElement SubmitforVerification;
@@ -690,7 +680,7 @@ public class BankLocators {
 
 	public WebElement OKButton;
 
-	// LogOut
+// LogOut
 
 	@FindBy(xpath = "//button[@title='profile']")
 	public WebElement Profile;
@@ -774,7 +764,7 @@ public class BankLocators {
 	@FindBy(xpath = "//input[@oninput='this.value=this.value.toLowerCase()']/ancestor::mat-form-field//mat-error[contains(text(), 'This field is required ')]")
 	public WebElement GeneralinfoDomainRequiredField;
 
-	// Communication invalid format & Admin/settlement RECON
+// Communication invalid format & Admin/settlement RECON
 
 	@FindBy(xpath = "//input[@formcontrolname='name']/ancestor::mat-form-field//mat-error[contains(text(), 'Invalid Format') or contains(text(), 'Invalid format')]")
 	public WebElement CommunicationNameInvalidFormat;
@@ -795,7 +785,7 @@ public class BankLocators {
 
 	public WebElement CommunicationUserNameInvalidFormat;
 
-	// Communication Field is Required &Admin/settlement RECON
+// Communication Field is Required &Admin/settlement RECON
 
 	@FindBy(xpath = "//input[@formcontrolname='name']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
 
@@ -816,7 +806,7 @@ public class BankLocators {
 	@FindBy(xpath = "//input[@formcontrolname='userName']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
 	public WebElement CommunicationUserNameFieldisRequired;
 
-	// channel info field is required
+// channel info field is required
 
 	@FindBy(xpath = "//mat-select[@formcontrolname='channel']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
 	public WebElement ChannelnameFieldisRequired;
@@ -830,7 +820,7 @@ public class BankLocators {
 	@FindBy(xpath = "//mat-select[@formcontrolname='routing']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
 	public WebElement ChannelRoutingFieldisRequired;
 
-	// Global FRM field is required
+// Global FRM field is required
 
 	@FindBy(xpath = "//input[@formcontrolname='Vcheckminutes']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
 	public WebElement VcheckminutesFieldisRequired;
@@ -867,24 +857,21 @@ public class BankLocators {
 
 	@FindBy(xpath = "//input[@formcontrolname='frmmonthly']/ancestor::mat-form-field//mat-error[contains(text(), ' Must be greater than Weekly Limit ')]")
 	public WebElement ICAMonthlygreaterthanweeklylimtError;
-
-	@FindBy(xpath = "//input[@formcontrolname='dailyLimit']/following-sibling::mat-error[contains(text(), 'Daily Limit Required')]")
-	public WebElement DailyLimitRequired;
-
+	
 	@FindBy(xpath = "//input[@formcontrolname='monthlyLimit']/following-sibling::mat-error[contains(text(), ' Equal value not allowed ')]")
 	public WebElement MonthlyEqualValueNotAllowed;
 
-	// Commercial Interchange Plan
+// Commercial Interchange Plan
 
 	@FindBy(xpath = "//input[@formcontrolname='interchangePlan']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
 	public WebElement InterchangeplanPricingPlanFieldisRequired;
 
-	// Commercial BANKONBOARDING COMMERCIAL
+// Commercial BANKONBOARDING COMMERCIAL
 
 	@FindBy(xpath = "//input[@formcontrolname='pricingPlanDescription']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
 	public WebElement BankOnboardingPricingPlanFieldisRequired;
 
-	// Settlement Field is Required
+// Settlement Field is Required
 
 	@FindBy(xpath = "//mat-select[@formcontrolname='channel']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
 	public WebElement SettlementChannelFieldisRequired;
@@ -913,12 +900,12 @@ public class BankLocators {
 	@FindBy(xpath = "//input[@formcontrolname='bankCity']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
 	public WebElement SettlementCityNameFieldisRequired;
 
-	// Whitelabel BANK ONBOARDING CONFIGURATION
+// Whitelabel BANK ONBOARDING CONFIGURATION
 
 	@FindBy(xpath = "//input[@formcontrolname='maxPlatformUser']/ancestor::mat-form-field//mat-error[contains(text(), 'Invalid format') or contains(text(), 'Invalid Format')]")
 	public WebElement MaxPlatformUserInvalidFormat;
 
-	// Webhook WEBHOOKURL
+// Webhook WEBHOOKURL
 	@FindBy(xpath = "//input[@formcontrolname='url']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
 	public WebElement WebhookURLFieldisRequired;
 
@@ -927,6 +914,22 @@ public class BankLocators {
 
 	@FindBy(xpath = "//input[@formcontrolname='url']/ancestor::mat-form-field//mat-error[contains(text(), 'Invalid Format') or contains(text(), 'Invalid format')]")
 	public WebElement WebhookURLInvalidformat;
+
+//clear refresh close
+
+	@FindBy(xpath = "//mat-icon[contains(text(),'refresh')]")
+	public WebElement refresh;
+
+	@FindBy(xpath = "//app-table-header/div[@id='container']/form[1]/div[2]/button[4]/span[1]/*[1]")
+	public WebElement Clear;
+
+	@FindBy(xpath = "//button[@class='close']")
+	public WebElement Close;
+	
+// verified sucess
+	
+	@FindBy(xpath = "//h2[contains(normalize-space(text()), 'Successfully Completed')]")
+    public WebElement VerfiedSuccessCompleted;
 
 	public BankLocators(WebDriver driver) {
 

@@ -17,15 +17,17 @@ public class PropertiesFileModifier {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         // Generate dynamic date and time for report filenames
         String dateTim = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date());
-
+        properties.setProperty("extent.reporter.pdf.start", "true" );
+        properties.setProperty("screenshot.dir", "screenshot-output/" );
+        properties.setProperty("extent.reporter.spark.start", "true");
+        properties.setProperty("extent.reporter.spark.base64imagesrc", "true" );
+        properties.setProperty("screenshot.rel.path", "../" );
+        properties.setProperty("Enable", "Spark report" );
         // Replace placeholders with actual date and time
-        properties.setProperty("extent.reporter.spark.out", 
-            properties.getProperty("extent.reporter.spark.out").replace("{yyyy_MM_dd_HH_mm_ss}", dateTim));
-        properties.setProperty("extent.reporter.pdf.out", 
-            properties.getProperty("extent.reporter.pdf.out").replace("{yyyy_MM_dd_HH_mm_ss}", dateTim));
+        properties.setProperty("extent.reporter.spark.out", "test-output/SparkReport/MMSREPORT_"+dateTim+".html" );
+        properties.setProperty("extent.reporter.pdf.out",  "test-output/PdfReport/MMSPDFREPORT_"+dateTim+".pdf");
 
         // Write the modified properties back to the file
         try (OutputStream outputStream = new FileOutputStream(filePath)) {

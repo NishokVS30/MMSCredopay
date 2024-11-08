@@ -21,10 +21,7 @@ Feature: System Users - Bank Onboarding Regression
 
  This feature aims to test the functionality of the 'BankOnboarding' within the application.
  
- #@loadDataExcelUtils
- #@run
-#Scenario: Load Data from Excel
-    #Given I load data from Excel using sheetname "Credentials"
+
 
   Scenario: SystemMaker Login
  Given I visit the System Maker Login in Regression using sheetname "Credentials" and rownumber 1
@@ -38,10 +35,13 @@ Feature: System Users - Bank Onboarding Regression
   Then the System Maker should see Bank, Aggregators, ISO,SUB ISO, Groupmerchant, Merchant, and Terminal in the side menu of Onboarding
   
   
+  Scenario: System Maker clicks the bank module
+     When the System Maker clicks the bank module
+  
    Scenario: System Maker Successfully Completes Mandatory Fields in Bank Onboarding
-    When the System Maker clicks the bank module
     Then the System Maker Bank Onboarding should prompt users to enter valid inputs using the sheet name "Bank Regression"
     
+  
   
     #Scenario: System verifier Login
  #Given I visit the System Verifier Login in Regression using sheetname "Credentials" and rownumber 2

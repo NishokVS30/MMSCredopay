@@ -1,5 +1,7 @@
 package org.Testcases;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
@@ -7,12 +9,8 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -29,7 +27,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.qameta.allure.Allure;
 
-public class SystemUserMultipleGroupMerchantRegression {
+public class SystemUserMultipleGroupMerchantRegression extends TestHooks{
 
 	private WebDriver driver;
 
@@ -74,7 +72,7 @@ public class SystemUserMultipleGroupMerchantRegression {
 		T = new org.Locators.TerminalLocators(driver);
 
 	}
-	
+
 	@When("the System Maker clicks the Group Merchant module")
 
 	public void SystemMakerClicktheSUBISOModule() {
@@ -142,7 +140,7 @@ public class SystemUserMultipleGroupMerchantRegression {
 
 			if (rowNumber == numberOfRows) {
 				System.out.println("Finished processing the last row. Logging out...");
-				performLogout();
+				performLogout(rowNumber);
 			}
 		}
 
@@ -164,12 +162,11 @@ public class SystemUserMultipleGroupMerchantRegression {
 		System.out.println("Data for row " + rowNumber + ": " + testData);
 
 		// Initialize the locators (e.g., BankLocators)
-		
 
 		int testCaseCount = 0;
 
 		// Validate fields for the current row using testData
-		testCaseCount += validateFieldsForRow(sheetName, testData, rowNumber, testCaseCount);
+		testCaseCount += validateFieldsForRow(testData, rowNumber);
 
 		return testCaseCount;
 	}
@@ -197,23 +194,13 @@ public class SystemUserMultipleGroupMerchantRegression {
 	ArrayList<String> value = new ArrayList<>();
 
 	@SuppressWarnings("unused")
-	private int validateFieldsForRow(String sheetName, Map<String, String> testData, int TestcaseNo, int rowNumber)
+	private int validateFieldsForRow(Map<String, String> testData, int TestcaseNo)
 			throws Exception {
 
 		// Initialize the locators
-	
 
 		// Initialize a counter to track the number of validated fields/sections
 		int validatedFieldsCount = 0;
-
-//			validatedFieldsCount += executeStep(() -> fillLoginDetails(testData, TestcaseNo), "Login Details");
-//			validatedFieldsCount += executeStep(
-//					() -> SystemMakerOnboardingshouldbedisplayedinthesidemenu(testData, TestcaseNo), "Onboarding Display");
-//			validatedFieldsCount += executeStep(() -> SystemMakershouldseeallSideMenu(testData, TestcaseNo),
-//					"Side Menu Visibility");
-//			validatedFieldsCount += executeStep(() -> SystemMakerclicksthebankmodule(testData, TestcaseNo),
-//					"Bank Module Click");
-
 		// Sales Details Section
 
 		validatedFieldsCount += executeStep(() -> {
@@ -272,7 +259,7 @@ public class SystemUserMultipleGroupMerchantRegression {
 		// Channel Config Section
 		validatedFieldsCount += executeStep(() -> {
 			try {
-				fillChannelConfig(testData, TestcaseNo);
+				fillChannelConfig(TestcaseNo);
 			} catch (InterruptedException | AWTException | IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -282,7 +269,7 @@ public class SystemUserMultipleGroupMerchantRegression {
 		// Commercial Section
 		validatedFieldsCount += executeStep(() -> {
 			try {
-				FillDiscountRate(testData, TestcaseNo);
+				FillDiscountRate(TestcaseNo);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -332,7 +319,7 @@ public class SystemUserMultipleGroupMerchantRegression {
 		// Final Submission
 		validatedFieldsCount += executeStep(() -> {
 			try {
-				submitForVerification();
+				submitForVerification(TestcaseNo);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -357,40 +344,71 @@ public class SystemUserMultipleGroupMerchantRegression {
 
 	private void fillSalesInfo(Map<String, String> testData, int TestcaseNo) throws Exception {
 
-		Faker faker = new Faker();
+		new Faker();
 
-		int testcaseCount = 0;
 		String errorMessage = "The data does not match or is empty.";
 
+		String VASCommission = testData.get("VAS Commission");
 		String Marsid = testData.get("Marsid");
 		String name = testData.get("Aggregator Name");
 		String isoname = testData.get("ISO Name");
 		String subisoname = testData.get("SUB ISO Name");
-		String uniqueReferenceNumber = generateValidUniqueReferenceNumber(faker, testData);
+		String SalesPerson = testData.get("Sales Person");
+		String uniqueReferenceNumber = testData.get("Unique Reference Number");
 
 		// Assume success initially
-		try {
+		if (VASCommission != null && !VASCommission.trim().isEmpty()) {
 
-			BL.clickElement(B.Createbutton);
+			boolean CreateStatus = true; // Assume success initially
+			try {
+				BL.clickElement(B.Createbutton);
+			} catch (AssertionError e) {
+				CreateStatus = false; // Set status to false if assertion fails
+				errorMessage = e.getMessage(); // Capture error message
+			}
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Create : ", "Group Merchant", CreateStatus,
+					errorMessage);
+
 			BL.clickElement(A.SalesInfo);
+			BL.clickElement(A.VASCommissionOne);
+			BL.selectDropdownOption(VASCommission);
+
+			String actualValue = BL.getElementValue(A.VASCommissionOne);
+			boolean Status = true; // Assume success initially
+			try {
+				if (actualValue != null) {
+					assertEquals(VASCommission.toUpperCase(), actualValue.toUpperCase());
+				}
+			} catch (AssertionError e) {
+				Status = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
+
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Sales Info : VAS Commission", VASCommission,
+					Status, errorMessage);
+
+		}
+
+		try {
 
 			if (uniqueReferenceNumber != null && !uniqueReferenceNumber.trim().isEmpty()) {
 
 				BL.clickElement(GM.UniqueReferenceNumber);
 				BL.enterElement(GM.UniqueReferenceNumber, uniqueReferenceNumber);
-
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean nameStatus = true; // Assume success initially
 				try {
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+
+					BL.isElementNotDisplayed(GM.uniqueRefNumFieldRequired, "Field is Required");
+					BL.isElementNotDisplayed(GM.uniqueRefNumInvalidFormat, "Invalid Format");
 
 				} catch (AssertionError e) {
 					nameStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Unique Reference Number", uniqueReferenceNumber, nameStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Sales Info : Unique Reference Number",
+						uniqueReferenceNumber, nameStatus, errorMessage);
 
 			}
 
@@ -398,18 +416,18 @@ public class SystemUserMultipleGroupMerchantRegression {
 
 				BL.clickElement(ISO.AggregatorName);
 				BL.selectDropdownOption(name);
-
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean nameStatus = true; // Assume success initially
 				try {
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(GM.AggregatorFieldRequired, "Field is Required");
+					BL.isElementNotDisplayed(GM.AggregatorInvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					nameStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Aggregator Name", name, nameStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Sales Info : Aggregator Name", name,
+						nameStatus, errorMessage);
 
 			}
 
@@ -417,19 +435,18 @@ public class SystemUserMultipleGroupMerchantRegression {
 
 				BL.clickElement(SUBISO.ISOName);
 				BL.selectDropdownOption(isoname);
-
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean nameStatus = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(GM.ISOInvalidDistributors, "Invalid Format");
 				} catch (AssertionError e) {
 					nameStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "ISO Name", isoname, nameStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Sales Info : ISO Name", isoname, nameStatus,
+						errorMessage);
 
 			}
 
@@ -438,28 +455,46 @@ public class SystemUserMultipleGroupMerchantRegression {
 				BL.clickElement(GM.SUBISO);
 
 				BL.selectDropdownOption(subisoname);
+				performTabKeyPress();
+				String actualValue = BL.getElementText(GM.SUBISO);
+				boolean Status = true; // Assume success initially
+				try {
+					if (actualValue != null) {
+						assertEquals(subisoname.toUpperCase(), actualValue.toUpperCase());
+					}
+				} catch (AssertionError e) {
+					Status = false;
+					errorMessage = e.getMessage(); // Capture error message
+				}
 
-				++testcaseCount;
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Sales Info : SUB ISO Name", isoname, Status,
+						errorMessage);
 
-				boolean nameStatus = true; // Assume success initially
+			}
+
+			if (SalesPerson != null && !SalesPerson.trim().isEmpty()) {
+
+				BL.clickElement(GM.salesperson);
+				BL.enterElement(GM.salesperson, SalesPerson);
+
+				boolean Status = true;
+
 				try {
 
 					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
-					nameStatus = false;
+					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
-
-				logTestStep(TestcaseNo, "SUB ISO Name", subisoname, nameStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Sales Info : Sales Person :", SalesPerson,
+						Status, errorMessage);
 
 			}
 
 			if (Marsid != null && !Marsid.trim().isEmpty()) {
-				
+
 				BL.clickElement(A.MarsId);
 				BL.enterElement(A.MarsId, Marsid);
-				
-				++testcaseCount;
 
 				boolean MarsidStatus = true;
 
@@ -470,23 +505,24 @@ public class SystemUserMultipleGroupMerchantRegression {
 					MarsidStatus = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Marsid :", Marsid, MarsidStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Sales Info : Marsid :", Marsid, MarsidStatus,
+						errorMessage);
 
 			}
 
 			boolean NextstepStatus = true;
 			try {
-				
+
 				BL.clickElement(B.NextStep);
 				BL.isElementDisplayed(A.IntroCompanyInfo, "Company Info");
-				
-				
+
 			} catch (AssertionError e) {
 				NextstepStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "Sales Info", NextstepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Sales Info : ", "NextStep", NextstepStatus,
+					errorMessage);
 
 		}
 
@@ -502,16 +538,15 @@ public class SystemUserMultipleGroupMerchantRegression {
 	private String fillCompanyInfo(Map<String, String> testData, int TestcaseNo) throws Exception {
 		try {
 
-			
-			Faker faker = new Faker();
+			new Faker();
 
-			String LegalName = testData.get("LegalName");
+			String LegalName = testData.get("Legal Name");
 			String brand = testData.get("Brand Name");
 			String Address = testData.get("Registered Address");
 			String pincode = testData.get("Registered Pincode");
 			String type = testData.get("Business Type");
 			String registeredNumber = testData.get("Registered Number");
-			String pan = generateValidPAN(faker);
+			String pan = testData.get("Company PAN");
 			String GstIN = testData.get("GSTIN");
 			String nb = testData.get("Nature Of Business");
 			String mcc = testData.get("MCC");
@@ -519,36 +554,27 @@ public class SystemUserMultipleGroupMerchantRegression {
 			String Type = testData.get("Statement Type");
 
 			String errorMessage = "The data does not match or is empty.";
-			int testcaseCount = 0;
-
-			TestCaseManager testCaseManager = new TestCaseManager();
-
-			if (LegalName == null || LegalName.trim().isEmpty()) {
-				LegalName = generateValidLegalName(faker, testData);
-			}
-
+			new TestCaseManager();
 			if (LegalName != null && !LegalName.trim().isEmpty()) {
-				
+
 				BL.clickElement(A.ComapnyInfo);
 
 				BL.clickElement(A.LegalName);
 
 				BL.enterElement(A.LegalName, LegalName);
-
-				
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean legalNameStatus = true; // Assume success initially
 
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyLegalNameFieldisRequired, "Field is Required");
+					BL.isElementNotDisplayed(A.CompanyLegalNameInvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					legalNameStatus = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Legal Name", LegalName, legalNameStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Company Info : Legal Name", LegalName,
+						legalNameStatus, errorMessage);
 
 			}
 
@@ -557,20 +583,20 @@ public class SystemUserMultipleGroupMerchantRegression {
 				BL.clickElement(A.BrandName);
 
 				BL.enterElement(A.BrandName, brand);
-
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean Status = true; // Assume success initially
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					} catch (AssertionError e) {
+					BL.isElementNotDisplayed(A.CompanyBrandNameFieldisRequired, "Field is Required");
+					BL.isElementNotDisplayed(A.CompanyBrandNameInvalidFormat, "Invalid Format");
+				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Brand Name", brand, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Company Info : Brand Name", brand, Status,
+						errorMessage);
 
 			}
 
@@ -579,43 +605,44 @@ public class SystemUserMultipleGroupMerchantRegression {
 				BL.clickElement(A.RegisteredAddress);
 
 				BL.enterElement(A.RegisteredAddress, Address);
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean Status = true; // Assume success initially
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyRegAddressInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyRegAddressFieldisRequired, "Field Required");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Registered Address", Address, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Company Info : Registered Address", Address,
+						Status, errorMessage);
 
 			}
 
 			if (pincode != null && !pincode.trim().isEmpty()) {
 
 				BL.clickElement(A.RegisteredPincode);
-				
+
 				BL.enterElement(A.RegisteredPincode, pincode);
 
 				BL.selectDropdownOption(pincode);
-
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean Status = true; // Assume success initially
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyRegPincodeInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyRegPinFieldisRequired, "Field Required");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Registered Pincode", pincode, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Company Info : Registered Pincode", pincode,
+						Status, errorMessage);
 
 			}
 
@@ -624,26 +651,29 @@ public class SystemUserMultipleGroupMerchantRegression {
 				BL.clickElement(A.BusinessType);
 
 				BL.selectDropdownOption(type);
-
-				++testcaseCount;
-
+				performTabKeyPress();
+				String actualValue = BL.getElementText(A.BusinessType);
 				boolean Status = true; // Assume success initially
 
 				try {
+					if (actualValue != null) {
+						assertEquals(type.toUpperCase(), actualValue.toUpperCase());
+						BL.isElementNotDisplayed(A.CompanyBusinessTypFieldisRequired, "Field Required");
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					}
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Business Type", type, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Company Info : Business Type", type, Status,
+						errorMessage);
 
 			}
 
 			boolean DateStatus = true;
 			try {
-				
+
 				BL.clickElement(A.EstablishedYearDatepicker);
 
 				Robot r = new Robot();
@@ -653,62 +683,56 @@ public class SystemUserMultipleGroupMerchantRegression {
 				r.keyRelease(KeyEvent.VK_ENTER);
 
 				BL.clickElement(A.ApplyButton);
-				
-				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+
+				BL.isElementNotDisplayed(A.CompanyCalenderFieldisRequired, "Field is Required");
 			} catch (AssertionError e) {
 				DateStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Established Year", "Current Date", DateStatus, errorMessage);
-
-			//
-//	     		if (registeredNumber.contains("E")) {
-//					Double numberInScientificNotation = Double.valueOf(registeredNumber);
-//					registeredNumber = String.format("%.0f", numberInScientificNotation);
-
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Company Info : Established Year", "Current Date",
+					DateStatus, errorMessage);
 			if (registeredNumber != null && !registeredNumber.trim().isEmpty()) {
 
 				BL.clickElement(A.RegisterNumber);
 
 				BL.enterElement(A.RegisterNumber, registeredNumber);
-
-
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean Status = true; // Assume success initially
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyRegNumInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyRegNumFieldisRequired, "Field Required");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Registered Number", registeredNumber, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Company Info : Registered Number",
+						registeredNumber, Status, errorMessage);
 
 			}
 
 			if (pan != null && !pan.trim().isEmpty()) {
 
-				BL.clickElement(A.ComapnyPAN);
+				BL.clickElement(A.CompanyPAN);
 
-				BL.enterElement(A.ComapnyPAN, pan);
-
-				++testcaseCount;
-
+				BL.enterElement(A.CompanyPAN, pan);
+				performTabKeyPress();
 				boolean Status = true; // Assume success initially
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyCmpPanInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyRegPanFieldisRequired, "Field Required");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Company PAN", pan, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Company Info : Company PAN", pan, Status,
+						errorMessage);
 
 			}
 
@@ -717,89 +741,92 @@ public class SystemUserMultipleGroupMerchantRegression {
 				BL.clickElement(A.GSTIN);
 
 				BL.enterElement(A.GSTIN, GstIN);
-
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean Status = true; // Assume success initially
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyCmpGSTInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.CompanyCmpGSTFieldisRequired, "Field Required");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "GstIN", GstIN, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Company Info : GstIN", GstIN, Status,
+						errorMessage);
 
 			}
 
 			if (nb != null && !nb.trim().isEmpty()) {
-				
-				BL.clickElement(GM.natureofbusiness);
-				
-				BL.selectDropdownOption(nb);
 
-				++testcaseCount;
+				BL.clickElement(GM.natureofbusiness);
+
+				BL.selectDropdownOption(nb);
+				performTabKeyPress();
+				String actualValue = BL.getElementText(GM.natureofbusiness);
 
 				boolean Status = true; // Assume success initially
 
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					if (actualValue != null) {
+						assertEquals(nb.toUpperCase(), actualValue.toUpperCase());
+						BL.isElementNotDisplayed(GM.NatureofBusinessFieldRequired, "Filed is Required");
+					}
 				} catch (AssertionError e) {
+
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Nature Of business", nb, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Company Info : Nature Of business", nb,
+						Status, errorMessage);
 
 			}
 
 			if (mcc != null && !mcc.trim().isEmpty()) {
 
-				BL.clickElement(GM.mcc);				
+				BL.clickElement(GM.mcc);
 				BL.CLearElement(GM.mcc);
 				BL.enterElement(GM.mcc, mcc);
 				Thread.sleep(1000);
 				BL.selectDropdownOption(mcc);
 
-				++testcaseCount;
-
 				boolean Status = true; // Assume success initially
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(GM.MccFieldRequired, "Field is Required");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "MCC", mcc, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Company Info : MCC", mcc, Status,
+						errorMessage);
 
 			}
 
 			if (frequency != null && !frequency.trim().isEmpty()) {
-				
-				
+
 				BL.clickElement(A.StatementFrequency);
 
 				BL.selectDropdownOption(frequency);
 
-				++testcaseCount;
-
+				String actualValue = BL.getElementText(A.StatementFrequency);
 				boolean Status = true; // Assume success initially
 
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					if (actualValue != null) {
+						assertEquals(frequency.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Statement Frequency", frequency, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Company Info : Statement Frequency",
+						frequency, Status, errorMessage);
 
 			}
 
@@ -808,25 +835,25 @@ public class SystemUserMultipleGroupMerchantRegression {
 				BL.clickElement(A.StatementType);
 
 				BL.selectDropdownOption(Type);
-				
-				
-
-				++testcaseCount;
-
+				performTabKeyPress();
+				String actualValue = BL.getElementText(A.StatementType);
 				boolean Status = true; // Assume success initially
 
 				try {
+					if (actualValue != null) {
+						assertEquals(Type.toUpperCase(), actualValue.toUpperCase());
+						BL.clickElement(B.NextStep);
 
-					
-					BL.clickElement(B.NextStep);
+						BL.isElementNotDisplayed(A.CompanyStatementTypeFieldisRequired, "Field Required");
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					}
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Statement Type", Type, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Company Info : Statement Type", Type, Status,
+						errorMessage);
 
 			}
 
@@ -838,7 +865,8 @@ public class SystemUserMultipleGroupMerchantRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "Company Info", NextstepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Company Info : ", "NextStep", NextstepStatus,
+					errorMessage);
 
 			return LegalName;
 
@@ -853,9 +881,7 @@ public class SystemUserMultipleGroupMerchantRegression {
 
 	private void fillPersonalInfo(Map<String, String> testData, int TestcaseNo) throws Exception {
 		try {
-			
 
-			int testcaseCount = 0;
 			String errorMessage = "The data does not match or is empty.";
 
 			Faker faker = new Faker();
@@ -863,14 +889,14 @@ public class SystemUserMultipleGroupMerchantRegression {
 			String title = testData.get("Title");
 			String FirstName = testData.get("First Name");
 			String LastName = testData.get("Last Name");
-			String pan = generateValidPAN(faker);
+			String pan = testData.get("PAN");
 			String Address = testData.get("Address");
 			String pincode = testData.get("Personal Pincode");
 			String PMobilenumber = testData.get("Personal Mobile Number");
 			String telephone = testData.get("TelePhone Number");
 			String emailid = testData.get("Email");
 			String Nationality = testData.get("Nationality");
-			String aadhaar = generateValidAadhaar();
+			String aadhaar = testData.get("Aadhaar Number");
 			String Passport = testData.get("Passport");
 
 			if (title != null && !title.trim().isEmpty()) {
@@ -883,19 +909,21 @@ public class SystemUserMultipleGroupMerchantRegression {
 
 				BL.selectDropdownOption(title);
 
-				++testcaseCount;
-
+				String actualValue = BL.getElementValue(A.titlepersonal);
 				boolean Status = true; // Assume success initially
 
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					if (actualValue != null) {
+						BL.isElementNotDisplayed(A.PersonalinfoTitleFieldrequired, "Field is Required");
+						assertEquals(title.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Title", title, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Personal Info : Title", title, Status,
+						errorMessage);
 
 			}
 
@@ -904,20 +932,20 @@ public class SystemUserMultipleGroupMerchantRegression {
 				BL.clickElement(A.FirstNamePersonal);
 
 				BL.enterElement(A.FirstNamePersonal, FirstName);
-
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean Status = true; // Assume success initially
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalinfoFirstNameFieldrequired, "Field is Required");
+					BL.isElementNotDisplayed(A.PersonalInfoFirstNameInvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "FirstName", FirstName, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Personal Info : FirstName", FirstName,
+						Status, errorMessage);
 
 			}
 
@@ -926,20 +954,18 @@ public class SystemUserMultipleGroupMerchantRegression {
 				BL.clickElement(A.LastNamePersonal);
 
 				BL.enterElement(A.LastNamePersonal, LastName);
-
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean Status = true; // Assume success initially
 
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalInfoLastNameInvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "LastName", LastName, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Personal Info : LastName", LastName, Status,
+						errorMessage);
 
 			}
 
@@ -953,33 +979,34 @@ public class SystemUserMultipleGroupMerchantRegression {
 				BL.clickElement(A.Date);
 				BL.clickElement(A.ApplyButton);
 
-				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+				BL.isElementNotDisplayed(A.PersonalinfoDOBFieldrequired, "Field is Required");
 			} catch (AssertionError e) {
 				DateStatus = false; // Set status to false if assertion fails
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Date Of Birth", "30/11/1998", DateStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Personal Info : Date Of Birth", "30/11/1998",
+					DateStatus, errorMessage);
 
 			if (pan != null && !pan.trim().isEmpty()) {
 
 				BL.clickElement(A.PanPersonal);
 
 				BL.enterElement(A.PanPersonal, pan);
-
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean Status = true; // Assume success initially
 
 				try {
+					BL.isElementNotDisplayed(A.PersonalinfoPANFieldrequired, "Field is Required");
+					BL.isElementNotDisplayed(A.PersonalInfoPanInvalidFormat, "Invalid Format");
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Pan", pan, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Personal Info : Pan", pan, Status,
+						errorMessage);
 
 			}
 
@@ -988,42 +1015,43 @@ public class SystemUserMultipleGroupMerchantRegression {
 				BL.clickElement(A.AddressPersonal);
 
 				BL.enterElement(A.AddressPersonal, Address);
-
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean Status = true; // Assume success initially
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalinfoAddressFieldrequired, "Field is Required");
+					BL.isElementNotDisplayed(A.PersonalInfoAddressInvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Address", Address, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Personal Info : Address", Address, Status,
+						errorMessage);
 
 			}
 
 			if (pincode != null && !pincode.trim().isEmpty()) {
 
 				BL.clickElement(A.PincodePersonal);
+				BL.enterElement(A.PincodePersonal, pincode);
 
 				BL.selectDropdownOption(pincode);
-
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean Status = true; // Assume success initially
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalinfoPincodeFieldrequired, "Field is Required");
+					BL.isElementNotDisplayed(A.PersonalInfoPincodeInvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Pincode", pincode, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Personal Info : Pincode", pincode, Status,
+						errorMessage);
 
 			}
 
@@ -1037,20 +1065,20 @@ public class SystemUserMultipleGroupMerchantRegression {
 				BL.clickElement(A.MobilePersonal);
 
 				BL.enterElement(A.MobilePersonal, Mobilenumber);
-
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean Status = true; // Assume success initially
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalinfoMobileFieldrequired, "Field is Required");
+					BL.isElementNotDisplayed(A.PersonalInfoMobileInvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Mobilenumber", Mobilenumber, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Personal Info : Mobilenumber", Mobilenumber,
+						Status, errorMessage);
 
 			}
 
@@ -1059,20 +1087,19 @@ public class SystemUserMultipleGroupMerchantRegression {
 				BL.clickElement(A.telephonepersonal);
 
 				BL.enterElement(A.telephonepersonal, telephone);
-
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean Status = true; // Assume success initially
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalInfoTelephoneInvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Telephone Number", telephone, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Personal Info : Telephone Number", telephone,
+						Status, errorMessage);
 
 			}
 
@@ -1081,20 +1108,20 @@ public class SystemUserMultipleGroupMerchantRegression {
 				BL.clickElement(A.emailPersonal);
 
 				BL.enterElement(A.emailPersonal, emailid);
-
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean Status = true; // Assume success initially
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalinfoEmailFieldrequired, "Field is Required");
+					BL.isElementNotDisplayed(A.PersonalinfoEmailFieldrequired, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Emailid", emailid, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Personal Info : Emailid", emailid, Status,
+						errorMessage);
 
 			}
 
@@ -1103,20 +1130,21 @@ public class SystemUserMultipleGroupMerchantRegression {
 				BL.clickElement(A.Nationalitypersonal);
 
 				BL.enterElement(A.Nationalitypersonal, Nationality);
-
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean Status = true; // Assume success initially
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalinfoNationalityFieldrequired, "Field is Required");
+					BL.isElementNotDisplayed(A.PersonalInfoNationalityInvalidFormat, "Invalid Format");
+
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Nationality", Nationality, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Personal Info : Nationality", Nationality,
+						Status, errorMessage);
 
 			}
 
@@ -1125,20 +1153,19 @@ public class SystemUserMultipleGroupMerchantRegression {
 				BL.clickElement(A.AadhaarNumberPersonal);
 
 				BL.enterElement(A.AadhaarNumberPersonal, aadhaar);
-
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean Status = true; // Assume success initially
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalInfoAadhaarInvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Aadhaar", aadhaar, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Personal Info : Aadhaar", aadhaar, Status,
+						errorMessage);
 
 			}
 
@@ -1147,20 +1174,19 @@ public class SystemUserMultipleGroupMerchantRegression {
 				BL.clickElement(A.PassportNumberPersonal);
 
 				BL.enterElement(A.PassportNumberPersonal, Passport);
-
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean Status = true; // Assume success initially
 
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(A.PersonalInfoPassportNumberInvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
 
-				logTestStep(TestcaseNo, "Passport", Passport, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Personal Info : Passport", Passport, Status,
+						errorMessage);
 
 			}
 
@@ -1174,7 +1200,7 @@ public class SystemUserMultipleGroupMerchantRegression {
 				r.keyRelease(KeyEvent.VK_ENTER);
 
 				BL.clickElement(A.ApplyButton);
-				
+
 				performTabKeyPress();
 
 				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
@@ -1183,7 +1209,8 @@ public class SystemUserMultipleGroupMerchantRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Date", "Passport ExpiryDate", DateStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Personal Info : Date", "Passport ExpiryDate",
+					DateStatus, errorMessage);
 
 			boolean SaveStatus = true;
 			try {
@@ -1197,7 +1224,8 @@ public class SystemUserMultipleGroupMerchantRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Save Button", "Personal Info", SaveStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Personal Info : ", "Save Button", SaveStatus,
+					errorMessage);
 
 			boolean NextstepStatus = true;
 			try {
@@ -1209,7 +1237,8 @@ public class SystemUserMultipleGroupMerchantRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "Personal Info", NextstepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Personal Info : ", "NextStep", NextstepStatus,
+					errorMessage);
 
 		} catch (Exception e) {
 			// Use the exception handler to log and handle exceptions gracefully
@@ -1225,8 +1254,6 @@ public class SystemUserMultipleGroupMerchantRegression {
 
 		try {
 
-
-			int testcaseCount = 0;
 			String errorMessage = "The data does not match or is empty.";
 
 			String CommName = testData.get("Communication Name");
@@ -1239,25 +1266,24 @@ public class SystemUserMultipleGroupMerchantRegression {
 
 			BL.clickElement(B.ClickonCommADD);
 
-
 			if (CommName != null && !CommName.trim().isEmpty()) {
 
 				BL.clickElement(B.ClickonCommuName);
 
 				BL.enterElement(B.ClickonCommuName, CommName);
-
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean CommunicationNameStatus = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-					} catch (AssertionError e) {
+					BL.isElementNotDisplayed(B.CommunicationNameInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationNameFieldisRequired, "Field is Required");
+				} catch (AssertionError e) {
 					CommunicationNameStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Admin user details Communication Name", CommName, CommunicationNameStatus,
-						errorMessage);
+				logTestStep(TestcaseNo,
+						"MMS : Group Merchant Onboarding : Communication Info : Admin user details Communication Name",
+						CommName, CommunicationNameStatus, errorMessage);
 
 			}
 
@@ -1265,19 +1291,19 @@ public class SystemUserMultipleGroupMerchantRegression {
 				BL.clickElement(B.ClickonCommuPosition);
 
 				BL.enterElement(B.ClickonCommuPosition, CommPosition);
-
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean CommunicationPositionStatus = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationPositionInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationPositionFieldisRequired, "Field is Required");
 				} catch (AssertionError e) {
 					CommunicationPositionStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Admin user details Communication Position", CommPosition,
-						CommunicationPositionStatus, errorMessage);
+				logTestStep(TestcaseNo,
+						"MMS : Group Merchant Onboarding : Communication Info : Admin user details Communication Position",
+						CommPosition, CommunicationPositionStatus, errorMessage);
 
 			}
 
@@ -1292,19 +1318,19 @@ public class SystemUserMultipleGroupMerchantRegression {
 				BL.clickElement(B.ClickonCommuMobileNumber);
 
 				BL.enterElement(B.ClickonCommuMobileNumber, communicationMobileNumber);
-
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean CommunicationMobileNumberStatus = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationMobileInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationMobileFieldisRequired, "Field is Required");
 				} catch (AssertionError e) {
 					CommunicationMobileNumberStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Admin user details Communication MobileNumber", communicationMobileNumber,
-						CommunicationMobileNumberStatus, errorMessage);
+				logTestStep(TestcaseNo,
+						"MMS : Group Merchant Onboarding : Communication Info : Admin user details Communication MobileNumber",
+						communicationMobileNumber, CommunicationMobileNumberStatus, errorMessage);
 
 			}
 
@@ -1318,20 +1344,19 @@ public class SystemUserMultipleGroupMerchantRegression {
 				BL.clickElement(B.ClickonCommuEmailId);
 
 				BL.enterElement(B.ClickonCommuEmailId, Communicationemailid);
-
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean CommunicationEmailIDStatus = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationEmailFieldisRequired, "Field is Required");
 
 				} catch (AssertionError e) {
 					CommunicationEmailIDStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Admin user details Communication Emailid", Communicationemailid,
-						CommunicationEmailIDStatus, errorMessage);
+				logTestStep(TestcaseNo,
+						"MMS : Group Merchant Onboarding : Communication Info : Admin user details Communication Emailid",
+						Communicationemailid, CommunicationEmailIDStatus, errorMessage);
 
 			}
 
@@ -1339,24 +1364,26 @@ public class SystemUserMultipleGroupMerchantRegression {
 				BL.clickElement(B.ClickOnAdUsers);
 				BL.selectDropdownOption(ADUSer);
 
-				++testcaseCount;
+				String actualValue = BL.getElementText(B.ClickOnAdUsers);
 
-				boolean CommunicationADUSERStatus = true; // Assume success initially
+				boolean Status = true; // Assume success initially
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-
+					if (actualValue != null) {
+						assertEquals(ADUSer.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
-					CommunicationADUSERStatus = false;
+					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Admin user details AD User", ADUSer, CommunicationADUSERStatus, errorMessage);
+				logTestStep(TestcaseNo,
+						"MMS : Group Merchant Onboarding : Communication Info : Admin user details AD User", ADUSer,
+						Status, errorMessage);
 
 			}
 
 			boolean SaveStatus = true;
 			try {
-				
+
 				BL.clickElement(B.SaveButton);
 
 				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
@@ -1366,7 +1393,8 @@ public class SystemUserMultipleGroupMerchantRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Admin user details Save Button", "Communication Info", SaveStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Communication Info : ",
+					"Admin user details Save Button", SaveStatus, errorMessage);
 
 		} catch (Exception e) {
 			// Use the exception handler to log and handle exceptions gracefully
@@ -1381,8 +1409,6 @@ public class SystemUserMultipleGroupMerchantRegression {
 
 		try {
 
-
-			int testcaseCount = 0;
 			String errorMessage = "The data does not match or is empty.";
 
 			String CommName = testData.get("Communication Name");
@@ -1399,19 +1425,19 @@ public class SystemUserMultipleGroupMerchantRegression {
 				BL.clickElement(B.ClickonCommuName);
 
 				BL.enterElement(B.ClickonCommuName, CommName);
-
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean CommunicationNameStatus = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationNameInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationNameFieldisRequired, "Field is Required");
 				} catch (AssertionError e) {
 					CommunicationNameStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "SettlementReconContactDetails Communication Name", CommName,
-						CommunicationNameStatus, errorMessage);
+				logTestStep(TestcaseNo,
+						"MMS : Group Merchant Onboarding : Communication Info : SettlementReconContactDetails Communication Name",
+						CommName, CommunicationNameStatus, errorMessage);
 
 			}
 
@@ -1419,19 +1445,19 @@ public class SystemUserMultipleGroupMerchantRegression {
 				BL.clickElement(B.ClickonCommuPosition);
 
 				BL.enterElement(B.ClickonCommuPosition, CommPosition);
-
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean CommunicationPositionStatus = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationPositionInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationPositionFieldisRequired, "Field is Required");
 				} catch (AssertionError e) {
 					CommunicationPositionStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "SettlementReconContactDetails Communication Position", CommPosition,
-						CommunicationPositionStatus, errorMessage);
+				logTestStep(TestcaseNo,
+						"MMS : Group Merchant Onboarding : Communication Info : SettlementReconContactDetails Communication Position",
+						CommPosition, CommunicationPositionStatus, errorMessage);
 
 			}
 
@@ -1446,18 +1472,18 @@ public class SystemUserMultipleGroupMerchantRegression {
 				BL.clickElement(B.ClickonCommuMobileNumber);
 
 				BL.enterElement(B.ClickonCommuMobileNumber, communicationMobileNumber);
-
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean CommunicationMobileNumberStatus = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationMobileInvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationMobileFieldisRequired, "Field is Required");
 				} catch (AssertionError e) {
 					CommunicationMobileNumberStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "SettlementReconContactDetails Communication MobileNumber",
+				logTestStep(TestcaseNo,
+						"MMS : Group Merchant Onboarding : Communication Info : SettlementReconContactDetails Communication MobileNumber",
 						communicationMobileNumber, CommunicationMobileNumberStatus, errorMessage);
 
 			}
@@ -1469,24 +1495,23 @@ public class SystemUserMultipleGroupMerchantRegression {
 				// Generate a random email address with @gmail.com
 				String randomEmailPrefix = faker.internet().slug(); // Generate a random string for the prefix
 				String Communicationemailid = randomEmailPrefix + "@gmail.com";
-				
+
 				BL.clickElement(B.ClickonCommuEmailId);
 
 				BL.enterElement(B.ClickonCommuEmailId, Communicationemailid);
-
-				++testcaseCount;
-
+				performTabKeyPress();
 				boolean CommunicationEmailIDStatus = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.CommunicationEmailFieldisRequired, "Field is Required");
 
 				} catch (AssertionError e) {
 					CommunicationEmailIDStatus = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "SettlementReconContactDetails Communication Emailid", Communicationemailid,
-						CommunicationEmailIDStatus, errorMessage);
+				logTestStep(TestcaseNo,
+						"MMS : Group Merchant Onboarding : Communication Info : SettlementReconContactDetails Communication Emailid",
+						Communicationemailid, CommunicationEmailIDStatus, errorMessage);
 
 			}
 
@@ -1501,13 +1526,13 @@ public class SystemUserMultipleGroupMerchantRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "SettlementReconContactDetails Save Button", "Communication Info", SaveStatus,
-					errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Communication Info : ",
+					"SettlementReconContactDetails Save Button", SaveStatus, errorMessage);
 
 			boolean NextstepStatus = true;
 			try {
 				Thread.sleep(1000);
-				
+
 				BL.clickElement(B.NextStep);
 				BL.isElementDisplayed(A.IntroChannelConfig, "Channel Config Page");
 
@@ -1516,7 +1541,8 @@ public class SystemUserMultipleGroupMerchantRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "Communication Info", NextstepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Communication Info : ", "NextStep",
+					NextstepStatus, errorMessage);
 
 		} catch (Exception e) {
 			// Use the exception handler to log and handle exceptions gracefully
@@ -1526,10 +1552,9 @@ public class SystemUserMultipleGroupMerchantRegression {
 		}
 	}
 
-	private void fillChannelConfig(Map<String, String> testData, int TestcaseNo)
+	private void fillChannelConfig(int TestcaseNo)
 			throws InterruptedException, AWTException, IOException {
 
-		int testcaseCount = 0;
 		String errorMessage = "The data does not match or is empty.";
 
 		try {
@@ -1557,12 +1582,9 @@ public class SystemUserMultipleGroupMerchantRegression {
 				Map<String, String> rowData = cachedData.get(currentRow - 1);
 
 				// Retrieve data for each field, handling null or empty values
-			//	String channelbank = rowData.getOrDefault("Channel Bank Name", "").trim();
 				String channel = rowData.getOrDefault("Channel", "").trim();
 				String network = rowData.getOrDefault("Network", "").trim();
 				String transactionSet = rowData.getOrDefault("Transaction Sets", "").trim();
-				String routing = rowData.getOrDefault("Routing", "").trim();
-
 				// Clear the key-value arrays before each iteration
 				key.clear();
 				value.clear();
@@ -1570,7 +1592,6 @@ public class SystemUserMultipleGroupMerchantRegression {
 				if (!channel.isEmpty()) {
 					BL.clickElement(A.ChannelConfig);
 //						driver.navigate().refresh();
-					Thread.sleep(1000);
 					BL.clickElement(B.AddButton);
 					Thread.sleep(1000);
 					BL.clickElement(B.CommercialChannel);
@@ -1580,12 +1601,19 @@ public class SystemUserMultipleGroupMerchantRegression {
 					value.add(channel);
 
 					performTabKeyPress();
-
-					boolean channelStatus = true;
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-
-					testcaseCount++;
-					logTestStep(TestcaseNo, "Channel", channel, channelStatus, errorMessage);
+					String actualValue = BL.getElementText(B.CommercialChannel);
+					boolean Status = true;
+					try {
+						if (actualValue != null) {
+							BL.isElementNotDisplayed(B.ChannelnameFieldisRequired, "Field is Required");
+							assertEquals(channel.toUpperCase(), actualValue.toUpperCase());
+						}
+					} catch (AssertionError e) {
+						Status = false;
+						errorMessage = e.getMessage(); // Capture error message
+					}
+					logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Channel Config : Channel", channel,
+							Status, errorMessage);
 
 				} else {
 					System.out.println("Channel data is empty for row: " + currentRow);
@@ -1600,12 +1628,19 @@ public class SystemUserMultipleGroupMerchantRegression {
 					value.add(network);
 
 					performTabKeyPress();
-
-					boolean networkStatus = true;
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-
-					testcaseCount++;
-					logTestStep(TestcaseNo, "Network", network, networkStatus, errorMessage);
+					String actualValue = BL.getElementText(B.ClickOntNetwork);
+					boolean Status = true;
+					try {
+						if (actualValue != null) {
+							BL.isElementNotDisplayed(B.ChannelNetworkFieldisRequired, "Field is Required");
+							assertEquals(network.toUpperCase(), actualValue.toUpperCase());
+						}
+					} catch (AssertionError e) {
+						Status = false;
+						errorMessage = e.getMessage(); // Capture error message
+					}
+					logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Channel Config : Network", network,
+							Status, errorMessage);
 
 				} else {
 					System.out.println("Network data is empty for row: " + currentRow);
@@ -1613,57 +1648,77 @@ public class SystemUserMultipleGroupMerchantRegression {
 
 				// Process Transaction Set
 				if (!transactionSet.isEmpty()) {
-					BL.clickElement(B.ClickOntransaction);
-					BL.selectDropdownOption(transactionSet);
+					try {
+						String[] transa = transactionSet.split(",");
+						for (String trans : transa) {
+							trans = trans.trim();
+							if (!trans.isEmpty()) {
+								BL.clickElement(B.ClickOntransaction);
+								BL.selectDropdownOption(trans);
 
-					key.add("Transaction Set-" + currentRow);
-					value.add(transactionSet);
+								key.add("Transaction Set-" + currentRow);
+								value.add(transactionSet);
 
-					performTabKeyPress();
+								performTabKeyPress();
 
-					boolean transactionSetStatus = true;
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+							}
 
-					testcaseCount++;
-					logTestStep(TestcaseNo, "TransactionSet", transactionSet, transactionSetStatus, errorMessage);
+						}
+						String actualValue = BL.getElementText(B.ClickOntransaction);
 
+						boolean Status = true;
+						try {
+							if (actualValue != null) {
+								BL.isElementNotDisplayed(B.ChannelTransactionFieldisRequired, "Field is Required");
+								assertEquals(transactionSet.toUpperCase(), actualValue.toUpperCase());
+							}
+						} catch (AssertionError e) {
+							Status = false;
+							errorMessage = e.getMessage(); // Capture the assertion error
+						}
+						logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Channel Config : TransactionSet",
+								transactionSet, Status, errorMessage);
+
+					} catch (Exception e) {
+						System.out.println(
+								"Error in processing Network data for row: " + currentRow + " - " + e.getMessage());
+						throw e;
+					}
 				} else {
 					System.out.println("Transaction Set data is empty for row: " + currentRow);
 				}
 
 				boolean DateStatus = true;
 				try {
-					
+
 					BL.clickElement(A.ChannelOpencalender1);
 					BL.clickElement(A.ApplyButton);
-					
+
 					performTabKeyPress();
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-
-					testcaseCount++;
+					BL.isElementNotDisplayed(A.ChannelStartDateFieldisRequired, "Field is Required");
 
 				} catch (AssertionError e) {
 					DateStatus = false;
 					errorMessage = e.getMessage();
 				}
-				logTestStep(TestcaseNo, "Start Date", "Valid Date", DateStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Channel Config : Start Date", "Valid Date",
+						DateStatus, errorMessage);
 
 				try {
 					BL.clickElement(A.ChannelOpencalender2);
 					BL.clickElement(A.ApplyButton);
-					
+
 					performTabKeyPress();
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-
-					testcaseCount++;
+					BL.isElementNotDisplayed(A.ChannelEndDateFieldisRequired, "Field is Required");
 
 				} catch (AssertionError e) {
 					DateStatus = false;
 					errorMessage = e.getMessage();
 				}
-				logTestStep(TestcaseNo, "END Date", "Valid Date", DateStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Channel Config : END Date", "Valid Date",
+						DateStatus, errorMessage);
 
 				// Process Save Button
 				boolean saveStatus = true;
@@ -1676,7 +1731,8 @@ public class SystemUserMultipleGroupMerchantRegression {
 					errorMessage = e.getMessage();
 				}
 
-				logTestStep(TestcaseNo, "Save Button", "Channel Config", saveStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Channel Config : ", "Save Button",
+						saveStatus, errorMessage);
 			}
 
 			// Process Next Step
@@ -1684,14 +1740,14 @@ public class SystemUserMultipleGroupMerchantRegression {
 			try {
 				BL.clickElement(B.NextStep);
 				BL.isElementDisplayed(GM.IntrodiscountRate, "Disc Rate");
-				
 
 			} catch (AssertionError e) {
 				nextStepStatus = false;
 				errorMessage = e.getMessage();
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "Channel Config", nextStepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Channel Config : ", "NextStep", nextStepStatus,
+					errorMessage);
 
 		} catch (Exception e) {
 			// Handle and log exceptions
@@ -1706,47 +1762,41 @@ public class SystemUserMultipleGroupMerchantRegression {
 
 		try {
 
-			
-			int testcaseCount = 0;
 			String errorMessage = "The data does not match or is empty.";
 
 			String poAImage = testData.get("Company Proof of address");
-
+			BL.ActionclickElement(B.Kyc);
 			if (poAImage != null && !poAImage.trim().isEmpty()) {
 
-				BL.clickElement(B.Kyc);
 				Thread.sleep(3000);
 				BL.UploadImage(A.CompanyProofofaddressUpload, poAImage);
-				
-				++testcaseCount;
 
-//				B.ClickOnDoubleclickNextStep();
 				Thread.sleep(1000);
 				BL.clickElement(B.NextStep);
 
 				boolean Status = true; // Assume success initially
 				try {
-
 					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "KYC Details", poAImage, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : KYC : KYC Details", poAImage, Status,
+						errorMessage);
 
 			}
 
 			boolean nextStepStatus = true;
 			try {
 				BL.isElementDisplayed(B.StatusHistory, "History");
-				
 
 			} catch (AssertionError e) {
 				nextStepStatus = false;
 				errorMessage = e.getMessage();
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "KYC-GM", nextStepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : KYC : ", "NextStep", nextStepStatus,
+					errorMessage);
 
 		} catch (Exception e) {
 			// Handle and log exceptions
@@ -1756,10 +1806,9 @@ public class SystemUserMultipleGroupMerchantRegression {
 		}
 	}
 
-	private void FillDiscountRate(Map<String, String> testData, int TestcaseNo)
+	private void FillDiscountRate(int TestcaseNo)
 			throws InterruptedException, AWTException, IOException {
 
-		int testcaseCount = 0;
 		String errorMessage = "The data does not match or is empty.";
 
 		try {
@@ -1811,12 +1860,19 @@ public class SystemUserMultipleGroupMerchantRegression {
 					value.add(channel);
 
 					performTabKeyPress();
+					String actualValue = BL.getElementText(B.ClickOnChannel);
 
-					boolean channelStatus = true;
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-
-					testcaseCount++;
-					logTestStep(TestcaseNo, "DiscountRate : Channel", channel, channelStatus, errorMessage);
+					boolean Status = true;
+					try {
+						if (actualValue != null) {
+							assertEquals(channel.toUpperCase(), actualValue.toUpperCase());
+						}
+					} catch (AssertionError e) {
+						Status = false;
+						errorMessage = e.getMessage(); // Capture error message
+					}
+					logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Discount Rate : Channel", channel,
+							Status, errorMessage);
 
 				} else {
 					System.out.println("Channel data is empty for row: " + currentRow);
@@ -1829,12 +1885,19 @@ public class SystemUserMultipleGroupMerchantRegression {
 					BL.selectDropdownOption(pricingPlan);
 
 					performTabKeyPress();
-
-					boolean networkStatus = true;
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-
-					testcaseCount++;
-					logTestStep(TestcaseNo, "Pricing Plan", pricingPlan, networkStatus, errorMessage);
+					String actualValue = BL.getElementText(A.DiscountRatePricingPlan);
+					boolean Status = true;
+					try {
+						if (actualValue != null) {
+							BL.isElementNotDisplayed(A.DiscountRatePricingPlanFieldRequired, "Field is Required");
+							assertEquals(pricingPlan.toUpperCase(), actualValue.toUpperCase());
+						}
+					} catch (AssertionError e) {
+						Status = false;
+						errorMessage = e.getMessage(); // Capture error message
+					}
+					logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Discount Rate : Pricing Plan",
+							pricingPlan, Status, errorMessage);
 
 				} else {
 					System.out.println("Network data is empty for row: " + currentRow);
@@ -1851,7 +1914,8 @@ public class SystemUserMultipleGroupMerchantRegression {
 					errorMessage = e.getMessage();
 				}
 
-				logTestStep(TestcaseNo, "Save Button", "GM Discount Rate", saveStatus, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Discount Rate : ", "Save Button", saveStatus,
+						errorMessage);
 			}
 
 			// Process Next Step
@@ -1866,9 +1930,12 @@ public class SystemUserMultipleGroupMerchantRegression {
 				errorMessage = e.getMessage();
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "GM Discount Rate", nextStepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Discount Rate : ", "NextStep", nextStepStatus,
+					errorMessage);
 
-		} catch (Exception e) {
+		} catch (
+
+		Exception e) {
 			// Handle and log exceptions
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
 			exceptionHandler.handleException(e, "Channel Config-Aggregator");
@@ -1879,18 +1946,13 @@ public class SystemUserMultipleGroupMerchantRegression {
 	private void fillSettlementInfo(Map<String, String> testData, int TestcaseNo)
 			throws InterruptedException, AWTException {
 
-		int testcaseCount = 0;
 		String errorMessage = "The data does not match or is empty.";
 
-		
-
 		String channel = testData.get("Settlement Channel");
+		String PaymentMode = testData.get("Payment Mode");
 		String Account = testData.get("Account Type");
 		String IFSCCode = testData.get("IFSC Code");
-
 		String BanKAccountNumber = testData.get("Bank Account Number");
-		String Mode = testData.get("Settlement Mode");
-		String payment = testData.get("Payment Flag");
 
 		try {
 
@@ -1901,23 +1963,46 @@ public class SystemUserMultipleGroupMerchantRegression {
 			BL.clickElement(B.AddButton);
 
 			if (channel != null && !channel.trim().isEmpty()) {
-				
+
 				BL.clickElement(B.SettlementInfo);
 				BL.clickElement(B.SettlementChannel);
 
 				BL.selectDropdownOption(channel);
 
-				++testcaseCount;
-
+				String actualValue = BL.getElementText(B.SettlementChannel);
 				boolean Status = true; // Assume success initially
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					if (actualValue != null) {
+						BL.isElementNotDisplayed(B.SettlementChannelFieldisRequired, "Field is Required");
+						assertEquals(channel.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Settlement Channel", channel, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Settlement Info : Channel", channel, Status,
+						errorMessage);
+
+			}
+
+			if (PaymentMode != null && !PaymentMode.trim().isEmpty()) {
+
+				BL.clickElement(GM.paymentmode);
+
+				BL.selectDropdownOption(PaymentMode);
+
+				String actualValue = BL.getElementText(GM.paymentmode);
+				boolean Status = true; // Assume success initially
+				try {
+					if (actualValue != null) {
+						assertEquals(PaymentMode.toUpperCase(), actualValue.toUpperCase());
+					}
+				} catch (AssertionError e) {
+					Status = false;
+					errorMessage = e.getMessage(); // Capture error message
+				}
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Settlement Info : Payment Mode", PaymentMode,
+						Status, errorMessage);
 
 			}
 
@@ -1926,17 +2011,20 @@ public class SystemUserMultipleGroupMerchantRegression {
 
 				BL.selectDropdownOption(Account);
 
-				++testcaseCount;
-
+				String actualValue = BL.getElementText(B.SettlementAccountType);
 				boolean Status = true; // Assume success initially
 				try {
+					if (actualValue != null) {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+						BL.isElementNotDisplayed(B.SettlementAccTypeFieldisRequired, "Field is Required");
+						assertEquals(Account.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Settlement AccountType", Account, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Settlement Info : AccountType", Account,
+						Status, errorMessage);
 
 			}
 
@@ -1944,17 +2032,17 @@ public class SystemUserMultipleGroupMerchantRegression {
 				BL.clickElement(B.SettlementBankAccountNumber);
 				BL.enterElement(B.SettlementBankAccountNumber, BanKAccountNumber);
 
-				++testcaseCount;
-
 				boolean Status = true; // Assume success initially
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.SettlementBankAccNumberFieldisRequired, "Field is Required");
+					assertEquals(BanKAccountNumber.toUpperCase(),
+							BL.getElementText(B.SettlementBankAccountNumber).toUpperCase());
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "BanKAccountNumber", BanKAccountNumber, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Settlement Info : BanKAccountNumber",
+						BanKAccountNumber, Status, errorMessage);
 
 			}
 
@@ -1966,17 +2054,17 @@ public class SystemUserMultipleGroupMerchantRegression {
 
 				performTabKeyPress();
 
-				++testcaseCount;
-
 				boolean Status = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.SettlementIFSCFieldisRequired, "Field is Required");
+					BL.isElementNotDisplayed(B.SettlementIFSCInvalid, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "IFSC Code", IFSCCode, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Settlement Info : IFSC Code", IFSCCode,
+						Status, errorMessage);
 
 			}
 
@@ -1986,26 +2074,26 @@ public class SystemUserMultipleGroupMerchantRegression {
 
 				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
-
 			} catch (AssertionError e) {
 				SaveStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Save Button", "Settlement Info", SaveStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Settlement Info : ", "Save Button", SaveStatus,
+					errorMessage);
 
 			boolean NextstepStatus = true;
 			try {
-				
+
 				BL.clickElement(B.NextStep);
 				BL.isElementDisplayed(GM.IntroWhitelabel, "white label");
-				} 
-			catch (AssertionError e) {
+			} catch (AssertionError e) {
 				NextstepStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "Settlement Info", NextstepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Settlement Info : ", "NextStep", NextstepStatus,
+					errorMessage);
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
@@ -2019,33 +2107,30 @@ public class SystemUserMultipleGroupMerchantRegression {
 	private void configureWhiteLabel(Map<String, String> testData, int TestcaseNo)
 			throws InterruptedException, AWTException {
 
-		int testcaseCount = 0;
 		String errorMessage = "The data does not match or is empty.";
-
 
 		String MaximumNoOfPlatform = testData.get("Maximum No of Platform");
 
 		try {
 
-				BL.clickElement(B.whitelabel);
+			BL.clickElement(B.whitelabel);
 
 			if (MaximumNoOfPlatform != null && !MaximumNoOfPlatform.trim().isEmpty()) {
-				
+
 				BL.clickElement(B.WhitelabelMaxNumberOfPlatform);
 				BL.enterElement(B.WhitelabelMaxNumberOfPlatform, MaximumNoOfPlatform);
 				performTabKeyPress();
 
-				++testcaseCount;
-
 				boolean Status = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.MaxPlatformUserInvalidFormat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Maximum No Of Platform", MaximumNoOfPlatform, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : White Label : Maximum No Of Platform",
+						MaximumNoOfPlatform, Status, errorMessage);
 			}
 
 			boolean SaveStatus = true;
@@ -2059,7 +2144,8 @@ public class SystemUserMultipleGroupMerchantRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Save Button", "Whitelabel", SaveStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : White Label : ", "Save Button", SaveStatus,
+					errorMessage);
 
 			boolean NextstepStatus = true;
 			try {
@@ -2067,13 +2153,13 @@ public class SystemUserMultipleGroupMerchantRegression {
 
 				BL.isElementDisplayed(A.IntroWebhooks, "Webhook Page");
 
-
 			} catch (AssertionError e) {
 				NextstepStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "Whitelabel", NextstepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : White Label : ", "NextStep", NextstepStatus,
+					errorMessage);
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
@@ -2086,9 +2172,8 @@ public class SystemUserMultipleGroupMerchantRegression {
 	// Method to configure Webhooks
 	private void configureWebhooks(Map<String, String> testData, int TestcaseNo) throws InterruptedException {
 
-		int testcaseCount = 0;
 		String errorMessage = "The data does not match or is empty.";
-		
+
 		String type = testData.get("Webhook Type");
 		String webhookURL = testData.get("Webhook url");
 
@@ -2104,34 +2189,36 @@ public class SystemUserMultipleGroupMerchantRegression {
 
 				BL.selectDropdownOption(type);
 
-				++testcaseCount;
-
+				String actualValue = BL.getElementText(B.WebhookType);
 				boolean Status = true; // Assume success initially
 				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					if (actualValue != null) {
+						BL.isElementNotDisplayed(B.Webhooktypes, "Field is Required");
+						assertEquals(type.toUpperCase(), actualValue.toUpperCase());
+					}
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Webhook Type", type, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Webhook : Webhook Type", type, Status,
+						errorMessage);
 			}
 
 			if (webhookURL != null && !webhookURL.trim().isEmpty()) {
 				BL.clickElement(B.WebhookTypeURL);
 				BL.enterElement(B.WebhookTypeURL, webhookURL);
 
-				++testcaseCount;
-
 				boolean Status = true; // Assume success initially
 				try {
 
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+					BL.isElementNotDisplayed(B.WebhookURLFieldisRequired, "Field is Required");
+					BL.isElementNotDisplayed(B.WebhookURLInvalidformat, "Invalid Format");
 				} catch (AssertionError e) {
 					Status = false;
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "Webhook URL", webhookURL, Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Webhook : Webhook URL", webhookURL, Status,
+						errorMessage);
 			}
 
 			boolean SaveStatus = true;
@@ -2145,20 +2232,21 @@ public class SystemUserMultipleGroupMerchantRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Save Button", "Webhooks", SaveStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Webhook : ", "Save Button", SaveStatus,
+					errorMessage);
 
 			boolean NextstepStatus = true;
 			try {
 				BL.clickElement(B.NextStep);
 				BL.isElementDisplayed(B.IntroKycConfig, "KYC Config");
-				
 
 			} catch (AssertionError e) {
 				NextstepStatus = false;
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "NextStep", "Webhooks", NextstepStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Webhook : ", "NextStep", NextstepStatus,
+					errorMessage);
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
@@ -2168,15 +2256,42 @@ public class SystemUserMultipleGroupMerchantRegression {
 
 	}
 
-	private void submitForVerification() throws InterruptedException {
+	private void submitForVerification(int TestcaseNo) throws InterruptedException {
+		try {
+			String errorMessage = "The data does not match or is empty.";
+			boolean SaveStatus = true;
+			try {
+				BL.clickElement(B.SubmitforVerification);
 
-		BL.clickElement(B.SubmitforVerification);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Submit for Verification", "Group Merchant",
+						SaveStatus, errorMessage);
 
-		BL.clickElement(B.YesButton);
+			} catch (AssertionError e) {
+				SaveStatus = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
 
-		BL.clickElement(B.OKButton);
+			try {
+				BL.clickElement(B.YesButton);
+				BL.clickElement(B.OKButton);
+
+				BL.isElementDisplayed(B.VerfiedSuccessCompleted, "Submit for Verification");
+
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : System Maker : Yes Button",
+						"Submit for Verfication", SaveStatus, errorMessage);
+
+			} catch (AssertionError e) {
+				SaveStatus = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
+
+		} catch (Exception e) {
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+			exceptionHandler.handleException(e, "Submit for verification");
+			throw e;
+		}
 	}
-	
+
 	@When("the System Verifier clicks the Group Merchant module")
 
 	public void SystemverifierClicktheSUBISOModule() {
@@ -2242,7 +2357,7 @@ public class SystemUserMultipleGroupMerchantRegression {
 
 			if (rowNumber == numberOfRows) {
 				System.out.println("Finished processing the last row. Logging out...");
-				performLogout();
+				performLogout(rowNumber);
 			}
 		}
 
@@ -2268,14 +2383,14 @@ public class SystemUserMultipleGroupMerchantRegression {
 		int testCaseCount = 0;
 
 		// Validate fields for the current row using testData
-		testCaseCount += validateFieldsForRow1(sheetName, testData, rowNumber, testCaseCount);
+		testCaseCount += validateFieldsForRow1(testData, rowNumber);
 
 		return testCaseCount;
 
 	}
 
 	@SuppressWarnings("unused")
-	private int validateFieldsForRow1(String sheetName, Map<String, String> testData, int TestcaseNo, int rowNumber)
+	private int validateFieldsForRow1(Map<String, String> testData, int TestcaseNo)
 			throws Exception {
 
 		// Initialize the locators
@@ -2310,8 +2425,7 @@ public class SystemUserMultipleGroupMerchantRegression {
 
 	private void Searchbyname(Map<String, String> testData, int TestcaseNo) throws InterruptedException, AWTException {
 
-		String LegalName = testData.get("LegalName");
-
+		String LegalName = testData.get("Legal Name");
 
 		key.clear();
 		value.clear();
@@ -2325,27 +2439,25 @@ public class SystemUserMultipleGroupMerchantRegression {
 				Thread.sleep(3000);
 
 				BL.clickElement(B.SearchbyBankName);
-				
+
 				Thread.sleep(1000);
 
-				BL.UploadImage(B.SearchbyBankName, LegalName);
+				BL.enterSplitElement(B.SearchbyBankName, LegalName);
+				Thread.sleep(3000);
+
+				BL.clickElement(B.ActionClick);
+
+				Thread.sleep(2000);
+
+				BL.ActionclickElement(B.ViewButton);
 
 			} catch (AssertionError e) {
 				Status = false;
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Search by name", LegalName, Status, errorMessage);
-
-			Thread.sleep(3000);
-
-			BL.clickElement(B.ActionClick);
-
-			Thread.sleep(2000);
-
-			BL.ActionclickElement(B.ViewButton);
-
-			int testcaseCount = 0;
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding :Actions and View",
+					" Group Merchant Status Inprogress", Status, errorMessage);
 
 			boolean verifiedStatus = true;
 			try {
@@ -2363,7 +2475,8 @@ public class SystemUserMultipleGroupMerchantRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Sales Info", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Verified", "Sales Info", verifiedStatus,
+					errorMessage);
 
 			try {
 				Thread.sleep(1000);
@@ -2379,7 +2492,8 @@ public class SystemUserMultipleGroupMerchantRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Company Info", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Verified", "Company Info", verifiedStatus,
+					errorMessage);
 
 			try {
 
@@ -2396,7 +2510,8 @@ public class SystemUserMultipleGroupMerchantRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Personal Info", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Verified", "Personal Info", verifiedStatus,
+					errorMessage);
 
 			try {
 				Thread.sleep(1000);
@@ -2412,7 +2527,8 @@ public class SystemUserMultipleGroupMerchantRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Communication Info", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Verified", "Communication Info", verifiedStatus,
+					errorMessage);
 
 			try {
 
@@ -2429,15 +2545,16 @@ public class SystemUserMultipleGroupMerchantRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Channel Config", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Verified", "Channel Config", verifiedStatus,
+					errorMessage);
 
 			try {
 
 				Thread.sleep(1000);
 				BL.isElementDisplayed(A.DiscountRate, "DISC Rate");
-								
+
 				BL.clickElement(A.DiscountRate);
-	
+
 				BL.clickElement(B.VerifiedandNext);
 
 			} catch (AssertionError e) {
@@ -2445,7 +2562,8 @@ public class SystemUserMultipleGroupMerchantRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Discount Rate", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Verified", "Discount Rate", verifiedStatus,
+					errorMessage);
 
 			try {
 
@@ -2462,7 +2580,8 @@ public class SystemUserMultipleGroupMerchantRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Settlement Info", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Verified", "Settlement Info", verifiedStatus,
+					errorMessage);
 
 			try {
 
@@ -2479,7 +2598,8 @@ public class SystemUserMultipleGroupMerchantRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Whitelabel", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Verified", "Whitelabel", verifiedStatus,
+					errorMessage);
 
 			try {
 
@@ -2496,7 +2616,8 @@ public class SystemUserMultipleGroupMerchantRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "Webhooks", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Verified", "Webhooks", verifiedStatus,
+					errorMessage);
 
 			try {
 
@@ -2527,26 +2648,44 @@ public class SystemUserMultipleGroupMerchantRegression {
 				errorMessage = e.getMessage(); // Capture error message
 			}
 
-			logTestStep(TestcaseNo, "Verified", "KYC-Group Merchant", verifiedStatus, errorMessage);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Verified", "KYC-Group Merchant", verifiedStatus,
+					errorMessage);
 
-			BL.clickElement(B.SubmitforApproval);
+			boolean SaveStatus = true;
+			try {
+				BL.clickElement(B.SubmitforApproval);
 
-			BL.clickElement(B.YesButton);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Submit for Approval", "Group Merchant",
+						SaveStatus, errorMessage);
 
-			BL.clickElement(B.OKButton);
+			} catch (AssertionError e) {
+				SaveStatus = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
 
-			Thread.sleep(1000);
+			try {
+				BL.clickElement(B.YesButton);
+				BL.clickElement(B.OKButton);
+
+				BL.isElementDisplayed(B.VerfiedSuccessCompleted, "Submit for Approval");
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : System Verifier : Yes Button",
+						"Submit for " + "", SaveStatus, errorMessage);
+
+			} catch (AssertionError e) {
+				SaveStatus = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
 
 			BL.clickElement(B.ApproveCancel);
 
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
-			exceptionHandler.handleException(e, "Verified");
+			exceptionHandler.handleException(e, "Submit for Approval");
 			throw e;
 		}
 
 	}
-	
+
 	@When("the System Approver clicks the Group Merchant module")
 
 	public void SystemapproverClicktheSUBISOModule() {
@@ -2612,7 +2751,7 @@ public class SystemUserMultipleGroupMerchantRegression {
 
 			if (rowNumber == numberOfRows) {
 				System.out.println("Finished processing the last row. Logging out...");
-				performLogout();
+				performLogout(rowNumber);
 			}
 		}
 
@@ -2638,14 +2777,14 @@ public class SystemUserMultipleGroupMerchantRegression {
 		int testCaseCount = 0;
 
 		// Validate fields for the current row using testData
-		testCaseCount += validateFieldsForRow2(sheetName, testData, rowNumber, testCaseCount);
+		testCaseCount += validateFieldsForRow2(testData, rowNumber);
 
 		return testCaseCount;
 
 	}
 
 	@SuppressWarnings("unused")
-	private int validateFieldsForRow2(String sheetName, Map<String, String> testData, int TestcaseNo, int rowNumber)
+	private int validateFieldsForRow2(Map<String, String> testData, int TestcaseNo)
 			throws Exception {
 
 		// Initialize the locators
@@ -2680,10 +2819,7 @@ public class SystemUserMultipleGroupMerchantRegression {
 
 	private void approveOnboarding(Map<String, String> testData, int TestcaseNo) throws InterruptedException {
 
-		String LegalName = testData.get("LegalName");
-
-
-		
+		String LegalName = testData.get("Legal Name");
 
 		key.clear();
 		value.clear();
@@ -2698,14 +2834,14 @@ public class SystemUserMultipleGroupMerchantRegression {
 
 			Thread.sleep(2000);
 
-			BL.enterElement(B.SearchbyBankName, LegalName);
+			BL.enterSplitElement(B.SearchbyBankName, LegalName);
 
 		} catch (AssertionError e) {
 			Status = false;
 			errorMessag = e.getMessage(); // Capture error message
 		}
 
-		logTestStep(TestcaseNo, "Search by name", LegalName, Status, errorMessag);
+		logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Search by name", LegalName, Status, errorMessag);
 		Thread.sleep(2000);
 
 		BL.ActionclickElement(B.ActionClick);
@@ -2713,32 +2849,42 @@ public class SystemUserMultipleGroupMerchantRegression {
 
 		BL.clickElement(B.ViewButton);
 
-		int testcaseCount = 0;
 		String errorMessage = "Approve Button is not visible.";
 
 		boolean ApprovedStatus = true;
 
 		try {
-
 			BL.clickElement(B.Approve);
 
-			BL.clickElement(B.YesButton);
-
-			BL.clickElement(B.OKButton);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Approval", "Group Merchant", ApprovedStatus,
+					errorMessage);
 
 		} catch (AssertionError e) {
 			ApprovedStatus = false;
 			errorMessage = e.getMessage(); // Capture error message
 		}
 
-		logTestStep(TestcaseNo, "Approved", "Group Merchant", ApprovedStatus, errorMessage);
+		try {
+			BL.clickElement(B.YesButton);
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : System Approver : Yes", "Approval",
+					ApprovedStatus, errorMessage);
 
-//		B.ClickOnApprove();
-//
-//		B.Yesforsubmit();
-//
-//		B.OkforSuccessfully();
+		} catch (AssertionError e) {
+			ApprovedStatus = false;
+			errorMessage = e.getMessage(); // Capture error message
+		}
+		try {
 
+			BL.clickElement(B.OKButton);
+			BL.isElementDisplayed(B.VerfiedSuccessCompleted, "Approval");
+
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : System Approver : Sucess pop-up Ok", "Approval",
+					ApprovedStatus, errorMessage);
+
+		} catch (AssertionError e) {
+			ApprovedStatus = false;
+			errorMessage = e.getMessage(); // Capture error message
+		}
 		BL.clickElement(B.ApproveCancel);
 
 		Thread.sleep(3000);
@@ -2747,7 +2893,7 @@ public class SystemUserMultipleGroupMerchantRegression {
 
 		Thread.sleep(2000);
 
-		BL.UploadImage(B.SearchbyBankName, LegalName);
+		BL.enterSplitElement(B.SearchbyBankName, LegalName);
 
 		Thread.sleep(3000);
 
@@ -2762,7 +2908,8 @@ public class SystemUserMultipleGroupMerchantRegression {
 			errorMessage = e.getMessage(); // Capture error message
 		}
 
-		logTestStep(TestcaseNo, "Group Merchant CPID", BL.getElementValue(B.CPID), ApprovedStatus, errorMessage);
+		logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Group Merchant CPID", BL.getElementValue(B.CPID),
+				ApprovedStatus, errorMessage);
 
 //		B.ClickonViewButton();
 //
@@ -2770,122 +2917,6 @@ public class SystemUserMultipleGroupMerchantRegression {
 
 		BL.clickElement(B.ApproveCancel);
 
-	}
-
-	// Set to track previously generated Aadhaar numbers to ensure uniqueness
-	private Set<String> existingAadhaarNumbers = new HashSet<>();
-
-	private String generateValidAadhaar() {
-		Faker faker = new Faker();
-		String aadhaarNumber;
-
-		// Continuously generate Aadhaar numbers until a unique and valid one is found
-		do {
-			StringBuilder aadhaarBuilder = new StringBuilder();
-
-			// Ensure the first digit is NOT 0 or 1
-			aadhaarBuilder.append(faker.number().numberBetween(2, 10)); // First digit: 2 to 9
-
-			// Generate the next 10 digits randomly (digits between 0 and 9)
-			for (int i = 1; i < 11; i++) {
-				aadhaarBuilder.append(faker.number().numberBetween(0, 10)); // Digits between 0 and 9
-			}
-
-			// Generate the 12th digit (check digit) using the Verhoeff algorithm
-			int checkDigit = calculateVerhoeffCheckDigit(aadhaarBuilder.toString());
-			aadhaarBuilder.append(checkDigit);
-
-			// Final generated Aadhaar number
-			aadhaarNumber = aadhaarBuilder.toString();
-
-			// Check if the generated Aadhaar number is unique
-		} while (existingAadhaarNumbers.contains(aadhaarNumber));
-
-		// Add the newly generated Aadhaar number to the set to track it
-		existingAadhaarNumbers.add(aadhaarNumber);
-
-		return aadhaarNumber;
-	}
-
-	// Verhoeff algorithm for check digit calculation (same as before)
-	private static final int[][] verhoeffMultiplicationTable = { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
-			{ 1, 2, 3, 4, 0, 6, 7, 8, 9, 5 }, { 2, 3, 4, 0, 1, 7, 8, 9, 5, 6 }, { 3, 4, 0, 1, 2, 8, 9, 5, 6, 7 },
-			{ 4, 0, 1, 2, 3, 9, 5, 6, 7, 8 }, { 5, 9, 8, 7, 6, 0, 4, 3, 2, 1 }, { 6, 5, 9, 8, 7, 1, 0, 4, 3, 2 },
-			{ 7, 6, 5, 9, 8, 2, 1, 0, 4, 3 }, { 8, 7, 6, 5, 9, 3, 2, 1, 0, 4 }, { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 } };
-
-	private static final int[][] verhoeffPermutationTable = { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
-			{ 1, 5, 7, 6, 2, 8, 3, 0, 9, 4 }, { 5, 8, 0, 3, 7, 9, 6, 1, 4, 2 }, { 8, 9, 1, 6, 0, 4, 3, 5, 2, 7 },
-			{ 9, 4, 5, 3, 1, 2, 6, 8, 7, 0 }, { 4, 2, 8, 6, 5, 7, 3, 9, 0, 1 }, { 2, 7, 9, 3, 8, 0, 6, 4, 1, 5 },
-			{ 7, 0, 4, 6, 9, 1, 3, 2, 5, 8 } };
-
-	private static final int[] verhoeffInverseTable = { 0, 4, 3, 2, 1, 5, 6, 7, 8, 9 };
-
-	// Calculate Verhoeff check digit for the given number (11 digits for Aadhaar)
-	private int calculateVerhoeffCheckDigit(String number) {
-		int checkSum = 0;
-		int[] digits = number.chars().map(c -> c - '0').toArray();
-
-		for (int i = digits.length - 1, j = 0; i >= 0; i--, j++) {
-			checkSum = verhoeffMultiplicationTable[checkSum][verhoeffPermutationTable[j % 8][digits[i]]];
-		}
-
-		return verhoeffInverseTable[checkSum];
-	}
-
-	private String generateValidUniqueReferenceNumber(Faker faker, Map<String, String> testData) {
-		String uniqueReferenceNumber;
-
-		// Extract the unique reference number from the single Map
-		String existingReferenceNumber = testData.get("Unique Reference Number");
-
-		while (true) {
-			// Generate a 10-character alphanumeric string
-			uniqueReferenceNumber = faker.regexify("[A-Za-z0-9]{10}");
-
-			// Check if the generated reference number is different from the existing one
-			if (!existingReferenceNumber.equals(uniqueReferenceNumber)) {
-				return uniqueReferenceNumber;
-			}
-		}
-	}
-
-	private String generateValidLegalName(Faker faker, Map<String, String> testData) {
-		String legalName;
-		Set<String> existingLegalNames = new HashSet<>();
-
-		// Extract the "LegalName" from testData if it exists and add it to the set
-		if (testData.get("LegalName") != null) {
-			existingLegalNames.add(testData.get("LegalName"));
-		}
-
-		while (true) {
-			// Generate a unique legal name (7 to 10 alphanumeric characters)
-			legalName = faker.regexify("[A-Za-z0-9]{7,10}");
-
-			// Ensure the generated legal name is unique
-			if (!existingLegalNames.contains(legalName)) {
-				return legalName; // Return the valid unique legal name
-			}
-		}
-	}
-
-	private String generateValidPAN(Faker faker) {
-		StringBuilder pan = new StringBuilder();
-
-		// First 5 characters: Uppercase letters
-		for (int i = 0; i < 5; i++) {
-			pan.append(faker.regexify("[A-Z]"));
-		}
-
-		// Next 4 characters: Digits
-		for (int i = 0; i < 4; i++) {
-			pan.append(faker.number().numberBetween(0, 10));
-		}
-
-		// Last character: Uppercase letter
-		pan.append(faker.regexify("[A-Z]"));
-
-		return pan.toString();
 	}
 
 	private void logTestStep(int testcaseCount, String fieldName, String fieldValue, Boolean status,
@@ -2928,14 +2959,38 @@ public class SystemUserMultipleGroupMerchantRegression {
 		robot.keyRelease(KeyEvent.VK_TAB);
 	}
 
-	private void performLogout() throws InterruptedException {
+	private void performLogout(int TestcaseNo) throws InterruptedException {
 
-		BL.clickElement(B.Profile);
+		try {
+			String errorMessage = "The data does not match or is empty.";
+			boolean SaveStatus = true;
+			try {
+				BL.clickElement(B.Profile);
+				BL.clickElement(B.LogOut);
 
-		BL.clickElement(B.LogOut);
+				logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Profile & Log Out", "Group Merchant",
+						SaveStatus, errorMessage);
 
-		BL.clickElement(B.YesButton);
+			} catch (AssertionError e) {
+				SaveStatus = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
+
+			try {
+				BL.clickElement(B.YesButton);
+
+			} catch (AssertionError e) {
+				SaveStatus = false;
+				errorMessage = e.getMessage(); // Capture error message
+			}
+			logTestStep(TestcaseNo, "MMS : Group Merchant Onboarding : Yes Button", "Log-Out", SaveStatus,
+					errorMessage);
+
+		} catch (Exception e) {
+			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
+			exceptionHandler.handleException(e, "Log Out");
+			throw e;
+		}
 
 	}
-
 }

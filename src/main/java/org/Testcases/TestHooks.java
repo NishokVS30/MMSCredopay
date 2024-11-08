@@ -15,17 +15,12 @@ public class TestHooks {
         try {
         	CustomWebDriverManager.getBaseUrl();
             System.out.println("aaa");
-            // Initialize Faker instance
-            Faker faker = new Faker();
-
             // Retrieve the Excel file path from environment variable or custom manager
             String excelFilePath = CustomWebDriverManager.getExcelFilePath();
-            System.out.println("PPPPPP"+excelFilePath);
-            System.out.println("AAAAAAAAAAAAAAAAAa"+CustomWebDriverManager.ExelPath);
             String propertiesFilePath = "C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\src\\test\\resources\\extent.properties";
-
+            
             // Update properties file
-            PropertiesFileModifier.updatePropertiesFile(propertiesFilePath);
+           PropertiesFileModifier.updatePropertiesFile(propertiesFilePath);
 
             // Validate that the Excel file path is not empty
             if (excelFilePath == null || excelFilePath.isEmpty()) {

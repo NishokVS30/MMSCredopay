@@ -25,7 +25,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.qameta.allure.Allure;
 
-public class SystemUserMultipleTerminalRegression {
+public class SystemUserMultipleTerminalRegression extends TestHooks {
 
 	private WebDriver driver;
 	org.Locators.BaseClassLocator BL;
@@ -258,13 +258,13 @@ public class SystemUserMultipleTerminalRegression {
 			Faker faker = new Faker();
 
 			String Merchant = testData.get("Merchant Name");
-			String TerminalName = null;
+			String TerminalName = testData.get("Terminal Name");
 			String TerminalType = testData.get("Terminal Type");
 			String UPITerminalType = testData.get("UPI Terminal Type");
 			String UPIOffliceType = testData.get("UPI Offline Type");
 			String DeviceModel = testData.get("Device Model");
 			
-			String DeviceNumber = generateDeviceNumber(faker);
+			String DeviceNumber = testData.get("Device Number");
 			String ActiveDeviceNumber = testData.get("Active Device Number");
 			String IMEINumber = testData.get("IMEI Number");
 			String DeviceType = testData.get("Device Type");
@@ -282,7 +282,7 @@ public class SystemUserMultipleTerminalRegression {
 
 				BL.clickElement(T.Merchant); // T.clickElement(T.Merchant);
 
-//				BL.enterElement(T.Merchant, Merchant);
+				BL.enterElement(T.Merchant, Merchant);
 
 //				T.enterElement(T.Merchant, Merchant);
 
@@ -306,11 +306,7 @@ public class SystemUserMultipleTerminalRegression {
 				  logTestStep(TestcaseNo, "Merchant Name", Merchant , Status, errorMessage);
 
 			}
-			
-			if (TerminalName == null || TerminalName.trim().isEmpty()) {
-				TerminalName = generateValidterminalname(faker, testData);
-			}
-
+		
 			if (TerminalName != null && !TerminalName.trim().isEmpty()) {
 
 				BL.clickElement(T.TerminalName);
@@ -658,48 +654,6 @@ public class SystemUserMultipleTerminalRegression {
 
 	}
 	
-	private String generateValidterminalname(Faker faker, Map<String, String> testData) {
-		String TerminalName;
-		Set<String> existingLegalNames = new HashSet<>();
-
-		// Extract the "LegalName" from testData if it exists and add it to the set
-		if (testData.get("TerminalName") != null) {
-			existingLegalNames.add(testData.get("TerminalName"));
-		}
-
-		while (true) {
-			// Generate a unique legal name (7 to 10 alphanumeric characters)
-			TerminalName = faker.regexify("[A-Za-z0-9]{7,10}");
-
-			// Ensure the generated legal name is unique
-			if (!existingLegalNames.contains(TerminalName)) {
-				return TerminalName; // Return the valid unique legal name
-			}
-		}
-	}
-
-	
-	private String generateDeviceNumber(Faker faker) {
-	    StringBuilder deviceNumber = new StringBuilder();
-
-	    // First 3 characters: Uppercase letters
-	    for (int i = 0; i < 3; i++) {
-	        deviceNumber.append(faker.regexify("[A-Z]"));
-	    }
-
-	    // Next 7 characters: Digits
-	    for (int i = 0; i < 7; i++) {
-	        deviceNumber.append(faker.number().numberBetween(0, 10));
-	    }
-
-	    // Last 2 characters: Uppercase letters
-	    for (int i = 0; i < 2; i++) {
-	        deviceNumber.append(faker.regexify("[A-Z]"));
-	    }
-
-	    return deviceNumber.toString();
-	}
-	
 
 	private void submitForVerification() throws InterruptedException {
 
@@ -846,7 +800,7 @@ public class SystemUserMultipleTerminalRegression {
 
 	private void Searchbyname(Map<String, String> testData, int TestcaseNo) throws InterruptedException, AWTException {
 
-		String TerminalName = testData.get("TerminalName");
+		String TerminalName = testData.get("Terminal Name");
 
 		key.clear();
 		value.clear();
@@ -1053,7 +1007,7 @@ public class SystemUserMultipleTerminalRegression {
 
 	private void approveOnboarding(Map<String, String> testData, int TestcaseNo) throws InterruptedException {
 
-		String TerminalName = testData.get("TerminalName");
+		String TerminalName = testData.get("Terminal Name");
 
 		key.clear();
 		value.clear();

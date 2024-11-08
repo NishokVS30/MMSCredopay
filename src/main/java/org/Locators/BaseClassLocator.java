@@ -83,47 +83,54 @@ public class BaseClassLocator {
 //	}
 
 	public void clickElement(WebElement element) {
-		try {
-			// Wait for the element to be visible and clickable
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-			wait.until(ExpectedConditions.visibilityOf(element)); // Ensure visibility
-			wait.until(ExpectedConditions.elementToBeClickable(element)); // Ensure clickable
+	    int maxAttempts = 3; // Maximum number of attempts to click
+	    int attempt = 0; // Current attempt count
 
-			// Scroll to the element to make sure it's in view
-			((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
+	    while (attempt < maxAttempts) {
+	        try {
+	            // Wait for the element to be visible and clickable
+	            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+	            wait.until(ExpectedConditions.visibilityOf(element));
+	            wait.until(ExpectedConditions.elementToBeClickable(element));
 
-			// Attempt to click the element
-			element.click();
-			System.out.println("Element clicked successfully.");
+	            // Scroll to the element to ensure it's in view
+	            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
 
-		} catch (ElementClickInterceptedException e) {
-			// Handle the case where another element blocks the click
-			System.out.println("Element click intercepted. Trying to click via JavaScript.");
+	            // Attempt to click the element
+	            	element.click();
 
-			try {
-				// Use JavaScript as a fallback to click the element
-				((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
-				System.out.println("Element clicked via JavaScript.");
-			} catch (Exception jsException) {
-				System.out.println("JavaScript click also failed.");
-				jsException.printStackTrace();
-			}
+	            System.out.println("Element clicked successfully.");
+	            break; // Exit loop if click is successful
 
-		} catch (TimeoutException e) {
-			// Handle timeout when waiting for the element to be clickable
-			System.out.println("The element '" + element + "' is not clickable within the timeout.");
-			e.printStackTrace();
+	        } catch (ElementClickInterceptedException e) {
+	            System.out.println("Element click intercepted. Trying to click via JavaScript.");
+	            try {
+	                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+	                System.out.println("Element clicked via JavaScript.");
+	                break; // Exit loop if JavaScript click is successful
+	            } catch (Exception jsException) {
+	                System.out.println("JavaScript click also failed.");
+	                jsException.printStackTrace();
+	            }
 
-		} catch (StaleElementReferenceException e) {
-			// Handle stale element reference exception
-			System.out.println("The element '" + element + "' is stale. Trying to relocate the element.");
-			e.printStackTrace();
+	        } catch (StaleElementReferenceException e) {
+	            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+                System.out.println("Element clicked via JavaScript.");
+                break; // Exit loop if JavaScript click is successful
 
-		} catch (Exception e) {
-			// Handle any other unexpected exceptions
-			System.out.println("An unexpected error occurred while trying to click the element.");
-			e.printStackTrace();
-		}
+	        } catch (TimeoutException e) {
+	            System.out.println("The element '" + element + "' is not clickable within the timeout.");
+	            e.printStackTrace();
+	            break; // Exit loop
+
+	        } catch (Exception e) {
+	            System.out.println("An unexpected error occurred while trying to click the element.");
+	            e.printStackTrace();
+	            break; // Exit loop
+	        }
+
+	        attempt++; // Increment the attempt counter
+	    }
 	}
 
 	public void ActionclickElement(WebElement element) {
@@ -201,6 +208,79 @@ public class BaseClassLocator {
 		}
 	}
 
+//	public void enterSplitElement(WebElement element, String text) {
+//		try {
+//			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+//			wait.until(ExpectedConditions.elementToBeClickable(element));
+//
+//			// Loop through each character in the text and send it one by one
+//			for (char ch : text.toCharArray()) {
+//				element.sendKeys(String.valueOf(ch));
+//				// Optional: Uncomment to add a delay for typing effect
+//				// Thread.sleep(100);
+//			}
+//
+//		} catch (ElementClickInterceptedException e) {
+//			// Retry entering text one character at a time if an intercept occurs
+//			for (char ch : text.toCharArray()) {
+//				element.sendKeys(String.valueOf(ch));
+//				// Optional: Uncomment to add a delay for typing effect
+//				// Thread.sleep(100);
+//			}
+//
+//		} catch (TimeoutException e) {
+//			System.out
+//					.println("The input field with formControlName '" + element + "' is not found within the timeout.");
+//		}
+//	}
+
+	public void enterSplitElement(WebElement element, String text) throws InterruptedException {
+	    try {
+	        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+	        wait.until(ExpectedConditions.elementToBeClickable(element));
+
+	        // Split the text by space to get each word
+	        String[] words = text.split(" ");
+
+	        // Loop through each word with an index to check if it’s the last word
+	        for (int i = 0; i < words.length; i++) {
+	            String word = words[i];
+
+	            // Enter each character of the word
+	            for (char ch : word.toCharArray()) {
+	                element.sendKeys(String.valueOf(ch));
+	            }
+
+	            // Add a space after each word except the last one
+	            if (i < words.length - 1) {
+	                Thread.sleep(1000);
+	                element.sendKeys(" ");
+	            }
+	        }
+
+	    } catch (ElementClickInterceptedException e) {
+	        // Fallback logic in case of an ElementClickInterceptedException
+	        String[] words = text.split(" ");
+	        
+	        for (int i = 0; i < words.length; i++) {
+	            String word = words[i];
+	            
+	            for (char ch : word.toCharArray()) {
+	                element.sendKeys(String.valueOf(ch));
+	            }
+
+	            if (i < words.length - 1) {
+	                Thread.sleep(1000);
+	                element.sendKeys(" ");
+	            }
+	        }
+
+	    } catch (TimeoutException e) {
+	        System.out.println("The input field with formControlName '" + element + "' is not found within the timeout.");
+	    }
+	}
+
+
 	public void UploadImage(WebElement element, String text) {
 
 		try {
@@ -253,8 +333,6 @@ public class BaseClassLocator {
 		return !isDisplayed;
 
 	}
-	
-	
 
 	public void CLearElement(WebElement element) {
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
@@ -291,19 +369,28 @@ public class BaseClassLocator {
 	}
 
 	public String getElementText(WebElement element) {
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+	    try {
+	        wait.until(ExpectedConditions.visibilityOf(element));
+	        
+	        String text = element.getText().trim();
 
-		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));				
-		try {
-			wait.until(ExpectedConditions.visibilityOf(element));
-			// Get the current value of the input field using the "value" attribute
-			return element.getText();
-		} catch (NoSuchElementException e) {
-			System.out.println("Element is not found: " + element);
-			return null;
-		} catch (TimeoutException e) {
-			System.out.println("The input field is not found within the timeout.");
-			return null;
-		}
+	        // If it's an input field and the text is empty, retrieve the "value" attribute instead
+	        if (text.isEmpty() && element.getTagName().equalsIgnoreCase("input")) {
+	            text = element.getAttribute("value").trim();
+	        }
+
+	        // Remove spaces around commas
+	        text = text.replaceAll("\\s*,\\s*", ",");
+
+	        // Convert text to lowercase
+	        return text.toLowerCase(); // or text.toUpperCase() for uppercase
+	    } catch (NoSuchElementException e) {
+	        System.out.println("Element is not found: " + element);
+	        return null;
+	    } catch (TimeoutException e) {
+	        System.out.println("The input field is not found within the timeout.");
+	        return null;
+	    }
 	}
-
 }

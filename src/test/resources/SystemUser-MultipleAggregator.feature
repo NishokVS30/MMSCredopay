@@ -22,10 +22,10 @@ Feature: System Users - Aggregator Onboarding Regression
  This feature aims to test the functionality of the 'Aggregator Onboarding' within the application.
  
  
- @loadDataExcelUtils
- @run
-Scenario: Load Data from Excel
-    Given I load data from Excel using sheetname "Credentials"
+ #@loadDataExcelUtils
+ #@run
+#Scenario: Load Data from Excel
+    #Given I load data from Excel using sheetname "Credentials"
     
 Scenario: SystemMaker Login
  Given I visit the System Maker Login in Regression using sheetname "Credentials" and rownumber 1
@@ -39,8 +39,10 @@ Scenario: SystemMaker Login
   Then the System Maker should see Bank, Aggregators, ISO,SUB ISO, Groupmerchant, Merchant, and Terminal in the side menu of Onboarding
   
   
-   Scenario: System Maker Successfully Completes Mandatory Fields in Bank Onboarding
+  Scenario: System Maker clicks the Aggregator module
     When the System Maker clicks the Aggregator module
+  
+   Scenario: System Maker Successfully Completes Mandatory Fields in Bank Onboarding
     Then the System Maker Aggregator Onboarding should prompt users to enter valid inputs using the sheet name "Aggregator Regression"
     
     

@@ -124,7 +124,6 @@ import io.github.cdimascio.dotenv.Dotenv;
 public class CustomWebDriverManager {
     private static WebDriver driver;
     private static int waitTime;
-    public static String ExelPath;
     private static Dotenv dotenv;
     private static ExtentReports extent;
 
@@ -132,7 +131,7 @@ public class CustomWebDriverManager {
     public static String getBaseUrl() {
           dotenv = Dotenv.configure().directory("src/test/resources").filename("run.env").load();
         String environment = dotenv.get("ENVIRONMENT", "UAT");
-          ExelPath = dotenv.get("EXCELFILEPATH");
+
         if (environment.equalsIgnoreCase("PRODUCTION")) {
             return dotenv.get("PRODUCTIONBASEURL");
         } else {
@@ -256,14 +255,8 @@ public class CustomWebDriverManager {
             System.out.println("Error clearing session storage: " + e.getMessage());
         }
     }
-    public static  String getExcelFilePath() {
-        System.out.println("ExelPathExelPathExelPathExelPathExelPathExelPathExelPathExelPath"+ExelPath);
-//    	return  "SSSSSSSSSSSSSSSS";
-//        
-//        dotenv = Dotenv.configure().directory("src/test/resources").filename("run.env").load();
-//
-    	return ExelPath;
-//    	return dotenv.get("EXCELFILEPATH");
+    public static String getExcelFilePath() {
+        return dotenv.get("EXCELFILEPATH");
     }
     
     public static void Report() {

@@ -21,10 +21,10 @@ Feature: System Users - Merchant Onboarding Regression
  This feature aims to test the functionality of the 'Merchant Onboarding' within the application.
  
  
- @loadDataExcelUtils
- @run
-Scenario: Load Data from Excel
-    Given I load data from Excel using sheetname "Credentials"		
+ #@loadDataExcelUtils
+ #@run
+#Scenario: Load Data from Excel
+    #Given I load data from Excel using sheetname "Credentials"		
     
 Scenario: SystemMaker Login
  Given I visit the System Maker Login in Regression using sheetname "Credentials" and rownumber 1
@@ -37,9 +37,10 @@ Scenario: SystemMaker Login
   Scenario: System Maker sees side menu items in Merchant Onboarding
   Then the System Maker should see Bank, Aggregators, ISO,SUB ISO, Groupmerchant, Merchant, and Terminal in the side menu of Onboarding
   
+  Scenario: System Maker clicks the Merchant module
+    When the System Maker clicks the Merchant module
   
    Scenario: System Maker Successfully Completes Mandatory Fields in Merchant Onboarding
-    When the System Maker clicks the Merchant module
     Then the System Maker Merchant Onboarding should prompt users to enter valid inputs using the sheet name "Merchant Regression"
     
     

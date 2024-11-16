@@ -1,37 +1,30 @@
 package org.Runner;
 
-import static org.junit.Assert.assertEquals;
-
-import java.awt.AWTException;
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-
 import org.Testcases.ReportManager;
 import org.junit.runner.RunWith;
+
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(strict = true, monochrome = true, glue = "org.Testcases",
+@CucumberOptions(monochrome = true, glue = "org.Testcases",
 
 //tags = "@run",				
 
 		// features = "src/test/resources/SystemUser-Bank.feature",
-		// features = "src/test/resources/SystemUser-Aggregator.																				feature",
+		// features = "src/test/resources/SystemUser-Aggregator,																				feature",
 		// features = "src/test/resources/SystemUser-ISO.feature",	
 		// features = "src/test/resources/SystemUser-SUBISO.feature",
 		// features = "src/test/resources/SystemUser-GroupMerchant.feature	",
 		// features = "src/test/resources/SystemUser-Merchant.feature",
 		// features = "src/test/resources/SystemUser-Terminal.feature",													
-	
+																															
                    features = "src/test/resources/SystemUser-MultipleBank.feature",																								
- //      		  features = "src/test/resources/System	User-MultipleAggregator.feature",		         	
+ //         		  features = "src/test/resources/SystemUser-MultipleAggregator.feature",		         	
  //               features = "src/test/resources/SystemUser-MultipleISO.feature",																																						
  //               features = "src/test/resources/SystemUser-MultipleSUBISO.feature",
  //	              features = "src/test/resources/SystemUser-MultipleGroupMerchant.feature",
- //               features = "src/test/resources/SystemUser-MultipleMerchant.feature",
+ //                  features = "src/test/resources/SystemUser-MultipleMerchant.feature",
  //               features = "src/test/resources/SystemUser-MultipleTerminal.feature",
         	    		
         	      plugin = {
@@ -41,6 +34,7 @@ import io.cucumber.junit.CucumberOptions;
         	    			        "junit:target/cucumber-report/cucumber.xml", 	
         	    			        "io.qameta.allure.cucumber6jvm.AllureCucumber6Jvm",
         	    			        "com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:"
+        
         	    			    })
 					
 

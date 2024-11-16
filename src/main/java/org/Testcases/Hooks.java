@@ -10,10 +10,10 @@ import io.cucumber.java.Before;
 public class Hooks {
 	SoftAssertions softAssertions = new SoftAssertions();
 	
-	 WebDriver driver;
+	//  WebDriver driver;
 	 @Before
 	    public void setUp() throws InterruptedException {
-		  driver = CustomWebDriverManager.getDriver();
+		//   driver = CustomWebDriverManager.getDriver();
 	    }
 
 //	    @After

@@ -196,7 +196,9 @@ public class ExcelUtilsDataCache {
 					else if ("Random.UniqueRefNumber".equalsIgnoreCase(value)) {
 						value = fakerUtil.generateValidUniqueReferenceNumber(fakerUtil.faker, existingUniqueReferenceNumber);
 					}
-					
+					else if ("Random.Image".equalsIgnoreCase(value)) {
+						value = fakerUtil.generateImage(sheetName);
+					}
 
 					// Update the rowData with the generated value
 					rowData.put(key, value);

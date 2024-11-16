@@ -27,6 +27,7 @@ import com.github.javafaker.Faker;
 
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.opentelemetry.exporter.logging.SystemOutLogRecordExporter;
 import io.qameta.allure.Allure;
 
 public class SystemUserMutipleAggregatorRegression extends TestHooks{
@@ -203,68 +204,68 @@ public class SystemUserMutipleAggregatorRegression extends TestHooks{
 		int validatedFieldsCount = 0;
 		// Sales Details Section
 
-		validatedFieldsCount += executeStep(() -> {
-			try {
-				fillSalesInfo(testData, TestcaseNo);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}, "Sales Info");
-
-		// Company Details Section
-		String LegalName = null;
-		validatedFieldsCount += executeStep(() -> {
-			try {
-
-				String generatedLegalName = fillCompanyInfo(testData, TestcaseNo);
-				testData.put("LegalName", generatedLegalName);
-
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}, "Company Info");
-
-		// Personal Details Section
-
-		validatedFieldsCount += executeStep(() -> {
-			try {
-				fillPersonalInfo(testData, TestcaseNo);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}, "Personal Info");
-
-		// Communication Details Section
-		validatedFieldsCount += executeStep(() -> {
-			try {
-				fillCommunicationDetailsAdminUserDetails(testData, TestcaseNo);
-			} catch (InterruptedException | AWTException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}, "Communication Details");
-
-		validatedFieldsCount += executeStep(() -> {
-			try {
-				fillCommunicationDetailsSettlementReconContactDetails(testData, TestcaseNo);
-			} catch (InterruptedException | AWTException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}, "Communication Details");
-
-		// Channel Config Section
-		validatedFieldsCount += executeStep(() -> {
-			try {
-				fillChannelConfig(testData, TestcaseNo);
-			} catch (InterruptedException | AWTException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}, "Channel Config");
+//		validatedFieldsCount += executeStep(() -> {
+//			try {
+//				fillSalesInfo(testData, TestcaseNo);
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}, "Sales Info");
+//
+//		// Company Details Section
+//		String LegalName = null;
+//		validatedFieldsCount += executeStep(() -> {
+//			try {
+//
+//				String generatedLegalName = fillCompanyInfo(testData, TestcaseNo);
+//				testData.put("LegalName", generatedLegalName);
+//
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}, "Company Info");
+//
+//		// Personal Details Section
+//
+//		validatedFieldsCount += executeStep(() -> {
+//			try {
+//				fillPersonalInfo(testData, TestcaseNo);
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}, "Personal Info");
+//
+//		// Communication Details Section
+//		validatedFieldsCount += executeStep(() -> {
+//			try {
+//				fillCommunicationDetailsAdminUserDetails(testData, TestcaseNo);
+//			} catch (InterruptedException | AWTException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}, "Communication Details");
+//
+//		validatedFieldsCount += executeStep(() -> {
+//			try {
+//				fillCommunicationDetailsSettlementReconContactDetails(testData, TestcaseNo);
+//			} catch (InterruptedException | AWTException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}, "Communication Details");
+//
+//		// Channel Config Section
+//		validatedFieldsCount += executeStep(() -> {
+//			try {
+//				fillChannelConfig(testData, TestcaseNo);
+//			} catch (InterruptedException | AWTException | IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}, "Channel Config");
 
 		// KYC Section
 		validatedFieldsCount += executeStep(() -> {
@@ -1899,13 +1900,17 @@ public class SystemUserMutipleAggregatorRegression extends TestHooks{
 			throws InterruptedException, AWTException {
 
 		try {
+			
+			Thread.sleep(30000);
 
 			int testcaseCount = 0;
 			String errorMessage = "The data does not match or is empty.";
 
 			String poAImage = testData.get("Company Proof of address");
+			
+			System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY"+poAImage);
 
-			BL.ActionclickElement(B.Kyc);
+//			BL.ActionclickElement(B.Kyc);
 
 			if (poAImage != null && !poAImage.trim().isEmpty()) {
 

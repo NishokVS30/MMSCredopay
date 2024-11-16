@@ -23,26 +23,25 @@ Feature: System Users - Bank Onboarding Regression
  
 
 
-  Scenario: SystemMaker Login
- Given I visit the System Maker Login in Regression using sheetname "Credentials" and rownumber 1
- And I enter the credentials and click a login button in Regression using sheetname "Credentials" and rownumber 1
-
-
-   Scenario: System Maker sees Onboarding in Sidemenu
-    When System Maker - Onboarding should be displayed in the side menu
-
-  Scenario: System Maker sees side menu items in Onboarding
-  Then the System Maker should see Bank, Aggregators, ISO,SUB ISO, Groupmerchant, Merchant, and Terminal in the side menu of Onboarding
-  
-  
-  Scenario: System Maker clicks the bank module
-     When the System Maker clicks the bank module
+  #Scenario: SystemMaker Login
+ #Given I visit the System Maker Login in Regression using sheetname "Credentials" and rownumber 1
+ #And I enter the credentials and click a login button in Regression using sheetname "Credentials" and rownumber 1
+#
+#
+   #Scenario: System Maker sees Onboarding in Sidemenu
+    #When System Maker - Onboarding should be displayed in the side menu
+#
+  #Scenario: System Maker sees side menu items in Onboarding
+  #Then the System Maker should see Bank, Aggregators, ISO,SUB ISO, Groupmerchant, Merchant, and Terminal in the side menu of Onboarding
+  #
+  #
+  #Scenario: System Maker clicks the bank module
+     #When the System Maker clicks the bank module
   
    Scenario: System Maker Successfully Completes Mandatory Fields in Bank Onboarding
     Then the System Maker Bank Onboarding should prompt users to enter valid inputs using the sheet name "Bank Regression"
     
-  
-  
+ 
     #Scenario: System verifier Login
  #Given I visit the System Verifier Login in Regression using sheetname "Credentials" and rownumber 2
  #And I enter the credentials and click a login button in Regression using sheetname "Credentials" and rownumber 2

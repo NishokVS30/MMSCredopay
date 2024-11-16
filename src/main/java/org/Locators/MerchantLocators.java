@@ -101,7 +101,6 @@ public class MerchantLocators {
 	public WebElement SelectOnAggregator;
 
 	@FindBy(xpath = "//mat-label[contains(text(), 'ISO')]")
-
 	public WebElement ISOLabel;
 
 	@FindBy(xpath = "//input[@formcontrolname='distributors']")

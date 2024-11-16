@@ -4,17 +4,16 @@ import java.io.IOException;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
-import com.github.javafaker.Faker;
-
 public class TestHooks {
- 
-	TestHooks(){
+
+ 	TestHooks(){
 		this.setUp();
 	}
     public void setUp() {
         try {
         	CustomWebDriverManager.getBaseUrl();
             System.out.println("aaa");
+            
             // Retrieve the Excel file path from environment variable or custom manager
             String excelFilePath = CustomWebDriverManager.getExcelFilePath();
             String propertiesFilePath = "C:\\Users\\DELL 7480\\eclipse-workspace\\MMSCredopay\\src\\test\\resources\\extent.properties";

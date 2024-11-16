@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import java.time.Duration;
 
 import org.Testcases.CustomWebDriverManager;
-import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.JavascriptExecutor;
@@ -25,12 +24,14 @@ public class BaseClassLocator {
 	WebDriver driver;
 
 	int waitTime;
+	double AssertwaitTime;
 
 	WebDriverWait wait;
 
 	public BaseClassLocator(WebDriver driver) {
 
-		this.waitTime = CustomWebDriverManager.getWaitTime(); // Get wait time from CustomWebDriverManager
+		this.waitTime = CustomWebDriverManager.getWaitTime();
+//		this.AssertwaitTime =CustomWebDriverManager.getAssertWaitTime();// Get wait time from CustomWebDriverManager
 		this.driver = driver;
 		PageFactory.initElements(driver, this);
 
@@ -64,6 +65,63 @@ public class BaseClassLocator {
 			((JavascriptExecutor) driver).executeScript("arguments[0].click();", optionElement);
 		}
 	}
+	
+	
+	public void TerminaltypeselectDropdownOption(String optionText) {
+		// Construct the XPath for the option text in a case-insensitive manner
+		String xpathExpression = "//mat-option//span[normalize-space(text())='" + optionText + "']";
+
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
+		try {
+			// Wait for the overlay to disappear (if it exists)
+			wait.until(ExpectedConditions.invisibilityOfElementLocated(By.className("cdk-overlay-backdrop")));
+
+			// Wait for the dropdown option to be visible and clickable
+			WebElement optionElement = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpathExpression)));
+
+			// Scroll the element into view (if needed) and click
+			((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", optionElement);
+			optionElement.click();
+		} catch (TimeoutException e) {
+			System.out.println(
+					"The dropdown option '" + optionText + "' is not found or not clickable within the timeout.");
+		} catch (ElementClickInterceptedException e) {
+			System.out.println("Element click intercepted for '" + optionText + "'. Trying to click via JavaScript.");
+
+			// Try clicking via JavaScript as a fallback
+			WebElement optionElement = driver.findElement(By.xpath(xpathExpression));
+			((JavascriptExecutor) driver).executeScript("arguments[0].click();", optionElement);
+		}
+	}
+	
+	
+	public boolean SaveisElementDisplayed(WebElement element, String elementName) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofMillis((long) (AssertwaitTime * 1000)));
+//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
+        try {
+
+            wait.until(ExpectedConditions.visibilityOf(element));
+
+            assertTrue(elementName + " is displayed.", element.isDisplayed());
+
+            return true;
+
+        } catch (NoSuchElementException e) {
+            System.out.println(elementName + " is not displayed.");
+            return false;
+
+        } catch (TimeoutException e) {
+            System.out.println(elementName + " is not displayed due to timeout.");
+            return false;
+        }
+    }
+	
+	
+	
+	
+	
 
 //	public void clickElement(WebElement element) {
 //
@@ -207,78 +265,78 @@ public class BaseClassLocator {
 					.println("The input field with formControlName '" + element + "' is not found within the timeout.");
 		}
 	}
-
-//	public void enterSplitElement(WebElement element, String text) {
-//		try {
-//			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-//			wait.until(ExpectedConditions.elementToBeClickable(element));
-//
-//			// Loop through each character in the text and send it one by one
-//			for (char ch : text.toCharArray()) {
-//				element.sendKeys(String.valueOf(ch));
-//				// Optional: Uncomment to add a delay for typing effect
-//				// Thread.sleep(100);
-//			}
-//
-//		} catch (ElementClickInterceptedException e) {
-//			// Retry entering text one character at a time if an intercept occurs
-//			for (char ch : text.toCharArray()) {
-//				element.sendKeys(String.valueOf(ch));
-//				// Optional: Uncomment to add a delay for typing effect
-//				// Thread.sleep(100);
-//			}
-//
-//		} catch (TimeoutException e) {
-//			System.out
-//					.println("The input field with formControlName '" + element + "' is not found within the timeout.");
-//		}
-//	}
-
 	public void enterSplitElement(WebElement element, String text) throws InterruptedException {
 	    try {
 	        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
 	        wait.until(ExpectedConditions.elementToBeClickable(element));
 
-	        // Split the text by space to get each word
-	        String[] words = text.split(" ");
-
-	        // Loop through each word with an index to check if it’s the last word
-	        for (int i = 0; i < words.length; i++) {
-	            String word = words[i];
-
-	            // Enter each character of the word
-	            for (char ch : word.toCharArray()) {
-	                element.sendKeys(String.valueOf(ch));
-	            }
-
-	            // Add a space after each word except the last one
-	            if (i < words.length - 1) {
-	                Thread.sleep(1000);
-	                element.sendKeys(" ");
-	            }
+	        // Loop through each character in the text and send it one by one with a 1-second delay
+	        for (char ch : text.toCharArray()) {
+	            element.sendKeys(String.valueOf(ch));
+	            // Wait for 1 second between each letter
+	            Thread.sleep(1000);  // 1000 milliseconds = 1 second
 	        }
 
 	    } catch (ElementClickInterceptedException e) {
-	        // Fallback logic in case of an ElementClickInterceptedException
-	        String[] words = text.split(" ");
-	        
-	        for (int i = 0; i < words.length; i++) {
-	            String word = words[i];
-	            
-	            for (char ch : word.toCharArray()) {
-	                element.sendKeys(String.valueOf(ch));
-	            }
-
-	            if (i < words.length - 1) {
-	                Thread.sleep(1000);
-	                element.sendKeys(" ");
-	            }
+	        // Retry entering text one character at a time if an intercept occurs
+	        for (char ch : text.toCharArray()) {
+	            element.sendKeys(String.valueOf(ch));
+	            // Wait for 1 second between each letter
+	            Thread.sleep(1000);  // 1000 milliseconds = 1 second
 	        }
 
 	    } catch (TimeoutException e) {
 	        System.out.println("The input field with formControlName '" + element + "' is not found within the timeout.");
+	    } catch (InterruptedException e) {
+	        // Handle InterruptedException
+	        System.out.println("The thread was interrupted during sleep.");
 	    }
 	}
+//	public void enterSplitElement(WebElement element, String text) throws InterruptedException {
+//	    try {
+//	        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+//	        wait.until(ExpectedConditions.elementToBeClickable(element));
+//
+//	        // Split the text by space to get each word
+//	        String[] words = text.split(" ");
+//
+//	        // Loop through each word with an index to check if it’s the last word
+//	        for (int i = 0; i < words.length; i++) {
+//	            String word = words[i];
+//
+//	            // Enter each character of the word
+//	            for (char ch : word.toCharArray()) {
+//	                element.sendKeys(String.valueOf(ch));
+//	            }
+//
+//	            // Add a space after each word except the last one
+//	            if (i < words.length - 1) {
+//	                Thread.sleep(1000);
+//	                element.sendKeys(" ");
+//	            }
+//	        }
+//
+//	    } catch (ElementClickInterceptedException e) {
+//	        // Fallback logic in case of an ElementClickInterceptedException
+//	        String[] words = text.split(" ");
+//	        
+//	        for (int i = 0; i < words.length; i++) {
+//	            String word = words[i];
+//	            
+//	            for (char ch : word.toCharArray()) {
+//	                element.sendKeys(String.valueOf(ch));
+//	            }
+//
+//	            if (i < words.length - 1) {
+//	                Thread.sleep(1000);
+//	                element.sendKeys(" ");
+//	            }
+//	        }
+//
+//	    } catch (TimeoutException e) {
+//	        System.out.println("The input field with formControlName '" + element + "' is not found within the timeout.");
+//	    }
+//	}
 
 
 	public void UploadImage(WebElement element, String text) {
@@ -318,21 +376,20 @@ public class BaseClassLocator {
 		}
 	}
 
-	public boolean isElementNotDisplayed(WebElement element, String elementName) throws InterruptedException {
-		boolean isDisplayed;
-
-		try {
-			isDisplayed = element.isDisplayed();
-		} catch (org.openqa.selenium.NoSuchElementException e) {
-			isDisplayed = false;
+		public boolean isElementNotDisplayed(WebElement element, String elementName) {
+			 WebDriverWait wait = new WebDriverWait(driver, Duration.ofMillis((long) (AssertwaitTime * 1000)));
+		    boolean isDisplayed;
+	
+		    try {
+		        wait.until(ExpectedConditions.visibilityOf(element));
+		        isDisplayed = element.isDisplayed();
+		        assertFalse(isDisplayed, elementName + " is displayed, but it should not be.");
+		        return false;
+		    } catch (NoSuchElementException | TimeoutException e) {
+		        // If element is not found or not visible within the timeout, it's considered not displayed
+		        return true;
+		    }
 		}
-		if (isDisplayed) {
-			assertFalse(isDisplayed, elementName + " is displayed, but it should not be.");
-		}
-
-		return !isDisplayed;
-
-	}
 
 	public void CLearElement(WebElement element) {
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));

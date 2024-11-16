@@ -78,7 +78,7 @@ public class BankLocators {
 	@FindBy(xpath = "//span[contains(text(), 'Next Step')]")
 	public WebElement NextStep;
 
-	@FindBy(xpath = "//h6[contains(text(), 'ADMIN USER Details')]")
+	@FindBy(xpath = "//h6[contains(text(), 'Admin User Details')]")
 	public WebElement AdminUserDetails;
 
 	@FindBy(xpath = "//button[@class='logo ng-tns-c471-3']")
@@ -352,7 +352,9 @@ public class BankLocators {
 
 	@FindBy(xpath = "//mat-checkbox[@formcontrolname='frmCheck']")
 	public WebElement GlobalFRMCheckbox;
-
+	
+	@FindBy(xpath = "//h6[contains(text(), 'Global FRM Parameters')]")
+	public WebElement LabelGlobalFRM;
 // Label
 
 	@FindBy(xpath = "//mat-label[contains(text(), 'Velocity Check Minutes')]")
@@ -677,7 +679,6 @@ public class BankLocators {
 	public WebElement SubmitforVerification;
 
 	@FindBy(xpath = "//span[contains(text(), 'OK')]")
-
 	public WebElement OKButton;
 
 // LogOut
@@ -708,6 +709,9 @@ public class BankLocators {
 
 	@FindBy(xpath = "//span[contains(text(),'Verified & Next')]")
 	public WebElement VerifiedandNext;
+	
+	@FindBy(xpath = "//span[contains(text(),'VERIFY')]")
+    public WebElement Verify;
 
 	@FindBy(xpath = "//span[contains(text(),'SUBMIT FOR APPROVAL')]")
 	public WebElement SubmitforApproval;
@@ -785,6 +789,9 @@ public class BankLocators {
 
 	public WebElement CommunicationUserNameInvalidFormat;
 
+	@FindBy(xpath = "//mat-error[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'invalid format')]")
+	public WebElement invalidmessage;
+	
 // Communication Field is Required &Admin/settlement RECON
 
 	@FindBy(xpath = "//input[@formcontrolname='name']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
@@ -805,6 +812,9 @@ public class BankLocators {
 
 	@FindBy(xpath = "//input[@formcontrolname='userName']/ancestor::mat-form-field//mat-error[contains(text(), ' This field is required ')]")
 	public WebElement CommunicationUserNameFieldisRequired;
+
+	@FindBy(xpath = "//mat-error[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'this field is required')]")
+	public WebElement Thisfieldrequired;
 
 // channel info field is required
 
@@ -857,7 +867,7 @@ public class BankLocators {
 
 	@FindBy(xpath = "//input[@formcontrolname='frmmonthly']/ancestor::mat-form-field//mat-error[contains(text(), ' Must be greater than Weekly Limit ')]")
 	public WebElement ICAMonthlygreaterthanweeklylimtError;
-	
+
 	@FindBy(xpath = "//input[@formcontrolname='monthlyLimit']/following-sibling::mat-error[contains(text(), ' Equal value not allowed ')]")
 	public WebElement MonthlyEqualValueNotAllowed;
 
@@ -925,11 +935,11 @@ public class BankLocators {
 
 	@FindBy(xpath = "//button[@class='close']")
 	public WebElement Close;
-	
+
 // verified sucess
-	
+
 	@FindBy(xpath = "//h2[contains(normalize-space(text()), 'Successfully Completed')]")
-    public WebElement VerfiedSuccessCompleted;
+	public WebElement VerfiedSuccessCompleted;
 
 	public BankLocators(WebDriver driver) {
 

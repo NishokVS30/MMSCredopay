@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,9 +16,13 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.junit.Assert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter;
@@ -30,6 +35,7 @@ import io.qameta.allure.Allure;
 public class SystemUserMultipleMerchantRegression extends TestHooks {
 
 	private WebDriver driver;
+	int waitTime;
 
 	org.Locators.BaseClassLocator BL;
 	org.Locators.SystemUserLocatores S;
@@ -47,6 +53,7 @@ public class SystemUserMultipleMerchantRegression extends TestHooks {
 
 	public SystemUserMultipleMerchantRegression() throws InterruptedException {
 		this.driver = CustomWebDriverManager.getDriver();
+		this.waitTime = CustomWebDriverManager.getWaitTime();
 //			 this.driver = driver;
 		System.setProperty("webdriver.chrome.logfile", "chromedriver.log");
 		System.setProperty("webdriver.chrome.verboseLogging", "true");
@@ -194,16 +201,14 @@ public class SystemUserMultipleMerchantRegression extends TestHooks {
 	ArrayList<String> key = new ArrayList<>();
 	ArrayList<String> value = new ArrayList<>();
 
-	@SuppressWarnings("unused")
-	private int validateFieldsForRow(Map<String, String> testData, int TestcaseNo)
-			throws Exception {
+	private int validateFieldsForRow(Map<String, String> testData, int TestcaseNo) throws Exception {
 
 		// Initialize the locators
 		B = new org.Locators.BankLocators(driver);
 
 		// Initialize a counter to track the number of validated fields/sections
 		int validatedFieldsCount = 0;
-		
+
 		// Sales Details Section
 		validatedFieldsCount += executeStep(() -> {
 			try {
@@ -339,7 +344,6 @@ public class SystemUserMultipleMerchantRegression extends TestHooks {
 
 		String errorMessage = "The data does not match or is empty.";
 
-		
 		String name = testData.get("Aggregator Name");
 		String SalesPerson = testData.get("Sales Person");
 		String VASCommission = testData.get("VAS Commission");
@@ -412,11 +416,11 @@ public class SystemUserMultipleMerchantRegression extends TestHooks {
 					Status = false; // Set status to false if assertion fails
 					errorMessage = e.getMessage(); // Capture error message
 				}
-				logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Sales Info : Sales Person :", SalesPerson,
-						Status, errorMessage);
+				logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Sales Info : Sales Person :", SalesPerson, Status,
+						errorMessage);
 
 			}
-			
+
 			if (VASCommission != null && !VASCommission.trim().isEmpty()) {
 
 				BL.clickElement(A.VASCommissionOne);
@@ -437,14 +441,13 @@ public class SystemUserMultipleMerchantRegression extends TestHooks {
 						Status, errorMessage);
 
 			}
-			
-			
-			if (branchcode != null && !branchcode.trim().isEmpty()) {
+
+			if (branchcode != null) {
 
 				BL.clickElement(M.ClickonbranchCode);
 				BL.enterElement(M.ClickonbranchCode, branchcode);
 				BL.selectDropdownOption(branchcode);
-				performTabKeyPress();
+//				performTabKeyPress();
 				boolean nameStatus = true; // Assume success initially
 				try {
 					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
@@ -515,6 +518,7 @@ public class SystemUserMultipleMerchantRegression extends TestHooks {
 						errorMessage);
 
 			}
+
 			boolean NextstepStatus = true;
 			try {
 				BL.clickElement(B.NextStep);
@@ -561,7 +565,7 @@ public class SystemUserMultipleMerchantRegression extends TestHooks {
 			String Type = testData.get("Statement Type");
 
 			String errorMessage = "The data does not match or is empty.";
-			
+
 			if (LegalName != null && !LegalName.trim().isEmpty()) {
 
 				BL.clickElement(A.ComapnyInfo);
@@ -2398,8 +2402,7 @@ public class SystemUserMultipleMerchantRegression extends TestHooks {
 		}
 	}
 
-	private void FillDiscountRate(int TestcaseNo)
-			throws InterruptedException, AWTException, IOException {
+	private void FillDiscountRate(int TestcaseNo) throws InterruptedException, AWTException, IOException {
 
 		String errorMessage = "The data does not match or is empty.";
 
@@ -2691,287 +2694,307 @@ public class SystemUserMultipleMerchantRegression extends TestHooks {
 
 	private void fillTerminalDetails(Map<String, String> testData, int TestcaseNo)
 			throws InterruptedException, AWTException {
+
 		try {
-		
+			
+			Thread.sleep(10000);
 			String errorMessage = "The Terminaldata does not match or is empty.";
 
-			String terminalName = testData.get("Terminal Name");
-			String terminalType = testData.get("Terminal Type");
-			String upiTerminaltype = testData.get("UPI Terminal Type");
-			String upiOfflinetype = testData.get("UPI Offline Type");
-			String deviceModel = testData.get("Device Model");
-			String deviceNumber = testData.get("Device Number");
-			String imeiNumber = testData.get("IMEI Number");
-			String deviceType = testData.get("Device Type");
-			String deviceCommercialmode = testData.get("Device Commercial Mode");
-			String tidFeeapplicable = testData.get("TID Fee Applicable");
-			String DevicePrice = testData.get("Device Price");
-			String InstallationFee = testData.get("Installation Fee");
-//			BL.clickElement(M.CLickOnTerminal);
+			String merchantIdFromRegression = testData.get("Merchant ID");
 
-			BL.clickElement(B.AddButton);
+			List<Map<String, String>> cachedData = cache.getCachedData("Terminals");
+			int numberOfRows = cachedData.size();
+			System.out.println("Total rows found: " + numberOfRows);
 
-			if (terminalName != null && !terminalName.trim().isEmpty()) {
-				BL.clickElement(T.TerminalName);
-				BL.enterElement(T.TerminalName, terminalName);
-				performTabKeyPress();
-				boolean status = true;
-				try {
+			for (int currentRow = 0; currentRow < numberOfRows; currentRow++) {
+				System.out.println("Running test for row number: " + (currentRow + 1));
+				Map<String, String> testData1 = cachedData.get(currentRow);
+				System.out.println("Test data: " + testData);
 
-					BL.isElementNotDisplayed(M.TerminalNameFieldRequired, "Field is Required");
-					BL.isElementNotDisplayed(M.TerminalNameInvalidFormat, "Invalid Format");
-				} catch (AssertionError e) {
-					status = false;
-					errorMessage = e.getMessage();
+				// Retrieve the Merchant ID from the terminal data
+				String terminalMerchantId = testData1.get("Merchant ID");
+
+				if (merchantIdFromRegression != null && !merchantIdFromRegression.equals(terminalMerchantId)) {
+					continue; // Skip processing this terminal record if the Merchant IDs don't match
 				}
 
-				logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : Terminal Name", terminalName, status,
-						errorMessage);
-			}
+				String terminalName = testData1.get("Terminal Name");
+				String terminalType = testData1.get("Terminal Type");
+				String upiTerminaltype = testData1.get("UPI Terminal Type");
+				String upiOfflinetype = testData1.get("UPI Offline Type");
+				String deviceModel = testData1.get("Device Model");
+				String deviceNumber = testData1.get("Device Number");
+				String imeiNumber = testData1.get("IMEI Number");
+				String deviceType = testData1.get("Device Type");
+				String deviceCommercialmode = testData1.get("Device Commercial Mode");
+				String tidFeeapplicable = testData1.get("TID Fee Applicable");
+				String DevicePrice = testData1.get("Device Price");
+				String InstallationFee = testData1.get("Installation Fee");
 
-			if (terminalType != null && !terminalType.trim().isEmpty()) {
-				BL.clickElement(T.Terminaltype);
-				BL.selectDropdownOption(terminalType);
-				performTabKeyPress();
-				String actualValue = BL.getElementText(T.Terminaltype);
-				boolean status = true;
-				try {
-					if (actualValue != null) {
-						BL.isElementNotDisplayed(M.TerminalTypeFieldRequired, "Field is Required");
-						assertEquals(terminalType.toUpperCase(), actualValue.toUpperCase());
-					}
-				} catch (AssertionError e) {
-					status = false;
-					errorMessage = e.getMessage();
-				}
+				ArrayList<String> key = new ArrayList<>();
+				ArrayList<String> value = new ArrayList<>();
 
-				logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : Terminal Type", terminalType, status,
-						errorMessage);
-			}
+				boolean hasValidData = false;
 
-			if (upiTerminaltype != null && !upiTerminaltype.trim().isEmpty()) {
-				BL.clickElement(M.UPITerminalType);
-				BL.selectDropdownOption(upiTerminaltype);
-				performTabKeyPress();
-				boolean status = true;
-				try {
 
-					BL.isElementNotDisplayed(M.UPITerminalTypeFieldReqired, "Field is Required");
+				
+				BL.clickElement(B.AddButton);
 
-				} catch (AssertionError e) {
-					status = false;
-					errorMessage = e.getMessage();
-				}
-				logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : UPI Terminal Type", upiTerminaltype,
-						status, errorMessage);
-			}
-
-			if (upiOfflinetype != null && !upiOfflinetype.trim().isEmpty()) {
-				BL.clickElement(M.UPIofflineType);
-				BL.selectDropdownOption(upiOfflinetype);
-				performTabKeyPress();
-				boolean status = true;
-				try {
-					BL.isElementNotDisplayed(M.UPIOfflineTypeFieldReqired, "Field is Required");
-				} catch (AssertionError e) {
-					status = false;
-					errorMessage = e.getMessage();
-				}
-
-				logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : UPI Offline Type", upiOfflinetype,
-						status, errorMessage);
-			}
-
-			if (deviceModel != null && !deviceModel.trim().isEmpty()) {
-				BL.clickElement(T.DeviceModel);
-				BL.enterElement(T.DeviceModel, deviceModel);
-				BL.selectDropdownOption(deviceModel);
-				String actualValue = BL.getElementText(T.DeviceModel);
-				boolean status = true;
-				try {
-					if (actualValue != null) {
-						assertEquals(deviceModel.toUpperCase(), actualValue.toUpperCase());
-					}
-				} catch (AssertionError e) {
-					status = false;
-					errorMessage = e.getMessage();
-				}
-
-				logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : Device Model", deviceModel, status,
-						errorMessage);
-			}
-
-			if (deviceNumber != null && !deviceNumber.trim().isEmpty()) {
-				BL.clickElement(T.DeviceNumber);
-				BL.enterElement(T.DeviceNumber, deviceNumber);
-
-				boolean status = true;
-				try {
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalidformat");
-				} catch (AssertionError e) {
-					status = false;
-					errorMessage = e.getMessage();
-				}
-
-				logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : Device Number", deviceNumber, status,
-						errorMessage);
-			}
-
-			if (imeiNumber != null && !imeiNumber.trim().isEmpty()) {
-				BL.clickElement(T.IMEINumber);
-				BL.enterElement(T.IMEINumber, imeiNumber);
-				boolean status = true;
-				try {
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalidformat");
-				} catch (AssertionError e) {
-					status = false;
-					errorMessage = e.getMessage();
-				}
-
-				logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : IMEI Number", imeiNumber, status,
-						errorMessage);
-			}
-
-			if (deviceType != null && !deviceType.trim().isEmpty()) {
-				BL.clickElement(M.DeviceType);
-				BL.selectDropdownOption(deviceType);
-				String actualValue = BL.getElementText(M.DeviceType);
-				boolean status = true;
-				try {
-					if (actualValue != null) {
-						assertEquals(deviceType.toUpperCase(), actualValue.toUpperCase());
-					}
-				} catch (AssertionError e) {
-					status = false;
-					errorMessage = e.getMessage();
-				}
-
-				logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : Device Type", deviceType, status,
-						errorMessage);
-			}
-
-			if (deviceCommercialmode != null && !deviceCommercialmode.trim().isEmpty()) {
-				BL.clickElement(T.DeviceCommericialmode);
-				BL.selectDropdownOption(deviceCommercialmode);
-				performTabKeyPress();
-				String actualValue = BL.getElementText(T.DeviceCommericialmode);
-				boolean status = true;
-				try {
-					if (actualValue != null) {
-						BL.isElementNotDisplayed(M.DeviceCommericialModeFieldRequired, "Invalidformat");
-						assertEquals(deviceCommercialmode.toUpperCase(), actualValue.toUpperCase());
+				if (terminalName != null && !terminalName.trim().isEmpty()) {
+					BL.clickElement(T.TerminalName);
+					BL.enterElement(T.TerminalName, terminalName);
+					performTabKeyPress();
+					boolean status = true;
+					try {
+						BL.isElementNotDisplayed(M.TerminalNameFieldRequired, "Field is Required");
+						BL.isElementNotDisplayed(M.TerminalNameInvalidFormat, "Invalid Format");
+					} catch (AssertionError e) {
+						status = false;
+						errorMessage = e.getMessage();
 					}
 
-				} catch (AssertionError e) {
-					status = false;
-					errorMessage = e.getMessage();
+					logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : Terminal Name", terminalName,
+							status, errorMessage);
 				}
 
-				logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : Device Commercial Mode",
-						deviceCommercialmode, status, errorMessage);
-			}
-
-			if (tidFeeapplicable != null && !tidFeeapplicable.trim().isEmpty()) {
-				BL.clickElement(T.TIDFeeApplicable);
-				BL.selectDropdownOption(tidFeeapplicable);
-				performTabKeyPress();
-				String actualValue = BL.getElementText(T.TIDFeeApplicable);
-				boolean status = true;
-				try {
-					if (actualValue != null) {
-						BL.isElementNotDisplayed(M.TidFeeApplicableFieldRequired, "Invalidformat");
-						assertEquals(tidFeeapplicable.toUpperCase(), actualValue.toUpperCase());
+				if (terminalType != null && !terminalType.trim().isEmpty()) {
+					BL.clickElement(T.Terminaltype);
+					BL.TerminaltypeselectDropdownOption(terminalType);
+					
+					System.out.println("_______________________________________________"+terminalType);
+//					performTabKeyPress();
+					String actualValue = BL.getElementText(T.Terminaltype);
+					boolean status = true;
+					try {
+						if (actualValue != null) {
+							BL.isElementNotDisplayed(M.TerminalTypeFieldRequired, "Field is Required");
+							assertEquals(terminalType.toUpperCase(), actualValue.toUpperCase());
+						}
+					} catch (AssertionError e) {
+						status = false;
+						errorMessage = e.getMessage();
 					}
-				} catch (AssertionError e) {
-					status = false;
-					errorMessage = e.getMessage();
+
+					logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : Terminal Type", terminalType,
+							status, errorMessage);
 				}
 
-				logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : TID Fee Applicable", tidFeeapplicable,
-						status, errorMessage);
+				if (upiTerminaltype != null && !upiTerminaltype.trim().isEmpty()) {
+					BL.clickElement(M.UPITerminalType);
+					BL.selectDropdownOption(upiTerminaltype);
+					performTabKeyPress();
+					boolean status = true;
+					try {
+						BL.isElementNotDisplayed(M.UPITerminalTypeFieldReqired, "Field is Required");
+					} catch (AssertionError e) {
+						status = false;
+						errorMessage = e.getMessage();
+					}
+					logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : UPI Terminal Type",
+							upiTerminaltype, status, errorMessage);
+				}
 
-			}
+				if (upiOfflinetype != null && !upiOfflinetype.trim().isEmpty()) {
+					BL.clickElement(M.UPIofflineType);
+					BL.selectDropdownOption(upiOfflinetype);
+					performTabKeyPress();
+					boolean status = true;
+					try {
+						BL.isElementNotDisplayed(M.UPIOfflineTypeFieldReqired, "Field is Required");
+					} catch (AssertionError e) {
+						status = false;
+						errorMessage = e.getMessage();
+					}
 
-			if (DevicePrice != null && !DevicePrice.trim().isEmpty()) {
+					logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : UPI Offline Type", upiOfflinetype,
+							status, errorMessage);
+				}
 
-				BL.clickElement(T.Deviceprice);
+				if (deviceModel != null && !deviceModel.trim().isEmpty()) {
+					BL.clickElement(T.DeviceModel);
+					BL.enterElement(T.DeviceModel, deviceModel);
+					Thread.sleep(1000);
+					BL.selectDropdownOption(deviceModel);
+					String actualValue = BL.getElementText(T.DeviceModel);
+					boolean status = true;
+					try {
+						if (actualValue != null) {
+							assertEquals(deviceModel.toUpperCase(), actualValue.toUpperCase());
+						}
+					} catch (AssertionError e) {
+						status = false;
+						errorMessage = e.getMessage();
+					}
 
-				BL.enterElement(T.Deviceprice, DevicePrice);
+					logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : Device Model", deviceModel, status,
+							errorMessage);
+				}
 
-				boolean Status = true; // Assume success initially
+				if (deviceNumber != null && !deviceNumber.trim().isEmpty()) {
+					BL.clickElement(T.DeviceNumber);
+					BL.enterElement(T.DeviceNumber, deviceNumber);
+
+					boolean status = true;
+					try {
+						BL.isElementNotDisplayed(B.InvalidFormat, "Invalidformat");
+					} catch (AssertionError e) {
+						status = false;
+						errorMessage = e.getMessage();
+					}
+
+					logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : Device Number", deviceNumber,
+							status, errorMessage);
+				}
+
+				if (imeiNumber != null && !imeiNumber.trim().isEmpty()) {
+					BL.clickElement(T.IMEINumber);
+					BL.enterElement(T.IMEINumber, imeiNumber);
+					boolean status = true;
+					try {
+						BL.isElementNotDisplayed(B.InvalidFormat, "Invalidformat");
+					} catch (AssertionError e) {
+						status = false;
+						errorMessage = e.getMessage();
+					}
+
+					logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : IMEI Number", imeiNumber, status,
+							errorMessage);
+				}
+
+				if (deviceType != null && !deviceType.trim().isEmpty()) {
+					BL.clickElement(M.DeviceType);
+					BL.selectDropdownOption(deviceType);
+					String actualValue = BL.getElementText(M.DeviceType);
+					boolean status = true;
+					try {
+						if (actualValue != null) {
+							assertEquals(deviceType.toUpperCase(), actualValue.toUpperCase());
+						}
+					} catch (AssertionError e) {
+						status = false;
+						errorMessage = e.getMessage();
+					}
+
+					logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : Device Type", deviceType, status,
+							errorMessage);
+				}
+
+				if (deviceCommercialmode != null && !deviceCommercialmode.trim().isEmpty()) {
+					BL.clickElement(T.DeviceCommericialmode);
+					BL.selectDropdownOption(deviceCommercialmode);
+					performTabKeyPress();
+					String actualValue = BL.getElementText(T.DeviceCommericialmode);
+					boolean status = true;
+					try {
+						if (actualValue != null) {
+							BL.isElementNotDisplayed(M.DeviceCommericialModeFieldRequired, "Invalidformat");
+							assertEquals(deviceCommercialmode.toUpperCase(), actualValue.toUpperCase());
+						}
+
+					} catch (AssertionError e) {
+						status = false;
+						errorMessage = e.getMessage();
+					}
+
+					logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : Device Commercial Mode",
+							deviceCommercialmode, status, errorMessage);
+				}
+
+				if (tidFeeapplicable != null && !tidFeeapplicable.trim().isEmpty()) {
+					BL.clickElement(T.TIDFeeApplicable);
+					BL.selectDropdownOption(tidFeeapplicable);
+					performTabKeyPress();
+					String actualValue = BL.getElementText(T.TIDFeeApplicable);
+					boolean status = true;
+					try {
+						if (actualValue != null) {
+							BL.isElementNotDisplayed(M.TidFeeApplicableFieldRequired, "Invalidformat");
+							assertEquals(tidFeeapplicable.toUpperCase(), actualValue.toUpperCase());
+						}
+					} catch (AssertionError e) {
+						status = false;
+						errorMessage = e.getMessage();
+					}
+
+					logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : TID Fee Applicable",
+							tidFeeapplicable, status, errorMessage);
+
+				}
+
+				if (DevicePrice != null && !DevicePrice.trim().isEmpty()) {
+
+					BL.clickElement(T.Deviceprice);
+
+					BL.enterElement(T.Deviceprice, DevicePrice);
+
+					boolean Status = true; // Assume success initially
+
+					try {
+
+						BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+
+					} catch (AssertionError e) {
+						Status = false; // Set status to false if assertion fails
+						errorMessage = e.getMessage(); // Capture error message
+					}
+
+					logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : Device Price", DevicePrice, Status,
+							errorMessage);
+				}
+
+				if (InstallationFee != null && !InstallationFee.trim().isEmpty()) {
+
+					BL.clickElement(T.InstallationFee);
+
+					BL.enterElement(T.InstallationFee, InstallationFee);
+
+					boolean Status = true; // Assume success initially
+
+					try {
+
+						BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
+
+					} catch (AssertionError e) {
+						Status = false; // Set status to false if assertion fails
+						errorMessage = e.getMessage(); // Capture error message
+					}
+
+					logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : Installation Fee", InstallationFee,
+							Status, errorMessage);
+				}
 
 				try {
+					BL.clickElement(B.SaveButton);
 
 					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
 
 				} catch (AssertionError e) {
-					Status = false; // Set status to false if assertion fails
-					errorMessage = e.getMessage(); // Capture error message
+					logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : Save Button", "Save Operation",
+							false, e.getMessage());
 				}
 
-				logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : Device Price", DevicePrice, Status,
-						errorMessage);
-			}
-			
-			if (InstallationFee != null && !InstallationFee.trim().isEmpty()) {
+			} // End of for loop
 
-				BL.clickElement(T.InstallationFee);
-
-				BL.enterElement(T.InstallationFee, InstallationFee);
-
-				boolean Status = true; // Assume success initially
-
-				try {
-
-					BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-
-				} catch (AssertionError e) {
-					Status = false; // Set status to false if assertion fails
-					errorMessage = e.getMessage(); // Capture error message
-				}
-
-				logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : Installation Fee", InstallationFee,
-						Status, errorMessage);
-			}
-			
-			boolean SaveStatus = true;
 			try {
-				
-				
-				BL.clickElement(B.SaveButton);
-				
 
-				BL.isElementNotDisplayed(B.InvalidFormat, "Invalid Format");
-
-			} catch (AssertionError e) {
-				SaveStatus = false;
-				errorMessage = e.getMessage(); // Capture error message
-			}
-
-			logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : Save Button", "Terminals",
-					SaveStatus, errorMessage);
-			
-			boolean NextstepStatus = true;
-			try {
 				BL.clickElement(B.NextStep);
+
 				BL.isElementDisplayed(A.IntroKYC, "KYC Page");
 
+				logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : Next Step", "Proceeding to KYC Page",
+						true, "");
+
 			} catch (AssertionError e) {
-				NextstepStatus = false;
-				errorMessage = e.getMessage(); // Capture error message
+				logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : Next Step", "Proceeding to KYC Page",
+						false, e.getMessage());
 			}
 
-			logTestStep(TestcaseNo, "MMS : Merchant Onboarding : Terminals : ", "NextStep", NextstepStatus,
-					errorMessage);
-		
-				
 		} catch (Exception e) {
 			ExceptionHandler exceptionHandler = new ExceptionHandler(driver, ExtentCucumberAdapter.getCurrentStep());
 			exceptionHandler.handleException(e, "Terminal Info");
 			throw e;
 		}
 	}
-	
 
 	@When("the System Verifier clicks the Merchant module")
 
@@ -3072,8 +3095,7 @@ public class SystemUserMultipleMerchantRegression extends TestHooks {
 	}
 
 	@SuppressWarnings("unused")
-	private int validateFieldsForRow1(Map<String, String> testData, int TestcaseNo)
-			throws Exception {
+	private int validateFieldsForRow1(Map<String, String> testData, int TestcaseNo) throws Exception {
 
 		// Initialize the locators
 		B = new org.Locators.BankLocators(driver);
@@ -3151,9 +3173,9 @@ public class SystemUserMultipleMerchantRegression extends TestHooks {
 
 				BL.clickElement(A.SalesInfo);
 
-				BL.clickElement(A.ManualTakeOver);
-
-				BL.clickElement(B.YesButton);
+//				BL.clickElement(A.ManualTakeOver);
+//
+//				BL.clickElement(B.YesButton);
 
 				BL.clickElement(B.VerifiedandNext);
 
@@ -3287,7 +3309,39 @@ public class SystemUserMultipleMerchantRegression extends TestHooks {
 
 			try {
 
-				Thread.sleep(1000);
+				WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
+
+				// Locate all elements matching the criteria
+				List<WebElement> tdbutton = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath(
+						"//td//button[@aria-label='Example icon-button with a menu' and contains(@class, 'mat-menu-trigger')]")));
+
+				for (int currentRow = 0; currentRow < tdbutton.size(); currentRow++) {
+					WebElement button = tdbutton.get(currentRow); // Access button directly from the list
+					try {
+						if (button.isDisplayed()) {
+							wait.until(ExpectedConditions.elementToBeClickable(button)).click();
+
+							BL.clickElement(B.ViewButton);
+							BL.clickElement(B.Verify);
+
+							Thread.sleep(2000);
+							Robot r = new Robot();
+							r.keyPress(KeyEvent.VK_ESCAPE);
+							r.keyRelease(KeyEvent.VK_ESCAPE);
+
+							System.out.println("Button clicked at index: " + currentRow);
+						} else {
+							System.out.println("Button at index " + currentRow + " is not displayed.");
+						}
+					} catch (Exception e) {
+						System.out.println("Exception occurred while clicking button at index " + currentRow + ": "
+								+ e.getMessage());
+					}
+				}
+
+				driver.navigate().refresh();
+
+				Thread.sleep(3000);
 
 				BL.clickElement(B.VerifiedandNext);
 
@@ -3487,8 +3541,7 @@ public class SystemUserMultipleMerchantRegression extends TestHooks {
 	}
 
 	@SuppressWarnings("unused")
-	private int validateFieldsForRow2(Map<String, String> testData, int TestcaseNo)
-			throws Exception {
+	private int validateFieldsForRow2(Map<String, String> testData, int TestcaseNo) throws Exception {
 
 		// Initialize the locators
 		B = new org.Locators.BankLocators(driver);
@@ -3652,7 +3705,6 @@ public class SystemUserMultipleMerchantRegression extends TestHooks {
 		}
 	}
 
-	
 	private void logTestStep(int testcaseCount, String fieldName, String fieldValue, Boolean status,
 			String errorMessage) {
 		String message = "MO Test Case " + testcaseCount + ": " + fieldName + " with value '" + fieldValue + "' "

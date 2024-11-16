@@ -1,10 +1,14 @@
 package org.Testcases;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
+import java.io.BufferedInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Random;
 import java.util.Set;
+import java.util.UUID;
+
 import com.github.javafaker.Faker;
 
 public class generateFaker {
@@ -308,4 +312,34 @@ public class generateFaker {
     	 return faker.regexify("[A-PR-Y][1-9]{7}");
     }
     
-}
+    
+    public String generateImage(String sheetName) {  
+    
+            // Placeholder API URL to get a random image (200x300)
+            String imageUrl = "https://picsum.photos/200/300";
+            
+            // Generate a unique filename for the image based on the sheetName
+            String fileName = sheetName + "_RandomImage_" + System.currentTimeMillis() + ".jpg";
+            
+            // Save the image in the user's Pictures directory
+            String saveDir = System.getProperty("user.home") + "/Pictures";
+            String filePath = Paths.get(saveDir, fileName).toString();
+            
+            try (BufferedInputStream in = new BufferedInputStream(new URL(imageUrl).openStream());
+                 FileOutputStream fileOutputStream = new FileOutputStream(filePath)) {
+                byte[] dataBuffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+                    fileOutputStream.write(dataBuffer, 0, bytesRead);
+                }
+                System.out.println("Image downloaded to: " + filePath);
+            } catch (IOException e) {
+                System.err.println("Error downloading image: " + e.getMessage());
+                return null;
+            }
+            
+            return filePath;
+        }
+    }
+   
+
